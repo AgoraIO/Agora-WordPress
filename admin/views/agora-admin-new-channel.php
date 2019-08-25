@@ -1,0 +1,3 @@
+<div class="wrap agoraio" id="agoraio">
+  New Agora Channel form goes here...
+</div>

@@ -2,3 +2,73 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+
+.card {
+  background: #fff none repeat scroll 0 0;
+  border: 1px solid #3ab7f8;
+  border-left: 4px solid #3ab7f8;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  margin-top: 20px;
+  max-width: 520px;
+  min-width: 255px;
+  padding: 0.7em 2em 1em;
+  position: relative;
+  transition: 0.35s ease all;
+}
+
+.card:hover {
+  box-shadow: 3px 3px 4px 0px #cdcdcd;
+}
+
+.card img.icon {
+  float: left;
+  margin: 8px 8px 8px -8px;
+}
+
+.card h2.title {
+  float: left;
+  max-width: 240px;
+  font-size: 1.3em;
+  font-weight: 600;
+}
+
+.card .infobox {
+  float: right;
+  font-size: 13px;
+  color: #666;
+  margin: 2px 0 5px;
+  line-height: 1.5;
+  max-width: 240px;
+}
+
+.card .inside .form-table th {
+  padding: 15px 10px 15px 0;
+  width: 160px;
+}
+
+.card .inside .form-table td {
+  padding: 10px 10px;
+}
+
+.card .checkboxes li {
+  margin: 0;
+}
+
+.card .flex {
+  display: flex;
+  flex-direction: row;
+}
+
+.card .flex .col {
+  flex-grow: 1;
+  padding: 10px 0;
+  min-width: 40%;
+}
+
+.card .label {
+  font-weight: bold;
+}
+
+.card .align-right {
+  text-align: right;
+}

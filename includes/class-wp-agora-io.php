@@ -74,7 +74,7 @@ class WP_Agora {
 	private function define_admin_hooks() {
 
 		$this->plugin_admin = new WP_Agora_Admin( $this->get_plugin_name(), $this->get_version() );
-
+		
 		add_action( 'admin_enqueue_scripts', array($this->plugin_admin, 'enqueue_styles') );
 		add_action( 'admin_enqueue_scripts', array($this->plugin_admin, 'enqueue_scripts') );
 
