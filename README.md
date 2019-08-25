@@ -1,8 +1,8 @@
 # WP Agora.io #
 **Contributors:** jalamprea
 **Tags:** communications, video, real-time
-**Requires at least:** 4.3.1
-**Tested up to:** 4.9.6  
+**Requires at least:** 5.0.0
+**Tested up to:** 5.2.2
 **License:** CC BY-ND 4.0  
 **License URI:** https://creativecommons.org/licenses/by-nd/4.0/  
 
