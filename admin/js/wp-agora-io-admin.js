@@ -1,16 +1,17 @@
 function updateSettingValue(settingName, newValue, callback) {
 	var data = { action: 'save-agora-setting' };
 	data[settingName] = newValue;
-	
+
 	var ajaxParams = {
 		type: 'POST',
 		url: ajaxurl, // from wp admin...
 		data
 	};
 	jQuery.ajax(ajaxParams).then(function(data) {
-		callback && callback();
+		callback && callback(null, data);
 	}).fail(function(error) {
 		console.error('Ajax Error:', error);
+		callback && callback(error, null);
 	});
 }
 
@@ -27,7 +28,9 @@ function applicationSettingsForm() {
 		parentActions.addClass('align-right')
 
 		var valueBox = jQuery(scope).find('.value').eq(0);
-		var currentValue = valueBox.text().trim();
+		var isMasked = valueBox.data('masked');
+
+		var currentValue = !isMasked ? valueBox.text().trim() : '';
 		// console.log(currentValue);
 		var input = jQuery('<input type="text" style="width:100%" value="'+currentValue+'" />');
 		jQuery(valueBox).html(input);
@@ -43,19 +46,31 @@ function applicationSettingsForm() {
 
 			actionButton.show();
 			parentActions.removeClass('align-right');
-
-			valueBox.html(input.val());
 		}
 
 		saveBtn.click(function(btnEvt){
 			btnEvt.preventDefault();
 			var newValue = input.val();
-			updateSettingValue(settingName, newValue, hideSaveButtons);
+			updateSettingValue(settingName, newValue, function(err, res) {
+				if (!err) {
+					hideSaveButtons();
+
+					if (isMasked) {
+						var out = '';
+						for(var i=0; i<newValue.length-4;i++) out += '*';
+						newValue = out + newValue.substring(newValue.length-4);
+					}
+					valueBox.html(newValue);
+				} else {
+					// TODO: Show error
+				}
+			});
 		});
 
 		cancelBtn.click(function(btnEvt){
 			btnEvt.preventDefault();
 			hideSaveButtons();
+			valueBox.html(currentValue);
 		});
 
 	});

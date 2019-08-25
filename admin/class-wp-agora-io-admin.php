@@ -34,7 +34,24 @@ class WP_Agora_Admin {
 
 
 	public function saveAjaxSettings() {
-		// echo "<pre>".print_r($_REQUEST, true)."</pre>";
+		unset($_REQUEST['action']);
+		$keys = array_keys($_REQUEST);
+		$key = $keys[0];
+		$value = $_REQUEST[$key];
+
+
+		$options = get_option($this->plugin_name);
+		if (!$options) {
+			$options = array();
+		}
+		$options[$key] = $value;
+
+ 		$r = update_option($this->plugin_name, $options);
+
+		header('Content-Type: application/json');
+		echo json_encode(array(
+        'updated' => $r
+    ));
 		wp_die();
 	}
 
@@ -78,6 +95,7 @@ class WP_Agora_Admin {
 	}
 
 	public function include_agora_settings_page() {
+		$agora_options = get_option($this->plugin_name);
 		include_once('views/agora-admin-settings.php');
 	}
 

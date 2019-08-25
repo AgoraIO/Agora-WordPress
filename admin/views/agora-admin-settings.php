@@ -30,11 +30,13 @@
         <div class="col label">
           App ID
         </div>
-        <div class="col value">
+        <div class="col value" data-masked="true">
           <?php
-          $value = "skfJHBfg38754hrPnf973q4hjf97834hOiUH9";
-          for($i=0;$i<strlen($value)-4;$i++) echo "*";
-          echo substr($value, strlen($value)-4);
+          $value = $agora_options['appId'];
+          if ($value) {
+            for($i=0;$i<strlen($value)-4;$i++) echo "*";
+            echo substr($value, strlen($value)-4);
+          }
           ?>
         </div>
       </div>
@@ -66,7 +68,8 @@
         </div>
         <div class="col value">
           <?php
-          $value = "https://4045media-cloudrecordings.s3.amazonaws.com";
+          $value = $agora_options['cloudStorageURL'];
+          // $value = "https://4045media-cloudrecordings.s3.amazonaws.com";
           echo $value;
           ?>
         </div>
@@ -92,7 +95,12 @@
     <div class="inside">
       <p>
         <?php
-        _e('Your token needs to be generated on your own server, hence you are required to first deploy  a token generator on the server. In our [AGORA_GITHUB]Github Repository[/AGORA_GITHUB] we provide source codes and token generator demos for several programming languages.', 'agoraio');
+        $desc = __('Your token needs to be generated on your own server, hence you are required to first deploy  a token generator on the server. In our [AGORA_GITHUB]Github Repository[/AGORA_GITHUB] we provide source codes and token generator demos for several programming languages.', 'agoraio');
+        echo str_replace(
+          array("[AGORA_GITHUB]", "[/AGORA_GITHUB]"),
+          array(
+            "<a href='https://github.com/agoraio/' target='blank'>", "</a>"),
+          $desc);
         ?></p>
       <div class="flex app-setting" id="tokenServerURL">
         <div class="col label">
@@ -100,7 +108,8 @@
         </div>
         <div class="col value">
           <?php
-          $value = "https://tokenserver.4045media.com";
+          $value = $agora_options['tokenServerURL'];
+          // $value = "https://tokenserver.4045media.com";
           echo $value;
           ?>
         </div>
