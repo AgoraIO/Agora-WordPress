@@ -30,27 +30,36 @@ function applicationSettingsForm() {
 		var valueBox = jQuery(scope).find('.value').eq(0);
 		var isMasked = valueBox.data('masked');
 
-		var currentValue = !isMasked ? valueBox.text().trim() : '';
-		// console.log(currentValue);
-		var input = jQuery('<input type="text" style="width:100%" value="'+currentValue+'" />');
+		var currentValue = valueBox.text().trim();
+		var showValue = isMasked ? '' : currentValue;
+		// console.log('Value:', currentValue);
+
+		var input = jQuery('<input type="text" style="width:100%" value="'+showValue+'" />');
 		jQuery(valueBox).html(input);
 
-		var saveBtn = jQuery('<a href="#" class="button button-primary" id="'+settingName+'-save'+'" style="margin-right:10px">Save</a>');
+		var saveBtn = jQuery('<a href="#" class="button button-primary" id="'+settingName+'-save'+'" style="margin:0 10px">Save</a>');
 		var cancelBtn = jQuery('<a href="#" class="button button-secondary" id="'+settingName+'-cancel'+'">Cancel</a>');
+		var errorBox = jQuery('<span class="error error-message"></span>');
+		parentActions.append(errorBox);
 		parentActions.append(saveBtn);
 		parentActions.append(cancelBtn);
 
 		var hideSaveButtons = function() {
 			saveBtn.remove();
 			cancelBtn.remove();
+			errorBox.remove();
 
-			actionButton.show();
 			parentActions.removeClass('align-right');
+			actionButton.show();
 		}
 
 		saveBtn.click(function(btnEvt){
 			btnEvt.preventDefault();
 			var newValue = input.val();
+			if (!newValue || newValue.length===0) {
+				errorBox.text('Please insert a valid value')
+				return false;
+			}
 			updateSettingValue(settingName, newValue, function(err, res) {
 				if (!err) {
 					hideSaveButtons();
@@ -62,7 +71,8 @@ function applicationSettingsForm() {
 					}
 					valueBox.html(newValue);
 				} else {
-					// TODO: Show error
+					// TODO: Improve error messages!
+					errorBox.text('Oops, your data cannot be updated!');
 				}
 			});
 		});

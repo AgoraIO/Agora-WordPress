@@ -1,3 +1,3 @@
 <div class="wrap agoraio" id="agoraio">
-  Channels table list goes here...
+  <h1>Agora Video - Channels</h1>
 </div>
