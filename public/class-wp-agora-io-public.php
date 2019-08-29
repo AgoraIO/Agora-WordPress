@@ -34,14 +34,14 @@ class WP_Agora_Public {
 
 	/**  Render Agora Commnication shortcode **/
 	public function agoraCommunicationShortcode( $atts ) {
-		// require_once("shortcode.agora-communication.php");
-		// return renderCommnicationShortcode( $this, $atts );
+		require_once("shortcode-agora-communication.php");
+		return renderCommnicationShortcode( $this, $atts );
 	}
 
 	/**  Render Agora Broadcast shortcode **/
 	public function agoraBroadcastShortcode( $atts ) {
-		// require_once("shortcode.agora-broadcast.php");
-		// return renderBroadcastShortcode( $this, $atts );
+		require_once("shortcode-agora-broadcast.php");
+		return renderBroadcastShortcode( $this, $atts );
 	}
 
 
