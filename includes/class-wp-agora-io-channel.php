@@ -160,6 +160,8 @@ class WP_Agora_Channel {
       'appearance' => array(
         'splashImageURL' => '',
         'noHostImageURL' => '',
+        'activeButtonColor' => '',
+        'disabledButtonColor' => '',
       ),
     ) );
 

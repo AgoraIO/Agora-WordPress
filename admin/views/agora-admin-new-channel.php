@@ -4,6 +4,31 @@
 if ( ! defined( 'ABSPATH' ) ) {
   die( '-1' );
 }
+
+
+function agoraio_admin_save_button( $channel_id ) {
+  static $button = '';
+
+  if ( ! empty( $button ) ) {
+    echo $button;
+    return;
+  }
+
+  $nonce = wp_create_nonce( 'agoraio-save-channel_' . $channel_id );
+
+  $onclick = sprintf(
+    "this.form._wpnonce.value = '%s';"
+    . " this.form.action.value = 'save';"
+    . " return true;",
+    $nonce );
+
+  $button = sprintf(
+    '<input type="submit" class="button-primary" name="agoraio-save" value="%1$s" onclick="%2$s" />',
+    esc_attr( __( 'Save', 'agoraio' ) ),
+    $onclick );
+
+  echo $button;
+}
 ?>
 
 <div class="wrap agoraio" id="agoraio-new-channel">
@@ -99,10 +124,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
       <div id="postbox-container-2" class="postbox-container">
         <?php do_action( 'agoraio_channel_form_appearance', $post ); ?>
+
+        <p class="submit"><?php agoraio_admin_save_button( $post_id ); ?></p>
       </div>
     </div>
   </div>
 
+  </form>
   <?php endif; ?>
 
 </div><!-- end wrap -->
@@ -115,7 +143,7 @@ function agora_render_setting_row($id, $title, $settings, $inputType="number") {
     <th scope="row"><label for="<?php echo $id ?>"><?php echo $title ?></label></th>
     <td>
       <input
-        <?php echo $inputType==='text' ? 'class="regular-text"' : ''; ?>
+        <?php echo $inputType!=='number' ? 'class="regular-text"' : ''; ?>
         id="<?php echo $id ?>"
         name="<?php echo $id ?>"
         type="<?php echo $inputType ?>"
@@ -134,9 +162,20 @@ function render_agoraio_channel_form_settings($channel) {
   $settings = $props['settings'];
   ?>
   <ul class="nav nav-tabs">
-    <li class="active"><a href="#tab-1"><?php _e('Settings and Permissions', 'agoraio') ?></a></li>
-    <li><a href="#tab-2"><?php _e('Push to External Networks', 'agoraio') ?></a></li>
-    <li><a href="#tab-3"><?php _e('Inject External Streams', 'agoraio') ?></a></li>
+    <li class="active">
+      <a href="#tab-1">
+        <i class="dashicons-before dashicons-admin-plugins"> </i>
+        <?php _e('Type and Permissions', 'agoraio') ?>
+      </a>
+    </li>
+    <li><a href="#tab-2">
+      <i class="dashicons-before dashicons-share"> </i>
+      <?php _e('Push to External Networks', 'agoraio') ?>
+    </a></li>
+    <li><a href="#tab-3">
+      <i class="dashicons-before dashicons-admin-settings"> </i>
+      <?php _e('Inject External Streams', 'agoraio') ?>
+    </a></li>
   </ul>
   <div class="tab-content">
     <div id="tab-1" class="tab-pane active">
@@ -222,9 +261,33 @@ function render_agoraio_channel_form_appearance($channel) {
   ?>
   <table class="form-table">
     <?php
-    agora_render_setting_row('splashImageURL', __('Splash Image URL', 'agoraio'), $appearance, 'text');
-    agora_render_setting_row('noHostImageURL', __('No-host Image URL', 'agoraio'), $appearance, 'text');
+    agora_render_setting_row('splashImageURL', __('Splash Image URL', 'agoraio'), $appearance, 'url');
+    agora_render_setting_row('noHostImageURL', __('No-host Image URL', 'agoraio'), $appearance, 'url');
     ?>
+    <tr>
+      <th scope="row"><label for="activeButtonColor"><?php _e('Active Button Color', 'agoraio') ?></label></th>
+      <td>
+        <input
+          id="activeButtonColor"
+          name="activeButtonColor"
+          type="text"
+          class="agora-color-picker"
+          value="<?php echo $appearance['activeButtonColor'] ?>"
+          data-default-color="#1E73BE">
+      </td>
+    </tr>
+    <tr>
+      <th scope="row"><label for="disabledButtonColor"><?php _e('Disabled Button Color', 'agoraio') ?></label></th>
+      <td>
+        <input
+          id="disabledButtonColor"
+          name="disabledButtonColor"
+          type="text"
+          class="agora-color-picker"
+          value="<?php echo $appearance['disabledButtonColor'] ?>"
+          data-default-color="#ffffff">
+      </td>
+    </tr>
   </table>
   <?php
 }
