@@ -86,11 +86,42 @@ function applicationSettingsForm() {
 	});
 };
 
+function activateAgoraTabs() {
+
+	// store tabs variables
+	var tabs = document.querySelectorAll("ul.nav-tabs > li");
+
+	for (i = 0; i < tabs.length; i++) {
+		tabs[i].addEventListener("click", switchTab);
+	}
+
+	function switchTab(event) {
+		event.preventDefault();
+
+		document.querySelector("ul.nav-tabs li.active").classList.remove("active");
+		document.querySelector(".tab-pane.active").classList.remove("active");
+
+		var clickedTab = event.currentTarget;
+		var anchor = event.target;
+		var activePaneID = anchor.getAttribute("href");
+
+		clickedTab.classList.add("active");
+		document.querySelector(activePaneID).classList.add("active");
+
+	}
+
+}
+
 (function( $ ) {
 	'use strict';
 
 	$( window ).load(function() {
 		$('.app-setting').each(applicationSettingsForm);
+
+		if($('#agoraio-new-channel').length>0) {
+			activateAgoraTabs();
+			$('.agora-color-picker').wpColorPicker();
+		}
 	});
 
 })( jQuery );

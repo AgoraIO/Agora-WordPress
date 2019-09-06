@@ -24,6 +24,9 @@ class WP_Agora_Admin {
 
 		add_action('admin_menu', array($this,'register_settings_page'));
 		// add_action('admin_init', array($this,'register_agora_settings'));
+		if (is_admin()) {
+			add_action( 'admin_enqueue_scripts', array($this, 'agora_enqueue_color_picker') );
+		}
 
 		// https://hugh.blog/2012/07/27/wordpress-add-plugin-settings-link-to-plugins-page/
 		$name = $plugin_name.'/wp-agora-io.php';
@@ -63,14 +66,14 @@ class WP_Agora_Admin {
 		// create new admin page here...
 		add_menu_page(
 			__('Agora Video', 'agoraio'), 
-			__('Agora Video', 'agoraio'), 
+			__('Agora Channels', 'agoraio'), 
 			'manage_options', 'agoraio',
 			array($this, 'include_agora_channels_page'), 'dashicons-admin-settings',
 			$_wp_last_object_menu );
 
 		$addnew = add_submenu_page( 'agoraio',
 			__( 'Add New Agora Channel', 'agoraio' ),
-			__( 'Add New', 'agoraio' ),
+			__( 'Add New Channel', 'agoraio' ),
 			'manage_options', 'agoraio-new-channel',
 			array($this, 'include_agora_new_channel_page') );
 
@@ -86,12 +89,64 @@ class WP_Agora_Admin {
 
 	}
 
-	public function include_agora_channels_page(){
+	public function include_agora_channels_page() {
+		if ( ! class_exists( 'Agora_Channels_List_Table' ) ) {
+		  require_once( 'class-agora-channels-list-table.php' );
+		}
+		$this->channels_obj = new Agora_Channels_List_Table();
 		include_once('views/agora-admin-channels.php');
 	} 
 
 	public function include_agora_new_channel_page() {
+		$post = WP_Agora_Channel::get_current();
+
+		if ( !$post ) {
+			$post = WP_Agora_Channel::get_template();
+		}
+ 
+    add_meta_box(
+    	'agora-form-settings',
+    	__('Channel Settings', 'agoraio'),
+    	'render_agoraio_channel_form_settings',
+    	null,
+    	'agora_channel_settings'
+    );
+    add_meta_box(
+    	'agora-form-appearance',
+    	__('Channel Appearance', 'agoraio'),
+    	'render_agoraio_channel_form_appearance',
+    	null,
+    	'agora_channel_appearance'
+    );
+
+		add_action( 'agoraio_channel_form_settings', array($this, 'handle_channel_form_metabox_settings'), 10, 1 );
+		add_action( 'agoraio_channel_form_appearance', array($this, 'handle_channel_form_metabox_appearance'), 10, 1 );
+
+		$post_id = -1;
 		include_once('views/agora-admin-new-channel.php');
+	}
+
+
+	public function agora_enqueue_color_picker() {
+		wp_enqueue_style( 'wp-color-picker' );
+		wp_enqueue_script( 'wp-color-picker' );
+		// die("<pre>".print_r('this', true)."</pre>");
+	}
+
+
+	// http://fieldmanager.org/docs/misc/adding-fields-after-the-title/
+	// https://metabox.io/how-to-create-custom-meta-boxes-custom-fields-in-wordpress/
+	public function handle_channel_form_metabox_settings($channel) {
+		global $wp_meta_boxes;
+
+		do_meta_boxes( get_current_screen(), 'agora_channel_settings', $channel );
+		unset( $wp_meta_boxes['post']['agora_channel_settings'] );
+	}
+	public function handle_channel_form_metabox_appearance($channel) {
+		global $wp_meta_boxes;
+
+		do_meta_boxes( get_current_screen(), 'agora_channel_appearance', $channel );
+		unset( $wp_meta_boxes['post']['agora_channel_appearance'] );
 	}
 
 	public function include_agora_settings_page() {

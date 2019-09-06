@@ -54,5 +54,6 @@ register_deactivation_hook( __FILE__, 'deactivate_wp_agora_io' );
  * admin-specific hooks, and public-facing site hooks.
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-wp-agora-io.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-wp-agora-io-channel.php';
 
 $wp_agora_plugin = new WP_Agora();

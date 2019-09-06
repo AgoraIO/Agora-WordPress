@@ -72,3 +72,68 @@
 .card .align-right {
   text-align: right;
 }
+
+
+/**
+ * ============================================
+ *   Internal tabs into Channel settings page
+ * ============================================
+ **/
+#agora-form-settings .inside {
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+.agoraio .nav-tabs {
+  width: 25%;
+  margin: 0;
+  list-style-type: none;
+  background-color: #efefef;
+}
+
+.agoraio .nav-tabs > li {
+  width: 100%;
+  margin-bottom: -1px;
+}
+
+.agoraio .nav-tabs > li > a {
+  line-height: 1.5;
+  padding: 12px;
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid #dedede;
+}
+
+.agoraio .nav-tabs > li > a:hover {
+  border-color: #eee #eee #ddd;
+}
+
+.agoraio .nav-tabs > li.active > a,
+.agoraio .nav-tabs > li.active > a:hover,
+.agoraio .nav-tabs > li.active > a:focus {
+  color: #555;
+  cursor: default;
+  background-color: #fff;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.agoraio .tab-content {
+  /* min-width: 70%; */
+}
+.agoraio .tab-content > .tab-pane {
+  width: 100%;
+  display: none;
+}
+
+.agoraio .tab-content > .tab-pane.active {
+  display: block;
+  padding: 20px;
+  background-color: #fff;
+  /* box-shadow: 0 5px 4px -2px rgba(0, 0, 0, 0.15); */
+}
+
+/** =========  FORMS  ========= ***/
+.agoraio .large-dropdown {
+  min-width: 180px;
+}

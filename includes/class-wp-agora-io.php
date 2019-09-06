@@ -39,7 +39,11 @@ class WP_Agora {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+
+		add_action( 'init', array('WP_Agora_Channel', 'init_agoraio'), 10, 0 );
 	}
+
+	
 
 	/**
 	 * Load common, admin and public dependencies for this plugin.
