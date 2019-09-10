@@ -17,7 +17,7 @@ function agoraio_admin_save_button( $channel_id ) {
   $nonce = wp_create_nonce( 'agoraio-save-channel_' . $channel_id );
 
   $onclick = sprintf(
-    "this.form._wpnonce.value = '%s';"
+      "this.form._wpnonce.value = '%s';"
     . " this.form.action.value = 'save';"
     . " return true;",
     $nonce );
@@ -137,13 +137,27 @@ function agoraio_admin_save_button( $channel_id ) {
 
 
 <?php
+function agora_render_setting_row_select($id, $title, $settings, $options) {
+  ?>
+  <tr>
+    <th scope="row"><label for="<?php echo $id ?>"><?php echo $title; ?></label></th>
+    <td>
+      <select id="<?php echo $id ?>" name="<?php echo $id ?>">
+        <?php foreach ($options as $key => $value) {
+          echo '<option value="'.$key.'">'.$value.'</option>';
+        } ?>
+      </select>
+    </td>
+  </tr>
+  <?php
+}
 function agora_render_setting_row($id, $title, $settings, $inputType="number") {
   ?>
   <tr>
     <th scope="row"><label for="<?php echo $id ?>"><?php echo $title ?></label></th>
     <td>
       <input
-        <?php echo $inputType!=='number' ? 'class="regular-text"' : ''; ?>
+        <?php echo $inputType!=='number' ? 'class="regular-text"' : 'min="0"'; ?>
         id="<?php echo $id ?>"
         name="<?php echo $id ?>"
         type="<?php echo $inputType ?>"
@@ -183,8 +197,8 @@ function render_agoraio_channel_form_settings($channel) {
         <tr>
           <th scope="row"><label for="type"><?php _e('Channel type', 'agoraio'); ?></label></th>
           <td>
-            <select name="type" id="type" class="large-dropdown">
-              <option><?php _e('Select Type', 'agoraio'); ?></option>
+            <select name="type" id="type" class="large-dropdown" required>
+              <option value=""><?php _e('Select Type', 'agoraio'); ?></option>
               <option value="broadcast"><?php _e('Broadcast', 'agoraio') ?></option>
               <option value="communication"><?php _e('Communication', 'agoraio') ?></option>
             </select>
@@ -220,21 +234,42 @@ function render_agoraio_channel_form_settings($channel) {
         agora_render_setting_row('videoBitrate', __('Video Bitrate', 'agoraio'), $settings);
         agora_render_setting_row('videoFramerate', __('Video Framerate', 'agoraio'), $settings);
         agora_render_setting_row('videoGop', __('Video GOP', 'agoraio'), $settings);
-        // agora_render_setting_row('lowLatency', __('Low Latency', 'agoraio'), $settings);
-        ?>
-        <tr>
-          <th scope="row"><label for="lowLatency"><?php _e('Low Latency', 'agoraio') ?></label></th>
-          <td>
-            <select id="lowLatency" name="lowLatency">
-              <option><?php _e('Select Latency', 'agoraio'); ?></option>
-            </select>
-          </td>
-        </tr>
-        <?php
-        agora_render_setting_row('audioSampleRate', __('Audio Sample Rate', 'agoraio'), $settings);
+        agora_render_setting_row_select(
+          'lowLatency',
+          __('Low Latency', 'agoraio'),
+          $settings,
+          array(
+            'false' => __('High latency with assured quality (default)', 'agoraio'),
+            'true' => __('Low latency with unassured quality', 'agoraio')
+          )
+        );
+        agora_render_setting_row_select(
+          'audioSampleRate',
+          __('Audio Sample Rate', 'agoraio'),
+          $settings,
+          array(
+            44100 => __('44.1 kHz (default)', 'agoraio'),
+            48000 => __('48 kHz', 'agoraio'),
+            32000 => __('32 kHz', 'agoraio'),
+          )
+        );
         agora_render_setting_row('audioBitrate', __('Audio Bitrate', 'agoraio'), $settings);
-        agora_render_setting_row('audioChannels', __('Audio Channels', 'agoraio'), $settings);
-        agora_render_setting_row('videoCodecProfile', __('Video Codec Profile', 'agoraio'), $settings);
+        agora_render_setting_row_select(
+          'audioChannels',
+          __('Audio Channels', 'agoraio'),
+          $settings,
+          array(1 => __('Mono (default)', 'agoraio'), 2 => __('Dual sound channels', 'agoraio'))
+        );
+        agora_render_setting_row_select(
+          'videoCodecProfile',
+          __('Video Codec Profile', 'agoraio'),
+          $settings,
+          array(
+            100 => __('High (default)', 'agoraio'),
+            77 => __('Main', 'agoraio'),
+            66 => __('Baseline', 'agoraio'),
+          )
+        );
         ?>
         <tr>
           <th scope="row"><label for="backgroundColor"><?php _e('Background Color', 'agoraio') ?></label></th>
