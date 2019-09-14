@@ -172,17 +172,24 @@ class Agora_Channels_List_Table extends WP_List_Table {
 
 
   function column_title( $item ) {
-
-    // create a nonce
-    $delete_nonce = wp_create_nonce( 'sp_delete_channel' );
-
     $title = '<strong>' . $item->title() . '</strong>';
+    return $title;
+  }
+
+  protected function handle_row_actions( $item, $column_name, $primary ) {
+    if ( $column_name !== $primary ) {
+      return '';
+    }
+
+    $edit_nonce = wp_create_nonce( 'agora_edit_channel' );
+    $delete_nonce = wp_create_nonce( 'agora_delete_channel' );
 
     $actions = [
-      'delete' => sprintf( '<a href="?page=%s&action=%s&channel=%s&_wpnonce=%s">Delete</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item->id() ), $delete_nonce )
+      'edit' => sprintf( '<a href="?page=%s&action=%s&channel=%s&_wpnonce=%s">'.__('Edit', 'agoraio').'</a>', esc_attr( $_REQUEST['page'] ), 'edit', absint( $item->id() ), $edit_nonce ),
+      'delete' => sprintf( '<a href="?page=%s&action=%s&channel=%s&_wpnonce=%s">'.__('Delete', 'agoraio').'</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item->id() ), $delete_nonce )
     ];
 
-    return $title . $this->row_actions( $actions );
+    return $this->row_actions( $actions );
   }
 
   public function column_shortcode( $item ) {
