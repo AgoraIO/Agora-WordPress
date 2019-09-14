@@ -1,17 +1,14 @@
-<div class="wrap agoraio" id="agoraio">
-  <h1>Agora Video - Channels</h1>
+<div class="wrap agoraio" id="agoraio-list-table">
+  <h1><?php _e('Agora.io - Channels', 'agoraio'); ?></h1>
 
   <div id="poststuff">
-    <div id="post-body" class="metabox-holder columns-2">
+    <div id="post-body">
       <div id="post-body-content">
-        <div class="meta-box-sortables ui-sortable">
-          <form method="post">
-            <?php
-              $this->channels_obj->prepare_items();
-              $this->channels_obj->display();
-            ?>
+          <form method="get" action="">
+            <input type="hidden" name="page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>" />
+            <?php $this->channels_obj->search_box( __( 'Search Channels', 'agoraio' ), 'agoraio-channel' ); ?>
+            <?php $this->channels_obj->display(); ?>
           </form>
-        </div>
       </div>
     </div>
   </div>

@@ -29,6 +29,38 @@ function agoraio_admin_save_button( $channel_id ) {
 
   echo $button;
 }
+
+function agora_render_setting_row_select($id, $title, $options, $settings, $prefix) { ?>
+  <tr>
+    <th scope="row"><label for="<?php echo $prefix.'-'.$id ?>"><?php echo $title; ?></label></th>
+    <td>
+      <select id="<?php echo $prefix.'-'.$id ?>" name="<?php echo $prefix.'-'.$id ?>">
+        <?php foreach ($options as $key => $value) {
+          echo '<option value="'.$key.'">'.$value.'</option>';
+        } ?>
+      </select>
+    </td>
+  </tr>
+  <?php
+}
+
+function agora_render_setting_row($id, $title, $settings, $prefix, $inputType="number") {
+  $input_id = !empty($prefix) ? $prefix.'-'.$id : $id;
+  ?>
+  <tr>
+    <th scope="row"><label for="<?php echo $input_id ?>"><?php echo $title ?></label></th>
+    <td>
+      <input
+        <?php echo $inputType!=='number' ? 'class="regular-text"' : 'min="0"'; ?>
+        id="<?php echo $input_id ?>"
+        name="<?php echo $input_id ?>"
+        type="<?php echo $inputType ?>"
+        value="<?php echo $settings[$input_id] ?>">
+    </td>
+  </tr>
+  <?php
+}
+
 ?>
 
 <div class="wrap agoraio" id="agoraio-new-channel">
@@ -82,6 +114,7 @@ function agoraio_admin_save_button( $channel_id ) {
               spellcheck="true"
               autocomplete="off"
               placeholder="<?php echo __( 'Channel name', 'agoraio' ); ?>"
+              required
               <?php echo current_user_can( 'edit_posts', $post_id ) ? '' : 'disabled="disabled"' ?>
             />
           </div><!-- #titlewrap -->
@@ -137,35 +170,6 @@ function agoraio_admin_save_button( $channel_id ) {
 
 
 <?php
-function agora_render_setting_row_select($id, $title, $settings, $options) {
-  ?>
-  <tr>
-    <th scope="row"><label for="<?php echo $id ?>"><?php echo $title; ?></label></th>
-    <td>
-      <select id="<?php echo $id ?>" name="<?php echo $id ?>">
-        <?php foreach ($options as $key => $value) {
-          echo '<option value="'.$key.'">'.$value.'</option>';
-        } ?>
-      </select>
-    </td>
-  </tr>
-  <?php
-}
-function agora_render_setting_row($id, $title, $settings, $inputType="number") {
-  ?>
-  <tr>
-    <th scope="row"><label for="<?php echo $id ?>"><?php echo $title ?></label></th>
-    <td>
-      <input
-        <?php echo $inputType!=='number' ? 'class="regular-text"' : 'min="0"'; ?>
-        id="<?php echo $id ?>"
-        name="<?php echo $id ?>"
-        type="<?php echo $inputType ?>"
-        value="<?php echo $settings[$id] ?>">
-    </td>
-  </tr>
-  <?php
-}
 
 // Render the content of the metabox with Channel Settings
 function render_agoraio_channel_form_settings($channel) {
@@ -222,70 +226,81 @@ function render_agoraio_channel_form_settings($channel) {
     </div>
 
     <div id="tab-2" class="tab-pane">
-      External URLs goes here...
+      <p class="desc"><?php _e('Small description of Second tab settings.', 'agoraio'); ?></p>
+      <hr/>
+      <?php agora_render_video_settings($settings, 'external'); ?>
     </div>
 
     <div id="tab-3" class="tab-pane">
       <?php // echo "<pre>".print_r($settings, true)."</pre>"; ?>
-      <table class="form-table">
-        <?php
-        agora_render_setting_row('width', __('Width', 'agoraio'), $settings);
-        agora_render_setting_row('height', __('Height', 'agoraio'), $settings);
-        agora_render_setting_row('videoBitrate', __('Video Bitrate', 'agoraio'), $settings);
-        agora_render_setting_row('videoFramerate', __('Video Framerate', 'agoraio'), $settings);
-        agora_render_setting_row('videoGop', __('Video GOP', 'agoraio'), $settings);
-        agora_render_setting_row_select(
-          'lowLatency',
-          __('Low Latency', 'agoraio'),
-          $settings,
-          array(
-            'false' => __('High latency with assured quality (default)', 'agoraio'),
-            'true' => __('Low latency with unassured quality', 'agoraio')
-          )
-        );
-        agora_render_setting_row_select(
-          'audioSampleRate',
-          __('Audio Sample Rate', 'agoraio'),
-          $settings,
-          array(
-            44100 => __('44.1 kHz (default)', 'agoraio'),
-            48000 => __('48 kHz', 'agoraio'),
-            32000 => __('32 kHz', 'agoraio'),
-          )
-        );
-        agora_render_setting_row('audioBitrate', __('Audio Bitrate', 'agoraio'), $settings);
-        agora_render_setting_row_select(
-          'audioChannels',
-          __('Audio Channels', 'agoraio'),
-          $settings,
-          array(1 => __('Mono (default)', 'agoraio'), 2 => __('Dual sound channels', 'agoraio'))
-        );
-        agora_render_setting_row_select(
-          'videoCodecProfile',
-          __('Video Codec Profile', 'agoraio'),
-          $settings,
-          array(
-            100 => __('High (default)', 'agoraio'),
-            77 => __('Main', 'agoraio'),
-            66 => __('Baseline', 'agoraio'),
-          )
-        );
-        ?>
-        <tr>
-          <th scope="row"><label for="backgroundColor"><?php _e('Background Color', 'agoraio') ?></label></th>
-          <td>
-            <input
-              id="backgroundColor"
-              name="backgroundColor"
-              type="text"
-              class="agora-color-picker"
-              value="<?php echo $settings['backgroundColor'] ?>"
-              data-default-color="#ffffff">
-          </td>
-        </tr>
-      </table>
+      <p class="desc"><?php _e('Small description of Third tab settings.', 'agoraio'); ?></p>
+      <hr/>
+      <?php agora_render_video_settings($settings, 'inject'); ?>
     </div>
   </div>
+  <?php
+}
+
+
+function agora_render_video_settings($settings, $prefix) {
+  ?>
+  <table class="form-table">
+    <?php
+    agora_render_setting_row('width', __('Width', 'agoraio'), $settings, $prefix);
+    agora_render_setting_row('height', __('Height', 'agoraio'), $settings, $prefix);
+    agora_render_setting_row('videoBitrate', __('Video Bitrate', 'agoraio'), $settings, $prefix);
+    agora_render_setting_row('videoFramerate', __('Video Framerate', 'agoraio'), $settings, $prefix);
+    agora_render_setting_row('videoGop', __('Video GOP', 'agoraio'), $settings, $prefix);
+    agora_render_setting_row_select(
+      'lowLatency',
+      __('Low Latency', 'agoraio'),
+      array(
+        'false' => __('High latency with assured quality (default)', 'agoraio'),
+        'true' => __('Low latency with unassured quality', 'agoraio')
+      ),
+      $settings, $prefix
+    );
+    agora_render_setting_row_select(
+      'audioSampleRate',
+      __('Audio Sample Rate', 'agoraio'),
+      array(
+        44100 => __('44.1 kHz (default)', 'agoraio'),
+        48000 => __('48 kHz', 'agoraio'),
+        32000 => __('32 kHz', 'agoraio'),
+      ),
+      $settings, $prefix
+    );
+    agora_render_setting_row('audioBitrate', __('Audio Bitrate', 'agoraio'), $settings, $prefix);
+    agora_render_setting_row_select(
+      'audioChannels',
+      __('Audio Channels', 'agoraio'),
+      array(1 => __('Mono (default)', 'agoraio'), 2 => __('Dual sound channels', 'agoraio')),
+      $settings, $prefix
+    );
+    agora_render_setting_row_select(
+      'videoCodecProfile',
+      __('Video Codec Profile', 'agoraio'),
+      array(
+        100 => __('High (default)', 'agoraio'),
+        77 => __('Main', 'agoraio'),
+        66 => __('Baseline', 'agoraio'),
+      ),
+      $settings, $prefix
+    );
+    ?>
+    <tr>
+      <th scope="row"><label for="backgroundColor"><?php _e('Background Color', 'agoraio') ?></label></th>
+      <td>
+        <input
+          id="<?php echo $prefix.'-'; ?>backgroundColor"
+          name="<?php echo $prefix.'-'; ?>backgroundColor"
+          type="text"
+          class="agora-color-picker"
+          value="<?php echo $settings[$prefix.'-backgroundColor'] ?>"
+          data-default-color="#ffffff">
+      </td>
+    </tr>
+  </table>
   <?php
 }
 
@@ -296,8 +311,8 @@ function render_agoraio_channel_form_appearance($channel) {
   ?>
   <table class="form-table">
     <?php
-    agora_render_setting_row('splashImageURL', __('Splash Image URL', 'agoraio'), $appearance, 'url');
-    agora_render_setting_row('noHostImageURL', __('No-host Image URL', 'agoraio'), $appearance, 'url');
+    agora_render_setting_row('splashImageURL', __('Splash Image URL', 'agoraio'), $appearance, '', 'url');
+    agora_render_setting_row('noHostImageURL', __('No-host Image URL', 'agoraio'), $appearance, '', 'url');
     ?>
     <tr>
       <th scope="row"><label for="activeButtonColor"><?php _e('Active Button Color', 'agoraio') ?></label></th>

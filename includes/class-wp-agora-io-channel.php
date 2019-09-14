@@ -6,6 +6,36 @@ class WP_Agora_Channel {
 
   private static $found_items = 0;
   private static $current = null;
+  private static $defaultVideoSettings = array(
+    'external-width' => 640,
+    'external-height' => 360,
+    'external-videoBitrate' => 400,
+    'external-videoFramerate' => 15,
+    'external-lowLatency' => false,
+    'external-audioSampleRate' => 48000,
+    'external-audioBitrate' => 48,
+    'external-audioChannels' => 1,
+    'external-videoGop' => 30,
+    'external-videoCodecProfile' => 100,
+    'external-backgroundColor' => '#efefef',
+    'inject-width' => 640,
+    'inject-height' => 360,
+    'inject-videoBitrate' => 400,
+    'inject-videoFramerate' => 15,
+    'inject-lowLatency' => false,
+    'inject-audioSampleRate' => 48000,
+    'inject-audioBitrate' => 48,
+    'inject-audioChannels' => 1,
+    'inject-videoGop' => 30,
+    'inject-videoCodecProfile' => 100,
+    'inject-backgroundColor' => '#efefef',
+  );
+  private static $defaultAppearanceSettings = array(
+    'splashImageURL' => '',
+    'noHostImageURL' => '',
+    'activeButtonColor' => '#dc3545',
+    'disabledButtonColor' => '#343a40',
+  );
 
   // private channel attrs
   private $id;
@@ -13,7 +43,8 @@ class WP_Agora_Channel {
   private $title;
   private $locale;
   private $properties = array();
-
+  // private $videoSettings = array();
+  // private $appearanceSettings = array();
 
   public static function init_agoraio() {
     register_post_type( self::post_type, array(
@@ -85,13 +116,13 @@ class WP_Agora_Channel {
     $channel->title = ( $title ? $title : __( 'Untitled', 'agoraio' ) );
     $channel->locale = ( $locale ? $locale : get_user_locale() );
 
-    $properties = $channel->get_properties();
+    // $properties = $channel->get_properties();
 
-    foreach ( $properties as $key => $value ) {
+    // foreach ( $properties as $key => $value ) {
       // $properties[$key] = WPCF7_ContactFormTemplate::get_default( $key );
-    }
+    // }
 
-    $channel->properties = $properties;
+    // $channel->properties = $properties;
 
     $channel = apply_filters( 'agoraio_default_pack', $channel, $args );
 
@@ -121,17 +152,19 @@ class WP_Agora_Channel {
       $this->title = $post->post_title;
       $this->locale = get_post_meta( $post->ID, '_locale', true );
 
-      $properties = $this->get_properties();
+      // $properties = $this->get_properties();
+      $videoSettings = get_post_meta( $this->id, 'channel_video_settings', true );
+      $appearanceSettings = get_post_meta( $this->id, 'channel_appearance_settings', true );
+      $channelType = get_post_meta( $this->id, 'channel_type', true );
+      $channelUserHost = get_post_meta( $this->id, 'channel_user_host', true );
 
-      foreach ( $properties as $key => $value ) {
-        if ( metadata_exists( 'post', $post->ID, '_' . $key ) ) {
-          $properties[$key] = get_post_meta( $post->ID, '_' . $key, true );
-        } elseif ( metadata_exists( 'post', $post->ID, $key ) ) {
-          $properties[$key] = get_post_meta( $post->ID, $key, true );
-        }
-      }
-
-      $this->properties = $properties;
+      $this->properties = array(
+        'type' => $channelType,
+        'host' => $channelUserHost,
+        'settings' => $videoSettings,
+        'appearance' => $appearanceSettings
+      );
+      
       // $this->upgrade();
     }
 
@@ -140,52 +173,79 @@ class WP_Agora_Channel {
 
   public function get_properties() {
     $properties = (array) $this->properties;
-
     $properties = wp_parse_args( $properties, array(
       'type' => '',
       'host' => array(),
-      'settings' => array(
-        'width' => 640,
-        'height' => 360,
-        'videoBitrate' => 400,
-        'videoFramerate' => 15,
-        'lowLatency' => false,
-        'audioSampleRate' => 48000,
-        'audioBitrate' => 48,
-        'audioChannels' => 1,
-        'videoGop' => 30,
-        'videoCodecProfile' => 100,
-        'backgroundColor' => '#efefef',
-      ),
-      'appearance' => array(
-        'splashImageURL' => '',
-        'noHostImageURL' => '',
-        'activeButtonColor' => '',
-        'disabledButtonColor' => '',
-      ),
+      'settings' => array_merge(self::$defaultVideoSettings),
+      'appearance' => array_merge(self::$defaultAppearanceSettings)
     ) );
-
-    $properties = (array) apply_filters( 'agoraio_channel_properties',
-      $properties, $this );
-
+    $properties = (array) apply_filters( 'agoraio_channel_properties', $properties, $this );
     return $properties;
   }
 
-  public function set_properties( $properties ) {
-    $defaults = $this->get_properties();
+  public function save( $args ) {
+    if ( $args['post_ID']==='-1' ) {
+      echo "<pre>".print_r('insert_post', true)."</pre>";
+      $post_id = wp_insert_post( array(
+        'post_type' => self::post_type,
+        'post_status' => 'publish',
+        'post_title' => $args['post_title'],
+      ) );
+    } else {
+      $post_id = wp_update_post( array(
+        'ID' => (int) $args['post_ID'],
+        'post_status' => 'publish',
+        'post_title' => $args['post_title'],
+      ) );
+    }
 
-    $properties = wp_parse_args( $properties, $defaults );
-    $properties = array_intersect_key( $properties, $defaults );
+    $videoSettings = array();
+    array_map(function($key) use ($args, &$videoSettings) {
+      $videoSettings[$key] = $args[$key];
+      return $args[$key];
+    }, array_keys(self::$defaultVideoSettings));
 
-    $this->properties = $properties;
+    $appearanceSettings = array();
+    array_map(function($key) use ($args, &$appearanceSettings) {
+      $appearanceSettings[$key] = $args[$key];
+      return $args[$key];
+    }, array_keys(self::$defaultAppearanceSettings));
+
+    update_post_meta($post_id, 'channel_video_settings', $videoSettings);
+    update_post_meta($post_id, 'channel_appearance_settings', $appearanceSettings);
+    update_post_meta($post_id, 'channel_type', $args['type']);
+    update_post_meta($post_id, 'channel_user_host', $args['host']);
+
+    unset($args['_wp_http_referer']);
+    unset($args['agoraio-locale']);
+    unset($args['agoraio-save']);
+    unset($args['active-tab']);
+    unset($args['_wpnonce']);
+    unset($args['action']);
+    unset($args['post']);
+    unset($args['page']);
+
+    $args['id'] = $post_id;
+
+    do_action( 'agoraio_after_save', $args );
+
+    return $args;
   }
 
   public function initial() {
     return empty( $this->id );
   }
 
+  public function id() {
+    return $this->id;
+  }
+
   public function title() {
     return $this->title;
+  }
+
+  public function type() {
+    return ucfirst( $this->properties['type'] );
   }
 
   public function set_title( $title ) {
@@ -214,6 +274,15 @@ class WP_Agora_Channel {
       $this->locale = $locale;
     } else {
       $this->locale = 'en_US';
+    }
+  }
+
+  public function shortcode() {
+    $type = $this->properties['type'];
+    if($type==='broadcast') {
+      return '[agora-broadcast channel_id="'.$this->id.'"]';
+    } else if($type==='communication') {
+      return '[agora-commnication channel_id="'.$this->id.'"]';
     }
   }
 

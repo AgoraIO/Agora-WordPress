@@ -15,6 +15,18 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  */
 class Agora_Channels_List_Table extends WP_List_Table {
 
+  public static function define_columns() {
+    $columns = array(
+      'cb' => '<input type="checkbox" />',
+      'title' => __( 'Title', 'agoraio' ),
+      'type' => __( 'Type', 'agoraio' ),
+      'shortcode' => __( 'Shortcode', 'agoraio' ),
+      'date' => __( 'Date', 'agoraio' ),
+    );
+
+    return $columns;
+  }
+
   public function __construct() {
     parent::__construct( array(
       'singular' => 'channel',
@@ -23,35 +35,78 @@ class Agora_Channels_List_Table extends WP_List_Table {
     ) );
   }
 
-  function get_columns() {
-    // return get_column_headers( get_current_screen() );
-    $columns = [
-      'cb'      => '<input type="checkbox" />',
-      'name'    => __( 'Channel Name', 'agoraio' ),
-      'type' => __( 'Channel type', 'agoraio' ),
-      'Shortcode'    => __( 'Shortcode', 'agoraio' )
-    ];
+  public function get_columns() {
+    $cols = get_column_headers( get_current_screen() );
+    // die("<pre>".print_r($cols, true)."</pre>");
+    return $cols;
+  }
+
+  protected function get_sortable_columns() {
+    $columns = array(
+      'title' => array( 'title', true ),
+      'date' => array( 'date', false ),
+    );
 
     return $columns;
   }
+
+  public function column_cb( $item ) {
+    return sprintf(
+      '<input type="checkbox" name="%1$s[]" value="%2$s" />',
+      $this->_args['singular'],
+      $item->id()
+    );
+  }
   
   public function prepare_items() {
-    $this->_column_headers = $this->get_column_info();
+    $current_screen = get_current_screen();
+    $per_page = $this->get_items_per_page( 'agoraio_per_page' );
+    
+    // $this->_column_headers = $this->get_column_info();
 
     /** Process bulk action */
-    $this->process_bulk_action();
+    // $this->process_bulk_action();
 
-    $per_page     = $this->get_items_per_page( 'agoraio_channels_per_page', 5 );
-    $current_page = $this->get_pagenum();
-    $total_items  = self::record_count();
+    $args = array(
+      'posts_per_page' => $per_page,
+      'orderby' => 'title',
+      'order' => 'ASC',
+      'offset' => ( $this->get_pagenum() - 1 ) * $per_page,
+    );
 
-    $this->set_pagination_args( [
-      'total_items' => $total_items, //WE have to calculate the total number of items
-      'per_page'    => $per_page //WE have to determine how many items to show on a page
-    ] );
+    if ( ! empty( $_REQUEST['s'] ) ) {
+      $args['s'] = $_REQUEST['s'];
+    }
+
+    if ( ! empty( $_REQUEST['orderby'] ) ) {
+      if ( 'title' == $_REQUEST['orderby'] ) {
+        $args['orderby'] = 'title';
+      } elseif ( 'date' == $_REQUEST['orderby'] ) {
+        $args['orderby'] = 'date';
+      }
+    }
+
+    if ( ! empty( $_REQUEST['order'] ) ) {
+      if ( 'asc' == strtolower( $_REQUEST['order'] ) ) {
+        $args['order'] = 'ASC';
+      } elseif ( 'desc' == strtolower( $_REQUEST['order'] ) ) {
+        $args['order'] = 'DESC';
+      }
+    }
+
+    $this->items = WP_Agora_Channel::find( $args );
+
+    $total_items = WP_Agora_Channel::count();
+    $total_pages = ceil( $total_items / $per_page );
+
+    $this->set_pagination_args( array(
+      'total_items' => $total_items,
+      'total_pages' => $total_pages,
+      'per_page' => $per_page,
+    ) );
 
 
-    $this->items = self::get_channels( $per_page, $current_page );
+    // $this->items = self::get_channels( $per_page, $current_page );
   }
 
   public function process_bulk_action() {
@@ -116,18 +171,69 @@ class Agora_Channels_List_Table extends WP_List_Table {
   }
 
 
-  function column_name( $item ) {
+  function column_title( $item ) {
 
     // create a nonce
     $delete_nonce = wp_create_nonce( 'sp_delete_channel' );
 
-    $title = '<strong>' . $item['name'] . '</strong>';
+    $title = '<strong>' . $item->title() . '</strong>';
 
     $actions = [
-      'delete' => sprintf( '<a href="?page=%s&action=%s&channel=%s&_wpnonce=%s">Delete</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item['ID'] ), $delete_nonce )
+      'delete' => sprintf( '<a href="?page=%s&action=%s&channel=%s&_wpnonce=%s">Delete</a>', esc_attr( $_REQUEST['page'] ), 'delete', absint( $item->id() ), $delete_nonce )
     ];
 
     return $title . $this->row_actions( $actions );
+  }
+
+  public function column_shortcode( $item ) {
+    $shortcodes = array( $item->shortcode() );
+
+    $output = '';
+
+    foreach ( $shortcodes as $shortcode ) {
+      $output .= "\n" . '<span class="shortcode"><input type="text"'
+        . ' onfocus="this.select();" readonly="readonly"'
+        . ' value="' . esc_attr( $shortcode ) . '"'
+        . ' class="large-text code" /></span>';
+    }
+
+    return trim( $output );
+  }
+
+  public function column_date( $item ) {
+    $post = get_post( $item->id() );
+
+    if ( ! $post ) {
+      return;
+    }
+
+    $t_time = mysql2date( __( 'Y/m/d g:i:s A', 'agoraio' ),
+      $post->post_date, true );
+    $m_time = $post->post_date;
+    $time = mysql2date( 'G', $post->post_date )
+      - get_option( 'gmt_offset' ) * 3600;
+
+    $time_diff = time() - $time;
+
+    if ( $time_diff > 0 and $time_diff < 24*60*60 ) {
+      $h_time = sprintf(
+        /* translators: %s: time since the creation of the contact form */
+        __( '%s ago', 'agoraio' ),
+        human_time_diff( $time )
+      );
+    } else {
+      $h_time = mysql2date( __( 'Y/m/d', 'agoraio' ), $m_time );
+    }
+
+    return sprintf( '<abbr title="%2$s">%1$s</abbr>',
+      esc_html( $h_time ),
+      esc_attr( $t_time )
+    );
+  }
+
+
+  public function column_type( $item ) {
+    return $item->type();
   }
 
   /**
@@ -139,12 +245,7 @@ class Agora_Channels_List_Table extends WP_List_Table {
    * @return mixed
    */
   public function column_default( $item, $column_name ) {
-    switch ( $column_name ) {
-      case 'address':
-      case 'city':
-        return $item[ $column_name ];
-      default:
-        return print_r( $item, true ); //Show the whole array for troubleshooting purposes
-    }
+    // return $column_name;
+    return print_r($item, true);
   }
 }
