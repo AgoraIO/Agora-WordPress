@@ -232,6 +232,19 @@ class WP_Agora_Channel {
     return $args;
   }
 
+  public function delete() {
+    if ( $this->initial() ) {
+      resturn;
+    }
+
+    if ( wp_delete_post( $this->id, true ) ) {
+      $this->id = 0;
+      return true;
+    }
+
+    return false;
+  }
+
   public function initial() {
     return empty( $this->id );
   }

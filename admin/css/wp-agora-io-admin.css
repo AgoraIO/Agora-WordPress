@@ -146,3 +146,9 @@
 .agoraio .large-dropdown {
   min-width: 180px;
 }
+
+
+/** ========= Admin Table ========== **/
+#agoraio-list-table .column-shortcode {
+  width: 400px;
+}

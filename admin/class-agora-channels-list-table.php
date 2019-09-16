@@ -181,8 +181,8 @@ class Agora_Channels_List_Table extends WP_List_Table {
       return '';
     }
 
-    $edit_nonce = wp_create_nonce( 'agora_edit_channel' );
-    $delete_nonce = wp_create_nonce( 'agora_delete_channel' );
+    $edit_nonce = wp_create_nonce( 'agora_edit_channel_' . $item->id() );
+    $delete_nonce = wp_create_nonce( 'agora_delete_channel_' . $item->id() );
 
     $actions = [
       'edit' => sprintf( '<a href="?page=%s&action=%s&channel=%s&_wpnonce=%s">'.__('Edit', 'agoraio').'</a>', esc_attr( $_REQUEST['page'] ), 'edit', absint( $item->id() ), $edit_nonce ),

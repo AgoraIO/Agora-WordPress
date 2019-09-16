@@ -72,7 +72,7 @@ class WP_Agora_Admin {
 			$_wp_last_object_menu );
 
 		$list = add_submenu_page( 'agoraio',
-			__( 'List Agora Channels', 'agoraio' ),
+			__( 'Agora Channels', 'agoraio' ),
 			__( 'Agora Channels', 'agoraio' ),
 			'manage_options', 'agoraio',
 			array($this, 'include_agora_channels_page') );
@@ -176,7 +176,10 @@ class WP_Agora_Admin {
 			$action
 		);
 
-		$id = null;
+		$channel = null;
+		if ( ! empty( $_GET['channel'] ) ) {
+			$channel = WP_Agora_Channel::get_instance( $_GET['channel'] );
+		}
 
 		if ( 'save' === $action ) {
 			$id = isset( $_POST['post_ID'] ) ? $_POST['post_ID'] : '-1';
@@ -202,6 +205,50 @@ class WP_Agora_Admin {
 			exit();
 		}
 
+		if ( 'delete' == $action ) {
+			if ( ! empty( $_POST['post_ID'] ) ) {
+				check_admin_referer( 'agora_delete_channel_' . $_POST['post_ID'] );
+			} elseif ( ! is_array( $_REQUEST['channel'] ) ) {
+				check_admin_referer( 'agora_delete_channel_' . $_REQUEST['channel'] );
+			} else {
+				check_admin_referer( 'bulk-posts' );
+			}
+
+			$posts = empty( $_POST['post_ID'] )
+				? (array) $_REQUEST['channel']
+				: (array) $_POST['post_ID'];
+
+			$deleted = 0;
+
+			foreach ( $posts as $post ) {
+				$post = WP_Agora_Channel::get_instance( $post );
+				
+				if ( empty( $post ) ) {
+					continue;
+				}
+
+				if ( ! current_user_can( 'edit_posts', $post->id() ) ) {
+					wp_die( __( 'You are not allowed to delete this item.', 'agoraio' ) );
+				}
+
+				if ( ! $post->delete() ) {
+					wp_die( __( 'Error in deleting.', 'agoraio' ) );
+				}
+
+				$deleted += 1;
+			}
+
+			$query = array();
+
+			if ( ! empty( $deleted ) ) {
+				$query['message'] = 'deleted';
+			}
+
+			$redirect_to = add_query_arg( $query, menu_page_url( 'agoraio', false ) );
+
+			wp_safe_redirect( $redirect_to );
+			exit();
+		}
 
 		if ( ! class_exists( 'Agora_Channels_List_Table' ) ) {
 		  require_once( 'class-agora-channels-list-table.php' );
