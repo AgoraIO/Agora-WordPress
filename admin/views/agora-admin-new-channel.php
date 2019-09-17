@@ -305,6 +305,14 @@ function render_agoraio_channel_form_appearance($channel) {
     <?php
     agora_render_setting_row('splashImageURL', __('Splash Image URL', 'agoraio'), $appearance, '', 'url');
     agora_render_setting_row('noHostImageURL', __('No-host Image URL', 'agoraio'), $appearance, '', 'url');
+    agora_render_setting_row('watchButtonText', __('Watch Stream Button Text', 'agoraio'), $appearance, '', 'text');
+    agora_render_setting_row_select(
+      'watchButtonIcon',
+      __('Watch Stream icon', 'agoraio'),
+      array(
+        'true' => __('Show icon', 'agoraio'),
+        'false' => __('Hide icon', 'agoraio')
+      ), $appearance, '')
     ?>
     <tr>
       <th scope="row"><label for="activeButtonColor"><?php _e('Active Button Color', 'agoraio') ?></label></th>

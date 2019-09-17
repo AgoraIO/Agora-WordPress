@@ -33,6 +33,8 @@ class WP_Agora_Channel {
   private static $defaultAppearanceSettings = array(
     'splashImageURL' => '',
     'noHostImageURL' => '',
+    'watchButtonText' => 'Watch the Live Stream',
+    'watchButtonIcon' => true,
     'activeButtonColor' => '#dc3545',
     'disabledButtonColor' => '#343a40',
   );
