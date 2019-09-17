@@ -57,6 +57,14 @@ class Agora_Channels_List_Table extends WP_List_Table {
       $item->id()
     );
   }
+
+  protected function get_bulk_actions() {
+    $actions = array(
+      'delete' => __( 'Delete', 'agoraio' ),
+    );
+
+    return $actions;
+  }
   
   public function prepare_items() {
     $current_screen = get_current_screen();
