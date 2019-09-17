@@ -14,6 +14,8 @@ class WP_Agora_Public {
 	private $plugin_name;
 	private $version;
 
+	private static $shortcodeRendered = array();
+
 	/**
 	 * Initialize the class and set its properties.
 	 */
@@ -21,12 +23,18 @@ class WP_Agora_Public {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->settings = null;
 
 		// Declaration of shortcodes and widgets
 		add_shortcode( 'agora-communication', array($this, 'agoraCommunicationShortcode') );
 		add_shortcode( 'agora-broadcast', array($this, 'agoraBroadcastShortcode') );
 
 		add_action( 'widgets_init', array($this, 'initAgoraWidgets'));
+
+		$this->settings = get_option($this->plugin_name);
+		if (!$this->settings) {
+			$this->settings = array();
+		}
 
 		// Use this in case of you need custom pages or templates...
 		// add_filter( 'template_include', array($this, 'agora_pages'), 99 );
@@ -60,18 +68,18 @@ class WP_Agora_Public {
 		// TODO: Auto detect bootstrap or use a custom one version of bootstrap for CSS Styles
 		$use_bootstrap = false;
 		if($use_bootstrap==='true') {
-			$bootstrap_css = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css';
+			$bootstrap_css = 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css';
 			wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
 		}
 	}
 
 	public function enqueue_scripts() {
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-agora-io-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/ui.js', array( 'jquery' ), $this->version, false );
 
 		// isset($this->api_data['agora_bootstrap']) ? $this->api_data['agora_bootstrap'] : '';
 		$use_bootstrap = false;
 		if($use_bootstrap==='true') {
-			$bootstrap_js = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js';
+			$bootstrap_js = 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js';
 			wp_enqueue_script( 'bootstrap', $bootstrap_js, array( 'jquery' ), null, true );
 		}
 
@@ -89,5 +97,13 @@ class WP_Agora_Public {
 		// return $vars;
 		echo '<script>'.$vars.'</script>';
 	}
+
+	public static function isShortcodeRendered($shortcode) {
+    return isset(self::$shortcodeRendered[$shortcode]);
+  }
+
+  public static function addShortcodeRendered($shortcode) {
+    self::$shortcodeRendered[$shortcode] = true;
+  }
 
 }
