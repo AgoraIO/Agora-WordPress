@@ -187,7 +187,7 @@ class WP_Agora_Channel {
 
   public function save( $args ) {
     if ( $args['post_ID']==='-1' ) {
-      echo "<pre>".print_r('insert_post', true)."</pre>";
+      // echo "<pre>".print_r('insert_post', true)."</pre>";
       $post_id = wp_insert_post( array(
         'post_type' => self::post_type,
         'post_status' => 'publish',
