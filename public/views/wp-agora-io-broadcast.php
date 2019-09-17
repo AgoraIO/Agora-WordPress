@@ -2,33 +2,33 @@
 <div class="agora agora-broadcast">
   <div id="main-container">
     <div id="screen-share-btn-container" class="col-2 float-right text-right mt-2">
-      <button id="screen-share-btn"  type="button" class="btn btn-lg">
+      <button id="screen-share-btn"  type="button" class="btn btn-md">
         <i id="screen-share-icon" class="fab fa-slideshare"></i>
       </button>
     </div>
     <div id="buttons-container" class="row justify-content-center mt-3">
       <div id="audio-controls" class="col-md-2 text-center btn-group">
-        <button id="mic-btn" type="button" class="btn btn-block btn-dark btn-lg">
+        <button id="mic-btn" type="button" class="btn btn-block btn-dark btn-md">
           <i id="mic-icon" class="fas fa-microphone"></i>
         </button>
-        <button id="mic-dropdown" type="button" class="btn btn-lg btn-dark dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="sr-only">Toggle Dropdown</span>
+        <button id="mic-dropdown" type="button" class="btn btn-md btn-dark dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="sr-only"><?php _e('Toggle Dropdown', 'agoraio'); ?></span>
           </button>
           <div id="mic-list" class="dropdown-menu dropdown-menu-right">
           </div>
       </div>
       <div id="video-controls" class="col-md-2 text-center btn-group">
-        <button id="video-btn"  type="button" class="btn btn-block btn-dark btn-lg">
+        <button id="video-btn"  type="button" class="btn btn-block btn-dark btn-md">
           <i id="video-icon" class="fas fa-video"></i>
         </button>
-        <button id="cam-dropdown" type="button" class="btn btn-lg btn-dark dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="sr-only">Toggle Dropdown</span>
+        <button id="cam-dropdown" type="button" class="btn btn-md btn-dark dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="sr-only"><?php _e('Toggle Dropdown', 'agoraio'); ?></span>
         </button>
         <div id="camera-list" class="dropdown-menu dropdown-menu-right">
         </div>
       </div>
       <div class="col-md-2 text-center">
-        <button id="exit-btn"  type="button" class="btn btn-block btn-danger btn-lg">
+        <button id="exit-btn"  type="button" class="btn btn-block btn-danger btn-md">
           <i id="exit-icon" class="fas fa-phone-slash"></i>
         </button>
       </div>
@@ -36,10 +36,10 @@
     <div id="full-screen-video"></div>
     <div id="lower-ui-bar" class="row fixed-bottom mb-1">
       <div id="rtmp-btn-container" class="col ml-3 mb-2">
-        <button id="rtmp-config-btn"  type="button" class="btn btn-primary btn-lg row rtmp-btn" data-toggle="modal" data-target="#addRtmpConfigModal">
+        <button id="rtmp-config-btn"  type="button" class="btn btn-primary btn-md row rtmp-btn" data-toggle="modal" data-target="#addRtmpConfigModal">
           <i id="rtmp-config-icon" class="fas fa-rotate-270 fa-sign-out-alt"></i>
         </button>
-        <button id="add-rtmp-btn"  type="button" class="btn btn-secondary btn-lg row rtmp-btn" data-toggle="modal" data-target="#add-external-source-modal">
+        <button id="add-rtmp-btn"  type="button" class="btn btn-secondary btn-md row rtmp-btn" data-toggle="modal" data-target="#add-external-source-modal">
           <i id="add-rtmp-icon" class="fas fa-plug"></i>
         </button>
       </div>
