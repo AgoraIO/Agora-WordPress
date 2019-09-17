@@ -30,13 +30,16 @@ function agoraio_admin_save_button( $channel_id ) {
   echo $button;
 }
 
-function agora_render_setting_row_select($id, $title, $options, $settings, $prefix) { ?>
+function agora_render_setting_row_select($id, $title, $options, $settings, $prefix=null) {
+  $input_id = !empty($prefix) ? $prefix.'-'.$id : $id;
+  ?>
   <tr>
-    <th scope="row"><label for="<?php echo $prefix.'-'.$id ?>"><?php echo $title; ?></label></th>
+    <th scope="row"><label for="<?php echo $input_id ?>"><?php echo $title; ?></label></th>
     <td>
-      <select id="<?php echo $prefix.'-'.$id ?>" name="<?php echo $prefix.'-'.$id ?>">
+      <select id="<?php echo $input_id ?>" name="<?php echo $input_id ?>">
         <?php foreach ($options as $key => $value) {
-          echo '<option value="'.$key.'">'.$value.'</option>';
+          $selected = ($settings[$input_id]===$key) ? 'selected="selected"' : '';
+          echo '<option value="'.$key.'" '.$selected.'>'.$value.'</option>';
         } ?>
       </select>
     </td>
@@ -130,21 +133,6 @@ function agora_render_setting_row($id, $title, $settings, $prefix, $inputType="n
                 value="<?php echo esc_attr( $post->shortcode() ); ?>" />
             </span>
             </p>
-            <?php if ( $old_shortcode = $post->shortcode( array( 'use_old_format' => true ) ) ) { ?>
-              <p class="description">
-              <label for="agora-shortcode-old">
-                <?php echo esc_html( __( "You can also use this old-style shortcode:", 'agoraio' ) ); ?>
-              </label>
-              <span class="shortcode old">
-                <input type="text" id="agora-shortcode-old"
-                  onfocus="this.select();"
-                  readonly="readonly"
-                  class="large-text code"
-                  value="<?php echo esc_attr( $old_shortcode ); ?>"
-                />
-              </span>
-              </p>
-            <?php } ?>
           <?php } ?>
           </div>
         </div><!-- #titlediv -->
@@ -198,17 +186,18 @@ function render_agoraio_channel_form_settings($channel) {
   <div class="tab-content">
     <div id="tab-1" class="tab-pane active">
       <table class="form-table">
-        <tr>
-          <th scope="row"><label for="type"><?php _e('Channel type', 'agoraio'); ?></label></th>
-          <td>
-            <select name="type" id="type" class="large-dropdown" required>
-              <option value=""><?php _e('Select Type', 'agoraio'); ?></option>
-              <option value="broadcast"><?php _e('Broadcast', 'agoraio') ?></option>
-              <option value="communication"><?php _e('Communication', 'agoraio') ?></option>
-            </select>
-          </td>
-        </tr>
-
+        <?php
+        $typeOptions = array(
+          '' => __('Select Type', 'agoraio'),
+          'broadcast' => __('Broadcast', 'agoraio'),
+          'communication' => __('Communication', 'agoraio'),
+        );
+        agora_render_setting_row_select(
+          'type',
+          __('Channel type', 'agoraio'),
+          $typeOptions,
+          $props
+        ) ?>
         <tr>
           <th scope="row"><label for="host"><?php _e('Broadcaster User', 'agoraio'); ?></label></th>
           <td>
@@ -218,6 +207,9 @@ function render_agoraio_channel_form_settings($channel) {
               "name" => "host",
               "class" => "large-dropdown",
             );
+            if (!empty($userHost)) {
+              $dropdownParams['selected'] = $userHost;
+            }
             wp_dropdown_users($dropdownParams);
             ?>
           </td>

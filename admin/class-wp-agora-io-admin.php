@@ -98,22 +98,23 @@ class WP_Agora_Admin {
 	}
 
 	public function include_agora_channels_page() {
+		if ( $post = WP_Agora_Channel::get_current() ) {
+			$this->create_agora_metaboxes_form();
+			$post_id = $post->initial() ? -1 : $post->id();
+			include_once('views/agora-admin-new-channel.php');
+			return;
+		}
+
 		if ( ! class_exists( 'Agora_Channels_List_Table' ) ) {
 		  require_once( 'class-agora-channels-list-table.php' );
 		}
 		$this->channels_obj = new Agora_Channels_List_Table();
 		$this->channels_obj->prepare_items();
 		include_once('views/agora-admin-channels.php');
-	} 
+	}
 
-	public function include_agora_new_channel_page() {
-		$post = WP_Agora_Channel::get_current();
-
-		if ( !$post ) {
-			$post = WP_Agora_Channel::get_template();
-		}
- 
-    add_meta_box(
+	private function create_agora_metaboxes_form() {
+		add_meta_box(
     	'agora-form-settings',
     	__('Channel Settings', 'agoraio'),
     	'render_agoraio_channel_form_settings',
@@ -130,8 +131,19 @@ class WP_Agora_Admin {
 
 		add_action( 'agoraio_channel_form_settings', array($this, 'handle_channel_form_metabox_settings'), 10, 1 );
 		add_action( 'agoraio_channel_form_appearance', array($this, 'handle_channel_form_metabox_appearance'), 10, 1 );
+	}
 
-		$post_id = -1;
+	public function include_agora_new_channel_page() {
+		$post = WP_Agora_Channel::get_current();
+
+		if ( !$post ) {
+			$post = WP_Agora_Channel::get_template();
+		}
+		// die("<pre>P:".print_r($post, true)."</pre>");
+ 
+    $this->create_agora_metaboxes_form();
+
+		$post_id = $post->initial() ? -1 : $post->id();
 		include_once('views/agora-admin-new-channel.php');
 	}
 
@@ -176,15 +188,10 @@ class WP_Agora_Admin {
 			$action
 		);
 
-		$channel = null;
-		if ( ! empty( $_GET['channel'] ) ) {
-			$channel = WP_Agora_Channel::get_instance( $_GET['channel'] );
-		}
-
 		if ( 'save' === $action ) {
 			$id = isset( $_POST['post_ID'] ) ? $_POST['post_ID'] : '-1';
 			check_admin_referer( 'agoraio-save-channel_' . $id );
-			
+
 			// save form data
 			$agoraio_channel = $this->save_channel( $_POST );
 
@@ -250,17 +257,34 @@ class WP_Agora_Admin {
 			exit();
 		}
 
-		if ( ! class_exists( 'Agora_Channels_List_Table' ) ) {
-		  require_once( 'class-agora-channels-list-table.php' );
+		$channel = null;
+		if ( 'agoraio-new-channel' == $plugin_page ) {
+			/* $channel = WP_Agora_Channel::get_template( array(
+				'locale' => isset( $_GET['locale'] ) ? $_GET['locale'] : null,
+			) ); */
+		} else if ( ! empty( $_GET['channel'] ) ) {
+			$channel = WP_Agora_Channel::get_instance( $_GET['channel'] );
+			// die("<pre>EDIT: ".print_r($channel, true)."</pre>");
 		}
 
-		add_filter( 'manage_' . $current_screen->id . '_columns',
-			array( 'Agora_Channels_List_Table', 'define_columns' ), 10, 0 );
+		if ( $channel && current_user_can('edit_posts', $channel->id()) ) {
+			// die("EDIT: <pre>".print_r($channel, true)."</pre>");
+			// $this->include_agora_new_channel_page();
 
-		add_screen_option( 'per_page', array(
-			'default' => 20,
-			'option' => 'agoraio_per_page',
-		) );
+		} else {
+			if ( ! class_exists( 'Agora_Channels_List_Table' ) ) {
+			  require_once( 'class-agora-channels-list-table.php' );
+			}
+
+			add_filter( 'manage_' . $current_screen->id . '_columns',
+				array( 'Agora_Channels_List_Table', 'define_columns' ), 10, 0 );
+
+			add_screen_option( 'per_page', array(
+				'default' => 20,
+				'option' => 'agoraio_per_page',
+			) );
+		}
+
 	}
 
 	private function save_channel( $args ) {
