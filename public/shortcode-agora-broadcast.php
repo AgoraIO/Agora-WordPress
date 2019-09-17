@@ -12,11 +12,14 @@ function renderBroadcastShortcode($parent, $instance) {
 
   $instance = shortcode_atts(
       array(
-          'formClass' => 'row',
-          'submitClass' => 'btn btn-primary'
+        'channel_id' => 0,
+        'formClass' => 'row',
+        'submitClass' => 'btn btn-primary'
       ), $instance, 'agora-broadcast' );
 
   if(!$instance) { $instance = []; }
+
+  $channel = WP_Agora_Channel::get_instance($instance['channel_id']);
 
   ob_start();
 
