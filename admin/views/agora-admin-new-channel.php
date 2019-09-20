@@ -169,16 +169,16 @@ function render_agoraio_channel_form_settings($channel) {
   ?>
   <ul class="nav nav-tabs">
     <li class="active">
-      <a href="#tab-1">
+      <a href="#tab-1" id="link-tab-1">
         <i class="dashicons-before dashicons-admin-plugins"> </i>
         <?php _e('Type and Permissions', 'agoraio') ?>
       </a>
     </li>
-    <li><a href="#tab-2">
+    <li><a href="#tab-2" id="link-tab-2">
       <i class="dashicons-before dashicons-share"> </i>
       <?php _e('Push to External Networks', 'agoraio') ?>
     </a></li>
-    <li><a href="#tab-3">
+    <li><a href="#tab-3" id="link-tab-3">
       <i class="dashicons-before dashicons-admin-settings"> </i>
       <?php _e('Inject External Streams', 'agoraio') ?>
     </a></li>
@@ -198,7 +198,7 @@ function render_agoraio_channel_form_settings($channel) {
           $typeOptions,
           $props
         ) ?>
-        <tr>
+        <tr id="broadcast-host-row">
           <th scope="row"><label for="host"><?php _e('Broadcaster User', 'agoraio'); ?></label></th>
           <td>
             <?php

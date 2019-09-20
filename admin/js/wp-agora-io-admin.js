@@ -97,6 +97,9 @@ function activateAgoraTabs() {
 
 	function switchTab(event) {
 		event.preventDefault();
+		if (event.target.disabled===true) {
+			return false;
+		}
 
 		document.querySelector("ul.nav-tabs li.active").classList.remove("active");
 		document.querySelector(".tab-pane.active").classList.remove("active");
@@ -107,9 +110,7 @@ function activateAgoraTabs() {
 
 		clickedTab.classList.add("active");
 		document.querySelector(activePaneID).classList.add("active");
-
 	}
-
 }
 
 (function( $ ) {
@@ -121,6 +122,22 @@ function activateAgoraTabs() {
 		if($('#agoraio-new-channel').length>0) {
 			activateAgoraTabs();
 			$('.agora-color-picker').wpColorPicker();
+
+			$('#type').change(function(){
+				var typeChannel = $(this).val();
+				var bhr = $('#broadcast-host-row');
+				var linkTab2 = $('#link-tab-2');
+				var linkTab3 = $('#link-tab-3');
+				if (typeChannel==='communication') {
+					bhr.hide();
+					linkTab2.parent().hide();
+					linkTab3.parent().hide();
+				} else {
+					bhr.show();
+					linkTab2.parent().show();
+					linkTab3.parent().show();
+				}
+			});
 		}
 	});
 
