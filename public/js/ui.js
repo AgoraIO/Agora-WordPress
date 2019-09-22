@@ -74,9 +74,9 @@ function toggleMic() {
   toggleBtn(jQuery("#mic-dropdown"));
   jQuery("#mic-icon").toggleClass('fa-microphone').toggleClass('fa-microphone-slash'); // toggle the mic icon
   if (jQuery("#mic-icon").hasClass('fa-microphone')) {
-    localStreams.camera.stream.unmuteAudio(); // enable the local mic
+    window.localStreams.camera.stream.unmuteAudio(); // enable the local mic
   } else {
-    localStreams.camera.stream.muteAudio(); // mute the local mic
+    window.localStreams.camera.stream.muteAudio(); // mute the local mic
   }
 }
 
@@ -84,13 +84,23 @@ function toggleVideo() {
   toggleBtn(jQuery("#video-btn")); // toggle button colors
   toggleBtn(jQuery("#cam-dropdown"));
   if (jQuery("#video-icon").hasClass('fa-video')) {
-    localStreams.camera.stream.muteVideo(); // enable the local video
+    window.localStreams.camera.stream.muteVideo(); // enable the local video
     console.log("muteVideo");
   } else {
-    localStreams.camera.stream.unmuteVideo(); // disable the local video
+    window.localStreams.camera.stream.unmuteVideo(); // disable the local video
     console.log("unMuteVideo");
   }
   jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
+}
+
+function calculateVideoScreenSize() {
+  var container = jQuery('#full-screen-video');
+  console.log('Video SIZE:', container.outerWidth());
+  var size = getSizeFromVideoProfile();
+
+  // https://math.stackexchange.com/a/180805
+  var newHeight = container.outerWidth() * size.height / size.width;
+  container.outerHeight(newHeight);
 }
 
 // keep the spinners honest
@@ -113,3 +123,22 @@ jQuery("#background-color-picker").change(event, function() {
     jQuery('#background-color-picker').val(backgroundColorPicker);
   } 
 });
+
+
+
+function getSizeFromVideoProfile() {
+  switch(window.cameraVideoProfile) {
+    case '480p_8':
+    case '480p_9': return { width: 848, height: 480 };
+    case '720p':
+    case '720p_1':
+    case '720p_2':
+    case '720p_3': return { width: 1280, height: 720 };
+    case '720p_6': return { width: 960, height: 720 };
+    case '1080p':
+    case '1080p_1':
+    case '1080p_2':
+    case '1080p_3':
+    case '1080p_5': return { width: 1920, height: 1080 };
+  }
+}
