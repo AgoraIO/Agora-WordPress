@@ -94,7 +94,7 @@ $current_user       = wp_get_current_user();
 
       // set video profile 
       // [full list: https://docs.agora.io/en/Interactive%20Broadcast/videoProfile_web?platform=Web#video-profile-table]
-      window.cameraVideoProfile = '<?php echo $instance['videoProfile'] ?>';
+      window.cameraVideoProfile = '<?php echo $instance['videoprofile'] ?>';
 
       // keep track of streams
       window.localStreams = {

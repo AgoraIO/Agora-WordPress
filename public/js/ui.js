@@ -127,6 +127,7 @@ jQuery("#background-color-picker").change(event, function() {
 
 
 function getSizeFromVideoProfile() {
+  // https://docs.agora.io/en/Interactive%20Broadcast/videoProfile_web?platform=Web#video-profile-table
   switch(window.cameraVideoProfile) {
     case '480p_8':
     case '480p_9': return { width: 848, height: 480 };

@@ -67,7 +67,7 @@ body .agora {
 #full-screen-video {
   position: relative;
   width: 100%;
-  min-height: 52px;
+  min-height: 100px;
   content: 'Loading video...';
   /* height: 100%; Calculated dinamycally by JS based on the video profile rate */
 }

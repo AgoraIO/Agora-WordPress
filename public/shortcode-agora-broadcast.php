@@ -1,11 +1,11 @@
 <?php 
 
 // Shortcode [agora-broadcast]
-function renderBroadcastShortcode($agora, $instance) {
+function renderBroadcastShortcode($agora, $attrs) {
 
   // Avoid duplicated shortcode rendered
   if (WP_Agora_Public::isShortcodeRendered('[agora-broadcast]')) {
-    return "<!-- Shortcode Already Rendered: ".print_r($instance, true)." -->";
+    return "<!-- Shortcode Already Rendered: ".print_r($agora, true)." -->";
   }
 
   $bootstrap_css = 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css';
@@ -20,9 +20,9 @@ function renderBroadcastShortcode($agora, $instance) {
         'audio' => 'true',
         'video' => 'true',
         'screen' => 'false',
-        'videoProfile' => '480p_9' // https://docs.agora.io/en/Video/API%20Reference/web/interfaces/agorartc.stream.html#setvideoprofile
-      ), $instance, 'agora-broadcast' );
-
+        'videoprofile' => '480p_9' // https://docs.agora.io/en/Video/API%20Reference/web/interfaces/agorartc.stream.html#setvideoprofile
+      ), $attrs, 'agora-broadcast' );
+  
   // TODO: Add validation here to avoid video and screen setting with the same value
 
   if(!$instance) { $instance = []; }

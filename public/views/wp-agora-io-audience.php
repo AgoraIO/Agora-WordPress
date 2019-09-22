@@ -29,7 +29,7 @@
       // create client 
       // vp8 to work across mobile devices
       window.agoraClient = AgoraRTC.createClient({mode: 'live', codec: 'vp8'});
-      window.cameraVideoProfile = '<?php echo $instance['videoProfile'] ?>';
+      window.cameraVideoProfile = '<?php echo $instance['videoprofile'] ?>';
 
       // set log level:
       // -- .DEBUG for dev 
