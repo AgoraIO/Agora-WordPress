@@ -369,13 +369,16 @@ body .agora {
   top: 0;
   left: 0;
   z-index: 9999;
+  max-width: 100% !important; /* important, because wordpress defaults :( */
+  margin-bottom: 0 !important;
 }
-#local-stream-container { 
+
+#local-stream-container {
   position: relative; 
   display: inline-block;
 }
 
-.remote-stream-container { 
+.remote-stream-container {
   display: inline-block;
 }
 
