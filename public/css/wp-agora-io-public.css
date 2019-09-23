@@ -370,6 +370,10 @@ body .agora {
   left: 0;
   z-index: 9999;
   max-width: 100% !important; /* important, because wordpress defaults :( */
+  margin: 0 !important;
+}
+.admin-bar .agora.agora-communication {
+  margin-top: 32px !important;
   margin-bottom: 0 !important;
 }
 
