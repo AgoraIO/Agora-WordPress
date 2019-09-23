@@ -43,13 +43,63 @@ class WP_Agora_Public {
 	/**  Render Agora Commnication shortcode **/
 	public function agoraCommunicationShortcode( $atts ) {
 		require_once("shortcode-agora-communication.php");
+		require_once(__DIR__.'/../includes/token-server/RtcTokenBuilder.php');
+
 		return renderCommnicationShortcode( $this, $atts );
 	}
 
 	/**  Render Agora Broadcast shortcode **/
 	public function agoraBroadcastShortcode( $atts ) {
 		require_once("shortcode-agora-broadcast.php");
+		require_once(__DIR__.'/../includes/token-server/RtcTokenBuilder.php');
+
 		return renderBroadcastShortcode( $this, $atts );
+	}
+
+	public function enqueueShortcodeStyles($type) {
+		$bootstrap_css = 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css';
+	  $fontawesome = 'https://use.fontawesome.com/releases/v5.7.0/css/all.css';
+	  wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
+	  wp_enqueue_style( 'fontawesome', $fontawesome, array('bootstrap'), null, 'all' );
+	  wp_enqueue_script( 'AgoraSDK', 'https://cdn.agora.io/sdk/web/AgoraRTCSDK-2.8.0.js', array('jquery'), null );
+
+	  $scriptUI = $type==='broadcast' ? 'js/broadcast-ui.js' : 'js/communication-ui.js';
+	  wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . $scriptUI, array( 'jquery' ), $this->version, false );
+	}
+
+
+	public function getShortcodeAttrs($shortcode, $attrs) {
+		$instance = shortcode_atts(
+	      array(
+	        'channel_id' => 0,
+	        'audio' => 'true',
+	        'video' => 'true',
+	        'screen' => 'false',
+	        'screenprofile' => '480p_2',
+	        'videoprofile' => '480p_9' // https://docs.agora.io/en/Video/API%20Reference/web/interfaces/agorartc.stream.html#setvideoprofile
+	      ), $attrs, $shortcode );
+
+	  if(!$instance) { $instance = []; }
+
+	  if ($instance['video']===$instance['screen']) {
+	    // Show some error???
+	    $instance['screen'] = $instance['video']==='false' ? 'true' : 'false';
+	  }
+
+	  return $instance;
+	}
+
+	public function validateShortcode($instance) {
+		if (((int)$instance['channel_id'])===0) {
+	    return '<p class="error">'.__('Please define the <b>channel_id</b> attribute to use on this shortcode', 'agoraio').'</div>';
+	  }
+
+
+	  if (!isset($this->settings['appId'])) {
+	    return '<p class="error">'.__('Please configure your <b>Agora App ID</b> before use this shortcode', 'agoraio').'</div>';
+	  }
+
+	  return false;
 	}
 
 
@@ -74,7 +124,7 @@ class WP_Agora_Public {
 	}
 
 	public function enqueue_scripts() {
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/ui.js', array( 'jquery' ), $this->version, false );
+		// wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/ui.js', array( 'jquery' ), $this->version, false );
 
 		// isset($this->api_data['agora_bootstrap']) ? $this->api_data['agora_bootstrap'] : '';
 		$use_bootstrap = false;
@@ -85,7 +135,7 @@ class WP_Agora_Public {
 
 		// add data before JS plugin
 		// useful to load dynamic settings and env vars
-		add_action( 'wp_footer', array($this, 'createPublicJSvars'), 1);
+		// add_action( 'wp_footer', array($this, 'createPublicJSvars'), 1);
 	}
 
 		// Create public JS Variables to pass to external script

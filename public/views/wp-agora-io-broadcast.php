@@ -64,9 +64,8 @@ $current_user       = wp_get_current_user();
      */
     window.addEventListener('load', function() {
       
-      window.channelName = '<?php echo $channel->title() ?>'; // set channel name
       var agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
-      
+      window.channelName = '<?php echo $channel->title() ?>'; // set channel name
       window.agoraCurrentRole = 'host';
 
       // default config for rtmp

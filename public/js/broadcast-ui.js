@@ -93,16 +93,6 @@ function toggleVideo() {
   jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
 }
 
-function calculateVideoScreenSize() {
-  var container = jQuery('#full-screen-video');
-  console.log('Video SIZE:', container.outerWidth());
-  var size = getSizeFromVideoProfile();
-
-  // https://math.stackexchange.com/a/180805
-  var newHeight = container.outerWidth() * size.height / size.width;
-  container.outerHeight(newHeight);
-}
-
 // keep the spinners honest
 jQuery("input[type='number']").change(event, function() {
   var maxValue = jQuery(this).attr("max");
@@ -124,7 +114,15 @@ jQuery("#background-color-picker").change(event, function() {
   } 
 });
 
+function calculateVideoScreenSize() {
+  var container = jQuery('#full-screen-video');
+  console.log('Video SIZE:', container.outerWidth());
+  var size = getSizeFromVideoProfile();
 
+  // https://math.stackexchange.com/a/180805
+  var newHeight = container.outerWidth() * size.height / size.width;
+  container.outerHeight(newHeight);
+}
 
 function getSizeFromVideoProfile() {
   // https://docs.agora.io/en/Interactive%20Broadcast/videoProfile_web?platform=Web#video-profile-table

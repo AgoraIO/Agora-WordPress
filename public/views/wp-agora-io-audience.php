@@ -1,11 +1,26 @@
-<div class="agora agora-broadcast agora-audience">
+<?php
+$settings = $channel->get_properties();
+$agoraStyle = '';
+if (!empty($settings['appearance']['splashImageURL'])) {
+  $agoraStyle = 'style="background-image:url('.$settings['appearance']['splashImageURL'].')"';
+}
+$buttonText = __('Watch the Live Stream', 'agoraio'); // watchButtonText
+if(!empty($settings['appearance']['watchButtonText'])) {
+  $buttonText = $settings['appearance']['watchButtonText'];
+}
+$buttonIcon = $settings['appearance']['watchButtonIcon']!=='false';
+?>
+<div class="agora agora-broadcast agora-audience" <?php echo $agoraStyle ?>>
   <div class="container-fluid p-0">
     <div id="full-screen-video" style="display: none"></div>
     <div id="watch-live-overlay" class="overlay">
       <div id="overlay-container">
           <div class="col-md text-center">
             <button id="watch-live-btn" type="button" class="btn btn-block btn-primary btn-xlg">
-              <i id="watch-live-icon" class="fas fa-broadcast-tower"></i><span>Watch the Live Stream</span>
+              <?php if($buttonIcon) { ?>
+                <i id="watch-live-icon" class="fas fa-broadcast-tower"></i>
+              <?php } ?>
+              <span><?php echo $buttonText ?></span>
             </button>
           </div>
       </div>
@@ -36,23 +51,23 @@
       // -- .NONE for prod
       window.agoraLogLevel = window.location.href.indexOf('localhost')>0 ? AgoraRTC.Logger.DEBUG : AgoraRTC.Logger.ERROR;
       AgoraRTC.Logger.setLogLevel(window.agoraLogLevel);
+      calculateVideoScreenSize();
       
-        // Due to broswer restrictions on auto-playing video, 
-        // user must click to init and join channel
-        jQuery("#watch-live-btn").click(function(){
-          AgoraRTC.Logger.info("user clicked to watch broadcast");
+      // Due to broswer restrictions on auto-playing video, 
+      // user must click to init and join channel
+      jQuery("#watch-live-btn").click(function(){
+        AgoraRTC.Logger.info("user clicked to watch broadcast");
 
-          // init Agora SDK
-          window.agoraClient.init(agoraAppId, function () {
-            jQuery("#watch-live-overlay").remove();
-            jQuery("#full-screen-video").fadeIn();
-            calculateVideoScreenSize();
-            AgoraRTC.Logger.info('AgoraRTC client initialized');
-            joinChannel(); // join channel upon successfull init
-          }, function (err) {
-            AgoraRTC.Logger.error('[ERROR] : AgoraRTC client init failed', err);
-          });
+        // init Agora SDK
+        window.agoraClient.init(agoraAppId, function () {
+          jQuery("#watch-live-overlay").remove();
+          jQuery("#full-screen-video").fadeIn();
+          AgoraRTC.Logger.info('AgoraRTC client initialized');
+          joinChannel(); // join channel upon successfull init
+        }, function (err) {
+          AgoraRTC.Logger.error('[ERROR] : AgoraRTC client init failed', err);
         });
+      });
 
       window.agoraClient.on('stream-published', function (evt) {
         AgoraRTC.Logger.info('Publish local stream successfully');

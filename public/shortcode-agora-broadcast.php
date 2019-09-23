@@ -8,34 +8,14 @@ function renderBroadcastShortcode($agora, $attrs) {
     return "<!-- Shortcode Already Rendered: ".print_r($agora, true)." -->";
   }
 
-  $bootstrap_css = 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css';
-  $fontawesome = 'https://use.fontawesome.com/releases/v5.7.0/css/all.css';
-  wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
-  wp_enqueue_style( 'fontawesome', $fontawesome, array('bootstrap'), null, 'all' );
-  wp_enqueue_script( 'AgoraSDK', 'https://cdn.agora.io/sdk/web/AgoraRTCSDK-2.8.0.js', array('jquery'), null );
+  $instance = $agora->getShortcodeAttrs('agora-broadcast', $attrs);
 
-  $instance = shortcode_atts(
-      array(
-        'channel_id' => 0,
-        'audio' => 'true',
-        'video' => 'true',
-        'screen' => 'false',
-        'videoprofile' => '480p_9' // https://docs.agora.io/en/Video/API%20Reference/web/interfaces/agorartc.stream.html#setvideoprofile
-      ), $attrs, 'agora-broadcast' );
-  
-  // TODO: Add validation here to avoid video and screen setting with the same value
-
-  if(!$instance) { $instance = []; }
-
-  if (((int)$instance['channel_id'])===0) {
-    return '<p class="error">'.__('Please define the <b>channel_id</b> attribute to use on this shortcode', 'agoraio').'</div>';
+  if (($err = $agora->validateShortcode($instance))!==false) {
+    return $err;
   }
 
+  $agora->enqueueShortcodeStyles('broadcast');
 
-  if (!isset($agora->settings['appId'])) {
-    return '<p class="error">'.__('Please configure your <b>Agora App ID</b> before use this shortcode', 'agoraio').'</div>';
-  }
-  require_once(__DIR__.'/../includes/token-server/RtcTokenBuilder.php');
   $channel = WP_Agora_Channel::get_instance($instance['channel_id']);
   $props = $channel->get_properties();
   $current_user = wp_get_current_user();

@@ -297,7 +297,7 @@ class WP_Agora_Channel {
     if($type==='broadcast') {
       return '[agora-broadcast channel_id="'.$this->id.'"]';
     } else if($type==='communication') {
-      return '[agora-commnication channel_id="'.$this->id.'"]';
+      return '[agora-communication channel_id="'.$this->id.'"]';
     }
   }
 
