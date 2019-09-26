@@ -32,7 +32,7 @@
         </div>
         <div class="col value" data-masked="true">
           <?php
-          $value = $agora_options['appId'];
+          $value = isset($agora_options['appId']) ? $agora_options['appId'] : false;
           if ($value) {
             for($i=0;$i<strlen($value)-4;$i++) echo "*";
             echo substr($value, strlen($value)-4);
@@ -68,7 +68,7 @@
         </div>
         <div class="col value">
           <?php
-          $value = $agora_options['cloudStorageURL'];
+          $value = isset($agora_options['cloudStorageURL']) ? $agora_options['cloudStorageURL'] : '';
           // $value = "https://4045media-cloudrecordings.s3.amazonaws.com";
           echo $value;
           ?>
