@@ -148,6 +148,9 @@ function activateAgoraTabs() {
 			linkTab2.parent().show();
 			linkTab3.parent().show();
 		}
+
+
+		// on communication, also hide Splash screen, and text and icon  button
 	}
 
 })( jQuery );

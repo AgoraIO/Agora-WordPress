@@ -83,39 +83,33 @@
 
   <!-- ===== Token Server ===== -->
   <div class="card">
-    <h2 class="title">Token Server</h2>
+    <h2 class="title">App Certificate</h2>
     <div class="infobox">
       agora.io
       <br />
-      <a href="https://docs.agora.io" target="blank">Agora.io Docs</a>
+      <a href="https://dashboard.agora.io/projects" target="blank">Agora.io Dashboard</a>
     </div>
 
     <br class="clear" />
 
     <div class="inside">
       <p>
-        <?php
-        $desc = __('Your token needs to be generated on your own server, hence you are required to first deploy  a token generator on the server. In our [AGORA_GITHUB]Github Repository[/AGORA_GITHUB] we provide source codes and token generator demos for several programming languages.', 'agoraio');
-        echo str_replace(
-          array("[AGORA_GITHUB]", "[/AGORA_GITHUB]"),
-          array(
-            "<a href='https://github.com/agoraio/' target='blank'>", "</a>"),
-          $desc);
+        <?php _e('Please enable your App Certificate Server on your Agora Dashborad, then copy here your <b>App Certificate</b>.', 'agoraio');
         ?></p>
-      <div class="flex app-setting" id="tokenServerURL">
+      <div class="flex app-setting" id="appCertificate">
         <div class="col label">
-          Tokern Server URL
+          App Certificate
         </div>
         <div class="col value">
           <?php
-          $value = $agora_options['tokenServerURL'];
-          // $value = "https://tokenserver.4045media.com";
+          $value = isset($agora_options['appCertificate']) ? $agora_options['appCertificate'] : '';
+          // $value = "2d921271bc1e481eb1ffc3309141ad95";
           echo $value;
           ?>
         </div>
       </div>
       <p>
-        <a href="#" class="button">Change Token Server</a>
+        <a href="#" class="button">Change App Certificate</a>
       </p>
     </div>
   </div>

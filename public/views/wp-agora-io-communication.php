@@ -57,17 +57,22 @@
 
     // use tokens for added security
     function generateToken() {
-      <?php // $appID, $appCertificate, $channelName, $uid, $role ?>
       return <?php
       $appID = $agora->settings['appId'];
-      $appCertificate = '';
-      $channelName = $channel->title();
-      $uid = 0; // Get urrent user id
-      $role = ''; // role should be based on the current user host...
-      $privilegeExpireTs = 0;
-      // echo RtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs);
-      echo 'null';
-      ?>; // TODO: add a token generation
+      $appCertificate = $agora->settings['appCertificate'];
+      if($appCertificate && strlen($appCertificate)>0) {
+        $channelName = $channel->title();
+        $current_user = wp_get_current_user();
+        $uid = $current_user->ID; // Get urrent user id
+
+        // role should be based on the current user host...
+        $role = ($current_user->ID===(int)$settings['host']) ? 'host' : 'audience'; 
+        $privilegeExpireTs = 0;
+        echo '"'.RtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs). '"';
+      } else {
+        echo 'null';
+      }
+      ?>;
     }
   </script>
 </div>
