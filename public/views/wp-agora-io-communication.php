@@ -3,6 +3,7 @@
   <div class="container-fluid p-0">
     <div id="main-container" class="controls-top">
       <div id="full-screen-video">
+        <div id="video-canvas"></div>
         <div id="screen-share-btn-container" class="col-2 float-right text-right mt-2">
           <button id="screen-share-btn"  type="button" class="btn btn-lg">
             <i id="screen-share-icon" class="fas fa-share-square"></i>
@@ -60,12 +61,14 @@
       return <?php
       $appID = $agora->settings['appId'];
       $appCertificate = $agora->settings['appCertificate'];
+
       if($appCertificate && strlen($appCertificate)>0) {
         $channelName = $channel->title();
         $current_user = wp_get_current_user();
         $uid = $current_user->ID; // Get urrent user id
 
         // role should be based on the current user host...
+        $settings = $channel->get_properties();
         $role = ($current_user->ID===(int)$settings['host']) ? 'host' : 'audience'; 
         $privilegeExpireTs = 0;
         echo '"'.RtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs). '"';

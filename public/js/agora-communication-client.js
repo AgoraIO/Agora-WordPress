@@ -57,9 +57,9 @@ client.on('stream-subscribed', function (evt) {
   var remoteId = remoteStream.getId();
   remoteStreams[remoteId] = remoteStream;
   AgoraRTC.Logger.info("Subscribe remote stream successfully: " + remoteId);
-  if( jQuery('#full-screen-video').is(':empty') ) { 
+  if( jQuery('#video-canvas').is(':empty') ) { 
     mainStreamId = remoteId;
-    remoteStream.play('full-screen-video');
+    remoteStream.play('video-canvas');
   } else {
     addRemoteStreamMiniView(remoteStream);
   }
@@ -77,7 +77,7 @@ client.on("peer-leave", function(evt) {
       remoteStreams[randomId].stop(); // stop the stream's existing playback
       var remoteContainerID = '#' + randomId + '_container';
       jQuery(remoteContainerID).empty().remove(); // remove the stream's miniView container
-      remoteStreams[randomId].play('full-screen-video'); // play the random stream as the main stream
+      remoteStreams[randomId].play('video-canvas'); // play the random stream as the main stream
       mainStreamId = randomId; // set the new main remote stream
     } else {
       var remoteContainerID = '#' + streamId + '_container';
@@ -253,7 +253,7 @@ function addRemoteStreamMiniView(remoteStream){
     addRemoteStreamMiniView(remoteStreams[mainStreamId]); // send the main video stream to a container
     jQuery(containerId).empty().remove(); // remove the stream's miniView container
     remoteStreams[streamId].stop() // stop the container's video stream playback
-    remoteStreams[streamId].play('full-screen-video'); // play the remote stream as the full screen video
+    remoteStreams[streamId].play('video-canvas'); // play the remote stream as the full screen video
     mainStreamId = streamId; // set the container stream id as the new main stream id
   });
 }

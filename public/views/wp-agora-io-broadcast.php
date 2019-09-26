@@ -207,6 +207,7 @@ $current_user       = wp_get_current_user();
         $uid = $current_user->ID; // Get urrent user id
 
         // role should be based on the current user host...
+        $settings = $channel->get_properties();
         $role = ($current_user->ID===(int)$settings['host']) ? 'host' : 'audience'; 
         $privilegeExpireTs = 0;
         echo '"'.RtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs). '"';
