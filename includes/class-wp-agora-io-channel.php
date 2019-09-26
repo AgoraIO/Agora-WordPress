@@ -35,8 +35,8 @@ class WP_Agora_Channel {
     'noHostImageURL' => '',
     'watchButtonText' => 'Watch the Live Stream',
     'watchButtonIcon' => true,
-    'activeButtonColor' => '#dc3545',
-    'disabledButtonColor' => '#343a40',
+    'activeButtonColor' => '#343a40',
+    'disabledButtonColor' => '#dc3545',
   );
 
   // private channel attrs
