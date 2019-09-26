@@ -5,28 +5,28 @@
       <div id="full-screen-video">
         <div id="video-canvas"></div>
         <div id="screen-share-btn-container" class="col-2 float-right text-right mt-2">
-          <button id="screen-share-btn"  type="button" class="btn btn-lg">
+          <button id="screen-share-btn"  type="button" class="btn btn-xs">
             <i id="screen-share-icon" class="fas fa-share-square"></i>
           </button>
         </div>
         <div id="buttons-container" class="row justify-content-center mt-3">
           <div class="col-md-2 text-center">
-            <button id="mic-btn" type="button" class="btn btn-block btn-dark btn-lg">
+            <button id="mic-btn" type="button" class="btn btn-block btn-dark btn-xs">
               <i id="mic-icon" class="fas fa-microphone"></i>
             </button>
           </div>
           <div class="col-md-2 text-center">
-            <button id="video-btn"  type="button" class="btn btn-block btn-dark btn-lg">
+            <button id="video-btn"  type="button" class="btn btn-block btn-dark btn-xs">
               <i id="video-icon" class="fas fa-video"></i>
             </button>
           </div>
           <div class="col-md-2 text-center">
-            <button id="exit-btn"  type="button" class="btn btn-block btn-danger btn-lg">
+            <button id="exit-btn"  type="button" class="btn btn-block btn-danger btn-xs">
               <i id="exit-icon" class="fas fa-phone-slash"></i>
             </button>
           </div>
         </div>
-        <div id="lower-video-bar" class="row mb-1">
+        <div id="lower-video-bar" class="row mb-0">
           <div id="remote-streams-container" class="container col-9 ml-1">
             <div id="remote-streams" class="row">
               <!-- insert remote streams dynamically -->

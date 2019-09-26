@@ -84,7 +84,6 @@ function toggleVisibility(elementID, visible) {
 }
 
 function toggleMic(localStream) {
-  debugger;
   toggleBtn(jQuery("#mic-btn")); // toggle button colors
   jQuery("#mic-icon").toggleClass('fa-microphone').toggleClass('fa-microphone-slash'); // toggle the mic icon
   if (jQuery("#mic-icon").hasClass('fa-microphone')) {

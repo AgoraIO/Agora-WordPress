@@ -55,9 +55,9 @@ body .agora {
   left: 0;
 }
 .agora-communication #lower-video-bar {
-  position: fixed;
+  position: absolute;
   bottom: 0;
-  left: 0;
+  left: 15px; /* 15px because of offset from bootstrap */
   width: 100%;
   height: 20vh;
 }
@@ -147,7 +147,7 @@ body .agora {
   bottom: 0;
   left: 0;
   color: #d9d9d9;
-  font-size: 2em;
+  font-size: 1.5em;
   padding: 0 0 3px 3px;
   display: none;
 } 
@@ -365,13 +365,11 @@ body .agora {
  *        Communication Styles
  ** ==================================*/
 .agora.agora-communication {
-  position: fixed;
-  background-color: white;
-  width: 100vw;
-  height: 100vh;
+  position: relative;
+  background-color: #dedede;
+  width: 100%;
+  height: auto;
   display: flex;
-  top: 0;
-  left: 0;
   z-index: 9999;
   max-width: 100% !important; /* important, because wordpress defaults :( */
   margin: 0 !important;
@@ -415,7 +413,7 @@ body .agora {
   bottom: 0;
   left: 0;
   color: #d9d9d9;
-  font-size: 2em;
+  font-size: 1.5em;
   padding: 0 0 3px 3px;
   display: none;
 } 
