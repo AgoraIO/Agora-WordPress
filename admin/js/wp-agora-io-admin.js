@@ -139,14 +139,23 @@ function activateAgoraTabs() {
 		var bhr = $('#broadcast-host-row');
 		var linkTab2 = $('#link-tab-2');
 		var linkTab3 = $('#link-tab-3');
+		var splashImageURL = $('#splashImageURL').parent().parent();
+		var watchButtonText = $('#watchButtonText').parent().parent();
+		var watchButtonIcon = $('#watchButtonIcon').parent().parent();
 		if (typeChannel==='communication') {
 			bhr.hide();
 			linkTab2.parent().hide();
 			linkTab3.parent().hide();
+			splashImageURL.hide();
+			watchButtonText.hide();
+			watchButtonIcon.hide();
 		} else {
 			bhr.show();
 			linkTab2.parent().show();
 			linkTab3.parent().show();
+			splashImageURL.show();
+			watchButtonText.show();
+			watchButtonIcon.show();
 		}
 
 
