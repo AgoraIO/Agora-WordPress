@@ -79,6 +79,10 @@ body .agora {
   /* background-color: black; */
   /* height: 100%; Calculated dinamycally by JS based on the video profile rate */
 }
+#video-canvas {
+  width: 100%;
+  height: 100%;
+}
 
 #full-screen-video-iframe {
   position: absolute;

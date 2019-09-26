@@ -171,7 +171,7 @@ $buttonIcon = $settings['appearance']['watchButtonIcon']!=='false';
         $uid = $current_user->ID; // Get urrent user id
 
         // role should be based on the current user host...
-        $role = ($current_user->ID===(int)$settings['host']) ? 'host' : 'audience'; 
+        $role = 'Role_Subscriber';
         $privilegeExpireTs = 0;
         echo '"'.RtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs). '"';
       } else {
