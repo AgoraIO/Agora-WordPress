@@ -21,14 +21,18 @@ function renderCommnicationShortcode($agora, $attrs) {
     array('AgoraSDK'), null );
 
   $channel = WP_Agora_Channel::get_instance($instance['channel_id']);
-  $props = $channel->get_properties();
-  $current_user = wp_get_current_user();
+  if ($channel) {
+    $props = $channel->get_properties();
+    $current_user = wp_get_current_user();
 
-  ob_start();
+    ob_start();
 
-  require_once('views/wp-agora-io-communication.php');
+    require_once('views/wp-agora-io-communication.php');
 
-  $out = ob_get_clean();
+    $out = ob_get_clean();
+  } else {
+    $out = "<!-- Agora: No channel found! -->";
+  }
 
 
   WP_Agora_Public::addShortcodeRendered('[agora-communication]');
