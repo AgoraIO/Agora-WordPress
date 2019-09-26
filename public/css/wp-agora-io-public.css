@@ -76,8 +76,7 @@ body .agora {
   position: relative;
   width: 100%;
   min-height: 100px;
-  /* background-color: black; */
-  /* height: 100%; Calculated dinamycally by JS based on the video profile rate */
+  background-size: cover;
 }
 #video-canvas {
   width: 100%;

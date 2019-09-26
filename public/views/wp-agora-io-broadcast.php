@@ -67,6 +67,7 @@ $current_user       = wp_get_current_user();
       var agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
       window.channelName = '<?php echo $channel->title() ?>'; // set channel name
       window.agoraCurrentRole = 'host';
+      window.userID = <?php echo $current_user->ID; ?>;
 
       // default config for rtmp
       var defaultConfigRTMP = {
@@ -214,7 +215,7 @@ $current_user       = wp_get_current_user();
       } else {
         echo 'null';
       }
-      ?>; // TODO: add a token generation
+      ?>;
     }
   </script>
   <style>

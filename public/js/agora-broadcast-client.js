@@ -5,7 +5,7 @@
 // join a channel
 function agoraJoinChannel() {
   var token = generateToken(); // rendered on PHP
-  var userID = 0; // set to null to auto generate uid on successfull connection
+  var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
 
   // set the role
   window.agoraClient.setClientRole(window.agoraCurrentRole, function() {
@@ -15,7 +15,7 @@ function agoraJoinChannel() {
   });
   
   // window.agoraClient.join(token, 'allThingsRTCLiveStream', 0, function(uid) {
-  window.agoraClient.join(token, window.channelName, userID, function(uid) {
+  window.agoraClient.join(token, window.channelName, userId, function(uid) {
       createCameraStream(uid, {});
       window.localStreams.uid = uid; // keep track of the stream uid  
       AgoraRTC.Logger.info('User ' + uid + ' joined channel successfully');

@@ -9,10 +9,16 @@ if(!empty($settings['appearance']['watchButtonText'])) {
   $buttonText = $settings['appearance']['watchButtonText'];
 }
 $buttonIcon = $settings['appearance']['watchButtonIcon']!=='false';
+
+$screenStyles = '';
+if (!empty($settings['appearance']['noHostImageURL'])) {
+  $screenStyles = "background-image: url('".$settings['appearance']['noHostImageURL']."')";
+}
+
 ?>
 <div class="agora agora-broadcast agora-audience" <?php echo $agoraStyle ?>>
   <div class="container-fluid p-0">
-    <div id="full-screen-video" style="display: none"></div>
+    <div id="full-screen-video" style="display: none; <?php echo $screenStyles; ?>"></div>
     <div id="watch-live-overlay" class="overlay">
       <div id="overlay-container">
           <div class="col-md text-center">
