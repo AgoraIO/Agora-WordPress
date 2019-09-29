@@ -31,6 +31,8 @@ function enableUiControls(localStream) {
     leaveChannel(); 
   });
 
+  jQuery('#rejoin-btn').click(rejoinChannel);
+
   // keyboard listeners 
   jQuery(document).keypress(function(e) {
     switch (e.key) {

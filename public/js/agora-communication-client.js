@@ -2,7 +2,7 @@
  * JS Interface for Agora.io SDK
  */
 // create client instances for camera (client) and screen share (screenClient)
-var client = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'}); 
+var agoraClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'}); 
 var screenClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'}); 
 
 // stream references (keep track of active streams) 
@@ -24,7 +24,7 @@ var screenShareActive = false; // flag for screen share
 
 function initClientAndJoinChannel(agoraAppId, channelName) {
   // init Agora SDK
-  client.init(agoraAppId, function () {
+  agoraClient.init(agoraAppId, function () {
     AgoraRTC.Logger.info("AgoraRTC client initialized");
     joinChannel(channelName); // join channel upon successfull init
   }, function (err) {
@@ -33,12 +33,12 @@ function initClientAndJoinChannel(agoraAppId, channelName) {
 }
 
 
-client.on('stream-published', function (evt) {
+agoraClient.on('stream-published', function (evt) {
   AgoraRTC.Logger.info("Publish local stream successfully");
 });
 
 // connect remote streams
-client.on('stream-added', function (evt) {
+agoraClient.on('stream-added', function (evt) {
   var stream = evt.stream;
   var streamId = stream.getId();
   AgoraRTC.Logger.info("new stream added: " + streamId);
@@ -46,13 +46,13 @@ client.on('stream-added', function (evt) {
   if (streamId != localStreams.screen.id) {
     AgoraRTC.Logger.info('subscribe to remote stream:' + streamId);
     // Subscribe to the stream.
-    client.subscribe(stream, function (err) {
+    agoraClient.subscribe(stream, function (err) {
       AgoraRTC.Logger.error("[ERROR] : subscribe stream failed", err);
     });
   }
 });
 
-client.on('stream-subscribed', function (evt) {
+agoraClient.on('stream-subscribed', function (evt) {
   var remoteStream = evt.stream;
   var remoteId = remoteStream.getId();
   remoteStreams[remoteId] = remoteStream;
@@ -66,7 +66,7 @@ client.on('stream-subscribed', function (evt) {
 });
 
 // remove the remote-container when a user leaves the channel
-client.on("peer-leave", function(evt) {
+agoraClient.on("peer-leave", function(evt) {
   var streamId = evt.stream.getId(); // the the stream id
   if(remoteStreams[streamId] != undefined) {
     remoteStreams[streamId].stop(); // stop playing the feed
@@ -87,16 +87,16 @@ client.on("peer-leave", function(evt) {
 });
 
 // show mute icon whenever a remote has muted their mic
-client.on("mute-audio", function (evt) {
+agoraClient.on("mute-audio", function (evt) {
   toggleVisibility('#' + evt.uid + '_mute', true);
 });
 
-client.on("unmute-audio", function (evt) {
+agoraClient.on("unmute-audio", function (evt) {
   toggleVisibility('#' + evt.uid + '_mute', false);
 });
 
 // show user icon whenever a remote has disabled their video
-client.on("mute-video", function (evt) {
+agoraClient.on("mute-video", function (evt) {
   var remoteId = evt.uid;
   // if the main user stops their video select a random user from the list
   if (remoteId != mainStreamId) {
@@ -105,18 +105,18 @@ client.on("mute-video", function (evt) {
   }
 });
 
-client.on("unmute-video", function (evt) {
+agoraClient.on("unmute-video", function (evt) {
   toggleVisibility('#' + evt.uid + '_no-video', false);
 });
 
 // join a channel
 function joinChannel(channelName) {
   var token = generateToken();
-  var userID = null; // set to null to auto generate uid on successfull connection
-  client.join(token, channelName, userID, function(uid) {
-      AgoraRTC.Logger.info("User " + uid + " join channel successfully");
-      createCameraStream(uid);
-      localStreams.camera.id = uid; // keep track of the stream uid 
+  var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
+  agoraClient.join(token, channelName, userId, function(uid) {
+    AgoraRTC.Logger.info("User " + uid + " join channel successfully");
+    createCameraStream(uid);
+    localStreams.camera.id = uid; // keep track of the stream uid 
   }, function(err) {
       AgoraRTC.Logger.error("[ERROR] : join channel failed", err);
   });
@@ -132,12 +132,17 @@ function createCameraStream(uid) {
   });
   localStream.setVideoProfile(window.cameraVideoProfile);
   localStream.init(function() {
+    jQuery('#rejoin-container').hide();
+    var thisBtn = jQuery('#rejoin-btn');
+    thisBtn.prop("disabled", false);
+    thisBtn.find('.spinner-border').hide();
+
     AgoraRTC.Logger.info("getUserMedia successfully");
     // TODO: add check for other streams. play local stream full size if alone in channel
     localStream.play('local-video'); // play the given stream within the local-video div
 
     // publish local stream
-    client.publish(localStream, function (err) {
+    agoraClient.publish(localStream, function (err) {
       AgoraRTC.Logger.error("[ERROR] : publish local stream error: " + err);
     });
   
@@ -150,7 +155,7 @@ function createCameraStream(uid) {
 
 // SCREEN SHARING
 function initScreenShare() {
-  screenClient.init(agoraAppId, function () {
+  screenagoraClient.init(agoraAppId, function () {
     AgoraRTC.Logger.info("AgoraRTC screenClient initialized");
     joinChannelAsScreenShare();
     screenShareActive = true;
@@ -163,7 +168,7 @@ function initScreenShare() {
 function joinChannelAsScreenShare() {
   var token = generateToken();
   var userID = null; // set to null to auto generate uid on successfull connection
-  screenClient.join(token, channelName, userID, function(uid) { 
+  screenagoraClient.join(token, channelName, userID, function(uid) { 
     localStreams.screen.id = uid;  // keep track of the uid of the screen stream.
     
     // Create the stream for screen sharing.
@@ -180,7 +185,7 @@ function joinChannelAsScreenShare() {
       AgoraRTC.Logger.info("getScreen successful");
       localStreams.screen.stream = screenStream; // keep track of the screen stream
       jQuery("#screen-share-btn").prop("disabled",false); // enable button
-      screenClient.publish(screenStream, function (err) {
+      screenagoraClient.publish(screenStream, function (err) {
         AgoraRTC.Logger.errorerror("[ERROR] : publish screen stream error: " + err);
       });
     }, function (err) {
@@ -194,7 +199,7 @@ function joinChannelAsScreenShare() {
     AgoraRTC.Logger.error("[ERROR] : join channel as screen-share failed", err);
   });
 
-  screenClient.on('stream-published', function (evt) {
+  screenagoraClient.on('stream-published', function (evt) {
     AgoraRTC.Logger.info("Publish screen stream successfully");
     localStreams.camera.stream.disableVideo(); // disable the local video stream (will send a mute signal)
     localStreams.camera.stream.stop(); // stop playing the local stream
@@ -205,7 +210,7 @@ function joinChannelAsScreenShare() {
     jQuery("#video-btn").prop("disabled",true); // disable the video button (as cameara video stream is disabled)
   });
   
-  screenClient.on('stopScreenSharing', function (evt) {
+  screenagoraClient.on('stopScreenSharing', function (evt) {
     AgoraRTC.Logger.info("screen sharing stopped", err);
   });
 }
@@ -216,11 +221,11 @@ function stopScreenShare() {
   localStreams.camera.stream.enableVideo(); // enable the camera feed
   localStreams.camera.stream.play('local-video'); // play the camera within the full-screen-video div
   jQuery("#video-btn").prop("disabled",false);
-  screenClient.leave(function() {
+  screenagoraClient.leave(function() {
     screenShareActive = false; 
     AgoraRTC.Logger.info("screen client leaves channel");
     jQuery("#screen-share-btn").prop("disabled",false); // enable button
-    screenClient.unpublish(localStreams.screen.stream); // unpublish the screen client
+    screenagoraClient.unpublish(localStreams.screen.stream); // unpublish the screen client
     localStreams.screen.stream.close(); // close the screen client stream
     localStreams.screen.id = ""; // reset the screen id
     localStreams.screen.stream = {}; // reset the stream obj
@@ -264,10 +269,10 @@ function leaveChannel() {
     stopScreenShare();
   }
 
-  client.leave(function() {
+  agoraClient.leave(function() {
     AgoraRTC.Logger.info("client leaves channel");
     localStreams.camera.stream.stop() // stop the camera stream playback
-    client.unpublish(localStreams.camera.stream); // unpublish the camera stream
+    agoraClient.unpublish(localStreams.camera.stream); // unpublish the camera stream
     localStreams.camera.stream.close(); // clean up and close the camera stream
     jQuery("#remote-streams").empty() // clean up the remote feeds
     //disable the UI elements
@@ -278,6 +283,8 @@ function leaveChannel() {
     // hide the mute/no-video overlays
     toggleVisibility("#mute-overlay", false); 
     toggleVisibility("#no-local-video", false);
+
+    jQuery('#rejoin-container').show();
     
     // show the modal overlay to join
     // jQuery("#modalForm").modal("show"); 

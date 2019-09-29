@@ -378,6 +378,22 @@ body .agora {
   margin-bottom: 0 !important;
 }
 
+.agora .rejoin-container {
+  position: absolute;
+  top: 46%;
+  width: 100%;
+  text-align: center;
+}
+.agora .rejoin-container button[disabled]:hover {
+  background: #007bff;
+  text-transform: none;
+  font-weight: 400;
+  font-family: inherit;
+  border-radius: .3rem;
+  padding: .5rem 1rem;
+  line-height: 1.5;
+}
+
 #local-stream-container {
   position: relative; 
   display: inline-block;

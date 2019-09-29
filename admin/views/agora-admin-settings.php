@@ -94,7 +94,7 @@
 
     <div class="inside">
       <p>
-        <?php _e('Please enable your App Certificate Server on your Agora Dashborad, then copy here your <b>App Certificate</b>.', 'agoraio');
+        <?php _e('Please enable your App Certificate Server on your Agora Dashboard, then copy here your <b>App Certificate</b>.', 'agoraio');
         ?></p>
       <div class="flex app-setting" id="appCertificate">
         <div class="col label">

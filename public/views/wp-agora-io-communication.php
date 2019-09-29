@@ -1,3 +1,4 @@
+<?php $current_user = wp_get_current_user(); ?>
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <div class="agora agora-communication">
   <div class="container-fluid p-0">
@@ -26,6 +27,12 @@
             </button>
           </div>
         </div>
+        <div id="rejoin-container" class="rejoin-container" style="display: none">
+          <button id="rejoin-btn" class="btn btn-primary btn-lg" type="button">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <?php _e('Rejoin to this channel', 'agoraio'); ?>
+          </button>
+        </div>
         <div id="lower-video-bar" class="row mb-0">
           <div id="remote-streams-container" class="container col-9 ml-1">
             <div id="remote-streams" class="row">
@@ -52,9 +59,20 @@
     window.addEventListener('load', function() {
       var agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
       var channelName = '<?php echo $channel->title() ?>'; // set channel name
+      window.userID = <?php echo $current_user->ID; ?>;
       calculateVideoScreenSize();
       initClientAndJoinChannel(agoraAppId, channelName);
     });
+
+    function rejoinChannel() {
+      var thisBtn = jQuery(this);
+      if(!thisBtn.prop('disabled')) {
+        joinChannel('<?php echo $channel->title() ?>');
+        thisBtn.prop("disabled", true);
+        thisBtn.find('.spinner-border').show();
+      }
+    }
+
 
     // use tokens for added security
     function generateToken() {
