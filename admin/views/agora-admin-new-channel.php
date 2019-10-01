@@ -58,7 +58,7 @@ function agora_render_setting_row($id, $title, $settings, $prefix, $inputType="n
         id="<?php echo $input_id ?>"
         name="<?php echo $input_id ?>"
         type="<?php echo $inputType ?>"
-        value="<?php echo $settings[$input_id] ?>">
+        value="<?php echo isset($settings[$input_id]) ? $settings[$input_id] : '' ?>">
     </td>
   </tr>
   <?php
@@ -145,6 +145,10 @@ function agora_render_setting_row($id, $title, $settings, $prefix, $inputType="n
 
       <div id="postbox-container-2" class="postbox-container">
         <?php do_action( 'agoraio_channel_form_appearance', $post ); ?>
+      </div>
+
+      <div id="postbox-container-3" class="postbox-container">
+        <?php do_action( 'agoraio_channel_form_recording', $post ); ?>
 
         <p class="submit"><?php agoraio_admin_save_button( $post_id ); ?></p>
       </div>
@@ -339,6 +343,66 @@ function render_agoraio_channel_form_appearance($channel) {
       </td>
     </tr>
   </table>
+  <?php
+}
+
+
+function render_agoraio_channel_form_recording($channel) {
+  $props = $channel->get_properties();
+  $recording = $props['recording'];
+  ?>
+  <table class="form-table">
+    <?php
+    agora_render_setting_row_select(
+      'vendor',
+      __('Vendor', 'agoraio'),
+      array(
+        '' => __('Select Cloud Vendor', 'agoraio'),
+        0 => __('Qiniu Cloud', 'agoraio'),
+        1 => __('Amazon S3', 'agoraio'),
+        2 => __('Alibaba Cloud', 'agoraio')
+      ), $recording, '');
+
+    agora_render_setting_row_select(
+      'region',
+      __('Region', 'agoraio'),
+      array('' => __('Please select a vendor', 'agoraio')), $recording, '');
+
+    agora_render_setting_row('bucket', __('Bucket', 'agoraio'), $recording, '', 'text');
+
+    agora_render_setting_row('accessKey', __('Access Key', 'agoraio'), $recording, '', 'text');
+
+    agora_render_setting_row('secretKey', __('Secret Key', 'agoraio'), $recording, '', 'text');
+    ?>
+  </table>
+  <script>
+    function updateRegionOptions() {
+      var vendor = parseInt(jQuery(this).val(), 10);
+      var options = null;
+      switch(vendor) {
+        case 0: // china
+          options = cloudRegions['qiniu'];
+          break;
+        case 1: // AWS
+          options = cloudRegions['aws'];
+          break;
+        case 2: // Alibaba
+          options = cloudRegions['alibaba'];
+          break;
+        default:
+          break;
+      }
+
+      var region = jQuery('#region');
+      region.empty();
+      jQuery.each(options, function(key, value) {
+        region.append(jQuery('<option/>').attr('value', key).text(value));
+      });
+    }
+    window.addEventListener('load', function() {
+      jQuery('#vendor').change(updateRegionOptions);
+    });
+  </script>
   <?php
 }
 ?>

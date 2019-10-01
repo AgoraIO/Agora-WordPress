@@ -121,6 +121,8 @@ class WP_Agora_Admin {
     	null,
     	'agora_channel_settings'
     );
+
+    // Apperance metabox
     add_meta_box(
     	'agora-form-appearance',
     	__('Channel Appearance', 'agoraio'),
@@ -129,8 +131,18 @@ class WP_Agora_Admin {
     	'agora_channel_appearance'
     );
 
+    // Recording metabox
+    add_meta_box(
+    	'agora-form-recording',
+    	__('Channel Recording', 'agoraio'),
+    	'render_agoraio_channel_form_recording',
+    	null,
+    	'agora_channel_recording'
+    );
+
 		add_action( 'agoraio_channel_form_settings', array($this, 'handle_channel_form_metabox_settings'), 10, 1 );
 		add_action( 'agoraio_channel_form_appearance', array($this, 'handle_channel_form_metabox_appearance'), 10, 1 );
+		add_action( 'agoraio_channel_form_recording', array($this, 'handle_channel_form_metabox_recording'), 10, 1 );
 	}
 
 	public function include_agora_new_channel_page() {
@@ -162,11 +174,19 @@ class WP_Agora_Admin {
 		do_meta_boxes( get_current_screen(), 'agora_channel_settings', $channel );
 		unset( $wp_meta_boxes['post']['agora_channel_settings'] );
 	}
+
 	public function handle_channel_form_metabox_appearance($channel) {
 		global $wp_meta_boxes;
 
 		do_meta_boxes( get_current_screen(), 'agora_channel_appearance', $channel );
 		unset( $wp_meta_boxes['post']['agora_channel_appearance'] );
+	}
+
+	public function handle_channel_form_metabox_recording($channel) {
+		global $wp_meta_boxes;
+
+		do_meta_boxes( get_current_screen(), 'agora_channel_recording', $channel );
+		unset( $wp_meta_boxes['post']['agora_channel_recording'] );
 	}
 
 	public function include_agora_settings_page() {

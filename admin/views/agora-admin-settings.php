@@ -47,7 +47,7 @@
   </div>
 
   <!-- ===== CLOUD RECORDING STORAGE ===== -->
-  <div class="card">
+  <!-- <div class="card">
     <h2 class="title">Cloud Recording Storage</h2>
     <div class="infobox">
       agora.io
@@ -60,7 +60,7 @@
     <div class="inside">
       <p>
         <?php
-        _e('Agora Cloud Recording is an add-on service to record and save voice calls, video calls and interactive broadcasts on your cloud storage. With Agora Cloud Recording, you can record calls or live broadcasts for your users to watch at their convenience', 'agoraio');
+        // _e('Agora Cloud Recording is an add-on service to record and save voice calls, video calls and interactive broadcasts on your cloud storage. With Agora Cloud Recording, you can record calls or live broadcasts for your users to watch at their convenience', 'agoraio');
         ?></p>
       <div class="flex app-setting" id="cloudStorageURL">
         <div class="col label">
@@ -78,7 +78,7 @@
         <a href="#" class="button">Change Cloud Recording Storage</a>
       </p>
     </div>
-  </div>
+  </div> -->
 
 
   <!-- ===== Token Server ===== -->
@@ -113,4 +113,72 @@
       </p>
     </div>
   </div>
+
+
+  <div class="card">
+    <h2 class="title">RESTFul Customer ID</h2>
+    <div class="infobox">
+      agora.io
+      <br />
+      <a href="https://docs.agora.io/en/faq/restful_authentication" target="blank">Agora.io RESTFul Docs</a>
+    </div>
+
+    <br class="clear" />
+
+    <div class="inside">
+      <p>
+        <?php
+        _e('You need to use your Customer ID to access to the RESTFul API and enable Cloud Recording', 'agoraio');
+        ?></p>
+      <div class="flex app-setting" id="customerID">
+        <div class="col label">
+          RESTFul Customer ID
+        </div>
+        <div class="col value">
+          <?php
+          $value = isset($agora_options['customerID']) ? $agora_options['customerID'] : '';
+          // $value = "https://4045media-cloudrecordings.s3.amazonaws.com";
+          echo $value;
+          ?>
+        </div>
+      </div>
+      <p>
+        <a href="#" class="button">Change Customer ID</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="title">RESTFul Customer Certificate</h2>
+    <div class="infobox">
+      agora.io
+      <br />
+      <a href="https://docs.agora.io/en/faq/restful_authentication" target="blank">Agora.io RESTFul Docs</a>
+    </div>
+
+    <br class="clear" />
+
+    <div class="inside">
+      <p>
+        <?php
+        _e('You need to use your Customer Certificate to enable Cloud Recording', 'agoraio');
+        ?></p>
+      <div class="flex app-setting" id="customerCertificate">
+        <div class="col label">
+          RESTFul Customer Certificate
+        </div>
+        <div class="col value">
+          <?php
+          $value = isset($agora_options['customerCertificate']) ? $agora_options['customerCertificate'] : '';
+          // $value = "https://4045media-cloudrecordings.s3.amazonaws.com";
+          echo $value;
+          ?>
+        </div>
+      </div>
+      <p>
+        <a href="#" class="button">Change Customer Certificate</a>
+      </p>
+    </div>
+  </div>
+
 </div>
