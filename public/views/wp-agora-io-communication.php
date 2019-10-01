@@ -57,11 +57,11 @@
     window.cameraVideoProfile = '<?php echo $instance['videoprofile'] ?>'; // 640x480 @ 30fps & 750kbs
     window.screenVideoProfile = '<?php echo $instance['screenprofile'] ?>';
     window.addEventListener('load', function() {
-      var agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
-      var channelName = '<?php echo $channel->title() ?>'; // set channel name
+      window.agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
+      window.channelName = '<?php echo $channel->title() ?>'; // set channel name
       window.userID = <?php echo $current_user->ID; ?>;
       calculateVideoScreenSize();
-      initClientAndJoinChannel(agoraAppId, channelName);
+      initClientAndJoinChannel(window.agoraAppId, window.channelName);
     });
 
     function rejoinChannel() {

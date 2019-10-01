@@ -15,6 +15,10 @@ function enableUiControls() {
     toggleVideo();
   });
 
+  jQuery("#cloud-recording-btn").click(function(){
+    toggleRecording();
+  });
+
   jQuery("#exit-btn").click(function(){
     console.log("so sad to see you leave the channel");
     leaveChannel(); 
@@ -29,6 +33,16 @@ function enableUiControls() {
   jQuery("#add-external-stream").click(function(){  
     addExternalSource();
     jQuery('#add-external-source-modal').modal('toggle');
+  });
+
+  jQuery("#screen-share-btn").click(function(){
+    toggleScreenShareBtn(); // set screen share button icon
+    jQuery("#screen-share-btn").prop("disabled",true); // disable the button on click
+    if(window.screenShareActive){
+      stopScreenShare();
+    } else {
+      initScreenShare(); 
+    }
   });
 
   // keyboard listeners 
@@ -80,15 +94,40 @@ function toggleMic() {
   }
 }
 
+function toggleRecording() {
+  if (window.loadingRecord) {
+    return false;
+  }
+
+  if (!window.restfulAuth) {
+    alert('To enable the Cloud Recording, please define your RESTFul Customer on the Agora plugin Settings');
+    return false;
+  }
+
+  var btn = jQuery("#cloud-recording-btn");
+  if (btn.hasClass('start-rec')) {
+    window.loadingRecord = true;
+    btn.removeClass('start-rec').addClass('load-rec').attr('title', 'Stop Recording');
+    // console.log("Start rec");
+    setTimeout(function() {
+      window.loadingRecord = false;
+      btn.removeClass('load-rec').addClass('stop-rec');
+    }, 1500);
+  } else {
+    btn.removeClass('stop-rec').addClass('start-rec').attr('title', 'Start Recording');
+    console.log("Stop rec");
+  }
+}
+
 function toggleVideo() {
   toggleBtn(jQuery("#video-btn")); // toggle button colors
   toggleBtn(jQuery("#cam-dropdown"));
   if (jQuery("#video-icon").hasClass('fa-video')) {
     window.localStreams.camera.stream.muteVideo(); // enable the local video
-    console.log("muteVideo");
+    // console.log("muteVideo");
   } else {
     window.localStreams.camera.stream.unmuteVideo(); // disable the local video
-    console.log("unMuteVideo");
+    // console.log("unMuteVideo");
   }
   jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
 }
@@ -140,4 +179,56 @@ function getSizeFromVideoProfile() {
     case '1080p_3':
     case '1080p_5': return { width: 1920, height: 1080 };
   }
+}
+
+function startVideoRecording() {
+  var params = {
+    action: 'cloud_record', // wp ajax action
+    sdk_action: 'start-recording',
+    cid: window.channelId,
+    cname: window.channelName,
+    uid: window.userID,
+    token: window.agoraToken
+  };
+  agoraApiRequest(ajax_url, params).done(function(res) {
+    // var startRecordURL = agoraAPI + window.agoraAppId + '/cloud_recording/resourceid/' + res.resourceId + '/mode/mix/start';
+    console.log(res);
+    window.resourceId = res.resourceId
+    window.recordingId = res.sid;
+    setTimeout(function(){
+      window.resourceId = null;
+    }, 1000*60*5); // Agora DOCS: The resource ID is valid for five minutes.
+  }).fail(function(err) {
+    console.error('API Error:',err);
+  })
+}
+
+
+function stopVideoRecording() {
+  var params = {
+    action: 'cloud_record', // wp ajax action
+    sdk_action: 'stop-recording',
+    cid: window.channelId,
+    cname: window.channelName,
+    uid: window.userID,
+    resourceId: window.resourceId,
+    recordingId: window.recordingId
+  };
+  agoraApiRequest(ajax_url, params).done(function(res) {
+    // var startRecordURL = agoraAPI + window.agoraAppId + '/cloud_recording/resourceid/' + res.resourceId + '/mode/mix/start';
+    console.log('Stop:', res);
+    window.recording = res.serverResponse;
+  }).fail(function(err) {
+    console.error('API Error:',err);
+  })
+}
+
+// Ajax simple requests
+function agoraApiRequest(endpoint_url, endpoint_data) {
+  var ajaxRequestParams = {
+    method: 'POST',
+    url: endpoint_url,
+    data: endpoint_data
+  };
+  return jQuery.ajax(ajaxRequestParams)
 }

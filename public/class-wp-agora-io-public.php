@@ -38,6 +38,10 @@ class WP_Agora_Public {
 
 		// Use this in case of you need custom pages or templates...
 		// add_filter( 'template_include', array($this, 'agora_pages'), 99 );
+		if (isset($this->settings['customerID'])) {
+			require_once plugin_dir_path(dirname( __FILE__ )) . 'includes/class-wp-agora-cloud-recording.php';
+			new AgoraCloudRecording($this->settings);
+		}
 	}
 
 	/**  Render Agora Commnication shortcode **/
@@ -63,6 +67,8 @@ class WP_Agora_Public {
 	  wp_enqueue_style( 'fontawesome', $fontawesome, array('bootstrap'), null, 'all' );
 	  wp_enqueue_script( 'AgoraSDK', 'https://cdn.agora.io/sdk/web/AgoraRTCSDK-2.8.0.js', array('jquery'), null );
 
+	  wp_enqueue_script( $this->plugin_name.'-screen', plugin_dir_url( __FILE__ ) . 'js/screen-share.js', array( 'jquery' ), $this->version, false );
+	  
 	  $scriptUI = $type==='broadcast' ? 'js/broadcast-ui.js' : 'js/communication-ui.js';
 	  wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . $scriptUI, array( 'jquery' ), $this->version, false );
 	}
@@ -135,7 +141,7 @@ class WP_Agora_Public {
 
 		// add data before JS plugin
 		// useful to load dynamic settings and env vars
-		// add_action( 'wp_footer', array($this, 'createPublicJSvars'), 1);
+		add_action( 'wp_footer', array($this, 'createPublicJSvars'), 1);
 	}
 
 		// Create public JS Variables to pass to external script

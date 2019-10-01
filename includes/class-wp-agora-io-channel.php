@@ -39,6 +39,15 @@ class WP_Agora_Channel {
     'disabledButtonColor' => '#dc3545',
   );
 
+  // https://docs.agora.io/en/cloud-recording/cloud_recording_api_rest?platform=All%20Platforms#parameters-1
+  private static $defaultRecordingSettings = array(
+    'vendor' => '',
+    'region' => 0,
+    'bucket' => '',
+    'accessKey' => '',
+    'secretKey' => ''
+  );
+
   // private channel attrs
   private $id;
   private $name;
@@ -157,6 +166,7 @@ class WP_Agora_Channel {
       // $properties = $this->get_properties();
       $videoSettings = get_post_meta( $this->id, 'channel_video_settings', true );
       $appearanceSettings = get_post_meta( $this->id, 'channel_appearance_settings', true );
+      $recordingSettings = get_post_meta( $this->id, 'channel_recording_settings', true );
       $channelType = get_post_meta( $this->id, 'channel_type', true );
       $channelUserHost = get_post_meta( $this->id, 'channel_user_host', true );
 
@@ -164,7 +174,8 @@ class WP_Agora_Channel {
         'type' => $channelType,
         'host' => $channelUserHost,
         'settings' => $videoSettings,
-        'appearance' => $appearanceSettings
+        'appearance' => $appearanceSettings,
+        'recording' => $recordingSettings
       );
       
       // $this->upgrade();
@@ -179,7 +190,8 @@ class WP_Agora_Channel {
       'type' => '',
       'host' => array(),
       'settings' => array_merge(self::$defaultVideoSettings),
-      'appearance' => array_merge(self::$defaultAppearanceSettings)
+      'appearance' => array_merge(self::$defaultAppearanceSettings),
+      'recording' => array_merge(self::$defaultRecordingSettings)
     ) );
     $properties = (array) apply_filters( 'agoraio_channel_properties', $properties, $this );
     return $properties;

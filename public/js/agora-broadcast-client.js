@@ -4,7 +4,7 @@
 
 // join a channel
 function agoraJoinChannel() {
-  var token = generateToken(); // rendered on PHP
+  window.agoraToken = generateToken(); // rendered on PHP
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
 
   // set the role
@@ -14,8 +14,7 @@ function agoraJoinChannel() {
     AgoraRTC.Logger.error('setClientRole failed', e);
   });
   
-  // window.agoraClient.join(token, 'allThingsRTCLiveStream', 0, function(uid) {
-  window.agoraClient.join(token, window.channelName, userId, function(uid) {
+  window.agoraClient.join(agoraToken, window.channelName, userId, function(uid) {
       createCameraStream(uid, {});
       window.localStreams.uid = uid; // keep track of the stream uid  
       AgoraRTC.Logger.info('User ' + uid + ' joined channel successfully');
@@ -64,12 +63,14 @@ function createCameraStream(uid, deviceIds) {
       jQuery("#video-btn").prop("disabled", false);
       jQuery("#exit-btn").prop("disabled", false);
     }
-
+    
     window.agoraClient.publish(localStream, function (err) {
       err && AgoraRTC.Logger.error('[ERROR] : publish local stream error: ' + err);
     });
 
     window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
+
+    jQuery('#buttons-container').fadeIn();
   }, function (err) {
     AgoraRTC.Logger.error('[ERROR] : getUserMedia failed', err);
   });

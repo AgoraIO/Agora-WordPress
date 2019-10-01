@@ -19,7 +19,7 @@ function enableUiControls(localStream) {
   jQuery("#screen-share-btn").click(function(){
     toggleScreenShareBtn(); // set screen share button icon
     jQuery("#screen-share-btn").prop("disabled",true); // disable the button on click
-    if(screenShareActive){
+    if(window.screenShareActive){
       stopScreenShare();
     } else {
       initScreenShare(); 
@@ -70,11 +70,6 @@ function enableUiControls(localStream) {
 
 function toggleBtn(btn){
   btn.toggleClass('btn-dark').toggleClass('btn-danger');
-}
-
-function toggleScreenShareBtn() {
-  jQuery('#screen-share-btn').toggleClass('btn-danger');
-  jQuery('#screen-share-icon').toggleClass('fa-share-square').toggleClass('fa-times-circle');
 }
 
 function toggleVisibility(elementID, visible) {

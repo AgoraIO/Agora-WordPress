@@ -3,17 +3,25 @@
 $channelSettings    = $channel->get_properties();
 $videoSettings      = $channelSettings['settings'];
 $appearanceSettings = $channelSettings['appearance'];
+$recordingSettings = $channelSettings['recording'];
 $current_user       = wp_get_current_user();
 ?>
 <div class="agora agora-broadcast">
   <div id="main-container" class="controls-top">
     <div id="full-screen-video">
-      <div id="screen-share-btn-container" class="col-2 float-right text-right mt-3">
-      <button id="screen-share-btn"  type="button" class="btn btn-md">
-        <i id="screen-share-icon" class="fab fa-slideshare"></i>
-      </button>
+      <?php // if(is_array($recordingSettings) && isset($recordingSettings['bucket'])) : ?>
+      <div id="cloud-recording-container" class="mt-3">
+        <button id="cloud-recording-btn" class="btn btn-sm start-rec" title="<?php _e('Start Recording', 'agoraio'); ?>">
+          <div class="inner-icon"> </div>
+        </button>
       </div>
-      <div id="buttons-container" class="row justify-content-center mt-3">
+    <?php // endif; ?>
+      <div id="screen-share-btn-container" class="col-2 float-right text-right mt-3">
+        <button id="screen-share-btn"  type="button" class="btn btn-md" title="<?php _e('Screen Share', 'agoraio'); ?>">
+          <i id="screen-share-icon" class="fab fa-slideshare"></i>
+        </button>
+      </div>
+      <div id="buttons-container" class="row justify-content-center mt-3" style="display: none">
         <div id="audio-controls" class="col-md-2 text-center btn-group">
           <button id="mic-btn" type="button" class="btn btn-block btn-dark btn-md">
             <i id="mic-icon" class="fas fa-microphone"></i>
@@ -64,11 +72,12 @@ $current_user       = wp_get_current_user();
      */
     window.addEventListener('load', function() {
       
-      var agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
+      window.agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
       window.channelName = '<?php echo $channel->title() ?>'; // set channel name
+      window.channelId = '<?php echo $channel->id() ?>'; // set channel name
       window.agoraCurrentRole = 'host';
       window.userID = <?php echo $current_user->ID; ?>;
-
+      
       // default config for rtmp
       var defaultConfigRTMP = {
         width: <?php echo $videoSettings['external-width'] ?>,
@@ -89,6 +98,7 @@ $current_user       = wp_get_current_user();
 
       // create client instance
       window.agoraClient = AgoraRTC.createClient({mode: 'live', codec: 'vp8'}); // h264 better detail at a higher motion
+      window.screenClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'}); 
 
       var mainStreamId; // reference to main stream
 
@@ -122,7 +132,7 @@ $current_user       = wp_get_current_user();
       // TODO: set DEBUG or NOE according to the current host (localhost or not)
 
       // init Agora SDK
-      window.agoraClient.init(agoraAppId, function () {
+      window.agoraClient.init(window.agoraAppId, function () {
         AgoraRTC.Logger.info('AgoraRTC client initialized');
         agoraJoinChannel(); // join channel upon successfull init
       }, function (err) {
