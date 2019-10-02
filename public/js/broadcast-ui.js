@@ -37,11 +37,22 @@ function enableUiControls() {
 
   jQuery("#screen-share-btn").click(function(){
     toggleScreenShareBtn(); // set screen share button icon
+    var loaderIcon = jQuery(this).find('.spinner-border');
+    var closeIcon = jQuery('#screen-share-icon');
+    loaderIcon.show();
+    closeIcon.hide();
+
+    var toggleLoader = function(err, next) {
+      loaderIcon.hide();
+      closeIcon.show();
+      // TODO: is not needed but I could capture the callback result here...
+    }
+
     jQuery("#screen-share-btn").prop("disabled",true); // disable the button on click
     if(window.screenShareActive){
-      stopScreenShare();
+      stopScreenShare(toggleLoader);
     } else {
-      initScreenShare(); 
+      initScreenShare(toggleLoader);
     }
   });
 

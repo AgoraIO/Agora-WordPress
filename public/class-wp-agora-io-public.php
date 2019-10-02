@@ -42,6 +42,52 @@ class WP_Agora_Public {
 			require_once plugin_dir_path(dirname( __FILE__ )) . 'includes/class-wp-agora-cloud-recording.php';
 			new AgoraCloudRecording($this->settings);
 		}
+
+		$ajaxTokenServer = array($this, 'ajaxTokenServer');
+    add_action( 'wp_ajax_generate_token', $ajaxTokenServer );
+    add_action( 'wp_ajax_nopriv_generate_token', $ajaxTokenServer );
+	}
+
+	public function ajaxTokenServer() {
+		require_once(__DIR__.'/../includes/token-server/RtcTokenBuilder.php');
+
+		header('Content-Type: application/json');
+		if (!isset($_POST['cid'])) {
+			header("HTTP/1.1 404 Channel Not Found"); 
+			echo '{"error": "Undefined channel!", "code": "404"}';
+			wp_die();
+			return;
+		}
+
+		$cid = $_POST['cid'];
+		$channel = WP_Agora_Channel::get_instance($cid);
+
+		if (!$channel->id()) {
+			header("HTTP/1.1 404 Channel Not Found"); 
+			echo '{"error": "Channel!", "code": "404"}';
+			wp_die();
+			return;
+		}
+
+		$appID = $this->settings['appId'];
+    $appCertificate = $this->settings['appCertificate'];
+    
+    if($appCertificate && strlen($appCertificate)>0) {
+      $channelName = $channel->title();
+      $uid = 0; // $current_user->ID; // Get urrent user id
+
+      // role should be based on the current user host...
+      $settings = $channel->get_properties();
+      $role = 'Role_Publisher'; // TODO: Validate if this should be changed according to the curret user and current shortcode from the ajax call...
+      $privilegeExpireTs = 0;
+      $token = RtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs);
+      echo json_encode(array( "token" => $token ));
+    } else {
+      header("HTTP/1.1 500 Channel Not Found"); 
+			echo '{"error": "Token Server not configured!", "code": "500"}';
+    }
+
+    wp_die();
 	}
 
 	/**  Render Agora Commnication shortcode **/

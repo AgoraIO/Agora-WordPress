@@ -120,6 +120,7 @@ body .agora {
   width: 100%;
   min-height: 100px;
   background-size: cover;
+  overflow: hidden;
 }
 #video-canvas {
   width: 100%;

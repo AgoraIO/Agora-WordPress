@@ -2,6 +2,9 @@
  * Agora Broadcast Client 
  */
 
+// stream references (keep track of active streams) 
+var remoteStreams = {}; // remote streams obj struct [id : stream] 
+
 // join a channel
 function agoraJoinChannel() {
   window.agoraToken = generateToken(); // rendered on PHP

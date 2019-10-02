@@ -16,13 +16,24 @@ function enableUiControls(localStream) {
     toggleVideo(localStream);
   });
 
-  jQuery("#screen-share-btn").click(function(){
+  jQuery("#screen-share-btn").click(function() {
     toggleScreenShareBtn(); // set screen share button icon
+    var loaderIcon = jQuery(this).find('.spinner-border');
+    var closeIcon = jQuery('#screen-share-icon');
+    loaderIcon.show();
+    closeIcon.hide();
+
+    var toggleLoader = function(err, next) {
+      loaderIcon.hide();
+      closeIcon.show();
+      // TODO: is not needed but I could capture the callback result here...
+    }
+
     jQuery("#screen-share-btn").prop("disabled",true); // disable the button on click
     if(window.screenShareActive){
-      stopScreenShare();
+      stopScreenShare(toggleLoader);
     } else {
-      initScreenShare(); 
+      initScreenShare(toggleLoader);
     }
   });
 
@@ -113,7 +124,7 @@ function logCameraDevices() {
     console.log("getDevices: " + JSON.stringify(devices));
   });
 
-  client.getCameras (function(cameras) {
+  agoraClient.getCameras (function(cameras) {
     var devCount = cameras.length;
     var id = cameras[0].deviceId;
     console.log("getCameras: " + JSON.stringify(cameras));
@@ -147,4 +158,14 @@ function getSizeFromVideoProfile() {
     case '1080p_3':
     case '1080p_5': return { width: 1920, height: 1080 };
   }
+}
+
+// Ajax simple requests
+function agoraApiRequest(endpoint_url, endpoint_data) {
+  var ajaxRequestParams = {
+    method: 'POST',
+    url: endpoint_url,
+    data: endpoint_data
+  };
+  return jQuery.ajax(ajaxRequestParams)
 }

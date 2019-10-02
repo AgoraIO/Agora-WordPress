@@ -8,6 +8,7 @@
         <div id="screen-share-btn-container" class="col-2 float-right text-right mt-2">
           <button id="screen-share-btn"  type="button" class="btn btn-xs">
             <i id="screen-share-icon" class="fas fa-share-square"></i>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none"></span>
           </button>
         </div>
         <div id="buttons-container" class="row justify-content-center mt-3">
@@ -59,7 +60,10 @@
     window.addEventListener('load', function() {
       window.agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
       window.channelName = '<?php echo $channel->title() ?>'; // set channel name
+      window.channelId = '<?php echo $channel->id() ?>'; // set channel name
       window.userID = <?php echo $current_user->ID; ?>;
+      window.agoraMode = 'communication';
+
       calculateVideoScreenSize();
       initClientAndJoinChannel(window.agoraAppId, window.channelName);
     });

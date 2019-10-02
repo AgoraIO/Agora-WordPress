@@ -19,6 +19,7 @@ $current_user       = wp_get_current_user();
       <div id="screen-share-btn-container" class="col-2 float-right text-right mt-3">
         <button id="screen-share-btn"  type="button" class="btn btn-md" title="<?php _e('Screen Share', 'agoraio'); ?>">
           <i id="screen-share-icon" class="fab fa-slideshare"></i>
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none"></span>
         </button>
       </div>
       <div id="buttons-container" class="row justify-content-center mt-3" style="display: none">
@@ -76,6 +77,7 @@ $current_user       = wp_get_current_user();
       window.channelName = '<?php echo $channel->title() ?>'; // set channel name
       window.channelId = '<?php echo $channel->id() ?>'; // set channel name
       window.agoraCurrentRole = 'host';
+      window.agoraMode = 'audience';
       window.userID = <?php echo $current_user->ID; ?>;
       
       // default config for rtmp
@@ -100,11 +102,12 @@ $current_user       = wp_get_current_user();
       window.agoraClient = AgoraRTC.createClient({mode: 'live', codec: 'vp8'}); // h264 better detail at a higher motion
       window.screenClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'}); 
 
-      var mainStreamId; // reference to main stream
+      window.mainStreamId; // reference to main stream
 
       // set video profile 
       // [full list: https://docs.agora.io/en/Interactive%20Broadcast/videoProfile_web?platform=Web#video-profile-table]
       window.cameraVideoProfile = '<?php echo $instance['videoprofile'] ?>';
+      window.screenVideoProfile = '<?php echo $instance['screenprofile'] ?>';
 
       // keep track of streams
       window.localStreams = {
@@ -112,6 +115,10 @@ $current_user       = wp_get_current_user();
         camera: {
           camId: '',
           micId: '',
+          stream: {}
+        },
+        screen: {
+          id: "",
           stream: {}
         }
       };

@@ -45,12 +45,15 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
     window.addEventListener('load', function() {
       var agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
       window.channelName = '<?php echo $channel->title() ?>'; // set channel name
+      window.channelId = '<?php echo $channel->id() ?>'; // set channel name
       window.agoraCurrentRole = 'audience';
+      window.agoraMode = 'audience';
 
       // create client 
       // vp8 to work across mobile devices
       window.agoraClient = AgoraRTC.createClient({mode: 'live', codec: 'vp8'});
       window.cameraVideoProfile = '<?php echo $instance['videoprofile'] ?>';
+      window.screenVideoProfile = '<?php echo $instance['screenprofile'] ?>';
 
       // set log level:
       // -- .DEBUG for dev 
