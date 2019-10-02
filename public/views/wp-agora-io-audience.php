@@ -113,8 +113,11 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
       window.agoraClient.on('peer-leave', function(evt) {
         AgoraRTC.Logger.info('Remote stream has left the channel: ' + evt.uid);
         evt.stream.stop(); // stop the stream
-        jQuery("#full-screen-video").fadeOut();
-        jQuery("#watch-live-closed").show();
+        if (jQuery('#full-screen-video').children().length===0) {
+          jQuery("#full-screen-video").fadeOut();
+          jQuery("#watch-live-closed").show();
+        }
+
       });
 
       // show mute icon whenever a remote has muted their mic
@@ -129,10 +132,13 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
       // show user icon whenever a remote has disabled their video
       window.agoraClient.on('mute-video', function (evt) {
         var remoteId = evt.uid;
+        // console.log('Mute video from remote:', remoteId);
+        jQuery('#full-screen-video').children().eq(0).hide();
       });
 
       window.agoraClient.on('unmute-video', function (evt) {
         var remoteId = evt.uid;
+        jQuery('#full-screen-video').children().eq(0).show();
       });
 
       // ingested live stream 

@@ -108,10 +108,15 @@ class WP_Agora_Public {
 
 	public function enqueueShortcodeStyles($type) {
 		$bootstrap_css = 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css';
+		$bootstrap_js = 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js';
+		$bootstrap_popper_js = 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js';
 	  $fontawesome = 'https://use.fontawesome.com/releases/v5.7.0/css/all.css';
 	  wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
 	  wp_enqueue_style( 'fontawesome', $fontawesome, array('bootstrap'), null, 'all' );
+	  
 	  wp_enqueue_script( 'AgoraSDK', 'https://cdn.agora.io/sdk/web/AgoraRTCSDK-2.8.0.js', array('jquery'), null );
+	  wp_enqueue_script( 'bootstrap_popper', $bootstrap_popper_js, array('jquery'), null );
+	  wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
 
 	  wp_enqueue_script( $this->plugin_name.'-screen', plugin_dir_url( __FILE__ ) . 'js/screen-share.js', array( 'jquery' ), $this->version, false );
 	  

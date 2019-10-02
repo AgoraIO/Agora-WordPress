@@ -15,6 +15,7 @@ function renderCommnicationShortcode($agora, $attrs) {
   }
 
   $agora->enqueueShortcodeStyles('communication');
+  
   wp_enqueue_script(
     'AgoraCommunicationClient',
     plugin_dir_url( __FILE__ ) . 'js/agora-communication-client.js',

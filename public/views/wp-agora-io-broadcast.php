@@ -15,7 +15,7 @@ $current_user       = wp_get_current_user();
           <div class="inner-icon"> </div>
         </button>
       </div>
-    <?php // endif; ?>
+      <?php // endif; ?>
       <div id="screen-share-btn-container" class="col-2 float-right text-right mt-3">
         <button id="screen-share-btn"  type="button" class="btn btn-md" title="<?php _e('Screen Share', 'agoraio'); ?>">
           <i id="screen-share-icon" class="fab fa-slideshare"></i>
@@ -66,7 +66,61 @@ $current_user       = wp_get_current_user();
         </div>
       </div>
     </div> <!--  end full-screen-video -->
+
+
+    <!-- RTMP Config Modal -->
+    <div class="modal fade slideInLeft animated" id="addRtmpConfigModal" tabindex="-1" role="dialog" aria-labelledby="rtmpConfigLabel" aria-hidden="true" data-keyboard=true>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="rtmpConfigLabel"><i class="fas fa-sliders-h"></i></h5>
+            <button type="button" class="close" data-dismiss="modal" data-reset="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="rtmp-config">
+              form content goes here...
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="start-RTMP-broadcast" class="btn btn-primary">
+                <i class="fas fa-satellite-dish"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end Modal -->
+
+    <!-- External Injest Url Modal -->
+    <div class="modal fade slideInLeft animated" id="add-external-source-modal" tabindex="-1" role="dialog" aria-labelledby="add-external-source-url-label" aria-hidden="true" data-keyboard=true>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="add-external-source-url-label"><i class="fas fa-broadcast-tower"></i> [add external url]</h5>
+            <button id="hide-external-url-modal" type="button" class="close" data-dismiss="modal" data-reset="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="external-injest-config">
+              form content goes here...
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="add-external-stream" class="btn btn-primary">
+                <i id="add-rtmp-icon" class="fas fa-plug"></i>  
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end Modal -->
+
   </div> <!--  end main-container  -->
+
+
   <script>
     /**
      * Agora Broadcast Client 
