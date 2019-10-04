@@ -225,8 +225,15 @@ class WP_Agora_Channel {
       return $args[$key];
     }, array_keys(self::$defaultAppearanceSettings));
 
+    $recordingSettings = array();
+    array_map(function($key) use ($args, &$recordingSettings) {
+      $recordingSettings[$key] = $args[$key];
+      return $args[$key];
+    }, array_keys(self::$defaultRecordingSettings));
+
     update_post_meta($post_id, 'channel_video_settings', $videoSettings);
     update_post_meta($post_id, 'channel_appearance_settings', $appearanceSettings);
+    update_post_meta($post_id, 'channel_recording_settings', $recordingSettings);
     update_post_meta($post_id, 'channel_type', $args['type']);
     update_post_meta($post_id, 'channel_user_host', $args['host']);
 

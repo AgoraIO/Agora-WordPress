@@ -38,7 +38,7 @@ function agora_render_setting_row_select($id, $title, $options, $settings, $pref
     <td>
       <select id="<?php echo $input_id ?>" name="<?php echo $input_id ?>">
         <?php foreach ($options as $key => $value) {
-          $selected = ($settings[$input_id]===$key) ? 'selected="selected"' : '';
+          $selected = ($settings[$input_id]==$key) ? 'selected="selected"' : '';
           echo '<option value="'.$key.'" '.$selected.'>'.$value.'</option>';
         } ?>
       </select>
@@ -350,6 +350,7 @@ function render_agoraio_channel_form_appearance($channel) {
 function render_agoraio_channel_form_recording($channel) {
   $props = $channel->get_properties();
   $recording = $props['recording'];
+  // die("<pre>".print_r($recording, true)."</pre>");
   ?>
   <table class="form-table">
     <?php
@@ -367,6 +368,10 @@ function render_agoraio_channel_form_recording($channel) {
       'region',
       __('Region', 'agoraio'),
       array('' => __('Please select a vendor', 'agoraio')), $recording, '');
+    
+    if(isset($recording['region'])) {
+      echo '<input type="hidden" id="region-tmp" value="'.$recording['region'].'" />';
+    }
 
     agora_render_setting_row('bucket', __('Bucket', 'agoraio'), $recording, '', 'text');
 
@@ -398,9 +403,15 @@ function render_agoraio_channel_form_recording($channel) {
       jQuery.each(options, function(key, value) {
         region.append(jQuery('<option/>').attr('value', key).text(value));
       });
+
+      var tmpVal = jQuery('#region-tmp').val();
+      if (tmpVal) {
+        region.val( tmpVal );
+      }
     }
     window.addEventListener('load', function() {
       jQuery('#vendor').change(updateRegionOptions);
+      jQuery('#vendor').change();
     });
   </script>
   <?php
