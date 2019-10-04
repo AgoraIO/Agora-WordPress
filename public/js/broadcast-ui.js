@@ -110,23 +110,29 @@ function toggleRecording() {
     return false;
   }
 
-  if (!window.restfulAuth) {
-    alert('To enable the Cloud Recording, please define your RESTFul Customer on the Agora plugin Settings');
-    return false;
-  }
-
   var btn = jQuery("#cloud-recording-btn");
   if (btn.hasClass('start-rec')) {
     window.loadingRecord = true;
     btn.removeClass('start-rec').addClass('load-rec').attr('title', 'Stop Recording');
-    // console.log("Start rec");
-    setTimeout(function() {
+    console.log("Starting rec...");
+    startVideoRecording(function(err, res) {
+      if (res) {
+        btn.removeClass('load-rec').addClass('stop-rec');
+      } else {
+        btn.removeClass('load-rec').addClass('start-rec').attr('title', 'Start Recording');
+      }
       window.loadingRecord = false;
-      btn.removeClass('load-rec').addClass('stop-rec');
-    }, 1500);
+    });
   } else {
     btn.removeClass('stop-rec').addClass('start-rec').attr('title', 'Start Recording');
-    console.log("Stop rec");
+    console.log("Stoping rec...");
+    stopVideoRecording(function(err, res) {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(res);
+      }
+    })
   }
 }
 
@@ -192,7 +198,7 @@ function getSizeFromVideoProfile() {
   }
 }
 
-function startVideoRecording() {
+function startVideoRecording(cb) {
   var params = {
     action: 'cloud_record', // wp ajax action
     sdk_action: 'start-recording',
@@ -204,18 +210,24 @@ function startVideoRecording() {
   agoraApiRequest(ajax_url, params).done(function(res) {
     // var startRecordURL = agoraAPI + window.agoraAppId + '/cloud_recording/resourceid/' + res.resourceId + '/mode/mix/start';
     console.log(res);
-    window.resourceId = res.resourceId
-    window.recordingId = res.sid;
-    setTimeout(function(){
-      window.resourceId = null;
-    }, 1000*60*5); // Agora DOCS: The resource ID is valid for five minutes.
+    if (res && res.sid) {
+      window.resourceId = res.resourceId
+      window.recordingId = res.sid;
+      setTimeout(function() {
+        window.resourceId = null;
+      }, 1000*60*5); // Agora DOCS: The resource ID is valid for five minutes.
+      cb(null, res);
+    } else {
+      cb(res, null);
+    }
   }).fail(function(err) {
     console.error('API Error:',err);
+    cb(err, null);
   })
 }
 
 
-function stopVideoRecording() {
+function stopVideoRecording(cb) {
   var params = {
     action: 'cloud_record', // wp ajax action
     sdk_action: 'stop-recording',
@@ -229,8 +241,11 @@ function stopVideoRecording() {
     // var startRecordURL = agoraAPI + window.agoraAppId + '/cloud_recording/resourceid/' + res.resourceId + '/mode/mix/start';
     console.log('Stop:', res);
     window.recording = res.serverResponse;
+    cb(null, res);
+
   }).fail(function(err) {
     console.error('API Error:',err);
+    cb(err, null);
   })
 }
 

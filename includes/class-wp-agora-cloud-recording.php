@@ -60,9 +60,9 @@ class AgoraCloudRecording {
 
     private function startRecording($data) {
 
-        // $resource = $this->acquire($data);
-        // $resourceId = $resource['resourceId'];
-        $resourceId = '--';
+        $resource = $this->acquire($data);
+        // die("<pre>".print_r($resource, true)."</pre>");
+        $resourceId = $resource->resourceId;
         
         $channel = WP_Agora_Channel::get_instance($data['cid']);
         $channelSettings    = $channel->get_properties();
@@ -71,27 +71,29 @@ class AgoraCloudRecording {
             return new WP_Error( 'data', "Storage Config not finished." );
         }
 
-        $sid = $data['sid'];
+        // $sid = $data['sid'];
         $endpoint = $this->settings['appId'].'/cloud_recording/resourceid/' . $resourceId . '/mode/mix/start';
 
         $clientRequest = new stdClass();
         $clientRequest->recordingConfig = new stdClass();
         $clientRequest->recordingConfig->channelType = 1; // 1 = broadcast,  0=Communication
         $clientRequest->storageConfig = new stdClass();
-        $clientRequest->storageConfig->vendor = $recordingSettings['vendor'];
-        $clientRequest->storageConfig->region = $recordingSettings['region'];
+        $clientRequest->storageConfig->vendor = intval($recordingSettings['vendor']);
+        $clientRequest->storageConfig->region = intval($recordingSettings['region']);
         $clientRequest->storageConfig->bucket = $recordingSettings['bucket'];
         $clientRequest->storageConfig->accessKey = $recordingSettings['accessKey'];
         $clientRequest->storageConfig->secretKey = $recordingSettings['secretKey'];
+        if (isset($data['token'])) {
+            $clientRequest->token = $data['token'];
+        }
         
         $params = array(
             'cname' => $data['cname'],
             'uid' => $data['uid'],
             'clientRequest' => $clientRequest
         );
-        if (isset($data['token'])) {
-            $params['token'] = $data['token'];
-        }
+
+        // die("<pre>".print_r($params, true)."</pre>");
         return $this->callAPI($endpoint, $params, 'POST');
     }
 
@@ -102,7 +104,7 @@ class AgoraCloudRecording {
             $resourceId = $data['resourceId'];
         } else {
             $resource = $this->acquire($data);
-            $resourceId = $resource['resourceId'];
+            $resourceId = $resource->resourceId;
         }
 
         if (!isset($data['cid']) || !isset($data['recordingId']) ) {
