@@ -124,13 +124,17 @@ function toggleRecording() {
       window.loadingRecord = false;
     });
   } else {
-    btn.removeClass('stop-rec').addClass('start-rec').attr('title', 'Start Recording');
     console.log("Stoping rec...");
     stopVideoRecording(function(err, res) {
       if (err) {
         console.error(err);
       } else {
-        console.log(res);
+        if(!res.errors) {
+          console.log(res);
+          btn.removeClass('stop-rec').addClass('start-rec').attr('title', 'Start Recording');
+        } else {
+          console.error(res.errors);
+        }
       }
     })
   }
@@ -211,11 +215,13 @@ function startVideoRecording(cb) {
     // var startRecordURL = agoraAPI + window.agoraAppId + '/cloud_recording/resourceid/' + res.resourceId + '/mode/mix/start';
     console.log(res);
     if (res && res.sid) {
-      window.resourceId = res.resourceId
+      window.resourceId = res.resourceId;
       window.recordingId = res.sid;
+      window.uid = res.uid;
+
       setTimeout(function() {
         window.resourceId = null;
-      }, 1000*60*5); // Agora DOCS: The resource ID is valid for five minutes.
+      }, 1000*60*4); // Agora DOCS: The resource ID is valid for five minutes.
       cb(null, res);
     } else {
       cb(res, null);
@@ -233,7 +239,7 @@ function stopVideoRecording(cb) {
     sdk_action: 'stop-recording',
     cid: window.channelId,
     cname: window.channelName,
-    uid: window.userID,
+    uid: window.uid,
     resourceId: window.resourceId,
     recordingId: window.recordingId
   };
@@ -248,6 +254,26 @@ function stopVideoRecording(cb) {
     cb(err, null);
   })
 }
+
+
+function queryVideoRecording() {
+  var params = {
+    action: 'cloud_record', // wp ajax action
+    sdk_action: 'query-recording',
+    cid: window.channelId,
+    cname: window.channelName,
+    uid: window.uid,
+    resourceId: window.resourceId,
+    recordingId: window.recordingId
+  };
+  agoraApiRequest(ajax_url, params).done(function(res) {
+    console.log('Query:', res);
+
+  }).fail(function(err) {
+    console.error('API Error:',err);
+  })
+}
+
 
 // Ajax simple requests
 function agoraApiRequest(endpoint_url, endpoint_data) {
