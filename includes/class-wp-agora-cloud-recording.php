@@ -49,12 +49,21 @@ class AgoraCloudRecording {
         }
 
         if (is_wp_error( $out )) {
-            header('HTTP/1.1 500 Internal Server Error');
+            $code = 500;
+            if (isset($out->errors['API'])) {
+                $errorOut = $out->errors['API'][0];
+                if (property_exists($errorOut, 'code')) {
+                    if(intval($errorOut->code)>=400) {
+                        $code = $errorOut->code;
+                    }
+                }
+            }
+            header('HTTP/1.1 '.$code);
         } else {
             header('HTTP/1.1 200 OK');
-            header('Content-Type: application/json');
         }
 
+        header('Content-Type: application/json');
         echo json_encode($out);
         die();
     }
@@ -167,8 +176,6 @@ class AgoraCloudRecording {
             'uid' => $data['uid'],
             'clientRequest' => json_decode("{}")
         );
-        // header('HTTP/1.1 500 Internal Server Error');
-        // die("<pre>STOP:".print_r($endpoint, true)."</pre>");
         return $this->callAPI($endpoint, $params, 'POST');
     }
 
