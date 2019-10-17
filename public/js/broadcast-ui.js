@@ -25,12 +25,30 @@ function enableUiControls() {
   });
 
   jQuery("#start-RTMP-broadcast").click(function(){
+    var formValid = document.getElementById('rtmp-config').checkValidity();
+    var errorEl = jQuery('#rtmp-error-msg');
+    if (!formValid) {
+      errorEl.show();
+      return;
+    } else {
+      errorEl.hide();
+    }
+
     startLiveTranscoding();
     jQuery('#addRtmpConfigModal').modal('toggle');
-    jQuery('#rtmp-url').val('');
+    // jQuery('#input_rtmp_url').val('');
   });
 
-  jQuery("#add-external-stream").click(function(){  
+  jQuery("#add-external-stream").click(function(){
+    var formValid = document.getElementById('external-inject-config').checkValidity();
+    var errorEl = jQuery('#external-url-error');
+    if (!formValid) {
+      errorEl.show();
+      return;
+    } else {
+      errorEl.hide();
+    }
+    // 
     addExternalSource();
     jQuery('#add-external-source-modal').modal('toggle');
   });
@@ -220,14 +238,14 @@ function startVideoRecording(cb) {
       window.uid = res.uid;
 
       setTimeout(function() {
-        window.resourceId = null;
-      }, 1000*60*4); // Agora DOCS: The resource ID is valid for five minutes.
+        // window.resourceId = null;
+      }, 1000*60*5); // Agora DOCS: The resource ID is valid for five minutes.
       cb(null, res);
     } else {
       cb(res, null);
     }
   }).fail(function(err) {
-    console.error('API Error:',err);
+    console.error('API Error:', err.responseJSON.errors);
     cb(err, null);
   })
 }
@@ -250,7 +268,7 @@ function stopVideoRecording(cb) {
     cb(null, res);
 
   }).fail(function(err) {
-    console.error('API Error:',err);
+    console.error('API Error:', err.responseJSON.errors);
     cb(err, null);
   })
 }

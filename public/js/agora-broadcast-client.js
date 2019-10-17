@@ -1,7 +1,8 @@
 /**
  * Agora Broadcast Client 
  */
-
+const RADIX_DECIMAL = 10;
+const RADIX_HEX = 16;
 // stream references (keep track of active streams) 
 var remoteStreams = {}; // remote streams obj struct [id : stream] 
 
@@ -170,69 +171,35 @@ function getMicDevices() {
 }
 
 function startLiveTranscoding() {
-  AgoraRTC.Logger.info("start live transcoding"); 
-  var rtmpUrl = jQuery('#rtmp-url').val();
-  var width = parseInt(jQuery('#window-scale-width').val(), 10);
-  var height = parseInt(jQuery('#window-scale-height').val(), 10);
-
-  var configRtmp = {
-    width: width,
-    height: height,
-    videoBitrate: parseInt(jQuery('#video-bitrate').val(), 10),
-    videoFramerate: parseInt(jQuery('#framerate').val(), 10),
-    lowLatency: (jQuery('#low-latancy').val() === 'true'),
-    audioSampleRate: parseInt(jQuery('#audio-sample-rate').val(), 10),
-    audioBitrate: parseInt(jQuery('#audio-bitrate').val(), 10),
-    audioChannels: parseInt(jQuery('#audio-channels').val(), 10),
-    videoGop: parseInt(jQuery('#video-gop').val(), 10),
-    videoCodecProfile: parseInt(jQuery('#video-codec-profile').val(), 10),
-    userCount: 1,
-    userConfigExtraInfo: {},
-    backgroundColor: parseInt(jQuery('#background-color-picker').val(), 16),
-    transcodingUsers: [{
-      uid: window.localStreams.uid,
-      alpha: 1,
-      width: width,
-      height: height,
-      x: 0,
-      y: 0,
-      zOrder: 0
-    }],
-  };
+  AgoraRTC.Logger.info("Start live transcoding..."); 
+  var rtmpURL = jQuery('#input_rtmp_url').val();
+  var rtmpKey = jQuery('#input_private_key').val();
+  var width = parseInt(jQuery('#window-scale-width').val(), RADIX_DECIMAL);
+  var height = parseInt(jQuery('#window-scale-height').val(), RADIX_DECIMAL);
 
   // set live transcoding config
-  window.agoraClient.setLiveTranscoding(configRtmp);
-  if(rtmpUrl !== '') {
-    window.agoraClient.startLiveStreaming(rtmpUrl, true)
-    window.externalBroadcastUrl = rtmpUrl;
-    addExternalTransmitionMiniView(rtmpUrl)
+  window.agoraClient.setLiveTranscoding(window.defaultConfigRTMP);
+
+  if(rtmpURL.length>0 && rtmpKey.length>0) {
+    const sep = rtmpURL.lastIndexOf('/')===rtmpURL.length-1 ? '' : '/';
+    window.externalBroadcastUrl = rtmpURL + sep + rtmpKey;
+    console.log(window.externalBroadcastUrl);
+    window.agoraClient.startLiveStreaming(window.externalBroadcastUrl, true)
+    addExternalTransmitionMiniView(window.externalBroadcastUrl)
   }
 }
 
 function addExternalSource() {
-  var externalUrl = jQuery('#external-url').val();
-  var width = parseInt(jQuery('#external-window-scale-width').val(), 10);
-  var height = parseInt(jQuery('#external-window-scale-height').val(), 10);
-
-  var injectStreamConfig = {
-    width: width,
-    height: height,
-    videoBitrate: parseInt(jQuery('#external-video-bitrate').val(), 10),
-    videoFramerate: parseInt(jQuery('#external-framerate').val(), 10),
-    audioSampleRate: parseInt(jQuery('#external-audio-sample-rate').val(), 10),
-    audioBitrate: parseInt(jQuery('#external-audio-bitrate').val(), 10),
-    audioChannels: parseInt(jQuery('#external-audio-channels').val(), 10),
-    videoGop: parseInt(jQuery('#external-video-gop').val(), 10)
-  };
-
+  var externalUrl = jQuery('#input_external_url').val();
+  
   // set live transcoding config
-  window.agoraClient.addInjectStreamUrl(externalUrl, injectStreamConfig)
-  injectedStreamURL = externalUrl;
+  window.agoraClient.addInjectStreamUrl(externalUrl, window.injectStreamConfig)
+  window.injectedStreamURL = externalUrl;
   // TODO: ADD view for external url (similar to rtmp url)
 }
 
 // RTMP Connection (UI Component)
-function addExternalTransmitionMiniView(rtmpUrl) {
+function addExternalTransmitionMiniView(rtmpURL) {
   var container = jQuery('#rtmp-controlers');
   // append the remote stream template to #remote-streams
   container.append(
@@ -240,7 +207,7 @@ function addExternalTransmitionMiniView(rtmpUrl) {
       jQuery('<div/>', {'class': 'pulse-container'}).append(
           jQuery('<button/>', {'id': 'rtmp-toggle', 'class': 'btn btn-lg col-flex pulse-button pulse-anim mt-2'})
       ),
-      jQuery('<input/>', {'id': 'rtmp-url', 'val': rtmpUrl, 'class': 'form-control col-flex" value="rtmps://live.facebook.com', 'type': 'text', 'disabled': true}),
+      jQuery('<input/>', {'id': 'rtmp-url', 'val': rtmpURL, 'class': 'form-control col-flex" value="rtmps://live.facebook.com', 'type': 'text', 'disabled': true}),
       jQuery('<button/>', {'id': 'removeRtmpUrl', 'class': 'btn btn-lg col-flex close-btn'}).append(
         jQuery('<i/>', {'class': 'fas fa-xs fa-trash'})
       )
@@ -249,7 +216,7 @@ function addExternalTransmitionMiniView(rtmpUrl) {
   
   jQuery('#rtmp-toggle').click(function() {
     if (jQuery(this).hasClass('pulse-anim')) {
-      window.agoraClient.stopLiveStreaming(externalBroadcastUrl)
+      window.agoraClient.stopLiveStreaming(window.externalBroadcastUrl)
     } else {
       window.agoraClient.startLiveStreaming(externalBroadcastUrl, true)
     }
@@ -258,8 +225,8 @@ function addExternalTransmitionMiniView(rtmpUrl) {
   });
 
   jQuery('#removeRtmpUrl').click(function() { 
-    window.agoraClient.stopLiveStreaming(externalBroadcastUrl);
-    externalBroadcastUrl = '';
+    window.agoraClient.stopLiveStreaming(window.externalBroadcastUrl);
+    window.externalBroadcastUrl = '';
     jQuery('#rtmp-container').remove();
   });
 
