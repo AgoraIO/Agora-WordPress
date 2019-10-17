@@ -9,13 +9,15 @@ $current_user       = wp_get_current_user();
 <div class="agora agora-broadcast">
   <div id="main-container" class="controls-top">
     <div id="full-screen-video">
-      <?php // if(is_array($recordingSettings) && isset($recordingSettings['bucket'])) : ?>
+      <?php if(is_array($recordingSettings) && 
+            !empty($recordingSettings['bucket']) &&
+            !empty($recordingSettings['accessKey'])) : ?>
       <div id="cloud-recording-container" class="mt-3">
         <button id="cloud-recording-btn" class="btn btn-sm start-rec" title="<?php _e('Start Recording', 'agoraio'); ?>">
           <div class="inner-icon"> </div>
         </button>
       </div>
-      <?php // endif; ?>
+      <?php endif; ?>
       <div id="screen-share-btn-container" class="col-2 float-right text-right mt-3">
         <button id="screen-share-btn"  type="button" class="btn btn-md" title="<?php _e('Screen Share', 'agoraio'); ?>">
           <i id="screen-share-icon" class="fab fa-slideshare"></i>
