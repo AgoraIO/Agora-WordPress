@@ -497,3 +497,20 @@ body .agora {
 .no-video-overlay {
   width: 80%;
 }
+
+.user_gravatar_circle {
+  border: 1px solid #dedede;
+  border-radius: 50%;
+  overflow: hidden;
+  max-width: 168px;
+}
+
+.user_gravatar_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: black;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}

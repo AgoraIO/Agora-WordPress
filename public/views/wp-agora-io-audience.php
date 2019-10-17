@@ -15,6 +15,9 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
   $screenStyles = "background-image: url('".$settings['appearance']['noHostImageURL']."')";
 }
 
+// die("<pre>".print_r($settings, true)."</pre>");
+$user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
+// die("<pre>".print_r($user_avatar['url'], true)."</pre>");
 ?>
 <div class="agora agora-broadcast agora-audience" <?php echo $agoraStyle ?>>
   <div class="container-fluid p-0">
@@ -40,6 +43,13 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
           </div>
       </div>
     </div>
+    <?php if ($user_avatar) : ?>
+    <div id="user_gravatar_wrapper" class="user_gravatar_wrapper d-none">
+      <div class="user_gravatar_circle">
+        <img src="<?php echo $user_avatar['url'] ?>" alt="Broadcast User">
+      </div>
+    </div>
+    <?php endif; ?>
   </div>
   <script>
     window.addEventListener('load', function() {
@@ -132,12 +142,15 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
       // show user icon whenever a remote has disabled their video
       window.agoraClient.on('mute-video', function (evt) {
         var remoteId = evt.uid;
-        // console.log('Mute video from remote:', remoteId);
+        //console.log('Mute video from remote:', remoteId);
+        jQuery('#user_gravatar_wrapper').toggleClass('d-none');
         jQuery('#full-screen-video').children().eq(0).hide();
       });
 
       window.agoraClient.on('unmute-video', function (evt) {
         var remoteId = evt.uid;
+        // console.log('Unmute video from remote:', remoteId);
+        jQuery('#user_gravatar_wrapper').toggleClass('d-none');
         jQuery('#full-screen-video').children().eq(0).show();
       });
 
