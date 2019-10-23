@@ -18,7 +18,7 @@ function agoraJoinChannel() {
     AgoraRTC.Logger.error('setClientRole failed', e);
   });
   
-  window.agoraClient.join(agoraToken, window.channelName, userId, function(uid) {
+  window.agoraClient.join(window.agoraToken, window.channelName, userId, function(uid) {
       createCameraStream(uid, {});
       window.localStreams.uid = uid; // keep track of the stream uid  
       AgoraRTC.Logger.info('User ' + uid + ' joined channel successfully');
@@ -174,16 +174,18 @@ function startLiveTranscoding() {
   AgoraRTC.Logger.info("Start live transcoding..."); 
   var rtmpURL = jQuery('#input_rtmp_url').val();
   var rtmpKey = jQuery('#input_private_key').val();
-  var width = parseInt(jQuery('#window-scale-width').val(), RADIX_DECIMAL);
-  var height = parseInt(jQuery('#window-scale-height').val(), RADIX_DECIMAL);
+  // var width = parseInt(jQuery('#window-scale-width').val(), RADIX_DECIMAL);
+  // var height = parseInt(jQuery('#window-scale-height').val(), RADIX_DECIMAL);
 
   // set live transcoding config
+  window.defaultConfigRTMP.transcodingUsers[0].uid = window.localStreams.uid;
   window.agoraClient.setLiveTranscoding(window.defaultConfigRTMP);
 
   if(rtmpURL.length>0 && rtmpKey.length>0) {
     const sep = rtmpURL.lastIndexOf('/')===rtmpURL.length-1 ? '' : '/';
     window.externalBroadcastUrl = rtmpURL + sep + rtmpKey;
     console.log(window.externalBroadcastUrl);
+
     window.agoraClient.startLiveStreaming(window.externalBroadcastUrl, true)
     addExternalTransmitionMiniView(window.externalBroadcastUrl)
   }

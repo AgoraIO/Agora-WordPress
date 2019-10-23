@@ -150,7 +150,7 @@ $current_user       = wp_get_current_user();
       window.channelId = '<?php echo $channel->id() ?>'; // set channel name
       window.agoraCurrentRole = 'host';
       window.agoraMode = 'audience';
-      window.userID = <?php echo $current_user->ID; ?>;
+      window.userID = parseInt(`123${<?php echo $current_user->ID; ?>}`, 10);
 
       // create client instance
       window.agoraClient = AgoraRTC.createClient({mode: 'live', codec: 'vp8'}); // h264 better detail at a higher motion
@@ -196,7 +196,7 @@ $current_user       = wp_get_current_user();
         audioChannels: <?php echo $videoSettings['external-audioChannels'] ?>,
         videoGop: <?php echo $videoSettings['external-videoGop'] ?>,
         videoCodecProfile: <?php echo $videoSettings['external-videoCodecProfile'] ?>,
-        userCount: 0,
+        userCount: 1,
         userConfigExtraInfo: {},
         backgroundColor: parseInt('<?php echo str_replace('#', '', $videoSettings['external-backgroundColor']) ?>', 16),
         transcodingUsers: [{
@@ -237,6 +237,23 @@ $current_user       = wp_get_current_user();
         AgoraRTC.Logger.error('[ERROR] : AgoraRTC client init failed', err);
       });
 
+
+      window.agoraClient.on('liveStreamingStarted', function (evt) {
+        console.log("Live streaming started", evt);
+      }); 
+
+      window.agoraClient.on('liveStreamingFailed', function (evt) {
+        console.log("Live streaming failed", evt);
+      }); 
+
+      window.agoraClient.on('liveStreamingStopped', function (evt) {
+        console.log("Live streaming stopped", evt);
+      });
+
+      window.agoraClient.on('liveTranscodingUpdated', function (evt) {
+        console.log("Live streaming updated", evt);
+      }); 
+
       <?php /*
       // client callbacks
       window.agoraClient.on('stream-published', function (evt) {
@@ -256,21 +273,7 @@ $current_user       = wp_get_current_user();
       });
 
       //live transcoding events..
-      window.agoraClient.on('liveStreamingStarted', function (evt) {
-        console.log("Live streaming started");
-      }); 
-
-      window.agoraClient.on('liveStreamingFailed', function (evt) {
-        console.log("Live streaming failed");
-      }); 
-
-      window.agoraClient.on('liveStreamingStopped', function (evt) {
-        console.log("Live streaming stopped");
-      });
-
-      window.agoraClient.on('liveTranscodingUpdated', function (evt) {
-        console.log("Live streaming updated");
-      }); 
+      
 
       // ingested live stream 
       window.agoraClient.on('streamInjectedStatus', function (evt) {
@@ -313,7 +316,7 @@ $current_user       = wp_get_current_user();
       if($appCertificate && strlen($appCertificate)>0) {
         $channelName = $channel->title();
         $current_user = wp_get_current_user();
-        $uid = $current_user->ID; // Get urrent user id
+        $uid = '123'.$current_user->ID; // Get urrent user id
 
         // role should be based on the current user host...
         $settings = $channel->get_properties();
