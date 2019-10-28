@@ -222,14 +222,14 @@ function render_agoraio_channel_form_settings($channel) {
     </div>
 
     <div id="tab-2" class="tab-pane">
-      <p class="desc"><?php _e('Small description of Second tab settings.', 'agoraio'); ?></p>
+      <p class="desc"><?php _e("Agora.io supports publishing streams to CDN's CDN (Content Delivery Networks) using live transcoding . Transcoding sets the audio/video profiles and the picture-in-picture layout for the stream to be pushed to the CDN. Configure the live transcoding settings. <a href='https://docs.agora.io/en/Interactive%20Broadcast/cdn_streaming_android?platform=Android#introduction' target='_blank'>(more)</a>", 'agoraio'); ?></p>
       <hr/>
       <?php agora_render_video_settings($settings, 'external'); ?>
     </div>
 
     <div id="tab-3" class="tab-pane">
       <?php // echo "<pre>".print_r($settings, true)."</pre>"; ?>
-      <p class="desc"><?php _e('Small description of Third tab settings.', 'agoraio'); ?></p>
+      <p class="desc"><?php _e('Injecting external media streams refers to pulling an external audio or video stream to an ongoing Agora.io live broadcast channel, so that the hosts and audience in the channel can hear and see the stream while interacting with each other.', 'agoraio'); ?></p>
       <hr/>
       <?php agora_render_video_settings($settings, 'inject'); ?>
     </div>
