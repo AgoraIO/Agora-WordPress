@@ -134,12 +134,23 @@ function logCameraDevices() {
 
 function calculateVideoScreenSize() {
   var container = jQuery('#full-screen-video');
-  console.log('Video SIZE:', container.outerWidth());
+  // console.log('Video SIZE:', container.outerWidth());
   var size = getSizeFromVideoProfile();
 
   // https://math.stackexchange.com/a/180805
-  var newHeight = container.outerWidth() * size.height / size.width;
+  var newHeight = 0;
+  console.log('Width:', container.outerWidth());
+  if (container.outerWidth() > 520) {
+    newHeight = container.outerWidth() * size.height / size.width;
+  } else {
+    newHeight = container.outerWidth();
+  }
+  console.log('newHeight:', newHeight);
   container.outerHeight(newHeight);
+  return {
+    width: container.outerWidth(),
+    height: container.outerHeight()
+  };
 }
 
 function getSizeFromVideoProfile() {

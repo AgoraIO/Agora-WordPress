@@ -46,6 +46,10 @@ class WP_Agora_Public {
 		$ajaxTokenServer = array($this, 'ajaxTokenServer');
     add_action( 'wp_ajax_generate_token', $ajaxTokenServer );
     add_action( 'wp_ajax_nopriv_generate_token', $ajaxTokenServer );
+
+    // Page Template loader for FullScreen
+    require_once plugin_dir_path(dirname( __FILE__ )) . 'public/class-wp-agora-page-template.php';
+    new WP_Agora_PageTemplate($this);
 	}
 
 	public function ajaxTokenServer() {
@@ -181,7 +185,7 @@ class WP_Agora_Public {
 	}
 
 	public function enqueue_scripts() {
-		// wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/ui.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-agora-io-public.js', array( 'jquery' ), $this->version, false );
 
 		// isset($this->api_data['agora_bootstrap']) ? $this->api_data['agora_bootstrap'] : '';
 		$use_bootstrap = false;
