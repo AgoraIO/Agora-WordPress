@@ -125,7 +125,7 @@ class WP_Agora_Public {
 	  wp_enqueue_script( $this->plugin_name.'-screen', plugin_dir_url( __FILE__ ) . 'js/screen-share.js', array( 'jquery' ), $this->version, false );
 	  
 	  $scriptUI = $type==='broadcast' ? 'js/broadcast-ui.js' : 'js/communication-ui.js';
-	  wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . $scriptUI, array( 'jquery' ), $this->version, false );
+	  wp_enqueue_script( $this->plugin_name.'-ui', plugin_dir_url( __FILE__ ) . $scriptUI, array( 'jquery' ), $this->version, false );
 	}
 
 
