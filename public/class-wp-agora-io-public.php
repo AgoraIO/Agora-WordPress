@@ -78,11 +78,11 @@ class WP_Agora_Public {
     
     if($appCertificate && strlen($appCertificate)>0) {
       $channelName = $channel->title();
-      $uid = 0; // $current_user->ID; // Get urrent user id
+      $uid = isset($_POST['uid']) ? $_POST['uid'] : $current_user->ID; // Get current user id
 
       // role should be based on the current user host...
       $settings = $channel->get_properties();
-      $role = 'Role_Publisher'; // TODO: Validate if this should be changed according to the curret user and current shortcode from the ajax call...
+      $role = 'Role_Publisher'; // TODO: Validate if this should be changed according to the current user and current shortcode from the ajax call...
       $privilegeExpireTs = 0;
       $token = RtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs);
       echo json_encode(array( "token" => $token ));
