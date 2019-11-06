@@ -18,8 +18,9 @@ class AgoraCloudRecording {
     private $lang_context = 'agoraio';
     private $authAgoraSDK = '';
 
-    public function __construct($settings) {
+    public function __construct($settings, $parent) {
         $this->settings = $settings;
+        $this->parent = $parent;
 
         $this->authAgoraSDK = $settings['customerID'].':'.$settings['customerCertificate'];
         $this->authAgoraSDK_B64 = base64_encode($this->authAgoraSDK);
@@ -134,11 +135,16 @@ class AgoraCloudRecording {
         $clientRequest->storageConfig->bucket = $recordingSettings['bucket'];
         $clientRequest->storageConfig->accessKey = $recordingSettings['accessKey'];
         $clientRequest->storageConfig->secretKey = $recordingSettings['secretKey'];
-        $clientRequest->storageConfig->fileNamePrefix = array( preg_replace('/\s+/', '', $channel->title()) );
 
-        if (isset($data['token'])) {
-            $clientRequest->token = $data['token'];
-        }
+        $t=date('d-m-Y');
+        $day = strtolower(date("d", strtotime($t)));
+        $month = strtolower(date("m", strtotime($t)));
+        $year = strtolower(date("Y", strtotime($t)));
+        $clientRequest->storageConfig->fileNamePrefix = array( preg_replace('/\s+/', '', $channel->title()).'-'.$day.'-'.$month.'-'.$year );
+
+        $newToken = $this->parent->generateNewToken($data['cid'], $data['uid']);
+        // die("<pre>".print_r($newToken, true)."</pre>");
+        $clientRequest->token = $newToken;
         
         $params = array(
             'cname' => $data['cname'],
@@ -146,7 +152,7 @@ class AgoraCloudRecording {
             'clientRequest' => $clientRequest
         );
 
-        // die("<pre>".var_export($params, true)."</pre>");
+        // die("<pre>".print_r($params, true)."</pre>");
         $out = $this->callAPI($endpoint, $params, 'POST');
         if (!is_wp_error( $out )) {
             $out->uid = $data['uid'];
@@ -185,7 +191,7 @@ class AgoraCloudRecording {
      *
      * Remote HTTP Call with cache usage through wp transients.
      **/
-    private function callAPI($url=false, $params=array(), $method='GET', $force_save_trans=false) {
+    private function callAPI($url=false, $params=array(), $method='GET') {
         if ($url) {
 
             //open connection
@@ -211,6 +217,7 @@ class AgoraCloudRecording {
                 'Authorization: Basic ' . $this->authAgoraSDK_B64
             ));
 
+            
             if($method==='POST' && !empty($params)) {
                 // die("<pre>".print_r(json_encode($params), true)."</pre>");
                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
