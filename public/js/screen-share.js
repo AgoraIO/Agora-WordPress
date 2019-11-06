@@ -63,7 +63,7 @@ function joinChannelAsScreenShare(cb) {
 
   generateAjaxToken(function(err, token) {
     if (err) {
-      AgoraRTC.Logger.error("[ERROR] : Get Token failed:", err);
+      AgoraRTC.Logger.error("[TOKEN ERROR] : Get Token failed:", err);
       cb(err, null);
       return false;
     }

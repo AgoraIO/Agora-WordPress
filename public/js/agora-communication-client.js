@@ -115,8 +115,8 @@ function joinChannel(channelName) {
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
   agoraClient.join(token, channelName, userId, function(uid) {
     AgoraRTC.Logger.info("User " + uid + " join channel successfully");
-    createCameraStream(uid);
     localStreams.camera.id = uid; // keep track of the stream uid 
+    createCameraStream(uid);
   }, function(err) {
       AgoraRTC.Logger.error("[ERROR] : join channel failed", err);
   });
@@ -133,6 +133,8 @@ function createCameraStream(uid) {
   localStream.setVideoProfile(window.cameraVideoProfile);
   localStream.init(function() {
     jQuery('#rejoin-container').hide();
+    jQuery('#buttons-container').removeClass('hidden');
+
     var thisBtn = jQuery('#rejoin-btn');
     thisBtn.prop("disabled", false);
     thisBtn.find('.spinner-border').hide();
@@ -205,6 +207,7 @@ function leaveChannel() {
     toggleVisibility("#no-local-video", false);
 
     jQuery('#rejoin-container').show();
+    jQuery('#buttons-container').addClass('hidden');
     
     // show the modal overlay to join
     // jQuery("#modalForm").modal("show"); 

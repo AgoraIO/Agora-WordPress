@@ -10,10 +10,17 @@
   <link rel="stylesheet" href="<?php echo $current_path ?>/css/wp-agora-fullscreen.css">
 </head>
 <body class="agora custom-background-image">
-  <div class="agora-fullscreen-container controls-bottom window-mode gradient-x">
+  <div class="agora-fullscreen-container controls-bottom window-mode gradient-4">
 
     <div class="main-video-screen" id="full-screen-video">
       <div id="video-canvas"></div>
+
+      <div id="rejoin-container" class="rejoin-container" style="display: none">
+        <button id="rejoin-btn" class="btn btn-primary btn-lg" type="button">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <?php _e('Rejoin to this channel', 'agoraio'); ?>
+        </button>
+      </div>
 
       <div id="buttons-container" class="row justify-content-center mt-3">
         <div class="col-md-2 text-center control-btn">
@@ -48,16 +55,13 @@
 
       <div class="remote-users">
         <div class="slick-avatars">
+          
           <div>
             <div class="avatar-circle">
               <img src="" alt="">
             </div>
           </div>
-          <div>
-            <div class="avatar-circle">
-              <img src="" alt="">
-            </div>
-          </div>
+
         </div>
       </div>
 
@@ -72,61 +76,11 @@
       window.agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
       window.channelName = '<?php echo $channel->title() ?>'; // set channel name
       window.channelId = '<?php echo $channel->id() ?>'; // set channel name
-      window.userID = <?php echo $current_user->ID; ?>;
+      window.userID = parseInt(`123${<?php echo $current_user->ID; ?>}`, 10);
       window.agoraMode = 'communication';
 
-      const resizeVideo = function(firstTime) {
-        const size = calculateVideoScreenSize();
-        const sliderSize = size.width - 200;
-        
-        if (!firstTime) {
-          // jQuery('.slick-avatars').slick('breakpoint')
-        } else {
-          jQuery('.remote-users').outerWidth(sliderSize);
-        }
-        return size;
-      }
-
-      const size = resizeVideo(true);
-      jQuery(window).smartresize(resizeVideo);
-
-      const sliderSize = size.width - 200;
-      const slidesToShow = Math.floor(sliderSize / 110);
-      
-      jQuery('.slick-avatars').slick({
-        dots: false,
-        slidesToShow,
-        responsive: [{
-          breakpoint: 480,
-          settings: {slidesToShow: 1}
-        }, {
-          breakpoint: 600,
-          settings: {slidesToShow: 2}
-        }, {
-          breakpoint: 1024,
-          settings: {slidesToShow: 3}
-        }, {
-          breakpoint: 1280,
-          settings: {slidesToShow: 4}
-        }, {
-          breakpoint: 1440,
-          settings: {slidesToShow: 5}
-        }]
-      });
-      // jQuery('.slick-avatars').on('breakpoint', function(event, slick, breakpoint) {
-      //   console.log('breakpoint:', breakpoint)
-      // })
-      initClientAndJoinChannel(window.agoraAppId, window.channelName);
+      fullscreenInit();
     });
-
-    function rejoinChannel() {
-      var thisBtn = jQuery(this);
-      if(!thisBtn.prop('disabled')) {
-        joinChannel('<?php echo $channel->title() ?>');
-        thisBtn.prop("disabled", true);
-        thisBtn.find('.spinner-border').show();
-      }
-    }
 
 
     // use tokens for added security
@@ -138,7 +92,8 @@
 
       if($appCertificate && strlen($appCertificate)>0) {
         $channelName = $channel->title();
-        $uid = 0; // $current_user->ID; // Get urrent user id
+        // $uid = 0; // $current_user->ID; // Get urrent user id
+        $uid = '123'.$current_user->ID; // Get urrent user id
 
         // role should be based on the current user host...
         $settings = $channel->get_properties();

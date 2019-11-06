@@ -245,7 +245,9 @@ function startVideoRecording(cb) {
       cb(res, null);
     }
   }).fail(function(err) {
-    console.error('API Error:', err.responseJSON.errors);
+    if (err.responseJSON) {
+      console.error('API Error:', err.responseJSON.errors);
+    }
     cb(err, null);
   })
 }

@@ -61,21 +61,13 @@
       window.agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
       window.channelName = '<?php echo $channel->title() ?>'; // set channel name
       window.channelId = '<?php echo $channel->id() ?>'; // set channel name
-      window.userID = <?php echo $current_user->ID; ?>;
+      // window.userID = <?php echo $current_user->ID; ?>;
+      window.userID = parseInt(`123${<?php echo $current_user->ID; ?>}`, 10);
       window.agoraMode = 'communication';
 
       calculateVideoScreenSize();
       initClientAndJoinChannel(window.agoraAppId, window.channelName);
     });
-
-    function rejoinChannel() {
-      var thisBtn = jQuery(this);
-      if(!thisBtn.prop('disabled')) {
-        joinChannel('<?php echo $channel->title() ?>');
-        thisBtn.prop("disabled", true);
-        thisBtn.find('.spinner-border').show();
-      }
-    }
 
 
     // use tokens for added security
@@ -87,7 +79,8 @@
 
       if($appCertificate && strlen($appCertificate)>0) {
         $channelName = $channel->title();
-        $uid = 0; // $current_user->ID; // Get urrent user id
+        // $uid = 0; // $current_user->ID; // Get urrent user id
+        $uid = "123" . $current_user->ID; // Get urrent user id
 
         // role should be based on the current user host...
         $settings = $channel->get_properties();

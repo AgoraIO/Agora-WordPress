@@ -76,7 +76,7 @@ class WP_Agora_PageTemplate {
     }
     
     $matches = [];
-    $found = preg_match('/channel_id="(.*?)"/m', $post->post_content, $matches);
+    $found = preg_match('/channel_id="(.*?)"/mi', $post->post_content, $matches);
 
     if ($found) {
       global $instance;
@@ -84,16 +84,22 @@ class WP_Agora_PageTemplate {
       global $agora;
 
       $channel_id = $matches[1];
-      $instance = $this->agora->getShortcodeAttrs('agora-communication', []);
+      if (strpos($post->post_content, '[agora-communication')>=0) {
+        $instance = $this->agora->getShortcodeAttrs('agora-communication', []);
+      } else {
+        $instance = $this->agora->getShortcodeAttrs('agora-broadcast', []);
+      }
       $channel = WP_Agora_Channel::get_instance($channel_id);
       $agora = $this->agora;
 
       wp_enqueue_script( 'AgoraSDK', 'https://cdn.agora.io/sdk/web/AgoraRTCSDK-2.8.0.js', array('jquery'), null );
 
-      $slickURL = plugin_dir_url( __FILE__ ) . 'js/slick-1.8.1/';
-      wp_enqueue_script( 'jquery.slick', $slickURL . 'slick.min.js', array('jquery'), null );
-      wp_enqueue_style( 'jquery.slick.css', $slickURL . 'slick.css', null, null );
-      wp_enqueue_style( 'jquery.slick.theme', $slickURL . 'slick-theme.css', null, null );
+      if (strpos($post->post_content, '[agora-communication')>=0) {
+        $slickURL = plugin_dir_url( __FILE__ ) . 'js/slick-1.8.1/';
+        wp_enqueue_script( 'jquery.slick', $slickURL . 'slick.min.js', array('jquery'), null );
+        wp_enqueue_style( 'jquery.slick.css', $slickURL . 'slick.css', null, null );
+        wp_enqueue_style( 'jquery.slick.theme', $slickURL . 'slick-theme.css', null, null );
+      }
 
 
       // Return default template if we don't have a custom one defined
@@ -103,6 +109,11 @@ class WP_Agora_PageTemplate {
       } 
 
       $file = plugin_dir_path(__FILE__) . 'views/' . get_post_meta($post->ID, '_wp_page_template', true);
+
+      if (strpos($post->post_content, '[agora-broadcast')!==false) {
+        $file = str_replace('agora-fullscreen-template.php', 'agora-fullscreen-broadcast.php', $file);
+      }
+
 
       // Just to be safe, we check if the file exist first
       if ( file_exists( $file ) ) {

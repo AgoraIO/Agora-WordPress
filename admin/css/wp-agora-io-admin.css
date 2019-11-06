@@ -128,9 +128,10 @@
 
 .agoraio .tab-content {
   /* min-width: 70%; */
+  overflow: hidden;
 }
 .agoraio .tab-content > .tab-pane {
-  width: 100%;
+  width: 94%;
   display: none;
 }
 

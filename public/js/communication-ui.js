@@ -55,7 +55,7 @@ function enableUiControls(localStream) {
         console.log("quick toggle the video");
         toggleVideo(localStream);
         break; 
-      case "s":
+      /* case "s":
         console.log("initializing screen share");
         toggleScreenShareBtn(); // set screen share button icon
         jQuery("#screen-share-btn").prop("disabled",true); // disable the button on click
@@ -64,7 +64,7 @@ function enableUiControls(localStream) {
         } else {
           initScreenShare(); 
         }
-        break;  
+        break;  */
       case "q":
         console.log("so sad to see you quit the channel");
         leaveChannel(); 
@@ -74,7 +74,7 @@ function enableUiControls(localStream) {
 
     // (for testing) 
     if(e.key === "r") { 
-      window.history.back(); // quick reset
+      // window.history.back(); // quick reset
     }
   });
 }
@@ -117,18 +117,31 @@ function toggleVideo(localStream) {
 }
 
 function logCameraDevices() {
-  console.log("Checking for Camrea Devices.....")
+  console.log("Checking for Camera Devices.....")
   AgoraRTC.getDevices (function(devices) {
     var devCount = devices.length;
-    var id = devices[0].deviceId;
-    console.log("getDevices: " + JSON.stringify(devices));
+    if (devCount>0) {
+      var id = devices[0].deviceId;
+      // console.log('Device:', devices[0])
+      // console.log("getDevices: " + JSON.stringify(devices));
+    }
   });
 
-  agoraClient.getCameras (function(cameras) {
+  agoraClient.getCameras(function(cameras) {
     var devCount = cameras.length;
     var id = cameras[0].deviceId;
     console.log("getCameras: " + JSON.stringify(cameras));
   });
+}
+
+
+function rejoinChannel() {
+  var thisBtn = jQuery(this);
+  if(!thisBtn.prop('disabled')) {
+    thisBtn.prop("disabled", true);
+    thisBtn.find('.spinner-border').show();
+    joinChannel(window.channelName);
+  }
 }
 
 
@@ -153,6 +166,7 @@ function calculateVideoScreenSize() {
   };
 }
 
+// get sizes based on the video quality settings
 function getSizeFromVideoProfile() {
   // https://docs.agora.io/en/Interactive%20Broadcast/videoProfile_web?platform=Web#video-profile-table
   switch(window.cameraVideoProfile) {
@@ -180,3 +194,50 @@ function agoraApiRequest(endpoint_url, endpoint_data) {
   };
   return jQuery.ajax(ajaxRequestParams)
 }
+
+function fullscreenInit() {
+  const resizeVideo = function(firstTime) {
+    const size = calculateVideoScreenSize();
+    const sliderSize = size.width - 200;
+    
+    if (!firstTime) {
+      // jQuery('.slick-avatars').slick('breakpoint')
+    } else {
+      jQuery('.remote-users').outerWidth(sliderSize);
+    }
+    return size;
+  }
+
+  const size = resizeVideo(true);
+  jQuery(window).smartresize(resizeVideo);
+
+  const sliderSize = size.width - 200;
+  const slidesToShow = Math.floor(sliderSize / 110);
+  
+  jQuery('.slick-avatars').slick({
+    dots: false,
+    slidesToShow,
+    responsive: [{
+      breakpoint: 480,
+      settings: {slidesToShow: 1}
+    }, {
+      breakpoint: 600,
+      settings: {slidesToShow: 2}
+    }, {
+      breakpoint: 960,
+      settings: {slidesToShow: 3}
+    }, {
+      breakpoint: 1128,
+      settings: {slidesToShow: 4}
+    }, {
+      breakpoint: 1366,
+      settings: {slidesToShow: 5}
+    }]
+  });
+  // jQuery('.slick-avatars').on('breakpoint', function(event, slick, breakpoint) {
+  //   console.log('breakpoint:', breakpoint)
+  // })
+  initClientAndJoinChannel(window.agoraAppId, window.channelName);
+}
+
+//EOF

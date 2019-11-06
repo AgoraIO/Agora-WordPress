@@ -425,7 +425,8 @@ body .agora {
   width: 100%;
   text-align: center;
 }
-.agora .rejoin-container button[disabled]:hover {
+.agora .rejoin-container button,
+.agora .rejoin-container button[disabled] {
   background: #007bff;
   text-transform: none;
   font-weight: 400;
@@ -433,6 +434,9 @@ body .agora {
   border-radius: .3rem;
   padding: .5rem 1rem;
   line-height: 1.5;
+}
+.agora .rejoin-container button:hover {
+  background: #2f5e90;
 }
 
 #local-stream-container {
@@ -465,4 +469,8 @@ body .agora {
   width: 100%;
   height: 100%;
   position: absolute;
+}
+
+.hidden {
+  display: none !important;
 }

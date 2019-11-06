@@ -143,15 +143,15 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
       window.agoraClient.on('mute-video', function (evt) {
         var remoteId = evt.uid;
         //console.log('Mute video from remote:', remoteId);
-        jQuery('#user_gravatar_wrapper').toggleClass('d-none');
-        jQuery('#full-screen-video').children().eq(0).hide();
+        // jQuery('#user_gravatar_wrapper').toggleClass('d-none');
+        // jQuery('#full-screen-video').children().eq(0).hide();
       });
 
       window.agoraClient.on('unmute-video', function (evt) {
         var remoteId = evt.uid;
         // console.log('Unmute video from remote:', remoteId);
-        jQuery('#user_gravatar_wrapper').toggleClass('d-none');
-        jQuery('#full-screen-video').children().eq(0).show();
+        // jQuery('#user_gravatar_wrapper').toggleClass('d-none');
+        // jQuery('#full-screen-video').children().eq(0).show();
       });
 
       // ingested live stream 
