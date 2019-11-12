@@ -63,10 +63,14 @@ function enableUiControls() {
     var toggleLoader = function(err, next) {
       loaderIcon.hide();
       closeIcon.show();
-      // TODO: is not needed but I could capture the callback result here...
+      if (err) {
+        window.screenShareActive = false;
+        toggleScreenShareBtn();
+      }
+      jQuery("#screen-share-btn").prop("disabled", false);
     }
 
-    jQuery("#screen-share-btn").prop("disabled",true); // disable the button on click
+    jQuery("#screen-share-btn").prop("disabled", true); // disable the button on click
     if(window.screenShareActive){
       stopScreenShare(toggleLoader);
     } else {

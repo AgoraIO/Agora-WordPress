@@ -92,6 +92,13 @@ class WP_Agora_PageTemplate {
       $channel = WP_Agora_Channel::get_instance($channel_id);
       $agora = $this->agora;
 
+      $bgMatches = [];
+      $bgFound = preg_match('/ background="(.*?)"/mi', $post->post_content, $bgMatches);
+      if ($bgFound) {
+        $instance['background'] = $bgMatches[1];
+      }
+
+
       wp_enqueue_script( 'AgoraSDK', 'https://cdn.agora.io/sdk/web/AgoraRTCSDK-2.8.0.js', array('jquery'), null );
 
       if (strpos($post->post_content, '[agora-communication')>=0) {
@@ -100,6 +107,13 @@ class WP_Agora_PageTemplate {
         wp_enqueue_style( 'jquery.slick.css', $slickURL . 'slick.css', null, null );
         wp_enqueue_style( 'jquery.slick.theme', $slickURL . 'slick-theme.css', null, null );
       }
+
+      $bootstrap_css = 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css';
+      $bootstrap_js = 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js';
+      $bootstrap_popper_js = 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js';
+      wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
+      wp_enqueue_script( 'bootstrap_popper', $bootstrap_popper_js, array('jquery'), null );
+      wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
 
 
       // Return default template if we don't have a custom one defined
@@ -111,7 +125,14 @@ class WP_Agora_PageTemplate {
       $file = plugin_dir_path(__FILE__) . 'views/' . get_post_meta($post->ID, '_wp_page_template', true);
 
       if (strpos($post->post_content, '[agora-broadcast')!==false) {
-        $file = str_replace('agora-fullscreen-template.php', 'agora-fullscreen-broadcast.php', $file);
+        $current_user = wp_get_current_user();
+        $props = $channel->get_properties();
+        if ((int)$props['host']===$current_user->ID) {
+          $file = str_replace('agora-fullscreen-template.php', 'agora-fullscreen-broadcast.php', $file);
+        } else {
+          $file = str_replace('agora-fullscreen-template.php', 'agora-fullscreen-audience.php', $file);
+          $agoraUserScript = 'js/agora-broadcast-client.js';
+        }
       }
 
 

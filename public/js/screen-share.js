@@ -6,8 +6,8 @@ function toggleScreenShareBtn() {
 
 // SCREEN SHARING
 function initScreenShare(cb) {
-  window.screenClient.init(agoraAppId, function () {
-    AgoraRTC.Logger.info("AgoraRTC screenClient initialized");
+  window.screenClient.init(agoraAppId, function (e) {
+    AgoraRTC.Logger.info("AgoraRTC screenClient initialized", e);
     joinChannelAsScreenShare(cb);
     // window.screenShareActive = true;
 
@@ -20,7 +20,7 @@ function initScreenShare(cb) {
 
 function joinChannelAsScreenShare(cb) {
   
-  var userId = null; // set to null to auto generate uid on successfull connection
+  var userId = null; // window.userID or set to null to auto generate uid on successfull connection
   var successJoin = function(uid) {
     localStreams.screen.id = uid;  // keep track of the uid of the screen stream.
     
@@ -122,7 +122,8 @@ function stopScreenShare(cb) {
 function generateAjaxToken(cb) {
   var params = {
     action: 'generate_token', // wp ajax action
-    cid: window.channelId
+    cid: window.channelId,
+    uid: 0, // needed to generate a new uid
   };
   agoraApiRequest(ajax_url, params).done(function(data){
     if (data && data.token) {

@@ -72,7 +72,9 @@ class WP_Agora_Public {
 			$cid = $_POST['cid'];
 			
 			$current_user = wp_get_current_user();
-    	$uid = isset($_POST['uid']) ? $_POST['uid'] : $current_user->ID; // Get current user id
+    	$uid = isset($_POST['uid']) ? $_POST['uid'] : '123'.$current_user->ID; // Get current user id
+    	// die("<pre>".print_r($uid, true)."</pre>");
+    	$uid = intval($uid);
 
 			$token = $this->generateNewToken($cid, $uid);
 
@@ -105,8 +107,11 @@ class WP_Agora_Public {
 		$channelName = $channel->title();
 		
     // role should be based on the current user host...
-    $settings = $channel->get_properties();
-    $role = 'Role_Publisher'; // TODO: Validate if this should be changed according to the current user and current shortcode from the ajax call...
+    // $settings = $channel->get_properties();
+    // $current_user = wp_get_current_user();
+
+    // TODO: Validate if this should be changed according to the current user and current shortcode from the ajax call...
+    $role = 'Role_Publisher'; 
     $privilegeExpireTs = 0;
     $token = RtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs);
 
@@ -155,6 +160,7 @@ class WP_Agora_Public {
 	        'audio' => 'true',
 	        'video' => 'true',
 	        'screen' => 'false',
+	        'background' => '',
 	        'screenprofile' => '480p_2',
 	        'videoprofile' => '480p_9' // https://docs.agora.io/en/Video/API%20Reference/web/interfaces/agorartc.stream.html#setvideoprofile
 	      ), $attrs, $shortcode );

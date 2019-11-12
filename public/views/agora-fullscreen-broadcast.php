@@ -3,7 +3,7 @@ $current_path = plugins_url('wp-agora-io') . '/public';
 $channelSettings    = $channel->get_properties();
 $videoSettings      = $channelSettings['settings'];
 $appearanceSettings = $channelSettings['appearance'];
-$recordingSettings = $channelSettings['recording'];
+$recordingSettings  = $channelSettings['recording'];
 $current_user       = wp_get_current_user();
 ?>
 <!DOCTYPE html>
@@ -17,7 +17,11 @@ $current_user       = wp_get_current_user();
   <link rel="stylesheet" href="<?php echo $current_path ?>/css/wp-agora-fullscreen.css">
 </head>
 <body class="agora custom-background-image">
-  <div class="agora-fullscreen-container controls-bottom window-mode gradient-x">
+  <?php
+  $bgStyle = $instance['background']==='' ? '' : 'style="background-color:'.$instance['background'].'"';
+  $bgClass = $instance['background']==='' ? 'gradient-4' : '';
+  ?>
+  <div class="agora-fullscreen-container controls-bottom window-mode <?php echo $bgClass ?>" <?php echo $bgStyle ?>>
 
     <div class="main-video-screen" id="full-screen-video">
       
@@ -28,26 +32,130 @@ $current_user       = wp_get_current_user();
         </button>
       </div>
 
-      <div id="buttons-container" class="row justify-content-center mt-3">
-        <div class="col-md-2 text-center control-btn">
-          <button id="mic-btn" type="button" class="btn btn-block btn-dark btn-xs">
+      <div id="buttons-container">
+        
+        <div class="control-btn">
+          <button id="mic-btn" type="button" class="btn btn-block btn-dark btn-xs" title="Mute Mic">
             <i id="mic-icon" class="fas fa-microphone"></i>
           </button>
         </div>
-        <div class="col-md-2 text-center control-btn main-btn">
-          <button id="exit-btn"  type="button" class="btn btn-block btn-danger btn-xs">
+        <div class="control-btn main-btn">
+          <button id="exit-btn"  type="button" class="btn btn-block btn-danger btn-xs" title="Finish Call">
             <i id="exit-icon" class="fas fa-phone-slash"></i>
           </button>
         </div>
-        <div class="col-md-2 text-center control-btn">
-          <button id="video-btn"  type="button" class="btn btn-block btn-dark btn-xs">
+        <div class="control-btn">
+          <button id="video-btn"  type="button" class="btn btn-block btn-dark btn-xs" title="Mute Video">
             <i id="video-icon" class="fas fa-video"></i>
           </button>
         </div>
+
       </div>
 
     </div>
+
+    <div id="lower-ui-bar" class="row mb-1">
+      <?php if(is_array($recordingSettings) && 
+            !empty($recordingSettings['bucket']) &&
+            !empty($recordingSettings['accessKey'])) : ?>
+        <div id="cloud-recording-container">
+          <button id="cloud-recording-btn" class="btn btn-sm start-rec" title="<?php _e('Start Recording', 'agoraio'); ?>">
+            <div class="inner-icon"> </div>
+          </button>
+        </div>
+      <?php endif; ?>
+
+      <div id="screen-share-btn-container" class="text-center control-btn">
+        <button id="screen-share-btn"  type="button" class="btn btn-md" title="<?php _e('Screen Share', 'agoraio'); ?>">
+          <i id="screen-share-icon" class="fas fa-share-square"></i>
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none"></span>
+        </button>
+      </div>
+
+      <div class="control-btn">
+        <button id="rtmp-config-btn"  type="button" class="btn btn-primary btn-md rtmp-btn" 
+          data-toggle="modal" data-target="#addRtmpConfigModal" title="<?php _e('Add RTMP Config', 'agoraio') ?>">
+          <i id="rtmp-config-icon" class="fas fa-rotate-270 fa-sign-out-alt"></i>
+        </button>
+      </div>
+      <div class="control-btn">
+        <button id="add-rtmp-btn"  type="button" class="btn btn-secondary btn-md rtmp-btn" data-toggle="modal" data-target="#add-external-source-modal" title="<?php _e('Add External Source', 'agoraio') ?>">
+          <i id="add-rtmp-icon" class="fas fa-plug"></i>
+        </button>
+      </div>
+      <div id="external-broadcasts-container" class="container col-flex hidden">
+        <div id="rtmp-controlers" class="col">
+          <!-- insert rtmp  controls -->
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- RTMP Config Modal -->
+  <div class="modal fade slideInLeft animated" id="addRtmpConfigModal" tabindex="-1" role="dialog" aria-labelledby="rtmpConfigLabel" aria-hidden="true" data-keyboard=true>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="rtmpConfigLabel"><i class="fas fa-sliders-h"></i></h5>
+          <button type="button" class="close" data-dismiss="modal" data-reset="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="rtmp-config" action="" method="post" onSubmit="return false;">
+            <div class="form-group">
+              <label for="input_rtmp_url">RTMP Server URL</label>
+              <input type="url" class="form-control" id="input_rtmp_url" placeholder="Enter the RTMP Server URL" value="" required />
+            </div>
+            <div class="form-group">
+              <label for="input_private_key">Stream key</label>
+              <input type="text" class="form-control" id="input_private_key" placeholder="Enter stream key" required />
+            </div>
+            <input type="submit" value="Start RTMP" style="position:fixed; top:-999999px">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <span id="rtmp-error-msg" class="error text-danger" style="display: none">Please complete the information!</span>
+          <button type="button" id="start-RTMP-broadcast" class="btn btn-primary">
+            <i class="fas fa-satellite-dish"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end Modal -->
+
+  <!-- External Injest Url Modal -->
+  <div class="modal fade slideInLeft animated" id="add-external-source-modal" tabindex="-1" role="dialog" aria-labelledby="add-external-source-url-label" aria-hidden="true" data-keyboard=true>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="add-external-source-url-label">
+            <i class="fas fa-broadcast-tower"></i> [add external url]
+          </h5>
+          <button id="hide-external-url-modal" type="button" class="close" data-dismiss="modal" data-reset="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="external-inject-config">
+            <div class="form-group">
+              <label for="input_external_url">External URL</label>
+              <input type="url" class="form-control" id="input_external_url" placeholder="Enter the external URL" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <span id="external-url-error" class="error text-danger" style="display: none">Please enter a valid external URL</span>
+          <button type="button" id="add-external-stream" class="btn btn-primary">
+              <i id="add-rtmp-icon" class="fas fa-plug"></i>  
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end Modal -->
+
   <?php wp_footer(); ?>
   <script>
     // video profile settings
@@ -147,7 +255,34 @@ $current_user       = wp_get_current_user();
         AgoraRTC.Logger.error('[ERROR] : AgoraRTC client init failed', err);
       });
 
-    });// end addEventListener
+      window.agoraClient.on('liveStreamingStarted', function (evt) {
+        console.log("Live streaming started", evt);
+      }); 
+
+      window.agoraClient.on('liveStreamingFailed', function (evt) {
+        console.log("Live streaming failed", evt);
+      }); 
+
+      window.agoraClient.on('liveStreamingStopped', function (evt) {
+        console.log("Live streaming stopped", evt);
+      });
+
+      window.agoraClient.on('liveTranscodingUpdated', function (evt) {
+        console.log("Live streaming updated", evt);
+      });
+
+      window.agoraClient.on('streamInjectedStatus', function (evt) {
+        console.log("Live streaming Injected Status:", evt);
+      });
+
+      window.agoraClient.on('stream-added', function (evt) {
+        console.log("streaming Injected:", evt);
+      });
+      window.agoraClient.on('exception', function (ex) {
+        console.log("Agora Exception:", ex);
+      });
+
+    });// end addEventListener Load
 
 
     // use tokens for added security
@@ -159,7 +294,10 @@ $current_user       = wp_get_current_user();
 
       if($appCertificate && strlen($appCertificate)>0) {
         $channelName = $channel->title();
-        $uid = 0; // $current_user->ID; // Get urrent user id
+        $uid = $current_user->ID; // Get urrent user id
+        if ($uid>0) {
+          $uid = '123' . $uid;
+        }
 
         // role should be based on the current user host...
         $settings = $channel->get_properties();
@@ -177,5 +315,6 @@ $current_user       = wp_get_current_user();
   </script>
   <script src="<?php echo $current_path ?>/js/agora-broadcast-client.js"></script>
   <script src="<?php echo $current_path ?>/js/broadcast-ui.js"></script>
+  <script src="<?php echo $current_path ?>/js/screen-share.js"></script>
 </body>
 </html>

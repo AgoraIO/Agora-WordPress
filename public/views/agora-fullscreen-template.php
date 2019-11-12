@@ -22,18 +22,18 @@
         </button>
       </div>
 
-      <div id="buttons-container" class="row justify-content-center mt-3">
-        <div class="col-md-2 text-center control-btn">
+      <div id="buttons-container" class="mt-3">
+        <div class="control-btn">
           <button id="mic-btn" type="button" class="btn btn-block btn-dark btn-xs">
             <i id="mic-icon" class="fas fa-microphone"></i>
           </button>
         </div>
-        <div class="col-md-2 text-center control-btn main-btn">
+        <div class="control-btn main-btn">
           <button id="exit-btn"  type="button" class="btn btn-block btn-danger btn-xs">
             <i id="exit-icon" class="fas fa-phone-slash"></i>
           </button>
         </div>
-        <div class="col-md-2 text-center control-btn">
+        <div class="control-btn">
           <button id="video-btn"  type="button" class="btn btn-block btn-dark btn-xs">
             <i id="video-icon" class="fas fa-video"></i>
           </button>
@@ -44,13 +44,13 @@
 
     <div class="audience-container" id="audience-avatars">
       <div class="avatar-circle local" id="local-stream-container">
-        <div id="mute-overlay" class="col">
+        <div id="mute-overlay">
           <i id="mic-icon" class="fas fa-microphone-slash"></i>
         </div>
-        <div id="no-local-video" class="col text-center">
+        <div id="no-local-video" class="text-center">
           <i id="user-icon" class="fas fa-user"></i>
         </div>
-        <div id="local-video" class="col"></div>
+        <div id="local-video"></div>
       </div>
 
       <div class="remote-users">
