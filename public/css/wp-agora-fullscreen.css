@@ -82,7 +82,6 @@
   top: auto;
 }
 .avatar-circle .remote-stream-container .no-video-overlay {
-  display: block;
   top: 7%;
   width: 100%;
 }
