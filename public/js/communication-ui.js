@@ -213,8 +213,7 @@ function fullscreenInit() {
 
   const sliderSize = size.width - 200;
   const slidesToShow = Math.floor(sliderSize / 110);
-  
-  jQuery('.slick-avatars').slick({
+  window.slickSettings = {
     dots: false,
     slidesToShow,
     responsive: [{
@@ -233,7 +232,9 @@ function fullscreenInit() {
       breakpoint: 1366,
       settings: {slidesToShow: 5}
     }]
-  });
+  };
+  
+  jQuery('#slick-avatars').slick(window.slickSettings);
   // jQuery('.slick-avatars').on('breakpoint', function(event, slick, breakpoint) {
   //   console.log('breakpoint:', breakpoint)
   // })

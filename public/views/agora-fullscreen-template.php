@@ -54,14 +54,8 @@
       </div>
 
       <div class="remote-users">
-        <div class="slick-avatars">
+        <div class="slick-avatars" id="slick-avatars">
           
-          <div>
-            <div class="avatar-circle">
-              <img src="" alt="">
-            </div>
-          </div>
-
         </div>
       </div>
 
@@ -78,6 +72,9 @@
       window.channelId = '<?php echo $channel->id() ?>'; // set channel name
       window.userID = parseInt(`123${<?php echo $current_user->ID; ?>}`, 10);
       window.agoraMode = 'communication';
+      if (window.userID===1230) {
+        window.userID = 0;
+      }
 
       fullscreenInit();
     });
@@ -93,7 +90,11 @@
       if($appCertificate && strlen($appCertificate)>0) {
         $channelName = $channel->title();
         // $uid = 0; // $current_user->ID; // Get urrent user id
-        $uid = '123'.$current_user->ID; // Get urrent user id
+        if ($current_user->ID!==0) {
+          $uid = '123'.$current_user->ID; // Get urrent user id
+        } else {
+          $uid = 0;
+        }
 
         // role should be based on the current user host...
         $settings = $channel->get_properties();

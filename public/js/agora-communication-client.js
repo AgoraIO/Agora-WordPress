@@ -41,7 +41,7 @@ agoraClient.on('stream-published', function (evt) {
 agoraClient.on('stream-added', function (evt) {
   var stream = evt.stream;
   var streamId = stream.getId();
-  AgoraRTC.Logger.info("new stream added: " + streamId);
+  // AgoraRTC.Logger.info("new stream added: " + streamId);
   // Check if the stream is local
   if (streamId != localStreams.screen.id) {
     AgoraRTC.Logger.info('subscribe to remote stream:' + streamId);
@@ -56,6 +56,16 @@ agoraClient.on('stream-subscribed', function (evt) {
   var remoteStream = evt.stream;
   var remoteId = remoteStream.getId();
   remoteStreams[remoteId] = remoteStream;
+  // console.log('Stream subscribed:', remoteId);
+  
+  getUserAvatar(remoteId, function(gravatar) {
+    // console.log('callback gravatar:', gravatar);
+    const url = gravatar.avatar.url;
+    // const index = remoteId;
+    const template = '<div id="uid-'+remoteId+'"><div class="avatar-circle"><img src="'+url+'" alt="gravatar" /></div></div>';
+    jQuery('#slick-avatars').slick('slickAdd', template);
+  });
+
   AgoraRTC.Logger.info("Subscribe remote stream successfully: " + remoteId);
   if( jQuery('#video-canvas').is(':empty') ) { 
     mainStreamId = remoteId;
@@ -65,20 +75,29 @@ agoraClient.on('stream-subscribed', function (evt) {
   }
 });
 
+agoraClient.on('stream-removed', function(evt) {
+  console.log('REMOVED: ', evt.uid);
+})
+
 // remove the remote-container when a user leaves the channel
 agoraClient.on("peer-leave", function(evt) {
+  console.log('peer-leave:', evt);
   var streamId = evt.stream.getId(); // the the stream id
-  if(remoteStreams[streamId] != undefined) {
+  jQuery('#uid-'+streamId).remove();
+
+  if(remoteStreams[streamId] !== undefined) {
     remoteStreams[streamId].stop(); // stop playing the feed
     delete remoteStreams[streamId]; // remove stream from list
     if (streamId == mainStreamId) {
       var streamIds = Object.keys(remoteStreams);
       var randomId = streamIds[Math.floor(Math.random()*streamIds.length)]; // select from the remaining streams
-      remoteStreams[randomId].stop(); // stop the stream's existing playback
-      var remoteContainerID = '#' + randomId + '_container';
-      jQuery(remoteContainerID).empty().remove(); // remove the stream's miniView container
-      remoteStreams[randomId].play('video-canvas'); // play the random stream as the main stream
-      mainStreamId = randomId; // set the new main remote stream
+      if (remoteStreams[randomId]) {
+        remoteStreams[randomId].stop(); // stop the stream's existing playback
+        var remoteContainerID = '#' + randomId + '_container';
+        jQuery(remoteContainerID).empty().remove(); // remove the stream's miniView container
+        remoteStreams[randomId].play('video-canvas'); // play the random stream as the main stream
+        mainStreamId = randomId; // set the new main remote stream
+      }
     } else {
       var remoteContainerID = '#' + streamId + '_container';
       jQuery(remoteContainerID).empty().remove(); // 
@@ -159,6 +178,7 @@ function createCameraStream(uid) {
 // REMOTE STREAMS UI
 function addRemoteStreamMiniView(remoteStream){
   var streamId = remoteStream.getId();
+  console.log('Adding remote to miniview:', streamId);
   // append the remote stream template to #remote-streams
   jQuery('#remote-streams').append(
     jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-stream-container col'}).append(
@@ -208,6 +228,8 @@ function leaveChannel() {
 
     jQuery('#rejoin-container').show();
     jQuery('#buttons-container').addClass('hidden');
+
+    jQuery('#slick-avatars').slick('unslick').html('').slick(window.slickSettings);
     
     // show the modal overlay to join
     // jQuery("#modalForm").modal("show"); 

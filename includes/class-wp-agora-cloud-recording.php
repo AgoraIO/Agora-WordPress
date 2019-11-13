@@ -140,8 +140,10 @@ class AgoraCloudRecording {
         $day = strtolower(date("d", strtotime($t)));
         $month = strtolower(date("m", strtotime($t)));
         $year = strtolower(date("Y", strtotime($t)));
-        $clientRequest->storageConfig->fileNamePrefix = array( preg_replace('/\s+/', '', $channel->title()).'-'.$day.'-'.$month.'-'.$year );
-
+        
+        $folderName = $month.$day.$year.preg_replace('/\s+/', '', $channel->title());
+        $clientRequest->storageConfig->fileNamePrefix = array( $folderName );
+        
         $newToken = $this->parent->generateNewToken($data['cid'], $data['uid']);
         // die("<pre>".print_r($newToken, true)."</pre>");
         $clientRequest->token = $newToken;

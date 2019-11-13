@@ -47,11 +47,23 @@ class WP_Agora_Public {
     add_action( 'wp_ajax_generate_token', $ajaxTokenServer );
     add_action( 'wp_ajax_nopriv_generate_token', $ajaxTokenServer );
 
+    $userAvatarAjax = array($this, 'getUserAvatar');
+    add_action( 'wp_ajax_get_user_avatar', $userAvatarAjax );
+    add_action( 'wp_ajax_nopriv_get_user_avatar', $userAvatarAjax );
+
     // Page Template loader for FullScreen
     require_once plugin_dir_path(dirname( __FILE__ )) . 'public/class-wp-agora-page-template.php';
     new WP_Agora_PageTemplate($this);
 
     require_once(__DIR__.'/../includes/token-server/RtcTokenBuilder.php');
+	}
+
+	public function getUserAvatar() {
+		$avatar = get_avatar_data( $_POST['uid'], array('size' => 168) );
+
+		header('Content-Type: application/json');
+		echo json_encode(array( "avatar" => $avatar ));
+		wp_die();
 	}
 
 	public function ajaxTokenServer() {

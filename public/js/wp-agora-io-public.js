@@ -31,3 +31,20 @@
   jQuery.fn[sr] = function(fn){  return fn ? this.bind('resize', debounce(fn)) : this.trigger(sr); };
 
 })(jQuery,'smartresize');
+
+
+function getUserAvatar(user_id, cb) {
+  var uid = String(user_id).substring(3);
+  console.log('Real WP user ID:', uid)
+  var params = {
+    action: 'get_user_avatar', // wp ajax action
+    uid, // needed to get the avatar from the WP user
+  };
+  agoraApiRequest(ajax_url, params).done(function(data) {
+    if (cb) {
+      cb(data);
+    }
+  }).fail(function(err) {
+    console.error('Avatar not available:', err);
+  });
+}
