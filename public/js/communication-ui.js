@@ -216,6 +216,7 @@ function fullscreenInit() {
   window.slickSettings = {
     dots: false,
     slidesToShow,
+    centerMode: false,
     responsive: [{
       breakpoint: 480,
       settings: {slidesToShow: 1}

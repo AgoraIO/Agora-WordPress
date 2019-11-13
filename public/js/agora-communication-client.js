@@ -57,22 +57,31 @@ agoraClient.on('stream-subscribed', function (evt) {
   var remoteId = remoteStream.getId();
   remoteStreams[remoteId] = remoteStream;
   // console.log('Stream subscribed:', remoteId);
-  
-  getUserAvatar(remoteId, function(gravatar) {
-    // console.log('callback gravatar:', gravatar);
-    const url = gravatar.avatar.url;
-    // const index = remoteId;
-    const template = '<div id="uid-'+remoteId+'"><div class="avatar-circle"><img src="'+url+'" alt="gravatar" /></div></div>';
-    jQuery('#slick-avatars').slick('slickAdd', template);
-  });
-
-  AgoraRTC.Logger.info("Subscribe remote stream successfully: " + remoteId);
-  if( jQuery('#video-canvas').is(':empty') ) { 
-    mainStreamId = remoteId;
-    remoteStream.play('video-canvas');
-  } else {
-    addRemoteStreamMiniView(remoteStream);
+  const callbackRemoteStreams = function() {
+    AgoraRTC.Logger.info("Subscribe remote stream successfully: " + remoteId);
+    if( jQuery('#video-canvas').is(':empty') ) { 
+      mainStreamId = remoteId;
+      remoteStream.play('video-canvas');
+    } else {
+      addRemoteStreamMiniView(remoteStream);
+    }
   }
+  
+  const avatarsSlider = jQuery('#slick-avatars');
+  if (avatarsSlider.length>0) {
+    getUserAvatar(remoteId, function(gravatar) {
+      // console.log('callback gravatar:', gravatar);
+      const url = gravatar.avatar.url;
+      // const index = remoteId;
+      const template = '<div id="uid-'+remoteId+'"><div class="avatar-circle"><img src="'+url+'" alt="gravatar" /></div></div>';
+      jQuery('#slick-avatars').slick('slickAdd', template);
+
+      callbackRemoteStreams();
+    });
+  } else {
+    callbackRemoteStreams();
+  }
+
 });
 
 agoraClient.on('stream-removed', function(evt) {
@@ -180,24 +189,51 @@ function addRemoteStreamMiniView(remoteStream){
   var streamId = remoteStream.getId();
   console.log('Adding remote to miniview:', streamId);
   // append the remote stream template to #remote-streams
-  jQuery('#remote-streams').append(
-    jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-stream-container col'}).append(
-      jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
-          jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
-      ),
-      jQuery('<div/>', {'id': streamId + '_no-video', 'class': 'no-video-overlay text-center'}).append(
-        jQuery('<i/>', {'class': 'fas fa-user'})
-      ),
-      jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
-    )
-  );
-  remoteStream.play('agora_remote_' + streamId); 
+  const remoteStreamsDiv = jQuery('#remote-streams');
+  let playerFound = false;
+  if (remoteStreamsDiv.length>0) {
+    playerFound = true;
+    remoteStreamsDiv.append(
+      jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-stream-container col'}).append(
+        jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
+            jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
+        ),
+        jQuery('<div/>', {'id': streamId + '_no-video', 'class': 'no-video-overlay text-center'}).append(
+          jQuery('<i/>', {'class': 'fas fa-user'})
+        ),
+        jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
+      )
+    );
+  } else {
+    const avatarCircleDiv = jQuery('#uid-'+streamId);
+    if (avatarCircleDiv.length>0) {
+      playerFound = true;
+      const circle = avatarCircleDiv.find('.avatar-circle');
+      circle.append(
+        jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-stream-container'}).append(
+          jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
+            jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
+          ),
+          jQuery('<div/>', {'id': streamId + '_no-video', 'class': 'no-video-overlay text-center'}).append(
+            jQuery('<i/>', {'class': 'fas fa-user'})
+          ),
+          jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
+        )
+      )
+      circle.find('img').hide();
+    }
+  }
+  playerFound && remoteStream.play('agora_remote_' + streamId); 
 
   var containerId = '#' + streamId + '_container';
   jQuery(containerId).dblclick(function() {
     // play selected container as full screen - swap out current full screen stream
     remoteStreams[mainStreamId].stop(); // stop the main video stream playback
     addRemoteStreamMiniView(remoteStreams[mainStreamId]); // send the main video stream to a container
+    const parentCircle = jQuery(containerId).parent();
+    if (parentCircle.hasClass('avatar-circle')) {
+      parentCircle.find('img').show();
+    }
     jQuery(containerId).empty().remove(); // remove the stream's miniView container
     remoteStreams[streamId].stop() // stop the container's video stream playback
     remoteStreams[streamId].play('video-canvas'); // play the remote stream as the full screen video
