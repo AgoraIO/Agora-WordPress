@@ -1,12 +1,3 @@
-=== WP Agora.io ===
-Contributors: jalamprea, digitallysavvy
-Tags: communications, video, real-time
-Requires at least: 5.0.0
-Tested up to: 5.2.2
-Stable tag: 5.2
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
-
 Easily add live broadcasting and video conferencing functionality into your Wordpress posts and page.
 
 == Description ==
@@ -59,6 +50,11 @@ Agora setup (advanced)
 3.  Navigate to \"Products and Usage\" page. Enable `RTMP` and `Cloud Recording`.
 4.  Navigate to the Dashboard API section of your Agora Dashboard (https://console.agora.io/restfulApi) and take note of your `Customer ID` and `Customer Certificate` keys.
 5.  Navigate to the Agora Word Press Settings page and input `App ID`, `App certificate`, `Customer ID`, and `Customer Certificate` keys
+
+== Screenshots ==
+1. View all channels and their short codes
+2. View and edit a broadcast channel\'s settings
+3. View and edit your Agora credentials
 
 == Changelog ==
 Version 1.0
