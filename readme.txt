@@ -1,3 +1,14 @@
+=== WP Agora.io ===
+Contributors: jalejo08, hermesf
+Tags: communications, video, real-time
+Requires at least: 5.0
+Tested up to: 5.2
+Requires PHP: 7.2
+Stable tag: 1.0
+Donate link: ...
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
 Easily add live broadcasting and video conferencing functionality into your Wordpress posts and page.
 
 == Description ==
@@ -59,3 +70,9 @@ Agora setup (advanced)
 == Changelog ==
 Version 1.0
 Initial build of the Agora.io WebSDK implemented as a WordPress plugin.
+
+== Frequently Asked Questions ==
+...
+
+== Upgrade Notice ==
+...
