@@ -45,6 +45,11 @@ Group chat calls scales to include up to 17 participants – ensuring that you c
 # Live Broadcasting
 Agora's flexible APIs enable deep integration of high quality, low latency – live video streaming experiences
 
+# Screen Shots
+![Channels List](/assets/screenshot-1.png?raw=true "Channels List")
+![Broadcast Channel Settings](/assets/screenshot-2.png?raw=true "Broadcast Channel Settings")
+![WP Agora.io Settings Page](/assets/screenshot-3.png?raw=true "WP Agora.io Settings Page")
+
 ## Installation ##
 
 This section describes how to install the plugin and get it working.
