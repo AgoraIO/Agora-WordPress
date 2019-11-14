@@ -14,7 +14,16 @@ Easily add live broadcasting and video conferencing functionality into your Word
 == Description ==
 WPAgora allows you easily add live broadcast or video conferencing functionality into your posts and pages. Easily create and configure a broadcast or communication channels through the admin dashboard. Highly customizable. Pick and choose the calling or interactive broadcast settings you need.
 
+Agora is a Communications Platform as a Service (CPaaS) that provides a fully encrypted, GDPR and Hippa compliant network. Agora delivers easy to embed Real-Time Engagement APIs which includes all the development tools and cloud infrastructure needed for mobile, web, and desktop applications.  Agora’s Software Defined Realtime Network (SD-RTN™) is the most widely used and intelligent Real Time Communications (RTC) network in the world.
+
+Agora includes full support across a range of tech stacks making it easy to deliver deep integration of high-quality, extreme low-latency video calling across all platforms and channels.
+
 Get started for free, the first 10,000 minutes each month are free and this includes free starter support through Slack. Agora scales with your website/platform through simple and affordable pricing model that scales with usage. See pricing details: https://www.agora.io/price-2/
+
+Terms of Service: https://www.agora.io/en/terms-of-service/
+Privacy Policy: https://www.agora.io/en/privacy-policy/
+Acceptable Use Policy: https://www.agora.io/en/acceptable-use-policy/
+Compliance Policy: https://www.agora.io/en/compliance/
 
 ## Fetures ##
 
@@ -34,12 +43,6 @@ Group chat calls scales to include up to 17 participants – ensuring that you c
 
 # Live Broadcasting
 Agora\'s flexible APIs enable deep integration of high quality, low latency – live video streaming experiences
-
-# About Agora.io
-Agora delivers easy to embed Real-Time Engagement APIs which includes all the development tools and cloud infrastructure needed for mobile, web, and desktop applications.  Agora’s Software Defined Realtime Network (SD-RTN™) is the most widely used and intelligent Real Time Communications (RTC) network in the world.
-
-Agora includes full support across a range of tech stacks making it easy to deliver deep integration of high-quality, extreme low-latency video calling across all platforms and channels.
-
 
 == Installation ==
 FTP
