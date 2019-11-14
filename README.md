@@ -2,7 +2,9 @@
 **Contributors:** jalamprea, digitallysavvy
 **Tags:** communications, video, real-time
 **Requires at least:** 5.0.0
-**Tested up to:** 5.2.2
+**Tested up to:** 5.2
+**Requires PHP:** 7.2
+**Stable tag:** 1.0
 **License:** CC BY-ND 4.0  
 **License URI:** https://creativecommons.org/licenses/by-nd/4.0/  
 
