@@ -99,7 +99,7 @@ class WP_Agora_PageTemplate {
       }
 
 
-      wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-2.8.0.js', array('jquery'), null );
+      wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-2.9.0.js', array('jquery'), null );
 
       if (strpos($post->post_content, '[agora-communication')>=0) {
         $slickURL = plugin_dir_url( __FILE__ ) . 'js/slick-1.8.1/';
