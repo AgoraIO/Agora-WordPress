@@ -147,14 +147,14 @@ class WP_Agora_Public {
 	}
 
 	public function enqueueShortcodeStyles($type) {
-		$bootstrap_css = 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css';
-		$bootstrap_js = 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js';
-		$bootstrap_popper_js = 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js';
-	  $fontawesome = 'https://use.fontawesome.com/releases/v5.7.0/css/all.css';
+		$bootstrap_css = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.css';
+		$bootstrap_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.js';
+		$bootstrap_popper_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/popper.min.js';
+	  $fontawesome = plugin_dir_url( __FILE__ ) . 'css/fontawesome.css';
 	  wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
 	  wp_enqueue_style( 'fontawesome', $fontawesome, array('bootstrap'), null, 'all' );
 	  
-	  wp_enqueue_script( 'AgoraSDK', 'https://cdn.agora.io/sdk/web/AgoraRTCSDK-2.8.0.js', array('jquery'), null );
+	  wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-2.8.0.js', array('jquery'), null );
 	  wp_enqueue_script( 'bootstrap_popper', $bootstrap_popper_js, array('jquery'), null );
 	  wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
 
@@ -216,7 +216,7 @@ class WP_Agora_Public {
 		// TODO: Auto detect bootstrap or use a custom one version of bootstrap for CSS Styles
 		$use_bootstrap = false;
 		if($use_bootstrap==='true') {
-			$bootstrap_css = 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css';
+			$bootstrap_css = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.css';
 			wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
 		}
 	}
@@ -227,7 +227,7 @@ class WP_Agora_Public {
 		// isset($this->api_data['agora_bootstrap']) ? $this->api_data['agora_bootstrap'] : '';
 		$use_bootstrap = false;
 		if($use_bootstrap==='true') {
-			$bootstrap_js = 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js';
+			$bootstrap_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.js';
 			wp_enqueue_script( 'bootstrap', $bootstrap_js, array( 'jquery' ), null, true );
 		}
 
