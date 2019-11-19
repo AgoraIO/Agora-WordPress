@@ -1,8 +1,3 @@
-(function( $ ) {
-	'use strict';
-
-})( jQuery );
-
 // https://www.paulirish.com/2009/throttled-smartresize-jquery-event-handler/
 (function($,sr){
 
@@ -33,7 +28,7 @@
 })(jQuery,'smartresize');
 
 
-function getUserAvatar(user_id, cb) {
+function agora_getUserAvatar(user_id, cb) {
   var uid = String(user_id).substring(3);
   console.log('Real WP user ID:', uid)
   var params = {

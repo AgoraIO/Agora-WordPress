@@ -381,7 +381,7 @@ function render_agoraio_channel_form_recording($channel) {
     ?>
   </table>
   <script>
-    function updateRegionOptions() {
+    function agoraUpdateRegionOptions() {
       var vendor = parseInt(jQuery(this).val(), 10);
       var options = null;
       switch(vendor) {
@@ -410,7 +410,7 @@ function render_agoraio_channel_form_recording($channel) {
       }
     }
     window.addEventListener('load', function() {
-      jQuery('#vendor').change(updateRegionOptions);
+      jQuery('#vendor').change(agoraUpdateRegionOptions);
       jQuery('#vendor').change();
     });
   </script>

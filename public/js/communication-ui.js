@@ -1,7 +1,7 @@
 
 
 // UI buttons
-function enableUiControls(localStream) {
+function agoraEnableUiControls(localStream) {
 
   jQuery("#mic-btn").prop("disabled", false);
   jQuery("#video-btn").prop("disabled", false);
@@ -9,11 +9,11 @@ function enableUiControls(localStream) {
   jQuery("#exit-btn").prop("disabled", false);
 
   jQuery("#mic-btn").click(function(){
-    toggleMic(localStream);
+    agoraToggleMic(localStream);
   });
 
   jQuery("#video-btn").click(function(){
-    toggleVideo(localStream);
+    agoraToggleVideo(localStream);
   });
 
   jQuery("#screen-share-btn").click(function() {
@@ -39,7 +39,7 @@ function enableUiControls(localStream) {
 
   jQuery("#exit-btn").click(function(){
     console.log("so sad to see you leave the channel");
-    leaveChannel(); 
+    agoraLeaveChannel(); 
   });
 
   jQuery('#rejoin-btn').click(rejoinChannel);
@@ -49,11 +49,11 @@ function enableUiControls(localStream) {
     switch (e.key) {
       case "m":
         console.log("squick toggle the mic");
-        toggleMic(localStream);
+        agoraToggleMic(localStream);
         break;
       case "v":
         console.log("quick toggle the video");
-        toggleVideo(localStream);
+        agoraToggleVideo(localStream);
         break; 
       /* case "s":
         console.log("initializing screen share");
@@ -67,7 +67,7 @@ function enableUiControls(localStream) {
         break;  */
       case "q":
         console.log("so sad to see you quit the channel");
-        leaveChannel(); 
+        agoraLeaveChannel(); 
         break;   
       default:  // do nothing
     }
@@ -79,11 +79,11 @@ function enableUiControls(localStream) {
   });
 }
 
-function toggleBtn(btn){
+function agoraToggleBtn(btn){
   btn.toggleClass('btn-dark').toggleClass('btn-danger');
 }
 
-function toggleVisibility(elementID, visible) {
+function agora_toggleVisibility(elementID, visible) {
   if (visible) {
     jQuery(elementID).attr("style", "display:block");
   } else {
@@ -91,28 +91,28 @@ function toggleVisibility(elementID, visible) {
   }
 }
 
-function toggleMic(localStream) {
-  toggleBtn(jQuery("#mic-btn")); // toggle button colors
+function agoraToggleMic(localStream) {
+  agoraToggleBtn(jQuery("#mic-btn")); // toggle button colors
   jQuery("#mic-icon").toggleClass('fa-microphone').toggleClass('fa-microphone-slash'); // toggle the mic icon
   if (jQuery("#mic-icon").hasClass('fa-microphone')) {
     localStream.unmuteAudio(); // enable the local mic
-    toggleVisibility("#mute-overlay", false); // hide the muted mic icon
+    agora_toggleVisibility("#mute-overlay", false); // hide the muted mic icon
   } else {
     localStream.muteAudio(); // mute the local mic
-    toggleVisibility("#mute-overlay", true); // show the muted mic icon
+    agora_toggleVisibility("#mute-overlay", true); // show the muted mic icon
   }
 }
 
-function toggleVideo(localStream) {
-  toggleBtn(jQuery("#video-btn")); // toggle button colors
+function agoraToggleVideo(localStream) {
+  agoraToggleBtn(jQuery("#video-btn")); // toggle button colors
   jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
   if (jQuery("#video-icon").hasClass('fa-video')) {
     localStream.unmuteVideo(); // enable the local video
-    toggleVisibility("#no-local-video", false); // hide the user icon when video is enabled
+    agora_toggleVisibility("#no-local-video", false); // hide the user icon when video is enabled
     logCameraDevices();
   } else {
     localStream.muteVideo(); // disable the local video
-    toggleVisibility("#no-local-video", true); // show the user icon when video is disabled
+    agora_toggleVisibility("#no-local-video", true); // show the user icon when video is disabled
   }
 }
 

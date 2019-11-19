@@ -71,7 +71,7 @@
 
 
     // use tokens for added security
-    function generateToken() {
+    function agoraGenerateToken() {
       return <?php
       $appID = $agora->settings['appId'];
       $appCertificate = $agora->settings['appCertificate'];
@@ -86,7 +86,7 @@
         $settings = $channel->get_properties();
         $role = 'Role_Subscriber';
         $privilegeExpireTs = 0;
-        echo '"'.RtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs). '"';
+        echo '"'.AgoraRtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs). '"';
       } else {
         echo 'null';
       }

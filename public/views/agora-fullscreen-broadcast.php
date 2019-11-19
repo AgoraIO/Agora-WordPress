@@ -13,8 +13,6 @@ $current_user       = wp_get_current_user();
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Agora.io Communication Chat</title>
   <?php wp_head() ?>
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
-  <link rel="stylesheet" href="<?php echo $current_path ?>/css/wp-agora-fullscreen.css">
 </head>
 <body class="agora custom-background-image">
   <?php
@@ -286,7 +284,7 @@ $current_user       = wp_get_current_user();
 
 
     // use tokens for added security
-    function generateToken() {
+    function agoraGenerateToken() {
       return <?php
       $appID = $agora->settings['appId'];
       $appCertificate = $agora->settings['appCertificate'];
@@ -306,15 +304,12 @@ $current_user       = wp_get_current_user();
         if(!class_exists('RtcTokenBuilder')) {
           require_once(__DIR__.'/../../includes/token-server/RtcTokenBuilder.php');
         }
-        echo '"'.RtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs). '"';
+        echo '"'.AgoraRtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs). '"';
       } else {
         echo 'null';
       }
       ?>;
     }
   </script>
-  <script src="<?php echo $current_path ?>/js/agora-broadcast-client.js"></script>
-  <script src="<?php echo $current_path ?>/js/broadcast-ui.js"></script>
-  <script src="<?php echo $current_path ?>/js/screen-share.js"></script>
 </body>
 </html>

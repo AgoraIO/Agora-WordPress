@@ -61,7 +61,7 @@ function joinChannelAsScreenShare(cb) {
     cb(err, null);
   };
 
-  generateAjaxToken(function(err, token) {
+  agora_generateAjaxToken(function(err, token) {
     if (err) {
       AgoraRTC.Logger.error("[TOKEN ERROR] : Get Token failed:", err);
       cb(err, null);
@@ -119,7 +119,7 @@ function stopScreenShare(cb) {
 
 
 
-function generateAjaxToken(cb) {
+function agora_generateAjaxToken(cb) {
   var params = {
     action: 'generate_token', // wp ajax action
     cid: window.channelId,

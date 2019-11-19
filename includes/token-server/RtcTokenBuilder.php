@@ -2,7 +2,7 @@
 
 require_once "AccessToken.php";
 
-class RtcTokenBuilder
+class AgoraRtcTokenBuilder
 {
     const RoleAttendee = 0;
     const RolePublisher = 1;
@@ -24,7 +24,7 @@ class RtcTokenBuilder
     #                    generated, set expireTimestamp as the current 
     #                    timestamp + 600 (seconds)./
     public static function buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs){
-        return RtcTokenBuilder::buildTokenWithUserAccount($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs);
+        return AgoraRtcTokenBuilder::buildTokenWithUserAccount($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs);
     }
 
     # appID: The App ID issued to you by Agora. Apply for a new App ID from 
@@ -40,12 +40,12 @@ class RtcTokenBuilder
     #                    Agora Service within 10 minutes after the token is 
     #                    generated, set expireTimestamp as the current 
     public static function buildTokenWithUserAccount($appID, $appCertificate, $channelName, $userAccount, $role, $privilegeExpireTs){
-        $token = AccessToken::init($appID, $appCertificate, $channelName, $userAccount);
-        $Privileges = AccessToken::Privileges;
+        $token = WPAgoraAccessToken::init($appID, $appCertificate, $channelName, $userAccount);
+        $Privileges = WPAgoraAccessToken::Privileges;
         $token->addPrivilege($Privileges["kJoinChannel"], $privilegeExpireTs);
-        if(($role == RtcTokenBuilder::RoleAttendee) ||
-            ($role == RtcTokenBuilder::RolePublisher) ||
-            ($role == RtcTokenBuilder::RoleAdmin))
+        if(($role == AgoraRtcTokenBuilder::RoleAttendee) ||
+            ($role == AgoraRtcTokenBuilder::RolePublisher) ||
+            ($role == AgoraRtcTokenBuilder::RoleAdmin))
         {
             $token->addPrivilege($Privileges["kPublishVideoStream"], $privilegeExpireTs);
             $token->addPrivilege($Privileges["kPublishAudioStream"], $privilegeExpireTs);

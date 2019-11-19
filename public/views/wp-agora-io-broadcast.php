@@ -309,7 +309,7 @@ $current_user       = wp_get_current_user();
 
 
     // use tokens for added security...
-    function generateToken() {
+    function agoraGenerateToken() {
       return <?php
       $appID = $agora->settings['appId'];
       $appCertificate = $agora->settings['appCertificate'];
@@ -322,7 +322,7 @@ $current_user       = wp_get_current_user();
         $settings = $channel->get_properties();
         $role = 'Role_Publisher';
         $privilegeExpireTs = 0;
-        echo '"'.RtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs). '"';
+        echo '"'.AgoraRtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs). '"';
       } else {
         echo 'null';
       }

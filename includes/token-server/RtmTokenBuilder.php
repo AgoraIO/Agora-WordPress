@@ -2,7 +2,7 @@
 
 require_once "AccessToken.php";
 
-class RtmTokenBuilder
+class AgoraRtmTokenBuilder
 {
     const RoleRtmUser = 1;
     # appID: The App ID issued to you by Agora. Apply for a new App ID from 
@@ -18,8 +18,8 @@ class RtmTokenBuilder
     #                    generated, set expireTimestamp as the current 
     #                    timestamp + 600 (seconds)./
     public static function buildToken($appID, $appCertificate, $userAccount, $role, $privilegeExpireTs){
-        $token = AccessToken::init($appID, $appCertificate, $userAccount, "");
-        $Privileges = AccessToken::Privileges;
+        $token = WPAgoraAccessToken::init($appID, $appCertificate, $userAccount, "");
+        $Privileges = WPAgoraAccessToken::Privileges;
         $token->addPrivilege($Privileges["kRtmLogin"], $privilegeExpireTs);
         return $token->build();
     }

@@ -40,7 +40,7 @@ class WP_Agora_Admin {
 		unset($_REQUEST['action']);
 		$keys = array_keys($_REQUEST);
 		$key = $keys[0];
-		$value = $_REQUEST[$key];
+		$value = sanitize_key( $_REQUEST[$key] );
 
 
 		$options = get_option($this->plugin_name);
@@ -52,9 +52,7 @@ class WP_Agora_Admin {
  		$r = update_option($this->plugin_name, $options);
 
 		header('Content-Type: application/json');
-		echo json_encode(array(
-        'updated' => $r
-    ));
+		echo json_encode(array('updated' => $r));
 		wp_die();
 	}
 
@@ -243,8 +241,8 @@ class WP_Agora_Admin {
 			}
 
 			$posts = empty( $_POST['post_ID'] )
-				? (array) $_REQUEST['channel']
-				: (array) $_POST['post_ID'];
+				? (array) sanitize_key($_REQUEST['channel'])
+				: (array) sanitize_key($_POST['post_ID']);
 
 			$deleted = 0;
 
@@ -284,7 +282,7 @@ class WP_Agora_Admin {
 				'locale' => isset( $_GET['locale'] ) ? $_GET['locale'] : null,
 			) ); */
 		} else if ( ! empty( $_GET['channel'] ) ) {
-			$channel = WP_Agora_Channel::get_instance( $_GET['channel'] );
+			$channel = WP_Agora_Channel::get_instance( sanitize_key($_GET['channel']) );
 			// die("<pre>EDIT: ".print_r($channel, true)."</pre>");
 		}
 
@@ -352,7 +350,7 @@ class WP_Agora_Admin {
 
 function agora_current_action() {
 	if ( isset( $_REQUEST['action'] ) and -1 != $_REQUEST['action'] ) {
-		return $_REQUEST['action'];
+		return sanitize_key($_REQUEST['action']);
 	}
 
 	return false;

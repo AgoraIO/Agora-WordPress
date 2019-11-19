@@ -164,7 +164,7 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
 
     // join a channel
     function joinChannel() {
-      var token = generateToken();
+      var token = agoraGenerateToken();
 
       // set the role
       window.agoraClient.setClientRole('audience', function() {
@@ -180,7 +180,7 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
       });
     }
 
-    function leaveChannel() {
+    function agoraLeaveChannel() {
       window.agoraClient.leave(function() {
         AgoraRTC.Logger.info('client leaves channel');
       }, function(err) {
@@ -189,7 +189,7 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
     }
 
     // use tokens for added security
-    function generateToken() {
+    function agoraGenerateToken() {
       return <?php
       $appID = $agora->settings['appId'];
       $appCertificate = $agora->settings['appCertificate'];
@@ -201,7 +201,7 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
         // role should be based on the current user host...
         $role = 'Role_Subscriber';
         $privilegeExpireTs = 0;
-        echo '"'.RtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs). '"';
+        echo '"'.AgoraRtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs). '"';
       } else {
         echo 'null';
       }

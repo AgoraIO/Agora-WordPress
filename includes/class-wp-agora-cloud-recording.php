@@ -9,8 +9,8 @@
  * @package    wp-agora-io
  * @subpackage wp-agora-io/includes
  */
-define('MIN_RAND_VALUE', 10000000);
-define('MAX_RAND_VALUE', 4294967295);
+define('AGORA_MIN_RAND_VALUE', 10000000);
+define('AGORA_MAX_RAND_VALUE', 4294967295);
 
 class AgoraCloudRecording {
     private $API_URL = 'https://api.agora.io/v1/apps/';
@@ -107,7 +107,7 @@ class AgoraCloudRecording {
 
     private function startRecording($data) {
 
-        $data['uid'] = ''.rand(MIN_RAND_VALUE, MAX_RAND_VALUE);
+        $data['uid'] = ''.rand(AGORA_MIN_RAND_VALUE, AGORA_MAX_RAND_VALUE);
 
         $resource = $this->acquire($data);
         // die("<pre>".print_r($resource, true)."</pre>");

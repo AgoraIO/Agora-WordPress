@@ -59,7 +59,8 @@ class WP_Agora_Public {
 	}
 
 	public function getUserAvatar() {
-		$avatar = get_avatar_data( $_POST['uid'], array('size' => 168) );
+		$uid = isset($_POST['uid']) ? sanitize_key($_POST['uid']) : 0;
+		$avatar = get_avatar_data( $uid, array('size' => 168) );
 
 		header('Content-Type: application/json');
 		echo json_encode(array( "avatar" => $avatar ));
@@ -81,10 +82,10 @@ class WP_Agora_Public {
     $appCertificate = $this->settings['appCertificate'];
     
     if($appCertificate && strlen($appCertificate)>0) {
-			$cid = $_POST['cid'];
+			$cid = isset($_POST['cid']) ? sanitize_key($_POST['cid']) : 0;
 			
 			$current_user = wp_get_current_user();
-    	$uid = isset($_POST['uid']) ? $_POST['uid'] : '123'.$current_user->ID; // Get current user id
+    	$uid = isset($_POST['uid']) ? sanitize_key($_POST['uid']) : '123'.$current_user->ID; // Get current user id
     	// die("<pre>".print_r($uid, true)."</pre>");
     	$uid = intval($uid);
 
@@ -125,7 +126,7 @@ class WP_Agora_Public {
     // TODO: Validate if this should be changed according to the current user and current shortcode from the ajax call...
     $role = 'Role_Publisher'; 
     $privilegeExpireTs = 0;
-    $token = RtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs);
+    $token = AgoraRtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs);
 
     return $token;
 	}
@@ -150,7 +151,7 @@ class WP_Agora_Public {
 		$bootstrap_css = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.css';
 		$bootstrap_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.js';
 		$bootstrap_popper_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/popper.min.js';
-	  $fontawesome = plugin_dir_url( __FILE__ ) . 'css/fontawesome.css';
+	  $fontawesome = plugin_dir_url( __FILE__ ) . 'css/fontawesome/css/solid.min.css';
 	  wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
 	  wp_enqueue_style( 'fontawesome', $fontawesome, array('bootstrap'), null, 'all' );
 	  

@@ -26,7 +26,7 @@ function initClientAndJoinChannel(agoraAppId, channelName) {
   // init Agora SDK
   agoraClient.init(agoraAppId, function () {
     AgoraRTC.Logger.info("AgoraRTC client initialized");
-    joinChannel(channelName); // join channel upon successfull init
+    agoraJoinChannel(channelName); // join channel upon successfull init
   }, function (err) {
     AgoraRTC.Logger.error("[ERROR] : AgoraRTC client init failed", err);
   });
@@ -69,7 +69,7 @@ agoraClient.on('stream-subscribed', function (evt) {
   
   const avatarsSlider = jQuery('#slick-avatars');
   if (avatarsSlider.length>0) {
-    getUserAvatar(remoteId, function(gravatar) {
+    agora_getUserAvatar(remoteId, function(gravatar) {
       // console.log('callback gravatar:', gravatar);
       const url = gravatar.avatar.url;
       // const index = remoteId;
@@ -116,11 +116,11 @@ agoraClient.on("peer-leave", function(evt) {
 
 // show mute icon whenever a remote has muted their mic
 agoraClient.on("mute-audio", function (evt) {
-  toggleVisibility('#' + evt.uid + '_mute', true);
+  agora_toggleVisibility('#' + evt.uid + '_mute', true);
 });
 
 agoraClient.on("unmute-audio", function (evt) {
-  toggleVisibility('#' + evt.uid + '_mute', false);
+  agora_toggleVisibility('#' + evt.uid + '_mute', false);
 });
 
 // show user icon whenever a remote has disabled their video
@@ -129,17 +129,17 @@ agoraClient.on("mute-video", function (evt) {
   // if the main user stops their video select a random user from the list
   if (remoteId != mainStreamId) {
     // if not the main vidiel then show the user icon
-    toggleVisibility('#' + remoteId + '_no-video', true);
+    agora_toggleVisibility('#' + remoteId + '_no-video', true);
   }
 });
 
 agoraClient.on("unmute-video", function (evt) {
-  toggleVisibility('#' + evt.uid + '_no-video', false);
+  agora_toggleVisibility('#' + evt.uid + '_no-video', false);
 });
 
 // join a channel
-function joinChannel(channelName) {
-  var token = generateToken();
+function agoraJoinChannel(channelName) {
+  var token = agoraGenerateToken();
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
   agoraClient.join(token, channelName, userId, function(uid) {
     AgoraRTC.Logger.info("User " + uid + " join channel successfully");
@@ -176,7 +176,7 @@ function createCameraStream(uid) {
       AgoraRTC.Logger.error("[ERROR] : publish local stream error: " + err);
     });
   
-    enableUiControls(localStream); // move after testing
+    agoraEnableUiControls(localStream); // move after testing
     localStreams.camera.stream = localStream; // keep track of the camera stream for later
   }, function (err) {
     AgoraRTC.Logger.error("[ERROR] : getUserMedia failed", err);
@@ -241,7 +241,7 @@ function addRemoteStreamMiniView(remoteStream){
   });
 }
 
-function leaveChannel() {
+function agoraLeaveChannel() {
   
   if(screenShareActive) {
     stopScreenShare();
@@ -259,8 +259,8 @@ function leaveChannel() {
     jQuery("#screen-share-btn").prop("disabled", true);
     jQuery("#exit-btn").prop("disabled", true);
     // hide the mute/no-video overlays
-    toggleVisibility("#mute-overlay", false); 
-    toggleVisibility("#no-local-video", false);
+    agora_toggleVisibility("#mute-overlay", false); 
+    agora_toggleVisibility("#no-local-video", false);
 
     jQuery('#rejoin-container').show();
     jQuery('#buttons-container').addClass('hidden');

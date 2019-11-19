@@ -106,6 +106,11 @@ class WP_Agora_PageTemplate {
         wp_enqueue_script( 'jquery.slick', $slickURL . 'slick.min.js', array('jquery'), null );
         wp_enqueue_style( 'jquery.slick.css', $slickURL . 'slick.css', null, null );
         wp_enqueue_style( 'jquery.slick.theme', $slickURL . 'slick-theme.css', null, null );
+
+        wp_enqueue_script( 'agora-communication-client',
+          plugin_dir_url( __FILE__ ) .'js/agora-communication-client.js', array('jquery'), null, true );
+        wp_enqueue_script( 'agora-communication-ui',
+          plugin_dir_url( __FILE__ ) .'js/communication-ui.js', array('jquery'), null, true );
       }
 
       $bootstrap_css = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.css';
@@ -114,6 +119,11 @@ class WP_Agora_PageTemplate {
       wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
       wp_enqueue_script( 'bootstrap_popper', $bootstrap_popper_js, array('jquery'), null );
       wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
+
+      wp_enqueue_style( 'fontawesome',
+        plugin_dir_url( __FILE__ ) . 'css/fontawesome/css/all.min.css', array(), null, 'all' );
+      wp_enqueue_style( 'agora-fullscreen',
+        plugin_dir_url( __FILE__ ) . 'css/wp-agora-fullscreen.css', array(), null, 'all' );
 
 
       // Return default template if we don't have a custom one defined
@@ -129,9 +139,16 @@ class WP_Agora_PageTemplate {
         $props = $channel->get_properties();
         if ((int)$props['host']===$current_user->ID) {
           $file = str_replace('agora-fullscreen-template.php', 'agora-fullscreen-broadcast.php', $file);
+
+          wp_enqueue_script('broadcast-client',
+            plugin_dir_url( __FILE__ ) . "js/agora-broadcast-client.js", array('jquery'), null, true);
+          wp_enqueue_script('broadcast-ui', 
+            plugin_dir_url( __FILE__ ) . "js/broadcast-ui.js", array('jquery'), null, true);
+          wp_enqueue_script('screen-share', 
+            plugin_dir_url( __FILE__ ) . "js/screen-share.js", array('jquery'), null, true);
         } else {
           $file = str_replace('agora-fullscreen-template.php', 'agora-fullscreen-audience.php', $file);
-          $agoraUserScript = 'js/agora-broadcast-client.js';
+          // $agoraUserScript = 'js/agora-broadcast-client.js';
         }
       }
 

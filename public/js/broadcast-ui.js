@@ -8,20 +8,20 @@ function enableUiControls() {
   jQuery("#add-rtmp-btn").prop("disabled", false);
 
   jQuery("#mic-btn").click(function(){
-    toggleMic();
+    agoraToggleMic();
   });
 
   jQuery("#video-btn").click(function(){
-    toggleVideo();
+    agoraToggleVideo();
   });
 
   jQuery("#cloud-recording-btn").click(function(){
-    toggleRecording();
+    agoraToggleRecording();
   });
 
   jQuery("#exit-btn").click(function(){
     console.log("so sad to see you leave the channel");
-    leaveChannel(); 
+    agoraLeaveChannel(); 
   });
 
   jQuery("#start-RTMP-broadcast").click(function(){
@@ -89,26 +89,26 @@ function enableUiControls() {
     switch (e.key) {
       case "m":
         console.log("squick toggle the mic");
-        toggleMic();
+        agoraToggleMic();
         break;
       case "v":
         console.log("quick toggle the video");
-        toggleVideo();
+        agoraToggleVideo();
         break; 
       case "q":
         console.log("so sad to see you quit the channel");
-        leaveChannel(); 
+        agoraLeaveChannel(); 
         break;   
       default:  // do nothing
     }
   });
 }
 
-function toggleBtn(btn){
+function agora_agoraToggleBtn(btn){
   btn.toggleClass('btn-dark').toggleClass('btn-danger');
 }
 
-function toggleVisibility(elementID, visible) {
+function agora_toggleVisibility(elementID, visible) {
   if (visible) {
     jQuery(elementID).attr("style", "display:block");
   } else {
@@ -116,9 +116,9 @@ function toggleVisibility(elementID, visible) {
   }
 }
 
-function toggleMic() {
-  toggleBtn(jQuery("#mic-btn")); // toggle button colors
-  toggleBtn(jQuery("#mic-dropdown"));
+function agoraToggleMic() {
+  agora_agoraToggleBtn(jQuery("#mic-btn")); // toggle button colors
+  agora_agoraToggleBtn(jQuery("#mic-dropdown"));
   jQuery("#mic-icon").toggleClass('fa-microphone').toggleClass('fa-microphone-slash'); // toggle the mic icon
   if (jQuery("#mic-icon").hasClass('fa-microphone')) {
     window.localStreams.camera.stream.unmuteAudio(); // enable the local mic
@@ -127,7 +127,7 @@ function toggleMic() {
   }
 }
 
-function toggleRecording() {
+function agoraToggleRecording() {
   if (window.loadingRecord) {
     return false;
   }
@@ -162,9 +162,9 @@ function toggleRecording() {
   }
 }
 
-function toggleVideo() {
-  toggleBtn(jQuery("#video-btn")); // toggle button colors
-  toggleBtn(jQuery("#cam-dropdown"));
+function agoraToggleVideo() {
+  agora_agoraToggleBtn(jQuery("#video-btn")); // toggle button colors
+  agora_agoraToggleBtn(jQuery("#cam-dropdown"));
   if (jQuery("#video-icon").hasClass('fa-video')) {
     window.localStreams.camera.stream.muteVideo(); // enable the local video
     // console.log("muteVideo");

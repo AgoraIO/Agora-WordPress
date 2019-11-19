@@ -2,7 +2,7 @@
 
 $SDK_VERSION = "1";
 
-function getToken($appid, $appcertificate, $account, $validTimeInSeconds){
+function AgoraGetToken($appid, $appcertificate, $account, $validTimeInSeconds){
     global $SDK_VERSION;
     $expiredTime = time() + $validTimeInSeconds;
 

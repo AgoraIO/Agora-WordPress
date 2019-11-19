@@ -1,12 +1,11 @@
 <?php
 
-class Message
+class WPAgoraTokenMessage
 {
     public $salt;
     public $ts;
     public $privileges;
-    public function __construct()
-    {
+    public function __construct() {
         $this->salt = rand(0, 100000);
 
         $date = new DateTime("now", new DateTimeZone('UTC'));
@@ -15,8 +14,7 @@ class Message
         $this->privileges = array();
     }
 
-    public function packContent()
-    {
+    public function packContent() {
         $buffer = unpack("C*", pack("V", $this->salt));
         $buffer = array_merge($buffer, unpack("C*", pack("V", $this->ts)));
         $buffer = array_merge($buffer, unpack("C*", pack("v", sizeof($this->privileges))));
@@ -27,8 +25,7 @@ class Message
         return $buffer;
     }
 
-    public function unpackContent($msg)
-    {
+    public function unpackContent($msg) {
         $pos = 0;
         $salt = unpack("V", substr($msg, $pos, 4))[1];
         $pos += 4;
@@ -51,8 +48,7 @@ class Message
     }
 }
 
-class AccessToken
-{
+class WPAgoraAccessToken {
     const Privileges = array(
         "kJoinChannel" => 1,
         "kPublishAudioStream" => 2,
@@ -73,13 +69,11 @@ class AccessToken
     public $appID, $appCertificate, $channelName, $uid;
     public $message;
 
-    function __construct()
-    {
-        $this->message = new Message();
+    function __construct() {
+        $this->message = new WPAgoraTokenMessage();
     }
 
-    function setUid($uid)
-    {
+    function setUid($uid) {
         if ($uid === 0) {
             $this->uid = "";
         } else {
@@ -87,8 +81,7 @@ class AccessToken
         }
     }
 
-    function is_nonempty_string($name, $str)
-    {
+    function is_nonempty_string($name, $str) {
         if (is_string($str) && $str !== "") {
             return true;
         }
@@ -96,9 +89,8 @@ class AccessToken
         return false;
     }
 
-    static function init($appID, $appCertificate, $channelName, $uid)
-    {
-        $accessToken = new AccessToken();
+    static function init($appID, $appCertificate, $channelName, $uid) {
+        $accessToken = new WPAgoraAccessToken();
 
         if (!$accessToken->is_nonempty_string("appID", $appID) ||
             !$accessToken->is_nonempty_string("appCertificate", $appCertificate) ||
@@ -111,27 +103,24 @@ class AccessToken
         $accessToken->channelName = $channelName;
 
         $accessToken->setUid($uid);
-        $accessToken->message = new Message();
+        $accessToken->message = new WPAgoraTokenMessage();
         return $accessToken;
     }
 
-    static function initWithToken($token, $appCertificate, $channel, $uid)
-    {
-        $accessToken = new AccessToken();
+    static function initWithToken($token, $appCertificate, $channel, $uid) {
+        $accessToken = new WPAgoraAccessToken();
         if (!$accessToken->extract($token, $appCertificate, $channel, $uid)) {
             return null;
         }
         return $accessToken;
     }
 
-    function addPrivilege($key, $expireTimestamp)
-    {
+    function addPrivilege($key, $expireTimestamp) {
         $this->message->privileges[$key] = $expireTimestamp;
         return $this;
     }
 
-    function extract($token, $appCertificate, $channelName, $uid)
-    {
+    function extract($token, $appCertificate, $channelName, $uid) {
         $ver_len = 3;
         $appid_len = 32;
         $version = substr($token, 0, $ver_len);
@@ -163,7 +152,7 @@ class AccessToken
         $msg = substr($content, $pos, $msgLen);
 
         $this->appID = $appid;
-        $message = new Message();
+        $message = new WPAgoraTokenMessage();
         $message->unpackContent($msg);
         $this->message = $message;
 
@@ -174,8 +163,7 @@ class AccessToken
         return true;
     }
 
-    function build()
-    {
+    function build() {
         $msg = $this->message->packContent();
         $val = array_merge(unpack("C*", $this->appID), unpack("C*", $this->channelName), unpack("C*", $this->uid), $msg);
 
@@ -184,14 +172,13 @@ class AccessToken
         $crc_channel_name = crc32($this->channelName) & 0xffffffff;
         $crc_uid = crc32($this->uid) & 0xffffffff;
 
-        $content = array_merge(unpack("C*", packString($sig)), unpack("C*", pack("V", $crc_channel_name)), unpack("C*", pack("V", $crc_uid)), unpack("C*", pack("v", count($msg))), $msg);
+        $content = array_merge(unpack("C*", agoraPackString($sig)), unpack("C*", pack("V", $crc_channel_name)), unpack("C*", pack("V", $crc_uid)), unpack("C*", pack("v", count($msg))), $msg);
         $version = "006";
         $ret = $version . $this->appID . base64_encode(implode(array_map("chr", $content)));
         return $ret;
     }
 }
 
-function packString($value)
-{
+function agoraPackString($value) {
     return pack("v", strlen($value)) . $value;
 }

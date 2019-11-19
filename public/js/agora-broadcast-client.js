@@ -1,14 +1,14 @@
 /**
  * Agora Broadcast Client 
  */
-const RADIX_DECIMAL = 10;
-const RADIX_HEX = 16;
+const AGORA_RADIX_DECIMAL = 10;
+const AGORA_RADIX_HEX = 16;
 // stream references (keep track of active streams) 
 var remoteStreams = {}; // remote streams obj struct [id : stream] 
 
 // join a channel
 function agoraJoinChannel() {
-  window.agoraToken = generateToken(); // rendered on PHP
+  window.agoraToken = agoraGenerateToken(); // rendered on PHP
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
 
   // set the role
@@ -80,7 +80,7 @@ function createCameraStream(uid, deviceIds) {
   });
 }
 
-function leaveChannel() {
+function agoraLeaveChannel() {
 
   window.agoraClient.leave(function() {
     AgoraRTC.Logger.info('client leaves channel');
@@ -174,8 +174,8 @@ function startLiveTranscoding() {
   AgoraRTC.Logger.info("Start live transcoding..."); 
   var rtmpURL = jQuery('#input_rtmp_url').val();
   var rtmpKey = jQuery('#input_private_key').val();
-  // var width = parseInt(jQuery('#window-scale-width').val(), RADIX_DECIMAL);
-  // var height = parseInt(jQuery('#window-scale-height').val(), RADIX_DECIMAL);
+  // var width = parseInt(jQuery('#window-scale-width').val(), AGORA_RADIX_DECIMAL);
+  // var height = parseInt(jQuery('#window-scale-height').val(), AGORA_RADIX_DECIMAL);
 
   // set live transcoding config
   window.defaultConfigRTMP.transcodingUsers[0].uid = window.localStreams.uid;
