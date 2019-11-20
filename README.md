@@ -12,7 +12,6 @@
 Easily add live broadcasting and video conferencing functionality into your Wordpress posts and page.
 
 ## Description ##
-
 The Agora WordPress plugin allows you easily add live broadcast or video conferencing functionality into your posts and pages. Easily create and configure a broadcast or communication channels through the admin dashboard. Highly customizable as you can pick and choose the calling or interactive broadcast settings you need.
 
 Agora is a Communications Platform as a Service (CPaaS) that provides a fully encrypted, GDPR and HIPPA compliant network. Agora delivers easy to embed Real-Time Engagement APIs which include all the development tools and cloud infrastructure needed for mobile, web, and desktop applications. Agora’s Software-Defined Real-Time Network (SD-RTN™) is the most widely used and intelligent Real-Time Communications (RTC) network in the world.
@@ -27,7 +26,6 @@ Get started for free! The first 10,000 minutes each month are free, including fr
 - Compliance Policy: https://www.agora.io/en/compliance/
 
 ## Fetures ##
-
 -  One-to-One Video Calls
 -  Group Video Calls
 -  One-to-Many Live Broadcasts
@@ -51,7 +49,6 @@ Agora's flexible APIs enable deep integration of high quality, low latency – l
 ![WP Agora.io Settings Page](/assets/screenshot-3.png?raw=true "WP Agora.io Settings Page")
 
 ## Installation ##
-
 This section describes how to install the plugin and get it working.
 
 # Plugin Installation
