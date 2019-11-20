@@ -83,21 +83,21 @@ class Agora_Channels_List_Table extends WP_List_Table {
     );
 
     if ( ! empty( $_REQUEST['s'] ) ) {
-      $args['s'] = $_REQUEST['s'];
+      $args['s'] = sanitize_key($_REQUEST['s']);
     }
 
     if ( ! empty( $_REQUEST['orderby'] ) ) {
-      if ( 'title' == $_REQUEST['orderby'] ) {
+      if ( 'title' == sanitize_key($_REQUEST['orderby']) ) {
         $args['orderby'] = 'title';
-      } elseif ( 'date' == $_REQUEST['orderby'] ) {
+      } elseif ( 'date' == sanitize_key($_REQUEST['orderby']) ) {
         $args['orderby'] = 'date';
       }
     }
 
     if ( ! empty( $_REQUEST['order'] ) ) {
-      if ( 'asc' == strtolower( $_REQUEST['order'] ) ) {
+      if ( 'asc' == strtolower( sanitize_key($_REQUEST['order']) ) ) {
         $args['order'] = 'ASC';
-      } elseif ( 'desc' == strtolower( $_REQUEST['order'] ) ) {
+      } elseif ( 'desc' == strtolower( sanitize_key($_REQUEST['order']) ) ) {
         $args['order'] = 'DESC';
       }
     }
@@ -129,7 +129,7 @@ class Agora_Channels_List_Table extends WP_List_Table {
         die( 'Go get a life script kiddies' );
       }
       else {
-        self::delete_channel( absint( $_GET['channel'] ) );
+        self::delete_channel( absint( sanitize_key($_GET['channel']) ) );
 
         wp_redirect( esc_url( add_query_arg() ) );
         exit;
@@ -163,8 +163,8 @@ class Agora_Channels_List_Table extends WP_List_Table {
 
   public static function get_channels( $per_page = 5, $page_number = 1 ) {
     return WP_Agora_Channel::find(array(
-      'order' => !empty($_REQUEST['order']) ? $_REQUEST['order'] : 'ASC',
-      'orderby' => !empty($_REQUEST['orderby']) ? $_REQUEST['orderby'] : '',
+      'order' => !empty($_REQUEST['order']) ? sanitize_key( $_REQUEST['order'] ) : 'ASC',
+      'orderby' => !empty($_REQUEST['orderby']) ? sanitize_sql_orderby( $_REQUEST['orderby'] ) : '',
       'posts_per_page' => $per_page,
       'offset' => $page_number-1
     ));

@@ -203,39 +203,46 @@ class WP_Agora_Channel {
       $post_id = wp_insert_post( array(
         'post_type' => self::post_type,
         'post_status' => 'publish',
-        'post_title' => $args['post_title'],
+        'post_title' => sanitize_text_field($args['post_title']),
       ) );
     } else {
       $post_id = wp_update_post( array(
         'ID' => (int) $args['post_ID'],
         'post_status' => 'publish',
-        'post_title' => $args['post_title'],
+        'post_title' => sanitize_text_field($args['post_title']),
       ) );
     }
 
     $videoSettings = array();
     array_map(function($key) use ($args, &$videoSettings) {
-      $videoSettings[$key] = $args[$key];
-      return $args[$key];
+      $videoSettings[$key] = sanitize_text_field($args[$key]);
+      return $videoSettings[$key];
     }, array_keys(self::$defaultVideoSettings));
 
     $appearanceSettings = array();
     array_map(function($key) use ($args, &$appearanceSettings) {
-      $appearanceSettings[$key] = $args[$key];
-      return $args[$key];
+      if ($key==='splashImageURL' || $key==='noHostImageURL') {
+        $value = esc_url_raw($args[$key]);
+      } else if ($key==='watchButtonText') {
+        $value = sanitize_text_field($args[$key]);
+      } else {
+        $value = sanitize_text_field($args[$key]);
+      }
+      $appearanceSettings[$key] = $value;
+      return $value;
     }, array_keys(self::$defaultAppearanceSettings));
 
     $recordingSettings = array();
     array_map(function($key) use ($args, &$recordingSettings) {
-      $recordingSettings[$key] = $args[$key];
-      return $args[$key];
+      $recordingSettings[$key] = sanitize_text_field($args[$key]);
+      return $recordingSettings[$key];
     }, array_keys(self::$defaultRecordingSettings));
 
     update_post_meta($post_id, 'channel_video_settings', $videoSettings);
     update_post_meta($post_id, 'channel_appearance_settings', $appearanceSettings);
     update_post_meta($post_id, 'channel_recording_settings', $recordingSettings);
-    update_post_meta($post_id, 'channel_type', $args['type']);
-    update_post_meta($post_id, 'channel_user_host', $args['host']);
+    update_post_meta($post_id, 'channel_type', sanitize_key($args['type']));
+    update_post_meta($post_id, 'channel_user_host', sanitize_key($args['host']));
 
     unset($args['_wp_http_referer']);
     unset($args['agoraio-locale']);

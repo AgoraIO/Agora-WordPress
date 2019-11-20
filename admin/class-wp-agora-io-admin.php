@@ -202,12 +202,12 @@ class WP_Agora_Admin {
 		// die("<pre>AGORA Load action:".print_r($action, true)."</pre>");
 		do_action(
 			'agoraio_admin_load',
-			isset( $_GET['page'] ) ? trim( $_GET['page'] ) : '',
+			isset( $_GET['page'] ) ? trim( sanitize_key($_GET['page']) ) : '',
 			$action
 		);
 
 		if ( 'save' === $action ) {
-			$id = isset( $_POST['post_ID'] ) ? $_POST['post_ID'] : '-1';
+			$id = isset( $_POST['post_ID'] ) ? sanitize_key($_POST['post_ID']) : '-1';
 			check_admin_referer( 'agoraio-save-channel_' . $id );
 
 			// save form data
@@ -215,7 +215,7 @@ class WP_Agora_Admin {
 
 			$query = array(
 				'post' => $agoraio_channel ? $id : 0,
-				'active-tab' => isset( $_POST['active-tab'] ) ? (int) $_POST['active-tab'] : 0,
+				'active-tab' => isset( $_POST['active-tab'] ) ? (int) sanitize_key($_POST['active-tab']) : 0,
 			);
 
 			if ( ! $agoraio_channel ) {
@@ -232,9 +232,9 @@ class WP_Agora_Admin {
 
 		if ( 'delete' == $action ) {
 			if ( !empty( $_POST['post_ID'] ) ) {
-				check_admin_referer( 'agora_delete_channel_' . $_POST['post_ID'] );
+				check_admin_referer( 'agora_delete_channel_' . sanitize_key($_POST['post_ID']) );
 			} elseif ( isset($_REQUEST['channel']) && !is_array($_REQUEST['channel']) ) {
-				check_admin_referer( 'agora_delete_channel_' . $_REQUEST['channel'] );
+				check_admin_referer( 'agora_delete_channel_' . sanitize_key($_REQUEST['channel']) );
 			} else {
 				// TODO: Fix this validation later...
 				// check_admin_referer( 'bulk-posts' );
@@ -309,7 +309,7 @@ class WP_Agora_Admin {
 	private function save_channel( $args ) {
 		$args = wp_unslash( $args );
 		
-		$id = isset( $args['post_ID'] ) ? $args['post_ID'] : '-1';
+		$id = isset( $args['post_ID'] ) ? sanitize_key($args['post_ID']) : '-1';
 		$args['id'] = (int) $id;
 
 		if ( -1 == $args['id'] ) {
