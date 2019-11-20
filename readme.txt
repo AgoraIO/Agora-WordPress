@@ -12,13 +12,13 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Easily add live broadcasting and video conferencing functionality into your Wordpress posts and page.
 
 == Description ==
-WPAgora allows you easily add live broadcast or video conferencing functionality into your posts and pages. Easily create and configure a broadcast or communication channels through the admin dashboard. Highly customizable. Pick and choose the calling or interactive broadcast settings you need.
+WPAgora allows you easily add live broadcast or video conferencing functionality into your posts and pages. Easily create and configure a broadcast or communication channels through the admin dashboard. Highly customizable as you can pick and choose the calling or interactive broadcast settings you need.
 
-Agora is a Communications Platform as a Service (CPaaS) that provides a fully encrypted, GDPR and Hippa compliant network. Agora delivers easy to embed Real-Time Engagement APIs which includes all the development tools and cloud infrastructure needed for mobile, web, and desktop applications.  Agora’s Software Defined Realtime Network (SD-RTN™) is the most widely used and intelligent Real Time Communications (RTC) network in the world.
+Agora is a Communications Platform as a Service (CPaaS) that provides a fully encrypted, GDPR and HIPPA compliant network. Agora delivers easy to embed Real-Time Engagement APIs which include all the development tools and cloud infrastructure needed for mobile, web, and desktop applications. Agora’s Software-Defined Real-Time Network (SD-RTN™) is the most widely used and intelligent Real-Time Communications (RTC) network in the world.
 
-Agora includes full support across a range of tech stacks making it easy to deliver deep integration of high-quality, extreme low-latency video calling across all platforms and channels.
+Agora includes full support across a range of tech stacks, making it easy to deliver deep integration of high-quality, extreme low-latency video calling across all platforms and channels.
 
-Get started for free, the first 10,000 minutes each month are free and this includes free starter support through Slack. Agora scales with your website/platform through simple and affordable pricing model that scales with usage. See pricing details: https://www.agora.io/price-2/
+Get started for free! The first 10,000 minutes each month are free, including free starter support through Slack. Agora scales with your website/platform usage through a simple and affordable pricing model. See pricing details: https://www.agora.io/price-2/
 
 Terms of Service: https://www.agora.io/en/terms-of-service/
 Privacy Policy: https://www.agora.io/en/privacy-policy/
@@ -31,12 +31,12 @@ Compliance Policy: https://www.agora.io/en/compliance/
 -  Group Video Calls
 -  One-to-Many Live Broadcasts
 -  Record calls and broadcasts to your cloud storage
--  Push live broadcasts to YouTube, FacebookLive, Twitch, Viemo, and any other CDN that supports the RTMP protocol.
+-  Push live broadcasts to YouTube, FacebookLive, Twitch, Vimeo, and any other CDN that supports the RTMP protocol.
 -  Pull live streams from any CDN into live broadcasts
--  Custromizable UI elements
+-  Customizable UI elements
 
 # One-to-One Video Calls
-Dramatically increase user engagement with Agora Video calling by delivering high quality, low-latency one-to-one video call capabilities directly into your own applications. 
+Dramatically increase user engagement with Agora Video calling by delivering high quality, low-latency, one-to-one video call capabilities directly into your own applications. 
 
 # Group Chat Video Calling
 Group chat calls scales to include up to 17 participants – ensuring that you can handle all the use-cases your users will ever need.
