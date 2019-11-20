@@ -195,54 +195,47 @@ class AgoraCloudRecording {
      **/
     private function callAPI($url=false, $params=array(), $method='GET') {
         if ($url) {
-
-            //open connection
-            $ch = curl_init();
-            // $ip = $_SERVER['REMOTE_ADDR'];
-
-            if($method==='GET' && !empty($params)) {
-                $query_params = http_build_query($params);
-                $url = sprintf("%s?%s", $url, $query_params);
-            }
-
             $url = $this->API_URL . $url;
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_FAILONERROR, false);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(   
-                'Content-Type: application/json',
-                'Authorization: Basic ' . $this->authAgoraSDK_B64
-            ));
 
+            $args = array(
+                'timeout' => '15',
+                'headers' => array(   
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Basic ' . $this->authAgoraSDK_B64
+                )
+            );
+
+            if ($method==='GET') {
+                if (!empty($params)) {
+                    $query_params = http_build_query($params);
+                    $url = sprintf("%s?%s", $url, $query_params);
+                }
+                // echo $url." - GET:<pre>".print_r($args, true)."</pre>";
+                // die();
+                $response = wp_remote_get( $url, $args );
+            } else {
+                $args['body'] = json_encode($params);
+                // echo $url." - POST:<pre>".print_r($args, true)."</pre>";
+                // die();
+                $response = wp_remote_post( $url, $args );
+            }
             
-            if($method==='POST' && !empty($params)) {
-                // die("<pre>".print_r(json_encode($params), true)."</pre>");
-                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+            if ( is_wp_error( $response ) ) {
+                $error_message = $response->get_error_message();
+                return new WP_Error('API', $error_message, $params);
             }
 
-            //execute post
-            $result = curl_exec($ch);
-            $err = curl_error($ch);
-            // $statusCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+            if ($response) {
+                $http_code = wp_remote_retrieve_response_code( $response );
+                $body = wp_remote_retrieve_body( $response );
 
-            if ($result) {
-                $res = json_decode($result);
-                if (property_exists($res, 'status') && $res->status==='error') {
-                    return new WP_Error('API', $res->message, $params);
-                }
-                if (property_exists($res, 'code')) {
-                    return new WP_Error('API', $res, $params);
+                if ($http_code >= 300) {
+                    return new WP_Error('API', $body, $params);
                 }
 
-                return $res;
+                return json_decode($body);
             } else {
-                return new WP_Error( 'data', $err, $params );
+                return new WP_Error( 'data', 'No response from server', $params );
             }
         }
         return false;
