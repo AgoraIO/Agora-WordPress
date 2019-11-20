@@ -1,4 +1,4 @@
-=== WP Agora.io ===
+=== Agora Word Press ===
 Contributors: jalejo08, hermesf
 Tags: communications, video, real-time
 Requires at least: 5.0
@@ -12,7 +12,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Easily add live broadcasting and video conferencing functionality into your Wordpress posts and page.
 
 == Description ==
-he Agora WordPress plugin allows you easily add live broadcast or video conferencing functionality into your posts and pages. Easily create and configure a broadcast or communication channels through the admin dashboard. Highly customizable as you can pick and choose the calling or interactive broadcast settings you need.
+The Agora WordPress plugin allows you easily add live broadcast or video conferencing functionality into your posts and pages. Easily create and configure a broadcast or communication channels through the admin dashboard. Highly customizable as you can pick and choose the calling or interactive broadcast settings you need.
 
 Agora is a Communications Platform as a Service (CPaaS) that provides a fully encrypted, GDPR and HIPPA compliant network. Agora delivers easy to embed Real-Time Engagement APIs which include all the development tools and cloud infrastructure needed for mobile, web, and desktop applications. Agora’s Software-Defined Real-Time Network (SD-RTN™) is the most widely used and intelligent Real-Time Communications (RTC) network in the world.
 
