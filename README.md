@@ -60,12 +60,12 @@ This section describes how to install the plugin and get it working.
 1.  Upload the `Agora-Word-Press` zip through the admin dashboard.
 2.  Activate the plugin through the 'Plugins' menu in WordPress
 
-# Agora setup (basic)
+### Agora setup (basic)
 1.  Create or Log into an Agora developer account (https://console.agora.io)
 2.  Create a project and take note of the `App ID` and `App certificate` keys
 3.  Navigate to the Agora Word Press Settings page and input `App ID` and `App certificate` keys
 
-# Agora setup (advanced)
+### Agora setup (advanced)
 1.  Create or Log into an Agora developer account (https://console.agora.io)
 2.  Create a project and take note of the `App ID` and `App certificate` keys
 3.  Navigate to "Products and Usage" page. Enable `RTMP` and `Cloud Recording`.
@@ -73,12 +73,6 @@ This section describes how to install the plugin and get it working.
 5.  Navigate to the Agora Word Press Settings page and input `App ID`, `App certificate`, `Customer ID`, and `Customer Certificate` keys
 
 ## Frequently Asked Questions ##
-
-## Screenshots ##
-
-1.  View all channels and their short codes
-2.  View and edit a broadcast channel's settings
-3.  View and edit your Agora credentials
 
 ## Changelog ##
 
