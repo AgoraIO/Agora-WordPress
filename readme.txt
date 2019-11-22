@@ -1,6 +1,6 @@
 === Agora Word Press ===
 Contributors: jalejo08, hermesf
-Tags: communications, video, real-time
+Tags: communications, video, real-time, video-streaming, real-time communications, live-streaming, interactive broadcasting, interactive streaming, video chat, video call, live broadcasting, video broadcasting, video conferencing
 Requires at least: 5.0
 Tested up to: 5.2
 Requires PHP: 7.2
