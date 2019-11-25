@@ -1,6 +1,6 @@
-# Agora Word Press #
+# Agora Video for WordPress #
 **Contributors:** jalamprea, digitallysavvy
-**Tags:** communications, video, real-time, video-streaming, real-time communications, live-streaming, interactive broadcasting, interactive streaming, video chat, video call, live broadcasting, video broadcasting, video conferencing
+**Tags:** live streaming, video streaming, video call, video conference
 **Requires at least:** 5.0.0
 **Tested up to:** 5.2
 **Requires PHP:** 7.2
@@ -12,7 +12,7 @@
 Easily add live broadcasting and video conferencing functionality into your Wordpress posts and page.
 
 ## Description ##
-The Agora WordPress plugin allows you to easily add live broadcast or video conferencing functionality into your posts and pages. Through the admin dashboard, you can easily create and configure a broadcast or communication channel. The Agora WordPress plugin is also highly customizable and enables  you to  pick and choose the calling or interactive broadcast settings you need.
+The Agora Video for WordPress plugin allows you to easily add live broadcast or video conferencing functionality into your posts and pages. Through the admin dashboard, you can easily create and configure a broadcast or communication channel. The Agora Video for WordPress plugin is also highly customizable and enables  you to  pick and choose the calling or interactive broadcast settings you need.
 
 Agora is a Real-Time Engagement Platform as a Service that provides a fully encrypted, GDPR and HIPPA-compliant network. Agora delivers easy to embed Real-Time Communications (RTC) and Engagement APIs which include all the development tools and cloud infrastructure needed for mobile, web, and desktop applications.
 
@@ -53,25 +53,36 @@ Agora’s flexible APIs enable deep integration of high quality, low latency –
 This section describes how to install the plugin and get it working.
 
 # Plugin Installation
+### WP Plugins
+1. Go to the Add New section of the Plugins section of your WordPress Admin Dashboard.
+2. Search for Agora.io 
+3. Click the Install Now button 
+4. Once the plugin status changes to “Installed”, the Active button will appear. Click the Activate button.
+
+![WP Plugins Installation](/assets/plugins.gif?raw=true "WP Plugins Installation")
+
+### Zip Upload
+1. Go the Plugins section of your WordPress Admin Dashboard
+2. Click the "Upload" button and then upload the wp-agora-io.zip through the WordPress Admin Dashboard.
+3. The plugin upload screen will load. Once "Plugin installed successfully..." click the Activate button.
+![Zip Upload Installation](/assets/upload.gif?raw=true "Zip Upload Installation")
+
 ### FTP
 1.  Upload the `Agora-Word-Press` folder to the `/wp-content/plugins/` directory
-2.  Activate the plugin through the 'Plugins' menu in WordPress
-
-### Plugins Upload
-1.  Upload the `Agora-Word-Press` zip through the admin dashboard.
-2.  Activate the plugin through the 'Plugins' menu in WordPress
+2.  Activate the plugin through the 'Plugins' menu in WordPress Admin Dashboard
+![FTP Installation](/assets/ftp.gif?raw=true "FTP Installation")
 
 ### Agora setup (basic)
 1.  Create or Log into an Agora developer account (https://console.agora.io)
 2.  Create a project and take note of the `App ID` and `App certificate` keys
-3.  Navigate to the Agora Word Press Settings page and input `App ID` and `App certificate` keys
+3.  Navigate to the plugin's Settings page and input `App ID` and `App certificate` keys
 
 ### Agora setup (advanced)
 1.  Create or Log into an Agora developer account (https://console.agora.io)
 2.  Create a project and take note of the `App ID` and `App certificate` keys
 3.  Navigate to "Products and Usage" page. Enable `RTMP` and `Cloud Recording`.
 4.  Navigate to the Dashboard API section of your Agora Dashboard (https://console.agora.io/restfulApi) and take note of your `Customer ID` and `Customer Certificate` keys.
-5.  Navigate to the Agora Word Press Settings page and input `App ID`, `App certificate`, `Customer ID`, and `Customer Certificate` keys
+5.  Navigate to the plugin's page and input `App ID`, `App certificate`, `Customer ID`, and `Customer Certificate` keys
 
 ## Frequently Asked Questions ##
 
