@@ -56,14 +56,14 @@ This section describes how to install the plugin and get it working.
 ![WP Plugins Installation](/assets/plugins.gif?raw=true "WP Plugins Installation")
 
 ### Zip Upload
-1.  Visit the (Agora Video for WordPress plugin)[https://wordpress.org/plugins/wp-agora-io/] page and download the plugin zip.
+1.  Visit the [Agora Video for WordPress plugin](https://wordpress.org/plugins/wp-agora-io/) page and download the plugin zip.
 2.  Go the Plugins section of your WordPress Admin Dashboard
 3.  Click the "Upload" button and then upload the wp-agora-io.zip through the WordPress Admin Dashboard.
 4.  The plugin upload screen will load. Once "Plugin installed successfully..." click the Activate button.
 ![Zip Upload Installation](/assets/upload.gif?raw=true "Zip Upload Installation")
 
 ### FTP
-1.  Visit the (Agora Video for WordPress plugin)[https://wordpress.org/plugins/wp-agora-io/] page and download the plugin zip.
+1.  Visit the [Agora Video for WordPress plugin](https://wordpress.org/plugins/wp-agora-io/) page and download the plugin zip.
 2.  Upload the `Agora-Word-Press` folder to the `/wp-content/plugins/` directory
 3.  Activate the plugin through the 'Plugins' menu in WordPress Admin Dashboard
 ![FTP Installation](/assets/ftp.gif?raw=true "FTP Installation")
