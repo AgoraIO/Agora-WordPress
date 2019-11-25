@@ -49,22 +49,23 @@ This section describes how to install the plugin and get it working.
 
 # Plugin Installation
 ### WP Plugins
-1. Go to the Add New section of the Plugins section of your WordPress Admin Dashboard.
-2. Search for Agora.io 
-3. Click the Install Now button 
-4. Once the plugin status changes to “Installed”, the Active button will appear. Click the Activate button.
-
+1.  Go to the Add New section of the Plugins section of your WordPress Admin Dashboard.
+2.  Search for Agora.io 
+3.  Click the Install Now button 
+4.  Once the plugin status changes to “Installed”, the Active button will appear. Click the Activate button.
 ![WP Plugins Installation](/assets/plugins.gif?raw=true "WP Plugins Installation")
 
 ### Zip Upload
-1. Go the Plugins section of your WordPress Admin Dashboard
-2. Click the "Upload" button and then upload the wp-agora-io.zip through the WordPress Admin Dashboard.
-3. The plugin upload screen will load. Once "Plugin installed successfully..." click the Activate button.
+1.  Visit the Agora Video for WordPress plugin page (https://wordpress.org/plugins/wp-agora-io/) and download the plugin zip.
+2.  Go the Plugins section of your WordPress Admin Dashboard
+3.  Click the "Upload" button and then upload the wp-agora-io.zip through the WordPress Admin Dashboard.
+4.  The plugin upload screen will load. Once "Plugin installed successfully..." click the Activate button.
 ![Zip Upload Installation](/assets/upload.gif?raw=true "Zip Upload Installation")
 
 ### FTP
-1.  Upload the `Agora-Word-Press` folder to the `/wp-content/plugins/` directory
-2.  Activate the plugin through the 'Plugins' menu in WordPress Admin Dashboard
+1.  Visit the Agora Video for WordPress plugin page (https://wordpress.org/plugins/wp-agora-io/) and download the plugin zip.
+2.  Upload the `Agora-Word-Press` folder to the `/wp-content/plugins/` directory
+3.  Activate the plugin through the 'Plugins' menu in WordPress Admin Dashboard
 ![FTP Installation](/assets/ftp.gif?raw=true "FTP Installation")
 
 ### Agora setup (basic)

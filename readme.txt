@@ -53,13 +53,15 @@ WP Plugins
 4. Once the plugin status changes to “Installed”, the Active button will appear. Click the Activate button.
 
 Zip Upload
-1. Go the Plugins section of your WordPress Admin Dashboard
-2. Click the "Upload" button and then upload the wp-agora-io.zip through the WordPress Admin Dashboard.
-3. The plugin upload screen will load. Once "Plugin installed successfully..." click the Activate button.
+1.  Visit the Agora Video for WordPress plugin page (https://wordpress.org/plugins/wp-agora-io/) and download the plugin zip.
+2.  Go the Plugins section of your WordPress Admin Dashboard
+3.  Click the "Upload" button and then upload the wp-agora-io.zip through the WordPress Admin Dashboard.
+4.  The plugin upload screen will load. Once "Plugin installed successfully..." click the Activate button.
 
 FTP
-1.  Upload the `Agora-Word-Press` folder to the `/wp-content/plugins/` directory
-2.  Activate the plugin through the 'Plugins' menu in WordPress
+1.  Visit the Agora Video for WordPress plugin page (https://wordpress.org/plugins/wp-agora-io/) and download the plugin zip.
+2.  Upload the `Agora-Word-Press` folder to the `/wp-content/plugins/` directory
+3.  Activate the plugin through the 'Plugins' menu in WordPress
 
 Agora setup (basic)
 1.  Create or Log into an Agora developer account (https://console.agora.io)
