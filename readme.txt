@@ -9,7 +9,7 @@ Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Easily add live broadcasting and video conferencing functionality into your Wordpress posts and page.
+Easily add live streaming and video conferencing functionality into your Wordpress posts and page.
 
 == Description ==
 The Agora Video for WordPress plugin allows you to easily add live broadcast or video conferencing functionality into your posts and pages. Through the admin dashboard, you can easily create and configure a broadcast or communication channel. The Agora Video for WordPress plugin is also highly customizable and enables  you to  pick and choose the calling or interactive broadcast settings you need.
@@ -42,7 +42,7 @@ Dramatically increase user engagement with Agora Video calling by delivering hig
 # Group Chat Video Calling
 Group chat calls scales to include up to 17 participants – ensuring that you can handle all the use-cases you will ever need.
 
-# Live Broadcasting
+# Live Streaming
 Agora's flexible APIs enable deep integration of high quality, low latency – live video streaming experiences
 
 == Installation ==
