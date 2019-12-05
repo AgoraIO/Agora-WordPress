@@ -1,18 +1,27 @@
-# Agora Video for WordPress #
-**Contributors:** jalamprea, digitallysavvy
-**Tags:** live streaming, video streaming, video call, video conference
-**Requires at least:** 5.0.0
-**Tested up to:** 5.2
-**Requires PHP:** 7.2
-**Stable tag:** 1.0
-**License:** CC BY-ND 4.0  
-**License URI:** https://creativecommons.org/licenses/by-nd/4.0
-**GitHub:** https://github.com/AgoraIO/Agora-Word-Press
+# Agora Video for WordPress #  
+**Contributors:** jalamprea, digitallysavvy  
+**Tags:** live streaming, video streaming, video call, video conference  
+**Requires at least:** 5.0.0  
+**Tested up to:** 5.2  
+**Requires PHP:** 7.2  
+**Stable tag:** 1.0  
+**License:** CC BY-ND 4.0    
+**License URI:** https://creativecommons.org/licenses/by-nd/4.0  
+**GitHub:** https://github.com/AgoraIO/Agora-Word-Press  
 
 Easily add live streaming and video conferencing functionality into your Wordpress posts and page.
 
 ## Description ##
-The [Agora Video for WordPress plugin](https://wordpress.org/plugins/wp-agora-io) allows you to easily add live broadcast or video conferencing functionality into your posts and pages. Through the admin dashboard, you can easily create and configure a broadcast or communication channel. The Agora Video for WordPress plugin is also highly customizable and enables  you to  pick and choose the calling or interactive broadcast settings you need.
+The [Agora Video for WordPress](https://wordpress.org/plugins/wp-agora-io) plugin lets you easily add live streaming or video conferencing functionality to your WordPress posts and pages. You can easily create and configure streaming or communication channels through the WordPress Admin dashboard and embed real time communications without any coding required!
+
+Features Include:
+-  Live video streaming with Host UI template
+-  Video calling with group video chat UI template
+-  Cloud recording directly to Amazon S3
+-  Screen sharing support
+-  RTMP support
+-  Customizable UI
+-  Customizable configurations (credentials, video profile, Codec, etc.) and much more!
 
 Agora is a Real-Time Engagement Platform as a Service that provides a fully encrypted, GDPR and HIPPA-compliant network. Agora delivers easy to embed Real-Time Communications (RTC) and Engagement APIs which include all the development tools and cloud infrastructure needed for mobile, web, and desktop applications.
 
@@ -27,13 +36,13 @@ Get started for free! The first 10,000 minutes each month are free, including fr
 - Compliance Policy: [https://www.agora.io/en/compliance](https://www.agora.io/en/compliance)
 
 ## Features ##
--  One-to-One Video Calls
--  Group Video Calls
--  One-to-Many Live Broadcasts
--  Record calls and broadcasts to your cloud storage
--  Push live broadcasts to YouTube, FacebookLive, Twitch, Vimeo, and any other CDN that supports the RTMP protocol.
--  Pull live streams from any CDN into live broadcasts
--  Customizable UI elements
+-  Live video streaming with Host UI template
+-  Video calling with group video chat UI template
+-  Cloud recording directly to Amazon S3
+-  Screen sharing support
+-  RTMP support
+-  Customizable UI
+-  Customizable configurations (credentials, video profile, Codec, etc.) and much more!
 
 # One-to-One Video Calls
 Dramatically increase user engagement with Agora Video calling by delivering high quality, low-latency, one-to-one video call capabilities directly into your own applications. 
