@@ -79,10 +79,6 @@ window.AGORA_COMMUNICATION_UI = {
     });
   },
 
-  // agoraToggleBtn: function (btn){
-  //   btn.toggleClass('btn-dark').toggleClass('btn-danger');
-  // },
-
   agora_toggleVisibility: function (elementID, visible) {
     if (visible) {
       jQuery(elementID).attr("style", "display:block");
