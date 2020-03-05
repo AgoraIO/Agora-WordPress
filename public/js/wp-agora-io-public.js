@@ -28,18 +28,30 @@
 })(jQuery,'smartresize');
 
 
-function agora_getUserAvatar(user_id, cb) {
-  var uid = String(user_id).substring(3);
-  console.log('Real WP user ID:', uid)
-  var params = {
-    action: 'get_user_avatar', // wp ajax action
-    uid, // needed to get the avatar from the WP user
-  };
-  agoraApiRequest(ajax_url, params).done(function(data) {
-    if (cb) {
-      cb(data);
-    }
-  }).fail(function(err) {
-    console.error('Avatar not available:', err);
-  });
+window.AGORA_UTILS = {
+
+  agoraApiRequest: function (endpoint_url, endpoint_data) {
+    var ajaxRequestParams = {
+      method: 'POST',
+      url: endpoint_url,
+      data: endpoint_data
+    };
+    return jQuery.ajax(ajaxRequestParams)
+  },
+
+  agora_getUserAvatar = function (user_id, cb) {
+    var uid = String(user_id).substring(3);
+    console.log('Real WP user ID:', uid)
+    var params = {
+      action: 'get_user_avatar', // wp ajax action
+      uid, // needed to get the avatar from the WP user
+    };
+    window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(data) {
+      if (cb) {
+        cb(data);
+      }
+    }).fail(function(err) {
+      console.error('Avatar not available:', err);
+    });
+  }
 }
