@@ -74,7 +74,7 @@
         window.userID = 0;
       }
 
-      fullscreenInit();
+      window.AGORA_COMMUNICATION_UI.fullscreenInit();
     });
 
 
@@ -87,12 +87,9 @@
 
       if($appCertificate && strlen($appCertificate)>0) {
         $channelName = $channel->title();
-        // $uid = 0; // $current_user->ID; // Get urrent user id
-        if ($current_user->ID!==0) {
+        if ($current_user->ID !== 0) {
           $uid = '123'.$current_user->ID; // Get urrent user id
-        } else {
-          $uid = 0;
-        }
+        } 
 
         // role should be based on the current user host...
         $settings = $channel->get_properties();
@@ -107,6 +104,7 @@
       }
       ?>;
     }
+    window.AGORA_FULLSCREEN_UI.agoraGenerateToken = agoraGenerateToken;
   </script>
 </body>
 </html>

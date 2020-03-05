@@ -293,7 +293,7 @@ $current_user       = wp_get_current_user();
       if($appCertificate && strlen($appCertificate)>0) {
         $channelName = $channel->title();
         $uid = $current_user->ID; // Get urrent user id
-        if ($uid>0) {
+        if ($uid !== 0) {
           $uid = '123' . $uid;
         }
 
@@ -310,6 +310,7 @@ $current_user       = wp_get_current_user();
       }
       ?>;
     }
+    window.AGORA_FULLSCREEN_UI.agoraGenerateToken = agoraGenerateToken;
   </script>
 </body>
 </html>

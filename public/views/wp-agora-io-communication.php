@@ -65,8 +65,8 @@
       window.userID = parseInt(`123${<?php echo $current_user->ID; ?>}`, 10);
       window.agoraMode = 'communication';
 
-      calculateVideoScreenSize();
-      initClientAndJoinChannel(window.agoraAppId, window.channelName);
+      window.AGORA_COMMUNICATION_UI.calculateVideoScreenSize();
+      window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel.initClientAndJoinChannel(window.agoraAppId, window.channelName);
     });
 
 
