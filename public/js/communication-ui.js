@@ -1,7 +1,7 @@
 
 window.AGORA_COMMUNICATION_UI = {
 // UI buttons
-  agoraEnableUiControls: function (localStream) {
+  enableUiControls: function (localStream) {
 
     jQuery("#mic-btn").prop("disabled", false);
     jQuery("#video-btn").prop("disabled", false);
