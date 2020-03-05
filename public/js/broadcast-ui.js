@@ -138,7 +138,7 @@ window.AGORA_BROADCAST_UI = {
       window.loadingRecord = true;
       btn.removeClass('start-rec').addClass('load-rec').attr('title', 'Stop Recording');
       console.log("Starting rec...");
-      startVideoRecording(function(err, res) {
+      window.AGORA_BROADCAST_UI.startVideoRecording(function(err, res) {
         if (res) {
           btn.removeClass('load-rec').addClass('stop-rec');
         } else {
@@ -148,7 +148,7 @@ window.AGORA_BROADCAST_UI = {
       });
     } else {
       console.log("Stoping rec...");
-      stopVideoRecording(function(err, res) {
+      window.AGORA_BROADCAST_UI.stopVideoRecording(function(err, res) {
         if (err) {
           console.error(err);
         } else {
