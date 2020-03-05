@@ -21,7 +21,7 @@ window.AGORA_BROADCAST_UI = {
 
     jQuery("#exit-btn").click(function(){
       console.log("so sad to see you leave the channel");
-      agoraLeaveChannel(); 
+      window.AGORA_BROADCAST_CLIENT.agoraLeaveChannel(); 
     });
 
     jQuery("#start-RTMP-broadcast").click(function(){
@@ -34,7 +34,7 @@ window.AGORA_BROADCAST_UI = {
         errorEl.hide();
       }
 
-      startLiveTranscoding();
+      window.AGORA_BROADCAST_CLIENT.startLiveTranscoding();
       jQuery('#addRtmpConfigModal').modal('toggle');
       // jQuery('#input_rtmp_url').val('');
     });
@@ -49,7 +49,7 @@ window.AGORA_BROADCAST_UI = {
         errorEl.hide();
       }
       // 
-      addExternalSource();
+      window.AGORA_BROADCAST_CLIENT.addExternalSource();
       jQuery('#add-external-source-modal').modal('toggle');
     });
 
@@ -97,7 +97,7 @@ window.AGORA_BROADCAST_UI = {
           break; 
         case "q":
           console.log("so sad to see you quit the channel");
-          agoraLeaveChannel(); 
+          window.AGORA_BROADCAST_CLIENT.agoraLeaveChannel(); 
           break;   
         default:  // do nothing
       }

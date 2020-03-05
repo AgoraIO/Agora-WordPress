@@ -17,7 +17,7 @@ window.AGORA_COMMUNICATION_UI = {
     });
 
     jQuery("#screen-share-btn").click(function() {
-      toggleScreenShareBtn(); // set screen share button icon
+      window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn(); // set screen share button icon
       var loaderIcon = jQuery(this).find('.spinner-border');
       var closeIcon = jQuery('#screen-share-icon');
       loaderIcon.show();
@@ -39,7 +39,7 @@ window.AGORA_COMMUNICATION_UI = {
 
     jQuery("#exit-btn").click(function(){
       console.log("so sad to see you leave the channel");
-      agoraLeaveChannel(); 
+      window.AGORA_COMMUNICATION_CLIENT.agoraLeaveChannel(); 
     });
 
     jQuery('#rejoin-btn').click(rejoinChannel);
@@ -67,7 +67,7 @@ window.AGORA_COMMUNICATION_UI = {
           break;  */
         case "q":
           console.log("so sad to see you quit the channel");
-          agoraLeaveChannel(); 
+          window.AGORA_COMMUNICATION_CLIENT.agoraLeaveChannel(); 
           break;   
         default:  // do nothing
       }
@@ -136,7 +136,7 @@ window.AGORA_COMMUNICATION_UI = {
   calculateVideoScreenSize: function () {
     var container = jQuery('#full-screen-video');
     // console.log('Video SIZE:', container.outerWidth());
-    var size = getSizeFromVideoProfile();
+    var size = window.AGORA_COMMUNICATION_UI.getSizeFromVideoProfile();
 
     // https://math.stackexchange.com/a/180805
     var newHeight = 0;
@@ -217,6 +217,6 @@ window.AGORA_COMMUNICATION_UI = {
     // jQuery('.slick-avatars').on('breakpoint', function(event, slick, breakpoint) {
     //   console.log('breakpoint:', breakpoint)
     // })
-    initClientAndJoinChannel(window.agoraAppId, window.channelName);
+    window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel.initClientAndJoinChannel(window.agoraAppId, window.channelName);
   }
 }

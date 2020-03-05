@@ -79,8 +79,8 @@ window.AGORA_SCREENSHARE_UTILS = {
       if (typeof mainStreamId !== 'undefined') {
         remoteStreams[mainStreamId].stop(); // stop the main video stream playback
         
-        if (window.AGORA_UI.addRemoteStreamMiniView) {
-          window.AGORA_UI.addRemoteStreamMiniView(remoteStreams[mainStreamId]); // send the main video stream to a container
+        if (window.AGORA_COMMUNICATION_CLIENT.addRemoteStreamMiniView) {
+          window.AGORA_COMMUNICATION_CLIENT.addRemoteStreamMiniView(remoteStreams[mainStreamId]); // send the main video stream to a container
         }
       }
       // localStreams.screen.stream.play('full-screen-video'); // play the screen share as full-screen-video (vortext effect?)
