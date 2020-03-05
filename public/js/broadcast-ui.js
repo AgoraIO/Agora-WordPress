@@ -115,7 +115,7 @@ window.AGORA_BROADCAST_UI = {
     }
   },
 
-  toggleVideo = function () {
+  toggleVideo: function () {
     window.AGORA_UTILS.toggleBtn(jQuery("#video-btn")); // toggle button colors
     window.AGORA_UTILS.toggleBtn(jQuery("#cam-dropdown"));
     if (jQuery("#video-icon").hasClass('fa-video')) {

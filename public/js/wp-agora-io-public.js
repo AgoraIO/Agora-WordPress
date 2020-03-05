@@ -51,7 +51,7 @@ window.AGORA_UTILS = {
     }
   },
 
-  agora_getUserAvatar = function (user_id, cb) {
+  agora_getUserAvatar: function (user_id, cb) {
     var uid = String(user_id).substring(3);
     console.log('Real WP user ID:', uid)
     var params = {

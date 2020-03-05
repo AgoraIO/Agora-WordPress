@@ -4,7 +4,7 @@ Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
 Tested up to: 5.2
 Requires PHP: 7.2
-Stable tag: 1.0
+Stable tag: 1.1
 Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -95,8 +95,12 @@ Agora's flexible APIs enable deep integration of high quality, low latency – l
 Version 1.0
 Initial build of the Agora.io WebSDK implemented as a WordPress plugin.
 
+Version 1.1
+Hotfix - for environments where js global scope is limited to local file. 
+
 == Frequently Asked Questions ==
 ...
 
 == Upgrade Notice ==
+Version 1.1 solves an issue where the client.js and ui.js are not able to communicate.
 ...

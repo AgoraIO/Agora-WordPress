@@ -61,6 +61,9 @@
   </div>
   <?php wp_footer(); ?>
   <script>
+    window.AGORA_UTILS = {
+      agoraGenerateToken: agoraGenerateToken
+    };
     // video profile settings
     window.cameraVideoProfile = '<?php echo $instance['videoprofile'] ?>'; // 640x480 @ 30fps & 750kbs
     window.screenVideoProfile = '<?php echo $instance['screenprofile'] ?>';
@@ -104,7 +107,6 @@
       }
       ?>;
     }
-    window.AGORA_FULLSCREEN_UI.agoraGenerateToken = agoraGenerateToken;
   </script>
 </body>
 </html>

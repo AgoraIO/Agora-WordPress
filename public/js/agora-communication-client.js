@@ -22,6 +22,12 @@ var localStreams = {
 var mainStreamId; // reference to main stream
 var screenShareActive = false; // flag for screen share 
 
+window.AGORA_COMMUNICATION_CLIENT = {
+  initClientAndJoinChannel: initClientAndJoinChannel,
+  addRemoteStreamMiniView: addRemoteStreamMiniView,
+  agoraLeaveChannel: agoraLeaveChannel
+};
+
 function initClientAndJoinChannel(agoraAppId, channelName) {
   // init Agora SDK
   agoraClient.init(agoraAppId, function () {
@@ -31,8 +37,6 @@ function initClientAndJoinChannel(agoraAppId, channelName) {
     AgoraRTC.Logger.error("[ERROR] : AgoraRTC client init failed", err);
   });
 }
-
-window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel = initClientAndJoinChannel;
 
 
 agoraClient.on('stream-published', function (evt) {
@@ -141,7 +145,7 @@ agoraClient.on("unmute-video", function (evt) {
 
 // join a channel
 function agoraJoinChannel(channelName) {
-  var token = window.AGORA_FULLSCREEN_UI.agoraGenerateToken();
+  var token = window.AGORA_UTILS.agoraGenerateToken();
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
   agoraClient.join(token, channelName, userId, function(uid) {
     AgoraRTC.Logger.info("User " + uid + " join channel successfully");
@@ -242,7 +246,6 @@ function addRemoteStreamMiniView(remoteStream){
     mainStreamId = streamId; // set the container stream id as the new main stream id
   });
 }
-window.AGORA_COMMUNICATION_CLIENT.addRemoteStreamMiniView = addRemoteStreamMiniView;
 
 function agoraLeaveChannel() {
   
@@ -276,5 +279,3 @@ function agoraLeaveChannel() {
     AgoraRTC.Logger.error("client leave failed ", err); //error handling
   });
 }
-
-window.AGORA_COMMUNICATION_CLIENT.agoraLeaveChannel = addRemoteStreamMiniView;

@@ -42,7 +42,7 @@ window.AGORA_COMMUNICATION_UI = {
       window.AGORA_COMMUNICATION_CLIENT.agoraLeaveChannel(); 
     });
 
-    jQuery('#rejoin-btn').click(rejoinChannel);
+    jQuery('#rejoin-btn').click(window.AGORA_COMMUNICATION_UI.rejoinChannel);
 
     // keyboard listeners 
     jQuery(document).keypress(function(e) {
@@ -217,6 +217,6 @@ window.AGORA_COMMUNICATION_UI = {
     // jQuery('.slick-avatars').on('breakpoint', function(event, slick, breakpoint) {
     //   console.log('breakpoint:', breakpoint)
     // })
-    window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel.initClientAndJoinChannel(window.agoraAppId, window.channelName);
+    window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel(window.agoraAppId, window.channelName);
   }
 }

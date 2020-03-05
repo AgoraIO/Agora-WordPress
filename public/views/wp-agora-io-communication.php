@@ -66,9 +66,12 @@
       window.agoraMode = 'communication';
 
       window.AGORA_COMMUNICATION_UI.calculateVideoScreenSize();
-      window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel.initClientAndJoinChannel(window.agoraAppId, window.channelName);
+      window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel(window.agoraAppId, window.channelName);
     });
 
+    window.AGORA_UTILS = {
+      agoraGenerateToken: agoraGenerateToken
+    };
 
     // use tokens for added security
     function agoraGenerateToken() {

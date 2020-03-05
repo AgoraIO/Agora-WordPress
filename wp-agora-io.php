@@ -4,14 +4,14 @@
  * The WP Integration plugin for Agora-io platform
  *
  * @link              https://www.agora.io
- * @since             1.0.0
+ * @since             1.1.0
  * @package           WP_Agora
  *
  * @wordpress-plugin
  * Plugin Name:       WP Agora.io
  * Plugin URI:        https://github.com/digitallysavvy/Agora-Word-Press/
  * Description:       Integrate the Agora Communication and Streaming platform directly into your wordpress content. This plugin let you create channels and manage thier settings directly into WP.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Author:            Agora.io
  * Author URI:        https://www.agora.io
  * License:           GPL-2.0+

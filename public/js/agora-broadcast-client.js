@@ -6,9 +6,15 @@ const AGORA_RADIX_HEX = 16;
 // stream references (keep track of active streams) 
 var remoteStreams = {}; // remote streams obj struct [id : stream] 
 
+window.AGORA_BROADCAST_CLIENT = {
+  startLiveTranscoding: startLiveTranscoding,
+  addExternalSource: addExternalSource,
+  agoraLeaveChannel: agoraLeaveChannel
+};
+
 // join a channel
 function agoraJoinChannel() {
-  window.agoraToken = window.AGORA_FULLSCREEN_UI.agoraGenerateToken(); // rendered on PHP
+  window.agoraToken = window.AGORA_UTILS.agoraGenerateToken(); // rendered on PHP
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
 
   // set the role
@@ -97,7 +103,7 @@ function agoraLeaveChannel() {
     AgoraRTC.Logger.error('client leave failed ', err); //error handling
   });
 }
-window.AGORA_BROADCAST_CLIENT.agoraLeaveChannel = agoraLeaveChannel;
+// window.AGORA_BROADCAST_CLIENT.agoraLeaveChannel = agoraLeaveChannel;
 
 function changeStreamSource (deviceIndex, deviceType) {
   AgoraRTC.Logger.info('Switching stream sources for: ' + deviceType);
@@ -192,7 +198,7 @@ function startLiveTranscoding() {
   }
 }
 
-window.AGORA_BROADCAST_CLIENT.startLiveTranscoding = startLiveTranscoding;
+// window.AGORA_BROADCAST_CLIENT.startLiveTranscoding = startLiveTranscoding;
 
 function addExternalSource() {
   var externalUrl = jQuery('#input_external_url').val();
@@ -202,7 +208,7 @@ function addExternalSource() {
   window.injectedStreamURL = externalUrl;
   // TODO: ADD view for external url (similar to rtmp url)
 }
-window.AGORA_BROADCAST_CLIENT.addExternalSource = addExternalSource;
+// window.AGORA_BROADCAST_CLIENT.addExternalSource = addExternalSource;
 
 // RTMP Connection (UI Component)
 function addExternalTransmitionMiniView(rtmpURL) {

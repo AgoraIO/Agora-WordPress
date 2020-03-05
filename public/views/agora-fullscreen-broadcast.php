@@ -156,6 +156,9 @@ $current_user       = wp_get_current_user();
 
   <?php wp_footer(); ?>
   <script>
+    window.AGORA_UTILS = {
+      agoraGenerateToken: agoraGenerateToken
+    };
     // video profile settings
     window.cameraVideoProfile = '<?php echo $instance['videoprofile'] ?>'; // 640x480 @ 30fps & 750kbs
     window.screenVideoProfile = '<?php echo $instance['screenprofile'] ?>';
@@ -310,7 +313,6 @@ $current_user       = wp_get_current_user();
       }
       ?>;
     }
-    window.AGORA_FULLSCREEN_UI.agoraGenerateToken = agoraGenerateToken;
   </script>
 </body>
 </html>
