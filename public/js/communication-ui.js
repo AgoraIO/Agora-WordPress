@@ -9,11 +9,11 @@ window.AGORA_COMMUNICATION_UI = {
     jQuery("#exit-btn").prop("disabled", false);
 
     jQuery("#mic-btn").click(function(){
-      agoraToggleMic(localStream);
+      window.AGORA_COMMUNICATION_UI.toggleMic(localStream);
     });
 
     jQuery("#video-btn").click(function(){
-      agoraToggleVideo(localStream);
+      window.AGORA_COMMUNICATION_UI.toggleVideo(localStream);
     });
 
     jQuery("#screen-share-btn").click(function() {
@@ -49,11 +49,11 @@ window.AGORA_COMMUNICATION_UI = {
       switch (e.key) {
         case "m":
           console.log("squick toggle the mic");
-          agoraToggleMic(localStream);
+          window.AGORA_COMMUNICATION_UI.toggleMic(localStream);
           break;
         case "v":
           console.log("quick toggle the video");
-          agoraToggleVideo(localStream);
+          window.AGORA_COMMUNICATION_UI.toggleVideo(localStream);
           break; 
         /* case "s":
           console.log("initializing screen share");
@@ -79,7 +79,7 @@ window.AGORA_COMMUNICATION_UI = {
     });
   },
 
-  agoraToggleMic: function (localStream) {
+  toggleMic: function (localStream) {
     window.AGORA_UTILS.toggleBtn(jQuery("#mic-btn")); // toggle button colors
     jQuery("#mic-icon").toggleClass('fa-microphone').toggleClass('fa-microphone-slash'); // toggle the mic icon
     if (jQuery("#mic-icon").hasClass('fa-microphone')) {
@@ -91,7 +91,7 @@ window.AGORA_COMMUNICATION_UI = {
     }
   },
 
-  agoraToggleVideo: function (localStream) {
+  toggleVideo: function (localStream) {
     window.AGORA_UTILS.toggleBtn(jQuery("#video-btn")); // toggle button colors
     jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
     if (jQuery("#video-icon").hasClass('fa-video')) {
@@ -175,7 +175,7 @@ window.AGORA_COMMUNICATION_UI = {
 
   fullscreenInit: function () {
     const resizeVideo = function(firstTime) {
-      const size = calculateVideoScreenSize();
+      const size = window.AGORA_COMMUNICATION_UI.calculateVideoScreenSize();
       const sliderSize = size.width - 200;
       
       if (!firstTime) {

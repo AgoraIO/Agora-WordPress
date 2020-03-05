@@ -8,15 +8,15 @@ window.AGORA_BROADCAST_UI = {
     jQuery("#add-rtmp-btn").prop("disabled", false);
 
     jQuery("#mic-btn").click(function(){
-      agoraToggleMic();
+      window.AGORA_BROADCAST_UI.toggleMic();
     });
 
     jQuery("#video-btn").click(function(){
-      agoraToggleVideo();
+      window.AGORA_BROADCAST_UI.toggleVideo();
     });
 
     jQuery("#cloud-recording-btn").click(function(){
-      agoraToggleRecording();
+      window.AGORA_BROADCAST_UI.toggleRecording();
     });
 
     jQuery("#exit-btn").click(function(){
@@ -89,11 +89,11 @@ window.AGORA_BROADCAST_UI = {
       switch (e.key) {
         case "m":
           console.log("squick toggle the mic");
-          agoraToggleMic();
+          window.AGORA_BROADCAST_UI.toggleMic();
           break;
         case "v":
           console.log("quick toggle the video");
-          agoraToggleVideo();
+          window.AGORA_BROADCAST_UI.toggleVideo();
           break; 
         case "q":
           console.log("so sad to see you quit the channel");
@@ -104,7 +104,7 @@ window.AGORA_BROADCAST_UI = {
     });
   },
 
-  agoraToggleMic: function () {
+  toggleMic: function () {
     window.AGORA_UTILS.toggleBtn(jQuery("#mic-btn")); // toggle button colors
     window.AGORA_UTILS.toggleBtn(jQuery("#mic-dropdown"));
     jQuery("#mic-icon").toggleClass('fa-microphone').toggleClass('fa-microphone-slash'); // toggle the mic icon
@@ -113,9 +113,22 @@ window.AGORA_BROADCAST_UI = {
     } else {
       window.localStreams.camera.stream.muteAudio(); // mute the local mic
     }
-  };
+  },
 
-  agoraToggleRecording: function () {
+  toggleVideo = function () {
+    window.AGORA_UTILS.toggleBtn(jQuery("#video-btn")); // toggle button colors
+    window.AGORA_UTILS.toggleBtn(jQuery("#cam-dropdown"));
+    if (jQuery("#video-icon").hasClass('fa-video')) {
+      window.localStreams.camera.stream.muteVideo(); // enable the local video
+      // console.log("muteVideo");
+    } else {
+      window.localStreams.camera.stream.unmuteVideo(); // disable the local video
+      // console.log("unMuteVideo");
+    }
+    jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
+  },
+
+  toggleRecording: function () {
     if (window.loadingRecord) {
       return false;
     }
@@ -150,23 +163,10 @@ window.AGORA_BROADCAST_UI = {
     }
   },
 
-  agoraToggleVideo = function () {
-    window.AGORA_UTILS.toggleBtn(jQuery("#video-btn")); // toggle button colors
-    window.AGORA_UTILS.toggleBtn(jQuery("#cam-dropdown"));
-    if (jQuery("#video-icon").hasClass('fa-video')) {
-      window.localStreams.camera.stream.muteVideo(); // enable the local video
-      // console.log("muteVideo");
-    } else {
-      window.localStreams.camera.stream.unmuteVideo(); // disable the local video
-      // console.log("unMuteVideo");
-    }
-    jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
-  },
-
   calculateVideoScreenSize: function () {
     var container = jQuery('#full-screen-video');
     console.log('Video SIZE:', container.outerWidth());
-    var size = getSizeFromVideoProfile();
+    var size = window.AGORA_BROADCAST_UI.getSizeFromVideoProfile();
 
     // https://math.stackexchange.com/a/180805
     var newHeight = container.outerWidth() * size.height / size.width;
