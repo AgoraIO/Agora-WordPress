@@ -104,14 +104,6 @@ window.AGORA_BROADCAST_UI = {
     });
   },
 
-  agora_toggleVisibility: function (elementID, visible) {
-    if (visible) {
-      jQuery(elementID).attr("style", "display:block");
-    } else {
-      jQuery(elementID).attr("style", "display:none");
-    }
-  },
-
   agoraToggleMic: function () {
     window.AGORA_UTILS.toggleBtn(jQuery("#mic-btn")); // toggle button colors
     window.AGORA_UTILS.toggleBtn(jQuery("#mic-dropdown"));

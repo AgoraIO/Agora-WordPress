@@ -43,6 +43,14 @@ window.AGORA_UTILS = {
     btn.toggleClass('btn-dark').toggleClass('btn-danger');
   },
 
+  toggleVisibility: function (elementID, visible) {
+    if (visible) {
+      jQuery(elementID).attr("style", "display:block");
+    } else {
+      jQuery(elementID).attr("style", "display:none");
+    }
+  },
+
   agora_getUserAvatar = function (user_id, cb) {
     var uid = String(user_id).substring(3);
     console.log('Real WP user ID:', uid)
