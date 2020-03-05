@@ -54,7 +54,7 @@ window.AGORA_BROADCAST_UI = {
     });
 
     jQuery("#screen-share-btn").click(function(){
-      toggleScreenShareBtn(); // set screen share button icon
+      window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn(); // set screen share button icon
       var loaderIcon = jQuery(this).find('.spinner-border');
       var closeIcon = jQuery('#screen-share-icon');
       loaderIcon.show();
@@ -65,16 +65,16 @@ window.AGORA_BROADCAST_UI = {
         closeIcon.show();
         if (err) {
           window.screenShareActive = false;
-          toggleScreenShareBtn();
+          window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn();
         }
         jQuery("#screen-share-btn").prop("disabled", false);
       }
 
       jQuery("#screen-share-btn").prop("disabled", true); // disable the button on click
       if(window.screenShareActive){
-        stopScreenShare(toggleLoader);
+        window.AGORA_SCREENSHARE_UTILS.stopScreenShare(toggleLoader);
       } else {
-        initScreenShare(toggleLoader);
+        window.AGORA_SCREENSHARE_UTILS.initScreenShare(toggleLoader);
       }
     });
 
