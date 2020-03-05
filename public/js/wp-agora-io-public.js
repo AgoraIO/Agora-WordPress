@@ -39,6 +39,10 @@ window.AGORA_UTILS = {
     return jQuery.ajax(ajaxRequestParams)
   },
 
+  toggleBtn: function (btn){
+    btn.toggleClass('btn-dark').toggleClass('btn-danger');
+  },
+
   agora_getUserAvatar = function (user_id, cb) {
     var uid = String(user_id).substring(3);
     console.log('Real WP user ID:', uid)

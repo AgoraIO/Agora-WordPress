@@ -104,10 +104,6 @@ window.AGORA_BROADCAST_UI = {
     });
   },
 
-  agora_agoraToggleBtn: function (btn){
-    btn.toggleClass('btn-dark').toggleClass('btn-danger');
-  },
-
   agora_toggleVisibility: function (elementID, visible) {
     if (visible) {
       jQuery(elementID).attr("style", "display:block");
@@ -117,8 +113,8 @@ window.AGORA_BROADCAST_UI = {
   },
 
   agoraToggleMic: function () {
-    agora_agoraToggleBtn(jQuery("#mic-btn")); // toggle button colors
-    agora_agoraToggleBtn(jQuery("#mic-dropdown"));
+    window.AGORA_UTILS.toggleBtn(jQuery("#mic-btn")); // toggle button colors
+    window.AGORA_UTILS.toggleBtn(jQuery("#mic-dropdown"));
     jQuery("#mic-icon").toggleClass('fa-microphone').toggleClass('fa-microphone-slash'); // toggle the mic icon
     if (jQuery("#mic-icon").hasClass('fa-microphone')) {
       window.localStreams.camera.stream.unmuteAudio(); // enable the local mic
@@ -163,8 +159,8 @@ window.AGORA_BROADCAST_UI = {
   },
 
   agoraToggleVideo = function () {
-    agora_agoraToggleBtn(jQuery("#video-btn")); // toggle button colors
-    agora_agoraToggleBtn(jQuery("#cam-dropdown"));
+    window.AGORA_UTILS.toggleBtn(jQuery("#video-btn")); // toggle button colors
+    window.AGORA_UTILS.toggleBtn(jQuery("#cam-dropdown"));
     if (jQuery("#video-icon").hasClass('fa-video')) {
       window.localStreams.camera.stream.muteVideo(); // enable the local video
       // console.log("muteVideo");

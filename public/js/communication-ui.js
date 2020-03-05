@@ -79,9 +79,9 @@ window.AGORA_COMMUNICATION_UI = {
     });
   },
 
-  agoraToggleBtn: function (btn){
-    btn.toggleClass('btn-dark').toggleClass('btn-danger');
-  },
+  // agoraToggleBtn: function (btn){
+  //   btn.toggleClass('btn-dark').toggleClass('btn-danger');
+  // },
 
   agora_toggleVisibility: function (elementID, visible) {
     if (visible) {
@@ -92,7 +92,7 @@ window.AGORA_COMMUNICATION_UI = {
   },
 
   agoraToggleMic: function (localStream) {
-    agoraToggleBtn(jQuery("#mic-btn")); // toggle button colors
+    window.AGORA_UTILS.toggleBtn(jQuery("#mic-btn")); // toggle button colors
     jQuery("#mic-icon").toggleClass('fa-microphone').toggleClass('fa-microphone-slash'); // toggle the mic icon
     if (jQuery("#mic-icon").hasClass('fa-microphone')) {
       localStream.unmuteAudio(); // enable the local mic
@@ -104,7 +104,7 @@ window.AGORA_COMMUNICATION_UI = {
   },
 
   agoraToggleVideo: function (localStream) {
-    agoraToggleBtn(jQuery("#video-btn")); // toggle button colors
+    window.AGORA_UTILS.toggleBtn(jQuery("#video-btn")); // toggle button colors
     jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
     if (jQuery("#video-icon").hasClass('fa-video')) {
       localStream.unmuteVideo(); // enable the local video
