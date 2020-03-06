@@ -156,6 +156,9 @@ $current_user       = wp_get_current_user();
 
   <?php wp_footer(); ?>
   <script>
+    window.AGORA_UTILS = {
+      agoraGenerateToken: agoraGenerateToken
+    };
     // video profile settings
     window.cameraVideoProfile = '<?php echo $instance['videoprofile'] ?>'; // 640x480 @ 30fps & 750kbs
     window.screenVideoProfile = '<?php echo $instance['screenprofile'] ?>';
@@ -293,7 +296,7 @@ $current_user       = wp_get_current_user();
       if($appCertificate && strlen($appCertificate)>0) {
         $channelName = $channel->title();
         $uid = $current_user->ID; // Get urrent user id
-        if ($uid>0) {
+        if ($uid !== 0) {
           $uid = '123' . $uid;
         }
 
