@@ -4,7 +4,7 @@
  * The WP Integration plugin for Agora-io platform
  *
  * @link              https://www.agora.io
- * @since             1.1.0
+ * @since             1.0.0
  * @package           WP_Agora
  *
  * @wordpress-plugin
@@ -28,7 +28,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Currently plugin version based on SemVer - https://semver.org
  */
-define( 'WP_AGORA_IO_VERSION', '1.0.0' );
+define( 'WP_AGORA_IO_VERSION', '1.1.0' );
 
 /**
  * The code that runs during plugin activation.

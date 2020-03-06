@@ -4,7 +4,7 @@
  * Page Template loader for this plugin
  *
  * @link       https://www.agora.io
- * @since      1.1.0
+ * @since      1.0.0
  *
  * @package    WP_Agora
  * @subpackage WP_Agora/public
