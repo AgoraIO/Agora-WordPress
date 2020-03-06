@@ -307,7 +307,9 @@ $current_user       = wp_get_current_user();
       */ ?>
     });
 
-
+    window.AGORA_UTILS = {
+      agoraGenerateToken: agoraGenerateToken
+    }
     // use tokens for added security...
     function agoraGenerateToken() {
       return <?php

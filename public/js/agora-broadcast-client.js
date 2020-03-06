@@ -6,9 +6,15 @@ const AGORA_RADIX_HEX = 16;
 // stream references (keep track of active streams) 
 var remoteStreams = {}; // remote streams obj struct [id : stream] 
 
+window.AGORA_BROADCAST_CLIENT = {
+  startLiveTranscoding: startLiveTranscoding,
+  addExternalSource: addExternalSource,
+  agoraLeaveChannel: agoraLeaveChannel
+};
+
 // join a channel
 function agoraJoinChannel() {
-  window.agoraToken = agoraGenerateToken(); // rendered on PHP
+  window.agoraToken = window.AGORA_UTILS.agoraGenerateToken(); // rendered on PHP
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
 
   // set the role
@@ -54,13 +60,13 @@ function createCameraStream(uid, deviceIds) {
   });
 
   localStream.init(function() {
-    calculateVideoScreenSize();
+    window.AGORA_BROADCAST_UI.calculateVideoScreenSize();
     AgoraRTC.Logger.info('getUserMedia successfully');
     localStream.play('full-screen-video'); // play the local stream on the main div
     // publish local stream
 
     if(jQuery.isEmptyObject(window.localStreams.camera.stream)) {
-      enableUiControls(localStream); // move after testing
+      window.AGORA_BROADCAST_UI.enableUiControls(localStream); // move after testing
     } else {
       //reset controls
       jQuery("#mic-btn").prop("disabled", false);
@@ -97,6 +103,7 @@ function agoraLeaveChannel() {
     AgoraRTC.Logger.error('client leave failed ', err); //error handling
   });
 }
+// window.AGORA_BROADCAST_CLIENT.agoraLeaveChannel = agoraLeaveChannel;
 
 function changeStreamSource (deviceIndex, deviceType) {
   AgoraRTC.Logger.info('Switching stream sources for: ' + deviceType);
@@ -191,6 +198,8 @@ function startLiveTranscoding() {
   }
 }
 
+// window.AGORA_BROADCAST_CLIENT.startLiveTranscoding = startLiveTranscoding;
+
 function addExternalSource() {
   var externalUrl = jQuery('#input_external_url').val();
   
@@ -199,6 +208,7 @@ function addExternalSource() {
   window.injectedStreamURL = externalUrl;
   // TODO: ADD view for external url (similar to rtmp url)
 }
+// window.AGORA_BROADCAST_CLIENT.addExternalSource = addExternalSource;
 
 // RTMP Connection (UI Component)
 function addExternalTransmitionMiniView(rtmpURL) {

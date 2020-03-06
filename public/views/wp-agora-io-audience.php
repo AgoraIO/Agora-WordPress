@@ -70,7 +70,7 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
       // -- .NONE for prod
       window.agoraLogLevel = window.location.href.indexOf('localhost')>0 ? AgoraRTC.Logger.DEBUG : AgoraRTC.Logger.ERROR;
       AgoraRTC.Logger.setLogLevel(window.agoraLogLevel);
-      calculateVideoScreenSize();
+      window.AGORA_BROADCAST_UI.calculateVideoScreenSize();
       
       // Due to broswer restrictions on auto-playing video, 
       // user must click to init and join channel

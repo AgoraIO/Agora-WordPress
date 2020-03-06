@@ -61,6 +61,9 @@
   </div>
   <?php wp_footer(); ?>
   <script>
+    window.AGORA_UTILS = {
+      agoraGenerateToken: agoraGenerateToken
+    };
     // video profile settings
     window.cameraVideoProfile = '<?php echo $instance['videoprofile'] ?>'; // 640x480 @ 30fps & 750kbs
     window.screenVideoProfile = '<?php echo $instance['screenprofile'] ?>';
@@ -74,7 +77,7 @@
         window.userID = 0;
       }
 
-      fullscreenInit();
+      window.AGORA_COMMUNICATION_UI.fullscreenInit();
     });
 
 
@@ -87,12 +90,9 @@
 
       if($appCertificate && strlen($appCertificate)>0) {
         $channelName = $channel->title();
-        // $uid = 0; // $current_user->ID; // Get urrent user id
-        if ($current_user->ID!==0) {
+        if ($current_user->ID !== 0) {
           $uid = '123'.$current_user->ID; // Get urrent user id
-        } else {
-          $uid = 0;
-        }
+        } 
 
         // role should be based on the current user host...
         $settings = $channel->get_properties();
