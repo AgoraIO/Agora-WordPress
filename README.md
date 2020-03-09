@@ -28,7 +28,7 @@ Agora is a Real-Time Engagement Platform as a Service that provides a fully encr
 With over 200+ data centers globally, the Agora’s Software-Defined Real-time Network (SD-RTN™) is trusted and  widely used by the world’s biggest brands and provides ease of scaling for up to 1 million peak concurrent users (PCU) in a single session with unmatched quality of experience.  
 Agora  fully supports a range of development environments, making it easy to deliver deep integration of high-quality, extreme low-latency video calling across all platforms and channels.
 
-Get started for free! The first 10,000 minutes each month are free, including free starter support through Slack. Agora offer a simple and affordable pricing model including volume discounts. See pricing details: [https://www.agora.io/price-2](https://www.agora.io/price-2)
+Get started for free! The first 10,000 minutes each month are free, including free starter support through Slack. Agora offer a simple and affordable pricing model including volume discounts. See pricing details: [https://www.agora.io/pricing](https://www.agora.io/pricing)
 
 - Terms of Service: [https://www.agora.io/en/terms-of-service](https://www.agora.io/en/terms-of-service)
 - Privacy Policy: [https://www.agora.io/en/privacy-policy](https://www.agora.io/en/privacy-policy)
@@ -95,9 +95,9 @@ This section describes how to install the plugin and get it working.
 ![WP Agora.io Settings Page](/assets/screenshot-3.png?raw=true "WP Agora.io Settings Page")
 
 ## Frequently Asked Questions ##
-1.  *Q:* Why don't my proect credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
+1.  *Q:* Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
-  *A:* The issue happens when the AppID and App Certificate fail to save to the database. This could be occurring for a few different reasons. One of the more common issues is conflicts with plugins. To test if it is a plugin conflict, please disable all plugins except for Agora. Then, try to save your AppID and App Certificate. 
+  *A:* This could be occurring for a few different reasons, one of the more common issues is conflicts with plugins. To test if it is a plugin conflict, please disable all plugins except for Agora. Then, try to save your AppID and App Certificate. 
   
   > If this does not resolve the issue and your App ID and App Certificate are still not getting stored, please file a support ticket: https://agora-ticket.agora.io
 

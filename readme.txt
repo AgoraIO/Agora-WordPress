@@ -28,7 +28,7 @@ Agora is a Real-Time Engagement Platform as a Service that provides a fully encr
 With over 200+ data centers globally, the Agora’s Software-Defined Real-time Network (SD-RTN™) is trusted and  widely used by the world’s biggest brands and provides ease of scaling for up to 1 million peak concurrent users (PCU) in a single session with unmatched quality of experience.  
 Agora  fully supports a range of development environments, making it easy to deliver deep integration of high-quality, extreme low-latency video calling across all platforms and channels.
 
-Get started for free! The first 10,000 minutes each month are free, including free starter support through Slack. Agora offer a simple and affordable pricing model including volume discounts. See pricing details: [https://www.agora.io/price-2](https://www.agora.io/price-2)
+Get started for free! The first 10,000 minutes each month are free, including free starter support through Slack. Agora offer a simple and affordable pricing model including volume discounts. See pricing details: [https://www.agora.io/pricing](https://www.agora.io/pricing)
 
 - Terms of Service: [https://www.agora.io/en/terms-of-service](https://www.agora.io/en/terms-of-service)
 - Privacy Policy: [https://www.agora.io/en/privacy-policy](https://www.agora.io/en/privacy-policy)
@@ -99,21 +99,22 @@ Version 1.1
 Hotfix - for environments where js global scope is limited to local file. 
 
 == Frequently Asked Questions ==
-#1.  *Q:* Why don't my proect credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
+#1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
-*A:* The issue happens when the AppID and App Certificate fail to save to the database. This could be occurring for a few different reasons. One of the more common issues is conflicts with plugins. To test if it is a plugin conflict, please disable all plugins except for Agora. Then, try to save your AppID and App Certificate. 
+  This could be occurring for a few different reasons, one of the more common issues is conflicts with plugins. To test if it is a plugin conflict, please disable all plugins except for Agora. Then, try to save your AppID and App Certificate. 
 
-*If this does not resolve the issue and your App ID and App Certificate are still not getting stored, please [file a support ticket](https://agora-ticket.agora.io)*
+  If this does not resolve the issue and your App ID and App Certificate are still not getting stored, please [file a support ticket](https://agora-ticket.agora.io)
 
-#2.  *Q:* What is the purpose of the RTMP and external URL buttons?
+#2. What is the purpose of the RTMP and external URL buttons?
 
-  *A:* The option for RTMP is for the purpose of pushing your Agora stream to a 3rd party service such as Vimeo or YouTube as a way to leverage 3rd party streaming services to increase your reach/visibility. This is an optional feature that does not need to be used if you don't want it. 
+  The option for RTMP is for the purpose of pushing your Agora stream to a 3rd party service such as Vimeo or YouTube as a way to leverage 3rd party streaming services to increase your reach/visibility. This is an optional feature that does not need to be used if you don't want it. 
 
   The external url is for ingesting a stream from a CDN into the Agora stream. Similar to RTMP, this is an optional feature that does not need to be used if you don't want it. 
 
-#3.  *Q:*  How can I hide the RTMP and external URL buttons?
+#3. How can I hide the RTMP and external URL buttons?
 
-  *A:* You can hide the RTMP and external URL buttons by hiding their container. To do so, add this to your theme's style.css: ```#rtmp-btn-container { display: none !important; }```
+  You can hide the RTMP and external URL buttons by hiding their container. To do so, add this to your theme's style.css: 
+  `#rtmp-btn-container { display: none !important; }`
 
 == Upgrade Notice ==
 Version 1.1 solves an issue where the client.js and ui.js are not able to communicate.
