@@ -69,7 +69,7 @@
       window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel(window.agoraAppId, window.channelName);
     });
 
-    window.AGORA_UTILS = {
+    window.AGORA_TOKEN_UTILS = {
       agoraGenerateToken: agoraGenerateToken
     };
 

@@ -61,7 +61,7 @@
   </div>
   <?php wp_footer(); ?>
   <script>
-    window.AGORA_UTILS = {
+    window.AGORA_TOKEN_UTILS = {
       agoraGenerateToken: agoraGenerateToken
     };
     // video profile settings
