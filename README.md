@@ -95,6 +95,10 @@ This section describes how to install the plugin and get it working.
 ![WP Agora.io Settings Page](/assets/screenshot-3.png?raw=true "WP Agora.io Settings Page")
 
 ## Frequently Asked Questions ##
+1.  Why don't my proect credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
+
+The issue happens when the AppID and App Certificate fail to save to the database. This could be occurring for a few different reasons. One of the more common issues is conflicts with plugins. To test if it is a plugin conflict, please disable all plugins except for Agora. Then, try to save your AppID and App Certificate. 
+> If this does not resolve the issue and your App ID and App Certificate are still not getting stored, please file a support ticket: https://agora-ticket.agora.io
 
 ## Changelog ##
 
