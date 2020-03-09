@@ -99,11 +99,21 @@ Version 1.1
 Hotfix - for environments where js global scope is limited to local file. 
 
 == Frequently Asked Questions ==
-1.  Why don't my proect credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
+#1.  *Q:* Why don't my proect credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
-The issue happens when the AppID and App Certificate fail to save to the database. This could be occurring for a few different reasons. One of the more common issues is conflicts with plugins. To test if it is a plugin conflict, please disable all plugins except for Agora. Then, try to save your AppID and App Certificate. 
+*A:* The issue happens when the AppID and App Certificate fail to save to the database. This could be occurring for a few different reasons. One of the more common issues is conflicts with plugins. To test if it is a plugin conflict, please disable all plugins except for Agora. Then, try to save your AppID and App Certificate. 
 
 *If this does not resolve the issue and your App ID and App Certificate are still not getting stored, please [file a support ticket](https://agora-ticket.agora.io)*
+
+#2.  *Q:* What is the purpose of the RTMP and external URL buttons?
+
+  *A:* The option for RTMP is for the purpose of pushing your Agora stream to a 3rd party service such as Vimeo or YouTube as a way to leverage 3rd party streaming services to increase your reach/visibility. This is an optional feature that does not need to be used if you don't want it. 
+
+  The external url is for ingesting a stream from a CDN into the Agora stream. Similar to RTMP, this is an optional feature that does not need to be used if you don't want it. 
+
+#3.  *Q:*  How can I hide the RTMP and external URL buttons?
+
+  *A:* You can hide the RTMP and external URL buttons by hiding their container. To do so, add this to your theme's style.css: ```#rtmp-btn-container { display: none !important; }```
 
 == Upgrade Notice ==
 Version 1.1 solves an issue where the client.js and ui.js are not able to communicate.
