@@ -131,11 +131,13 @@ window.AGORA_COMMUNICATION_UI = {
       // joinChannel(window.channelName);
       if (jQuery("#mic-icon").hasClass('fa-microphone-slash')) {
         jQuery("#mic-icon").toggleClass('fa-microphone').toggleClass('fa-microphone-slash');
+        localStream.unmuteAudio(); // enable the local mic
         window.AGORA_UTILS.toggleVisibility("#mute-overlay", false); // hide the muted mic icon
       }
       
       if (jQuery("#video-icon").hasClass('fa-video-slash')) {
         jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
+        localStream.unmuteVideo(); // enable the local video
         window.AGORA_UTILS.toggleVisibility("#no-local-video", false); // hide the user icon when video is enabled
       } 
       window.AGORA_COMMUNICATION_CLIENT.agoraJoinChannel(window.channelName);
