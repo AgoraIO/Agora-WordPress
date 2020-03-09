@@ -2,9 +2,9 @@
 **Contributors:** jalamprea, digitallysavvy  
 **Tags:** live streaming, video streaming, video call, video conference  
 **Requires at least:** 5.0.0  
-**Tested up to:** 5.2  
+**Tested up to:** 5.4  
 **Requires PHP:** 7.2  
-**Stable tag:** 1.1  
+**Stable tag:** 1.2  
 **License:** CC BY-ND 4.0    
 **License URI:** https://creativecommons.org/licenses/by-nd/4.0  
 **GitHub:** https://github.com/AgoraIO/Agora-Word-Press  
