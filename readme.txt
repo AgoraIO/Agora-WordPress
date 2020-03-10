@@ -2,9 +2,9 @@
 Contributors: jalejo08, hermesf
 Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
-Tested up to: 5.2
+Tested up to: 5.4
 Requires PHP: 7.2
-Stable tag: 1.1
+Stable tag: 1.2
 Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -97,6 +97,9 @@ Initial build of the Agora.io WebSDK implemented as a WordPress plugin.
 
 Version 1.1
 Hotfix - for environments where js global scope is limited to local file. 
+
+Version 1.2
+Hotfix - patch to fix ui button issue caused by UTILS naming collision. 
 
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 

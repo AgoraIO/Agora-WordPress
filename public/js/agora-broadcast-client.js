@@ -14,7 +14,7 @@ window.AGORA_BROADCAST_CLIENT = {
 
 // join a channel
 function agoraJoinChannel() {
-  window.agoraToken = window.AGORA_UTILS.agoraGenerateToken(); // rendered on PHP
+  window.agoraToken = window.AGORA_TOKEN_UTILS.agoraGenerateToken(); // rendered on PHP
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
 
   // set the role
