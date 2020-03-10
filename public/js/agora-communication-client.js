@@ -24,6 +24,7 @@ var screenShareActive = false; // flag for screen share
 
 window.AGORA_COMMUNICATION_CLIENT = {
   initClientAndJoinChannel: initClientAndJoinChannel,
+  agoraJoinChannel: agoraJoinChannel,
   addRemoteStreamMiniView: addRemoteStreamMiniView,
   agoraLeaveChannel: agoraLeaveChannel
 };
@@ -96,6 +97,10 @@ agoraClient.on('stream-removed', function(evt) {
 
 // remove the remote-container when a user leaves the channel
 agoraClient.on("peer-leave", function(evt) {
+  if (!evt || !evt.stream) {
+    console.error('Stream undefined cannot be removed', evt);
+    return false;
+  }
   console.log('peer-leave:', evt);
   var streamId = evt.stream.getId(); // the the stream id
   jQuery('#uid-'+streamId).remove();
@@ -145,7 +150,7 @@ agoraClient.on("unmute-video", function (evt) {
 
 // join a channel
 function agoraJoinChannel(channelName) {
-  var token = window.AGORA_UTILS.agoraGenerateToken();
+  var token = window.AGORA_TOKEN_UTILS.agoraGenerateToken();
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
   agoraClient.join(token, channelName, userId, function(uid) {
     AgoraRTC.Logger.info("User " + uid + " join channel successfully");

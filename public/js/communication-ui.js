@@ -80,27 +80,30 @@ window.AGORA_COMMUNICATION_UI = {
   },
 
   toggleMic: function (localStream) {
+    console.log(localStream)
     window.AGORA_UTILS.toggleBtn(jQuery("#mic-btn")); // toggle button colors
-    jQuery("#mic-icon").toggleClass('fa-microphone').toggleClass('fa-microphone-slash'); // toggle the mic icon
-    if (jQuery("#mic-icon").hasClass('fa-microphone')) {
+    jQuery("#mic-icon").toggleClass('fa-microphone', localStream.userMuteAudio).toggleClass('fa-microphone-slash', !localStream.userMuteAudio); // toggle the mic icon
+
+    if (!localStream.userMuteAudio) {
+      localStream.muteAudio(); // disable the local video
+      window.AGORA_UTILS.toggleVisibility("#mute-overlay", true); // show the muted mic icon
+    } else {
       localStream.unmuteAudio(); // enable the local mic
       window.AGORA_UTILS.toggleVisibility("#mute-overlay", false); // hide the muted mic icon
-    } else {
-      localStream.muteAudio(); // mute the local mic
-      window.AGORA_UTILS.toggleVisibility("#mute-overlay", true); // show the muted mic icon
     }
   },
 
   toggleVideo: function (localStream) {
     window.AGORA_UTILS.toggleBtn(jQuery("#video-btn")); // toggle button colors
-    jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
-    if (jQuery("#video-icon").hasClass('fa-video')) {
-      localStream.unmuteVideo(); // enable the local video
-      window.AGORA_UTILS.toggleVisibility("#no-local-video", false); // hide the user icon when video is enabled
-      logCameraDevices();
-    } else {
+    jQuery("#video-icon").toggleClass('fa-video', localStream.userMuteVideo).toggleClass('fa-video-slash', !localStream.userMuteVideo); // toggle the video icon
+
+    if (!localStream.userMuteVideo) {
       localStream.muteVideo(); // disable the local video
       window.AGORA_UTILS.toggleVisibility("#no-local-video", true); // show the user icon when video is disabled
+    } else {
+      localStream.unmuteVideo(); // enable the local video
+      window.AGORA_UTILS.toggleVisibility("#no-local-video", false); // hide the user icon when video is enabled
+      window.AGORA_COMMUNICATION_UI.logCameraDevices();
     }
   },
 
@@ -128,7 +131,17 @@ window.AGORA_COMMUNICATION_UI = {
     if(!thisBtn.prop('disabled')) {
       thisBtn.prop("disabled", true);
       thisBtn.find('.spinner-border').show();
-      joinChannel(window.channelName);
+      // joinChannel(window.channelName);
+      if (jQuery("#mic-icon").hasClass('fa-microphone-slash')) {
+        jQuery("#mic-icon").toggleClass('fa-microphone').toggleClass('fa-microphone-slash');
+        window.AGORA_UTILS.toggleVisibility("#mute-overlay", false); // hide the muted mic icon
+      }
+      
+      if (jQuery("#video-icon").hasClass('fa-video-slash')) {
+        jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
+        window.AGORA_UTILS.toggleVisibility("#no-local-video", false); // hide the user icon when video is enabled
+      } 
+      window.AGORA_COMMUNICATION_CLIENT.agoraJoinChannel(window.channelName);
     }
   },
 
