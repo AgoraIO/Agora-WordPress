@@ -97,6 +97,10 @@ agoraClient.on('stream-removed', function(evt) {
 
 // remove the remote-container when a user leaves the channel
 agoraClient.on("peer-leave", function(evt) {
+  if (!evt || !evt.stream) {
+    console.error('Stream undefined cannot be removed', evt);
+    return false;
+  }
   console.log('peer-leave:', evt);
   var streamId = evt.stream.getId(); // the the stream id
   jQuery('#uid-'+streamId).remove();
