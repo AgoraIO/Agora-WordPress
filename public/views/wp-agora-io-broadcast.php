@@ -322,7 +322,7 @@ $current_user       = wp_get_current_user();
 
         // role should be based on the current user host...
         $settings = $channel->get_properties();
-        $role = 'Role_Publisher';
+        $role = 1;
         $privilegeExpireTs = 0;
         echo '"'.AgoraRtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs). '"';
       } else {

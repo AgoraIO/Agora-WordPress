@@ -173,7 +173,15 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
         AgoraRTC.Logger.error('setClientRole failed', e);
       });
       
-      window.agoraClient.join(token, channelName, 0, function(uid) {
+      <?php
+      $current_user = wp_get_current_user();
+      $uid = 0;
+      if ($current_user->ID>0) {
+        $uid = 123 + $current_user->ID;
+      }
+      echo "var userID = ".$uid.";\n";
+      ?>
+      window.agoraClient.join(token, channelName, userID, function(uid) {
           AgoraRTC.Logger.info('User ' + uid + ' join channel successfully');
       }, function(err) {
           AgoraRTC.Logger.error('[ERROR] : join channel failed', err);
@@ -197,9 +205,12 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
         $channelName = $channel->title();
         $current_user = wp_get_current_user();
         $uid = $current_user->ID; // Get urrent user id
+        if ($uid !== 0) {
+          $uid = 123 + $current_user->ID;
+        }
 
         // role should be based on the current user host...
-        $role = 'Role_Subscriber';
+        $role = 2; // Subscriber
         $privilegeExpireTs = 0;
         echo '"'.AgoraRtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs). '"';
       } else {
