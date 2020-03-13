@@ -120,3 +120,9 @@ This section describes how to install the plugin and get it working.
 
 ### 1.1.0 ###
 Hotfix - for environments where js global scope is limited to local file. Cleaned up some duplicate functions and ensure explicitly control scope.
+
+### 1.2.0 ###
+Hotfix - patch to fix ui button issue caused by UTILS naming collision. 
+
+### 1.3.0 ###
+Hotfix - patch to fix audience uid issue, where the audience uid in joinChannel did not match uid in token. 

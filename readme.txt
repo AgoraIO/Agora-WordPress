@@ -101,6 +101,9 @@ Hotfix - for environments where js global scope is limited to local file.
 Version 1.2
 Hotfix - patch to fix ui button issue caused by UTILS naming collision. 
 
+Version 1.3
+Hotfix - patch to fix audience uid issue, where the audience uid in joinChannel did not match uid in token. 
+
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
@@ -120,5 +123,5 @@ Hotfix - patch to fix ui button issue caused by UTILS naming collision.
   `#rtmp-btn-container { display: none !important; }`
 
 == Upgrade Notice ==
-Version 1.1 solves an issue where the client.js and ui.js are not able to communicate.
+Version 1.3 solves an issue where the audience uid in joinChannel did not match uid in token. 
 ...
