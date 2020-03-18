@@ -168,7 +168,7 @@ $current_user       = wp_get_current_user();
       window.channelId = '<?php echo $channel->id() ?>'; // set channel name
       window.agoraCurrentRole = 'host';
       window.agoraMode = 'audience';
-      window.userID = parseInt(`123${<?php echo $current_user->ID; ?>}`, 10);
+      window.userID = parseInt(`${<?php echo $current_user->ID; ?>}`, 10);
       window.agoraMode = 'broadcast';
 
       // create client instance
@@ -296,9 +296,6 @@ $current_user       = wp_get_current_user();
       if($appCertificate && strlen($appCertificate)>0) {
         $channelName = $channel->title();
         $uid = $current_user->ID; // Get urrent user id
-        if ($uid !== 0) {
-          $uid = '123' . $uid;
-        }
 
         // role should be based on the current user host...
         $settings = $channel->get_properties();

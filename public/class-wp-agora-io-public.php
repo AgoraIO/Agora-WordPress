@@ -85,7 +85,7 @@ class WP_Agora_Public {
 			$cid = isset($_POST['cid']) ? sanitize_key($_POST['cid']) : 0;
 			
 			$current_user = wp_get_current_user();
-    	$uid = isset($_POST['uid']) ? sanitize_key($_POST['uid']) : '123'.$current_user->ID; // Get current user id
+    	$uid = isset($_POST['uid']) ? sanitize_key($_POST['uid']) : $current_user->ID; // Get current user id
     	// die("<pre>".print_r($uid, true)."</pre>");
     	$uid = intval($uid);
 
