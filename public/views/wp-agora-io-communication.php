@@ -61,8 +61,7 @@
       window.agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
       window.channelName = '<?php echo $channel->title() ?>'; // set channel name
       window.channelId = '<?php echo $channel->id() ?>'; // set channel name
-      // window.userID = <?php echo $current_user->ID; ?>;
-      window.userID = parseInt(`123${<?php echo $current_user->ID; ?>}`, 10);
+      window.userID = parseInt(`${<?php echo $current_user->ID; ?>}`, 10);
       window.agoraMode = 'communication';
 
       window.AGORA_COMMUNICATION_UI.calculateVideoScreenSize();
@@ -82,8 +81,7 @@
 
       if($appCertificate && strlen($appCertificate)>0) {
         $channelName = $channel->title();
-        // $uid = 0; // $current_user->ID; // Get urrent user id
-        $uid = "123" . $current_user->ID; // Get urrent user id
+        $uid = $current_user->ID; // Get urrent user id
 
         // role should be based on the current user host...
         $settings = $channel->get_properties();

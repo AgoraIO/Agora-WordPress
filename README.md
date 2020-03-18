@@ -4,7 +4,7 @@
 **Requires at least:** 5.0.0  
 **Tested up to:** 5.4  
 **Requires PHP:** 7.2  
-**Stable tag:** 1.3  
+**Stable tag:** 1.4  
 **License:** CC BY-ND 4.0    
 **License URI:** https://creativecommons.org/licenses/by-nd/4.0  
 **GitHub:** https://github.com/AgoraIO/Agora-Word-Press  
@@ -126,3 +126,6 @@ Hotfix - patch to fix ui button issue caused by UTILS naming collision.
 
 ### 1.3.0 ###
 Hotfix - patch to fix audience uid issue, where the audience uid in joinChannel did not match uid in token. 
+
+### 1.4 ###
+Hotfix - removed uid patch.

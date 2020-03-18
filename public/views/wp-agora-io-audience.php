@@ -175,10 +175,7 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
       
       <?php
       $current_user = wp_get_current_user();
-      $uid = 0;
-      if ($current_user->ID>0) {
-        $uid = 123 + $current_user->ID;
-      }
+      $uid = $current_user->ID; // Get urrent user id
       echo "var userID = ".$uid.";\n";
       ?>
       window.agoraClient.join(token, channelName, userID, function(uid) {
@@ -205,9 +202,6 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
         $channelName = $channel->title();
         $current_user = wp_get_current_user();
         $uid = $current_user->ID; // Get urrent user id
-        if ($uid !== 0) {
-          $uid = 123 + $current_user->ID;
-        }
 
         // role should be based on the current user host...
         $role = 2; // Subscriber
