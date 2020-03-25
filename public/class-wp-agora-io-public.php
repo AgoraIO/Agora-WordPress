@@ -85,7 +85,7 @@ class WP_Agora_Public {
 			$cid = isset($_POST['cid']) ? sanitize_key($_POST['cid']) : 0;
 			
 			$current_user = wp_get_current_user();
-    	$uid = isset($_POST['uid']) ? sanitize_key($_POST['uid']) : '123'.$current_user->ID; // Get current user id
+    	$uid = isset($_POST['uid']) ? sanitize_key($_POST['uid']) : $current_user->ID; // Get current user id
     	// die("<pre>".print_r($uid, true)."</pre>");
     	$uid = intval($uid);
 
@@ -155,7 +155,7 @@ class WP_Agora_Public {
 	  wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
 	  wp_enqueue_style( 'fontawesome', $fontawesome, array('bootstrap'), null, 'all' );
 	  
-	  wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-2.9.0.js', array('jquery'), null );
+		wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-3.0.2.121.js', array('jquery'), null );
 	  wp_enqueue_script( 'bootstrap_popper', $bootstrap_popper_js, array('jquery'), null );
 	  wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
 

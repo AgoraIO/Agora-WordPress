@@ -68,11 +68,8 @@
       window.agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
       window.channelName = '<?php echo $channel->title() ?>'; // set channel name
       window.channelId = '<?php echo $channel->id() ?>'; // set channel name
-      window.userID = parseInt(`123${<?php echo $current_user->ID; ?>}`, 10);
+      window.userID = parseInt(`${<?php echo $current_user->ID; ?>}`, 10);
       window.agoraMode = 'communication';
-      if (window.userID===1230) {
-        window.userID = 0;
-      }
 
       window.AGORA_COMMUNICATION_UI.fullscreenInit();
     });
@@ -87,11 +84,7 @@
 
       if($appCertificate && strlen($appCertificate)>0) {
         $channelName = $channel->title();
-        if ($current_user->ID !== 0) {
-          $uid = '123'.$current_user->ID; // Get urrent user id
-        } else {
-          $uid = 0;
-        }
+        $uid = $current_user->ID; // Get urrent user id
 
         // role should be based on the current user host...
         $settings = $channel->get_properties();

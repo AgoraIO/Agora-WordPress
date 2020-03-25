@@ -4,7 +4,7 @@ Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
 Tested up to: 5.4
 Requires PHP: 7.2
-Stable tag: 1.3
+Stable tag: 1.4
 Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,9 @@ Hotfix - patch to fix ui button issue caused by UTILS naming collision.
 Version 1.3
 Hotfix - patch to fix audience uid issue, where the audience uid in joinChannel did not match uid in token. 
 
+Version 1.4
+Updated to Agora WebSDK v3.0.2, fixed a patch for uid's.
+
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
@@ -122,6 +125,10 @@ Hotfix - patch to fix audience uid issue, where the audience uid in joinChannel 
   You can hide the RTMP and external URL buttons by hiding their container. To do so, add this to your theme's style.css: 
   `#rtmp-btn-container { display: none !important; }`
 
+#4. Does communication mode support cloud recording?
+
+  Currently only Broadcast mode supports cloud recording, where the broadcaster has to initiate the recording.The decision was made during development to for privacy of users. The plugin allows for setting the cloud recording credentials within the communication channel settings because we want to allow users to extend the plugin based on their needs.
+
 == Upgrade Notice ==
-Version 1.3 solves an issue where the audience uid in joinChannel did not match uid in token. 
+Version 1.4 updates to use Agora WebSDK v3.0.2. 
 ...

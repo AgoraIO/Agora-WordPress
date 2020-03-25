@@ -103,7 +103,6 @@
         <div class="col value">
           <?php
           $value = isset($agora_options['appCertificate']) ? $agora_options['appCertificate'] : '';
-          // $value = "2d921271bc1e481eb1ffc3309141ad95";
           echo $value;
           ?>
         </div>

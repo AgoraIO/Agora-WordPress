@@ -28,7 +28,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Currently plugin version based on SemVer - https://semver.org
  */
-define( 'WP_AGORA_IO_VERSION', '1.3.0' );
+define( 'WP_AGORA_IO_VERSION', '1.4.0' );
 
 /**
  * The code that runs during plugin activation.
