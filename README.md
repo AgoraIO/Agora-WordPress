@@ -116,6 +116,9 @@ This section describes how to install the plugin and get it working.
 
   *A:* Currently only Broadcast mode supports cloud recording, where the broadcaster has to initiate the recording.The decision was made during development to for privacy of users. The plugin allows for setting the cloud recording credentials within the communication channel settings because we want to allow users to extend the plugin based on their needs.
 
+5.  *Q:*  Why doesn't the video work? I see the buttons but I don't get any prompts for video access.
+
+  *A:* Browsers require a secure connection (HTTPS) for accessing a device's microphone and camera. When testing locally, localhost is a whitelisted URL but once you deploy to production you will need to have a secure connection for the plugin to function properly.
 
 ## Changelog ##
 
