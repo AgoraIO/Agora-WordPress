@@ -64,11 +64,11 @@ function applicationSettingsForm() {
 
 		saveBtn.click(function(btnEvt){
 			btnEvt.preventDefault();
-			var newValue = input.val();
-			if (!newValue || newValue.length===0) {
+			var newValue = input.val() || '';
+			/* if (!newValue || newValue.length===0) {
 				errorBox.text('Please insert a valid value')
 				return false;
-			}
+			}*/
 			updateSettingValue(settingName, newValue, function(err, res) {
 				if (!err) {
 					hideSaveButtons();
