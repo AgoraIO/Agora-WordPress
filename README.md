@@ -111,7 +111,11 @@ This section describes how to install the plugin and get it working.
 
   *A:* You can hide the RTMP and external URL buttons by hiding their container. To do so, add this to your theme's _style.css_:
   ```#rtmp-btn-container { display: none !important; }```
- 
+
+4.  *Q:*  Does communication mode support cloud recording?
+
+  *A:* Currently only Broadcast mode supports cloud recording, where the broadcaster has to initiate the recording.The decision was made during development to for privacy of users. The plugin allows for setting the cloud recording credentials within the communication channel settings because we want to allow users to extend the plugin based on their needs.
+
 
 ## Changelog ##
 
@@ -128,4 +132,4 @@ Hotfix - patch to fix ui button issue caused by UTILS naming collision.
 Hotfix - patch to fix audience uid issue, where the audience uid in joinChannel did not match uid in token. 
 
 ### 1.4 ###
-Hotfix - removed uid patch.
+Updated to Agora WebSDK v3.0.2, fixed a patch for uid's.
