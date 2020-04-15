@@ -4,7 +4,7 @@
 **Requires at least:** 5.0.0  
 **Tested up to:** 5.4  
 **Requires PHP:** 7.2  
-**Stable tag:** 1.4  
+**Stable tag:** 1.5  
 **License:** CC BY-ND 4.0    
 **License URI:** https://creativecommons.org/licenses/by-nd/4.0  
 **GitHub:** https://github.com/AgoraIO/Agora-Word-Press  
@@ -110,12 +110,15 @@ This section describes how to install the plugin and get it working.
 3.  *Q:*  How can I hide the RTMP and external URL buttons?
 
   *A:* You can hide the RTMP and external URL buttons by hiding their container. To do so, add this to your theme's _style.css_:
-  ```#rtmp-btn-container { display: none !important; }```
+  ```#lower-ui-bar div { display: none; } #screen-share-btn-container { display: block !important; }```
 
 4.  *Q:*  Does communication mode support cloud recording?
 
   *A:* Currently only Broadcast mode supports cloud recording, where the broadcaster has to initiate the recording.The decision was made during development to for privacy of users. The plugin allows for setting the cloud recording credentials within the communication channel settings because we want to allow users to extend the plugin based on their needs.
 
+5.  *Q:*  Why doesn't the video work? I see the buttons but I don't get any prompts for video access.
+
+  *A:* Browsers require a secure connection (HTTPS) for accessing a device's microphone and camera. When testing locally, localhost is a whitelisted URL but once you deploy to production you will need to have a secure connection for the plugin to function properly.
 
 ## Changelog ##
 
@@ -133,3 +136,8 @@ Hotfix - patch to fix audience uid issue, where the audience uid in joinChannel 
 
 ### 1.4 ###
 Updated to Agora WebSDK v3.0.2, fixed a patch for uid's.
+
+### 1.5 ###
+Updated to resolves issues with saving Agora Settings that are caused by plugin conflicts. Fixed grammer error. Release resolves issues:
+- [43](https://github.com/AgoraIO/Agora-Word-Press/issues/43) 
+- [52](https://github.com/AgoraIO/Agora-Word-Press/issues/52) 

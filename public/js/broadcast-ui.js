@@ -88,7 +88,7 @@ window.AGORA_BROADCAST_UI = {
 
       switch (e.key) {
         case "m":
-          console.log("squick toggle the mic");
+          console.log("quick toggle the mic");
           window.AGORA_BROADCAST_UI.toggleMic();
           break;
         case "v":
