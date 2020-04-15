@@ -37,19 +37,36 @@ class WP_Agora_Admin {
 
 
 	public function saveAjaxSettings() {
-		unset($_REQUEST['action']);
-		$keys = array_keys($_REQUEST);
-		$key = $keys[0];
-		$value = sanitize_key( $_REQUEST[$key] );
+		global $wpdb;
 
+		unset($_POST['action']);
+		$keys = array_keys($_POST);
+		$key = $keys[0];
+		$value = sanitize_key( $_POST[$key] );
 
 		$options = get_option($this->plugin_name);
+
 		if (!$options) {
 			$options = array();
 		}
 		$options[$key] = $value;
 
- 		$r = update_option($this->plugin_name, $options);
+		$old_value = get_option( $option );
+
+		$r = false;
+		if (!$old_value) {
+			$r = add_option( $this->plugin_name, $options, '');
+		} else {
+			// $r = update_option($this->plugin_name, $options);
+			$serialized_value = maybe_serialize( $options );
+			$update_args = array(
+	      'option_value' => $serialized_value,
+	    );
+			$r = $wpdb->update(
+					$wpdb->options,
+					$update_args,
+					array( 'option_name' => $this->plugin_name ) );
+		}
 
 		header('Content-Type: application/json');
 		echo json_encode(array('updated' => $r));
