@@ -107,6 +107,11 @@ Hotfix - patch to fix audience uid issue, where the audience uid in joinChannel 
 Version 1.4
 Updated to Agora WebSDK v3.0.2, fixed a patch for uid's.
 
+### 1.5 ###
+Updated to resolves issues with saving Agora Settings that are caused by plugin conflicts. Fixed grammer error. Release resolves issues:
+- [43](https://github.com/AgoraIO/Agora-Word-Press/issues/43) 
+- [52](https://github.com/AgoraIO/Agora-Word-Press/issues/52) 
+
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
@@ -129,11 +134,10 @@ Updated to Agora WebSDK v3.0.2, fixed a patch for uid's.
 
   Currently only Broadcast mode supports cloud recording, where the broadcaster has to initiate the recording.The decision was made during development to for privacy of users. The plugin allows for setting the cloud recording credentials within the communication channel settings because we want to allow users to extend the plugin based on their needs.
 
-
 #5. Why doesn't the video work? I see the buttons but I don't get any prompts for video access.
 
   Browsers require a secure connection (HTTPS) for accessing a device's microphone and camera. When testing locally, localhost is a whitelisted URL but once you deploy to production you will need to have a secure connection for the plugin to function properly.
 
 == Upgrade Notice ==
-Version 1.4 updates to use Agora WebSDK v3.0.2. 
+Version 1.5 updates to resolve issues caused by conflicts with other plugins
 ...
