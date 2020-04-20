@@ -45,17 +45,16 @@ class WP_Agora_Admin {
 		$value = sanitize_key( $_POST[$key] );
 
 		$options = get_option($this->plugin_name);
+		$old_value = $options;
 
 		if (!$options) {
 			$options = array();
 		}
 		$options[$key] = $value;
 
-		$old_value = get_option( $option );
-
 		$r = false;
 		if (!$old_value) {
-			$r = add_option( $this->plugin_name, $options, '');
+			$r = add_option( $this->plugin_name, $options);
 		} else {
 			// $r = update_option($this->plugin_name, $options);
 			$serialized_value = maybe_serialize( $options );
@@ -67,6 +66,7 @@ class WP_Agora_Admin {
 					$update_args,
 					array( 'option_name' => $this->plugin_name ) );
 		}
+
 
 		header('Content-Type: application/json');
 		echo json_encode(array('updated' => $r));
