@@ -136,6 +136,7 @@
         <div class="col value">
           <?php
           $value = isset($agora_options['customerID']) ? $agora_options['customerID'] : '';
+          // $value = "https://4045media-cloudrecordings.s3.amazonaws.com";
           echo $value;
           ?>
         </div>

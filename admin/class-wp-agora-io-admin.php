@@ -42,7 +42,7 @@ class WP_Agora_Admin {
 		unset($_POST['action']);
 		$keys = array_keys($_POST);
 		$key = $keys[0];
-		$value = sanitize_key( $_POST[$key] );
+		$value = sanitize_text_field( $_POST[$key] );
 
 		$options = get_option($this->plugin_name);
 		$old_value = $options;
@@ -61,7 +61,7 @@ class WP_Agora_Admin {
 			$update_args = array(
 	      'option_value' => $serialized_value,
 	    );
-			$r = $wpdb->update(
+	    $r = $wpdb->update(
 					$wpdb->options,
 					$update_args,
 					array( 'option_name' => $this->plugin_name ) );
@@ -69,7 +69,7 @@ class WP_Agora_Admin {
 
 
 		header('Content-Type: application/json');
-		echo json_encode(array('updated' => $r));
+		echo json_encode(array('updated' => ($r===true || $r===0 || $r===1)));
 		wp_die();
 	}
 
