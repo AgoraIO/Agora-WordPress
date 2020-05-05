@@ -26,51 +26,66 @@ function updateSettingValue(settingName, newValue, callback) {
 
 // jQuery App for each Setting box...
 function applicationSettingsForm() {
-	var scope = this;
-	var settingName = scope.id;
+	const scope = this;
+	const settingName = scope.id;
+	const srcLoader = '/wp-content/plugins/wp-agora-io/admin/css/loader.svg';
+	var agoraSaving = false;
+
 	jQuery(scope).parent().find('a.button').click(function(evt){
 		evt.preventDefault();
-		var actionButton = jQuery(this);
+		const actionButton = jQuery(this);
 		actionButton.hide();
 		
-		var parentActions = actionButton.parent();
+		const parentActions = actionButton.parent();
 		parentActions.addClass('align-right')
+		parentActions.addClass('agora-settings-actions')
 
-		var valueBox = jQuery(scope).find('.value').eq(0);
-		var isMasked = valueBox.data('masked');
+		const valueBox = jQuery(scope).find('.value').eq(0);
+		const isMasked = valueBox.data('masked');
 
-		var currentValue = valueBox.text().trim();
-		var showValue = isMasked ? '' : currentValue;
+		const currentValue = valueBox.text().trim();
+		const showValue = isMasked ? '' : currentValue;
 		// console.log('Value:', currentValue);
 
-		var input = jQuery('<input type="text" style="width:100%" value="'+showValue+'" />');
+		const input = jQuery('<input type="text" style="width:100%" value="'+showValue+'" />');
 		jQuery(valueBox).html(input);
 
-		var saveBtn = jQuery('<a href="#" class="button button-primary" id="'+settingName+'-save'+'" style="margin:0 10px">Save</a>');
-		var cancelBtn = jQuery('<a href="#" class="button button-secondary" id="'+settingName+'-cancel'+'">Cancel</a>');
-		var errorBox = jQuery('<span class="error error-message"></span>');
+		const saveBtn = jQuery('<a href="#" class="button button-primary" id="'+settingName+'-save'+'" style="margin:0 10px">Save</a>');
+		const cancelBtn = jQuery('<a href="#" class="button button-secondary" id="'+settingName+'-cancel'+'">Cancel</a>');
+		const errorBox = jQuery('<span class="error error-message"></span>');
+		const agoraLoader = jQuery('<span class="agora-loader" style="display:none"><img src="' + srcLoader + '" width="32" /></span>');
+		parentActions.append(agoraLoader);
 		parentActions.append(errorBox);
 		parentActions.append(saveBtn);
 		parentActions.append(cancelBtn);
 
-		var hideSaveButtons = function() {
+		const hideSaveButtons = function() {
 			saveBtn.remove();
 			cancelBtn.remove();
 			errorBox.remove();
+			agoraLoader.remove();
 
 			parentActions.removeClass('align-right');
 			actionButton.show();
 		}
 
-		saveBtn.click(function(btnEvt){
+		const saveOption = function(btnEvt){
 			btnEvt.preventDefault();
-			var newValue = input.val() || '';
-			/* if (!newValue || newValue.length===0) {
+			if (agoraSaving) {
+				return false;
+			}
+
+			var newValue = input.val();
+			if (!newValue || newValue.length===0) {
 				errorBox.text('Please insert a valid value')
 				return false;
-			}*/
+			}
+			agoraLoader.show();
+			errorBox.text('');
+			saveBtn.attr('disabled', 'disabled');
+			agoraSaving = true;
 			updateSettingValue(settingName, newValue, function(err, res) {
-				if (!err) {
+				if (!err && res.updated===true) {
 					hideSaveButtons();
 
 					if (isMasked) {
@@ -81,10 +96,21 @@ function applicationSettingsForm() {
 					valueBox.html(newValue);
 				} else {
 					// TODO: Improve error messages!
-					errorBox.text('Oops, your data cannot be updated!');
+					errorBox.text('Data not saved. Please, try again');
 				}
+				agoraSaving = false;
+				agoraLoader.hide();
+				saveBtn.attr('disabled', false);
 			});
-		});
+
+		};
+		saveBtn.click(saveOption);
+		input.keypress(function(evt){
+			if (evt.keyCode===13) {
+				evt.preventDefault();
+				saveOption(evt);
+			}
+		})
 
 		cancelBtn.click(function(btnEvt){
 			btnEvt.preventDefault();

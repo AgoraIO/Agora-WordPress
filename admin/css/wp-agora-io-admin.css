@@ -142,6 +142,14 @@
   /* box-shadow: 0 5px 4px -2px rgba(0, 0, 0, 0.15); */
 }
 
+.agoraio .agora-settings-actions {
+  margin-top: 0;
+}
+.agoraio .agora-settings-actions span.agora-loader img {
+    position: relative;
+    top: 10px;
+    display: inline;
+}
 
 /** =========  FORMS  ========= ***/
 .agoraio .large-dropdown {
