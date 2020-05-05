@@ -44,14 +44,18 @@ Get started for free! The first 10,000 minutes each month are free, including fr
 -  Customizable UI
 -  Customizable configurations (credentials, video profile, Codec, etc.) and much more!
 
-# One-to-One Video Calls
+### One-to-One Video Calls ###
 Dramatically increase user engagement with Agora Video calling by delivering high quality, low-latency, one-to-one video call capabilities directly into your own applications. 
 
-# Group Chat Video Calling
+### Group Chat Video Calling ###
 Group chat calls scales to include up to 17 participants – ensuring that you can handle all the use-cases you will ever need.
 
-# Live Streaming
+# Live Streaming ###
 Agora’s flexible APIs enable deep integration of high quality, low latency – live video streaming experiences
+
+
+## Quick Start Guide ##
+ [https://medium.com/agora-io/agora-video-for-wordpress-plugin-quickstart-guide-b8838abd4245](https://medium.com/agora-io/agora-video-for-wordpress-plugin-quickstart-guide-b8838abd4245)
 
 ## Installation ##
 This section describes how to install the plugin and get it working.
