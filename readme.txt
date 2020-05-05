@@ -4,7 +4,7 @@ Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
 Tested up to: 5.4
 Requires PHP: 7.2
-Stable tag: 1.4
+Stable tag: 1.5.2
 Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -107,9 +107,17 @@ Hotfix - patch to fix audience uid issue, where the audience uid in joinChannel 
 Version 1.4
 Updated to Agora WebSDK v3.0.2, fixed a patch for uid's.
 
-### 1.5 ###
+Version 1.5
 Updated to resolves issues with saving Agora Settings that are caused by plugin conflicts. Fixed grammer error. Release resolves issues:
 - [43](https://github.com/AgoraIO/Agora-Word-Press/issues/43) 
+- [52](https://github.com/AgoraIO/Agora-Word-Press/issues/52) 
+
+Version 1.5.1
+Updated to resolves issues with saving Agora Settings. Release resolves issues:
+- [52](https://github.com/AgoraIO/Agora-Word-Press/issues/52) 
+
+Version 1.5.2
+Updated to resolves issues with saving Agora Settings created by previous hotfix. Release resolves issues:
 - [52](https://github.com/AgoraIO/Agora-Word-Press/issues/52) 
 
 == Frequently Asked Questions ==
@@ -139,5 +147,5 @@ Updated to resolves issues with saving Agora Settings that are caused by plugin 
   Browsers require a secure connection (HTTPS) for accessing a device's microphone and camera. When testing locally, localhost is a whitelisted URL but once you deploy to production you will need to have a secure connection for the plugin to function properly.
 
 == Upgrade Notice ==
-Version 1.5 updates to resolve issues caused by conflicts with other plugins
+Version 1.5.2 updates to resolve issues with saving Settings.
 ...
