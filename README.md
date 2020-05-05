@@ -50,7 +50,7 @@ Dramatically increase user engagement with Agora Video calling by delivering hig
 ### Group Chat Video Calling ###
 Group chat calls scales to include up to 17 participants – ensuring that you can handle all the use-cases you will ever need.
 
-# Live Streaming ###
+### Live Streaming ###
 Agora’s flexible APIs enable deep integration of high quality, low latency – live video streaming experiences
 
 
