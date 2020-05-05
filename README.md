@@ -4,7 +4,7 @@
 **Requires at least:** 5.0.0  
 **Tested up to:** 5.4  
 **Requires PHP:** 7.2  
-**Stable tag:** 1.5  
+**Stable tag:** 1.5.2  
 **License:** CC BY-ND 4.0    
 **License URI:** https://creativecommons.org/licenses/by-nd/4.0  
 **GitHub:** https://github.com/AgoraIO/Agora-Word-Press  
@@ -140,4 +140,12 @@ Updated to Agora WebSDK v3.0.2, fixed a patch for uid's.
 ### 1.5 ###
 Updated to resolves issues with saving Agora Settings that are caused by plugin conflicts. Fixed grammer error. Release resolves issues:
 - [43](https://github.com/AgoraIO/Agora-Word-Press/issues/43) 
+- [52](https://github.com/AgoraIO/Agora-Word-Press/issues/52) 
+
+### Version 1.5.1 ###
+Updated to resolves issues with saving Agora Settings. Release resolves issues:
+- [52](https://github.com/AgoraIO/Agora-Word-Press/issues/52) 
+
+### Version 1.5.2 ###
+Updated to resolves issues with saving Agora Settings created by previous hotfix. Release resolves issues:
 - [52](https://github.com/AgoraIO/Agora-Word-Press/issues/52) 
