@@ -26,7 +26,7 @@ $current_user       = wp_get_current_user();
       <div id="rejoin-container" class="rejoin-container" style="display: none">
         <button id="rejoin-btn" class="btn btn-primary btn-lg" type="button">
           <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          <?php _e('Rejoin to this channel', 'agoraio'); ?>
+          <?php _e('Rejoin this channel', 'agoraio'); ?>
         </button>
       </div>
 

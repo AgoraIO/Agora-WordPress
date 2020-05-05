@@ -48,7 +48,7 @@ window.AGORA_COMMUNICATION_UI = {
     jQuery(document).keypress(function(e) {
       switch (e.key) {
         case "m":
-          console.log("squick toggle the mic");
+          console.log("quick toggle the mic");
           window.AGORA_COMMUNICATION_UI.toggleMic(localStream);
           break;
         case "v":
@@ -80,7 +80,7 @@ window.AGORA_COMMUNICATION_UI = {
   },
 
   toggleMic: function (localStream) {
-    console.log(localStream)
+    // console.log(localStream)
     window.AGORA_UTILS.toggleBtn(jQuery("#mic-btn")); // toggle button colors
     jQuery("#mic-icon").toggleClass('fa-microphone', localStream.userMuteAudio).toggleClass('fa-microphone-slash', !localStream.userMuteAudio); // toggle the mic icon
 
@@ -121,7 +121,7 @@ window.AGORA_COMMUNICATION_UI = {
     agoraClient.getCameras(function(cameras) {
       var devCount = cameras.length;
       var id = cameras[0].deviceId;
-      console.log("getCameras: " + JSON.stringify(cameras));
+      // console.log("getCameras: " + JSON.stringify(cameras));
     });
   },
 
