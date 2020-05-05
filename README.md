@@ -114,7 +114,7 @@ This section describes how to install the plugin and get it working.
 
 4.  *Q:*  Does communication mode support cloud recording?
 
-  *A:* Currently only Broadcast mode supports cloud recording, where the broadcaster has to initiate the recording.The decision was made during development to for privacy of users. The plugin allows for setting the cloud recording credentials within the communication channel settings because we want to allow users to extend the plugin based on their needs.
+  *A:* Currently only Broadcast mode supports cloud recording, where the broadcaster has to initiate the recording.The decision was made during development for the privacy of users. The plugin allows for setting the cloud recording credentials within the communication channel settings because we want to allow users to extend the plugin based on their needs.
 
 5.  *Q:*  Why doesn't the video work? I see the buttons but I don't get any prompts for video access.
 
