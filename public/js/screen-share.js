@@ -29,9 +29,14 @@ window.AGORA_SCREENSHARE_UTILS = {
         audio: false, // Set the audio attribute as false to avoid any echo during the call.
         video: false,
         screen: true, // screen stream
-        extensionId: 'minllpmhdgpndnkomcoccfekfegnlikg', // Google Chrome:
-        mediaSource:  'screen', // Firefox: 'screen', 'application', 'window' (select one)
+        screenAudio: true,
       });
+
+      // Set relevant attributes according to the browser.
+      // Note that you need to implement isFirefox.
+      if (window.AGORA_SCREENSHARE_UTILS.isFirefox()) {
+        screenStream.mediaSource = 'screen'; // Firefox: 'screen', 'application', 'window' (select one)
+      }
       screenStream.setScreenProfile(screenVideoProfile); // set the profile of the screen
       screenStream.init(function(){
         AgoraRTC.Logger.info("getScreen successful");
@@ -137,5 +142,25 @@ window.AGORA_SCREENSHARE_UTILS = {
       }
     })
     
+  },
+
+  isSafari: function(){
+    return (
+            /constructor/i.test(window.HTMLElement) || 
+            (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || 
+            (typeof safari !== 'undefined' && safari.pushNotification))
+          );
+  },
+  
+  isCompatibleChrome: function() {
+    if (!!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)) {
+      var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+      return (raw && parseInt(raw[2], 10) >= 72);
+    }
+    return false;
+  },
+  
+  isFirefox: function() {
+    return typeof InstallTrigger !== 'undefined';
   }
 }
