@@ -123,6 +123,10 @@ Version 1.5.2
 Updated to resolves issues with saving Agora Settings created by previous hotfix. Release resolves issues:
 - [52](https://github.com/AgoraIO/Agora-Word-Press/issues/52) 
 
+Version 1.6 (beta)
+Updated to resolves issues with with screen sharing in Chrome browser. Release resolves issues:
+- [42](https://github.com/AgoraIO/Agora-Word-Press/issues/42) 
+
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
@@ -150,5 +154,5 @@ Updated to resolves issues with saving Agora Settings created by previous hotfix
   Browsers require a secure connection (HTTPS) for accessing a device's microphone and camera. When testing locally, localhost is a whitelisted URL but once you deploy to production you will need to have a secure connection for the plugin to function properly.
 
 == Upgrade Notice ==
-Version 1.5.2 updates to resolve issues with saving Settings.
+Version 1.6 updates to resolve issues with screen sharing in Chrome browser.
 ...

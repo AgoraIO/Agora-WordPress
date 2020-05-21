@@ -153,3 +153,7 @@ Updated to resolves issues with saving Agora Settings. Release resolves issues:
 ### Version 1.5.2 ###
 Updated to resolves issues with saving Agora Settings created by previous hotfix. Release resolves issues:
 - [52](https://github.com/AgoraIO/Agora-Word-Press/issues/52) 
+
+### Version 1.6 (beta) ###
+Updated to resolves issues with with screen sharing in Chrome browser. Release resolves issues:
+- [42](https://github.com/AgoraIO/Agora-Word-Press/issues/42) 
