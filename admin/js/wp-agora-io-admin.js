@@ -28,7 +28,7 @@ function updateSettingValue(settingName, newValue, callback) {
 function applicationSettingsForm() {
 	const scope = this;
 	const settingName = scope.id;
-	const srcLoader = '/wp-content/plugins/wp-agora-io/admin/css/loader.svg';
+	const srcLoader = AGORA_ADMIN_URL + 'css/loader.svg';
 	var agoraSaving = false;
 
 	jQuery(scope).parent().find('a.button').click(function(evt){

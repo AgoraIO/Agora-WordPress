@@ -46,41 +46,6 @@
     </div>
   </div>
 
-  <!-- ===== CLOUD RECORDING STORAGE ===== -->
-  <!-- <div class="card">
-    <h2 class="title">Cloud Recording Storage</h2>
-    <div class="infobox">
-      agora.io
-      <br />
-      <a href="https://docs.agora.io" target="blank">Agora.io Docs</a>
-    </div>
-
-    <br class="clear" />
-
-    <div class="inside">
-      <p>
-        <?php
-        // _e('Agora Cloud Recording is an add-on service to record and save voice calls, video calls and interactive broadcasts on your cloud storage. With Agora Cloud Recording, you can record calls or live broadcasts for your users to watch at their convenience', 'agoraio');
-        ?></p>
-      <div class="flex app-setting" id="cloudStorageURL">
-        <div class="col label">
-          Cloud Storage URL
-        </div>
-        <div class="col value">
-          <?php
-          $value = isset($agora_options['cloudStorageURL']) ? $agora_options['cloudStorageURL'] : '';
-          // $value = "https://4045media-cloudrecordings.s3.amazonaws.com";
-          echo $value;
-          ?>
-        </div>
-      </div>
-      <p>
-        <a href="#" class="button">Change Cloud Recording Storage</a>
-      </p>
-    </div>
-  </div> -->
-
-
   <!-- ===== Token Server ===== -->
   <div class="card">
     <h2 class="title">App Certificate</h2>
@@ -180,4 +145,7 @@
     </div>
   </div>
 
+  <script type="text/javascript">
+    window.AGORA_ADMIN_URL = '<?php echo plugin_dir_url(__DIR__ . '/../index.php'); ?>';
+  </script>
 </div>
