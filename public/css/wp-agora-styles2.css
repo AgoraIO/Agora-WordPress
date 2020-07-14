@@ -1,0 +1,285 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?bkn7m5');
+  src:  url('fonts/icomoon.eot?bkn7m5#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?bkn7m5') format('truetype'),
+    url('fonts/icomoon.woff?bkn7m5') format('woff'),
+    url('fonts/icomoon.svg?bkn7m5#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-feed:before {
+  content: "\e904";
+}
+.icon-users:before {
+  content: "\e902";
+}
+.icon-enlarge:before {
+  content: "\e903";
+}
+.icon-mic:before {
+  content: "\e901";
+}
+.icon-microphone:before {
+  content: "\e901";
+}
+.icon-voice:before {
+  content: "\e901";
+}
+.icon-audio:before {
+  content: "\e901";
+}
+.icon-cog:before {
+  content: "\e900";
+}
+.agora {
+  font-size: 14px;
+}
+
+.agora-container {
+  display: grid;
+  grid-template-rows: 5% 80% 15%;
+  font-family: 14px
+}
+/*  total 100vh - 32px of wp admin bar */
+.agora-fullscreen .agora-container {
+  grid-template-rows: 5vh 77vh 15vh;
+}
+
+.agora-container button {
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: none;
+}
+
+.agora-header {
+  background: #6c757e;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.agora-content {
+  background: #343338;
+  display: grid;
+  grid-template-rows: 12% 88%;
+}
+.agora-fullscreen .agora-content {
+  grid-template-rows: 8vh 92vh;
+}
+
+.agora .buttons-top{
+  display: flex;
+  justify-content: space-between;
+  margin: 0 1.5em
+}
+.agora .left-button{
+  display: inherit;
+  align-items: center;
+}
+.agora .right-buttons{
+  display: inherit;
+  align-items: center;
+}
+.agora .wordpress{
+  color: #6c757e;
+  border: 1px solid #d7d7d7;
+  border-radius: 5px;
+  padding: .5em 1em;
+  background-color: #d7d7d7;
+  margin: 0;
+}
+.agora .leave-meeting {
+  color: white;
+  border: 1px solid #d94964;
+  border-radius: 5px;
+  padding: .5em 1em;
+  background-color: #d94964;
+  margin: 0 1em;
+}
+
+.agora .icon-cog {
+  font-size: 28px;
+  color: #6c757e;
+  cursor: pointer;
+}
+.agora .icon-enlarge {
+  font-size: 20px;
+  color: #efefef;
+  margin: .2em 1em;
+  cursor: pointer;
+}
+
+
+.agora .screen {
+  border-radius: 5px;
+  height: 69.5%;
+}
+.agora.agora-fullscreen .screen {
+  height: 69.5vh;
+  align-items: center;
+  display: grid;
+}
+.agora .screen-users{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.agora .user video {
+  /* border-radius: 5px;
+  object-fit: cover; */
+}
+
+/*pantalla 1*/
+.agora .screen-users-1 .user {
+  width: 100%;
+  height: 40vh;
+}
+.agora-fullscreen .screen-users-1 .user {
+  width: 90%;
+  height: 69.5vh;
+}
+
+/* pantalla 2 */
+.agora .screen-users-2 .user{
+  width: 47%;
+  padding: 0 .5em;
+}
+.agora .screen-users-2 img {
+  width: 100%;
+  height: 69.5vh;
+}
+
+/* pantalla 3-4 */
+.agora .screen-users-3-4 .user{
+  width: 47%;
+  padding: 0 .5em 0.5em;
+}
+.agora .screen-users-3-4 .user img{
+  width: 100%;
+  height: 33.8vh;
+}
+
+/*pantalla 5 y 6*/
+.agora .screen-users-5-6 .user{
+  width: 28%;
+  padding: 0 .5em .7em;
+}
+.agora .screen-users-5-6 .user img{
+  width: 100%;
+  height: 32vh;
+}
+
+/* pantalla 7 y 8*/
+.agora .screen-users-7-8 .user{
+  width: 19.5%;
+  padding: 0 .5em .7em;
+}
+.agora .screen-users-7-8 .user img{
+  width: 100%;
+  height: 32.5vh;
+}
+
+/* pantalla 9, 10, 11 y 12*/
+.agora .screen-users-9-12 .user{
+  width: 23%;
+  padding: 0 .5em .5em;
+}
+.agora .screen-users-9-12 .user img{
+  width: 100%;
+  height: 21.5vh;
+}
+.modal {
+  display: none
+}
+
+.agora-footer {
+  background: #343338;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+.agora .buttons-botton {
+  margin: .5em;
+}
+.agora .buttons-botton .btnIcon {
+  background: #6c757e;
+  border-radius: 5px;
+  padding: .5em;
+  font-size: 24px;
+  color: white;
+}
+
+
+@media screen and (max-width: 1023px){
+  .agora .screen-users-9-12 .user{
+    width: 22%;
+  }
+}
+@media screen and (max-width:768px){
+  .agora .screen-users-2 .user{
+    width: 46.5%;
+  }
+  .agora .screen-users-3-4 .user{
+    width: 46%;
+  }
+  .agora .screen-users-9-12 .user{
+    width: 19%;
+  }
+}
+@media screen and (max-width: 480px){
+  .agora .screen-users-2 .user{
+    width: 44.9%;
+  }
+  .agora .screen-users-3-4 .user{
+    width: 44%;
+  }
+  .agora .buttons-botton{
+    font-size: 25px;
+  }
+}
+@media screen and (max-width: 320px) {
+  .agora .buttons-botton{
+    font-size: 18px;
+  }
+}
+@media screen and (max-height: 480px) {
+  .agora .wordpress,
+  .agora .leave-meeting{
+    padding: 0.3em;
+  }
+  .agora .icon-cog{
+    font-size: 16px;
+  }
+  .agora .buttons-botton{
+    font-size: 18px;
+  }
+  .agora .icon-enlarge{
+    font-size: 16px;
+    margin-right: 1.5em;
+  }
+  .agora .screen-users-3-4 .user{
+    padding: 0.03em 0.1em;
+  }
+  .agora .buttons-botton{
+    font-size: 20px;
+  }
+}

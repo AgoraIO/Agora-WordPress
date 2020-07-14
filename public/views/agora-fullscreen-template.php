@@ -7,57 +7,23 @@
   <title>Agora.io Communication Chat</title>
   <?php wp_head() ?>
 </head>
-<body class="agora custom-background-image">
-  <div class="agora-fullscreen-container controls-bottom window-mode gradient-4">
+<body <?php body_class(); ?>>>
+  <div class="agora agora-fullscreen">
+    <section class="agora-container">
+      <?php require_once "parts/header.php" ?>
 
-    <div class="main-video-screen" id="full-screen-video">
-      <div id="video-canvas"></div>
+      <div class="agora-content">
+        <?php require_once "parts/header-controls.php" ?>
 
-      <div id="rejoin-container" class="rejoin-container" style="display: none">
-        <button id="rejoin-btn" class="btn btn-primary btn-lg" type="button">
-          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          <?php _e('Rejoin this channel', 'agoraio'); ?>
-        </button>
-      </div>
-
-      <div id="buttons-container" class="mt-3">
-        <div class="control-btn">
-          <button id="mic-btn" type="button" class="btn btn-block btn-dark btn-xs">
-            <i id="mic-icon" class="fas fa-microphone"></i>
-          </button>
-        </div>
-        <div class="control-btn main-btn">
-          <button id="exit-btn"  type="button" class="btn btn-block btn-danger btn-xs">
-            <i id="exit-icon" class="fas fa-phone-slash"></i>
-          </button>
-        </div>
-        <div class="control-btn">
-          <button id="video-btn"  type="button" class="btn btn-block btn-dark btn-xs">
-            <i id="video-icon" class="fas fa-video"></i>
-          </button>
+        <div class="screen">
+          <div id="screen-users" class="screen-users screen-users-1">
+            <div id="local-video" class="user"></div>
+          </div>
         </div>
       </div>
 
-    </div>
-
-    <div class="audience-container" id="audience-avatars">
-      <div class="avatar-circle local" id="local-stream-container">
-        <div id="mute-overlay">
-          <i id="mic-icon" class="fas fa-microphone-slash"></i>
-        </div>
-        <div id="no-local-video" class="text-center">
-          <i id="user-icon" class="fas fa-user"></i>
-        </div>
-        <div id="local-video"></div>
-      </div>
-
-      <div class="remote-users">
-        <div class="slick-avatars" id="slick-avatars">
-          
-        </div>
-      </div>
-
-    </div>
+      <?php require_once "parts/footer.php" ?>
+    </section>
   </div>
   <?php wp_footer(); ?>
   <script>

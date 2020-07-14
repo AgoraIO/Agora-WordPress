@@ -200,12 +200,12 @@ function addRemoteStreamMiniView(remoteStream){
   var streamId = remoteStream.getId();
   console.log('Adding remote to miniview:', streamId);
   // append the remote stream template to #remote-streams
-  const remoteStreamsDiv = jQuery('#remote-streams');
+  const remoteStreamsDiv = jQuery('#screen-users');
   let playerFound = false;
   if (remoteStreamsDiv.length>0) {
     playerFound = true;
     remoteStreamsDiv.append(
-      jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-stream-container col'}).append(
+      jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container col'}).append(
         jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
             jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
         ),

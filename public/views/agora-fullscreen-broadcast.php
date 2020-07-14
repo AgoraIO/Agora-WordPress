@@ -14,79 +14,24 @@ $current_user       = wp_get_current_user();
   <title>Agora.io Communication Chat</title>
   <?php wp_head() ?>
 </head>
-<body class="agora custom-background-image">
-  <?php
-  $bgStyle = $instance['background']==='' ? '' : 'style="background-color:'.$instance['background'].'"';
-  $bgClass = $instance['background']==='' ? 'gradient-4' : '';
-  ?>
-  <div class="agora-fullscreen-container controls-bottom window-mode <?php echo $bgClass ?>" <?php echo $bgStyle ?>>
+<body <?php body_class(); ?>>
+  <div class="agora agora-fullscreen">
+    <section class="agora-container">
+      <?php require_once "parts/header.php" ?>
 
-    <div class="main-video-screen" id="full-screen-video">
-      
-      <div id="rejoin-container" class="rejoin-container" style="display: none">
-        <button id="rejoin-btn" class="btn btn-primary btn-lg" type="button">
-          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          <?php _e('Rejoin this channel', 'agoraio'); ?>
-        </button>
-      </div>
+      <div class="agora-content">
+        <?php require_once "parts/header-controls.php" ?>
 
-      <div id="buttons-container">
-        
-        <div class="control-btn">
-          <button id="mic-btn" type="button" class="btn btn-block btn-dark btn-xs" title="Mute Mic">
-            <i id="mic-icon" class="fas fa-microphone"></i>
-          </button>
-        </div>
-        <div class="control-btn main-btn">
-          <button id="exit-btn"  type="button" class="btn btn-block btn-danger btn-xs" title="Finish Call">
-            <i id="exit-icon" class="fas fa-phone-slash"></i>
-          </button>
-        </div>
-        <div class="control-btn">
-          <button id="video-btn"  type="button" class="btn btn-block btn-dark btn-xs" title="Mute Video">
-            <i id="video-icon" class="fas fa-video"></i>
-          </button>
-        </div>
-
-      </div>
-
-    </div>
-
-    <div id="lower-ui-bar" class="row mb-1">
-      <?php if(is_array($recordingSettings) && 
-            !empty($recordingSettings['bucket']) &&
-            !empty($recordingSettings['accessKey'])) : ?>
-        <div id="cloud-recording-container">
-          <button id="cloud-recording-btn" class="btn btn-sm start-rec" title="<?php _e('Start Recording', 'agoraio'); ?>">
-            <div class="inner-icon"> </div>
-          </button>
-        </div>
-      <?php endif; ?>
-
-      <div id="screen-share-btn-container" class="text-center control-btn">
-        <button id="screen-share-btn"  type="button" class="btn btn-md" title="<?php _e('Screen Share', 'agoraio'); ?>">
-          <i id="screen-share-icon" class="fas fa-share-square"></i>
-          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none"></span>
-        </button>
-      </div>
-
-      <div class="control-btn">
-        <button id="rtmp-config-btn"  type="button" class="btn btn-primary btn-md rtmp-btn" 
-          data-toggle="modal" data-target="#addRtmpConfigModal" title="<?php _e('Add RTMP Config', 'agoraio') ?>">
-          <i id="rtmp-config-icon" class="fas fa-rotate-270 fa-sign-out-alt"></i>
-        </button>
-      </div>
-      <div class="control-btn">
-        <button id="add-rtmp-btn"  type="button" class="btn btn-secondary btn-md rtmp-btn" data-toggle="modal" data-target="#add-external-source-modal" title="<?php _e('Add External Source', 'agoraio') ?>">
-          <i id="add-rtmp-icon" class="fas fa-plug"></i>
-        </button>
-      </div>
-      <div id="external-broadcasts-container" class="container col-flex hidden">
-        <div id="rtmp-controlers" class="col">
-          <!-- insert rtmp  controls -->
+        <div class="screen">
+          <div id="screen-users" class="screen-users screen-users-1">
+            <div id="full-screen-video" class="user"></div>
+          </div>
         </div>
       </div>
-    </div>
+
+      <?php require_once "parts/footer.php" ?>
+    </section>
+    
   </div>
 
   <!-- RTMP Config Modal -->
