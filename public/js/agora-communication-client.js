@@ -66,7 +66,7 @@ agoraClient.on('stream-subscribed', function (evt) {
   // console.log('Stream subscribed:', remoteId);
   const callbackRemoteStreams = function() {
     AgoraRTC.Logger.info("Subscribe remote stream successfully: " + remoteId);
-    if( jQuery('#video-canvas').is(':empty') ) { 
+    if(jQuery('#video-canvas').is(':empty') ) { 
       mainStreamId = remoteId;
       remoteStream.play('video-canvas');
     } else {
