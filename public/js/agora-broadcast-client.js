@@ -9,7 +9,8 @@ var remoteStreams = {}; // remote streams obj struct [id : stream]
 window.AGORA_BROADCAST_CLIENT = {
   startLiveTranscoding: startLiveTranscoding,
   addExternalSource: addExternalSource,
-  agoraLeaveChannel: agoraLeaveChannel
+  agoraLeaveChannel: agoraLeaveChannel,
+  addInjectedStreamMiniView: addInjectedStreamMiniView
 };
 
 // join a channel
@@ -30,6 +31,10 @@ function agoraJoinChannel() {
       AgoraRTC.Logger.info('User ' + uid + ' joined channel successfully');
   }, function(err) {
       AgoraRTC.Logger.error('[ERROR] : join channel failed', err);
+  });
+
+  window.agoraClient.on('stream-published', function (evt) {
+    AgoraRTC.Logger.info("Publish local stream successfully");
   });
 }
 
@@ -93,6 +98,10 @@ function agoraLeaveChannel() {
     window.localStreams.camera.stream.stop() // stop the camera stream playback
     window.localStreams.camera.stream.close(); // clean up and close the camera stream
     window.agoraClient.unpublish(window.localStreams.camera.stream); // unpublish the camera stream
+    if (window.injectedStreamURL && window.injectedStreamURL != "") {
+      window.agoraClient.removeInjectStreamUrl(window.injectedStreamURL);
+    }
+    jQuery("#remote-streams").empty() // clean up the remote feeds
     //disable the UI elements
     jQuery('#mic-btn').prop('disabled', true);
     jQuery('#video-btn').prop('disabled', true);
@@ -206,9 +215,8 @@ function addExternalSource() {
   // set live transcoding config
   window.agoraClient.addInjectStreamUrl(externalUrl, window.injectStreamConfig)
   window.injectedStreamURL = externalUrl;
-  // TODO: ADD view for external url (similar to rtmp url)
 }
-// window.AGORA_BROADCAST_CLIENT.addExternalSource = addExternalSource;
+window.AGORA_BROADCAST_CLIENT.addExternalSource = addExternalSource;
 
 // RTMP Connection (UI Component)
 function addExternalTransmitionMiniView(rtmpURL) {
@@ -242,4 +250,41 @@ function addExternalTransmitionMiniView(rtmpURL) {
     jQuery('#rtmp-container').remove();
   });
 
+}
+
+// REMOTE STREAMS UI
+function addInjectedStreamMiniView(remoteStream){
+  var streamId = remoteStream.getId();
+  remoteStreams[streamId] = remoteStream;
+  console.log('Adding remote to miniview:', streamId);
+  // append the remote stream template to #remote-streams
+  const remoteStreamsDiv = jQuery('#remote-streams');
+  let playerFound = false;
+  if (remoteStreamsDiv.length>0) {
+    playerFound = true;
+    remoteStreamsDiv.append(
+      jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-streams-container col'}).append(
+        jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
+      )
+    );
+  } else {
+    const avatarCircleDiv = jQuery('#uid-'+streamId);
+    if (avatarCircleDiv.length>0) {
+      playerFound = true;
+      const circle = avatarCircleDiv.find('.avatar-circle');
+      circle.append(
+        jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-streams-container'}).append(
+          jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
+        )
+      )
+      circle.find('img').hide();
+    }
+  }
+  playerFound && remoteStream.play('agora_remote_' + streamId); 
+
+  var containerId = '#' + streamId + '_container';
+  jQuery(containerId).dblclick(function() {
+    // double click to stop Stream Inject
+    window.agoraClient.removeInjectStreamUrl(window.injectedStreamURL);
+  });
 }

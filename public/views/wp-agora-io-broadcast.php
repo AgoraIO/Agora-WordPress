@@ -68,6 +68,11 @@ $current_user       = wp_get_current_user();
           </div>
         </div>
       </div>
+      <div id="remote-streams-container" class="container col-9 ml-1">
+        <div id="remote-streams" class="row">
+          <!-- insert remote streams dynamically -->
+        </div>
+      </div>
     </div> <!--  end full-screen-video -->
 
 
@@ -254,7 +259,6 @@ $current_user       = wp_get_current_user();
         console.log("Live streaming updated", evt);
       }); 
 
-      <?php /*
       // client callbacks
       window.agoraClient.on('stream-published', function (evt) {
         console.log('Publish local stream successfully');
@@ -262,7 +266,25 @@ $current_user       = wp_get_current_user();
 
       // when a remote stream is added
       window.agoraClient.on('stream-added', function (evt) {
-        console.log('new stream added: ' + evt.stream.getId());
+        var stream = evt.stream;
+        var streamId = stream.getId();
+        // AgoraRTC.Logger.info("new stream added: " + streamId);
+        // Check if the stream is local
+        if (streamId != localStreams.screen.id) {
+          AgoraRTC.Logger.info('subscribe to remote stream:' + streamId);
+          // Subscribe to the stream.
+          agoraClient.subscribe(stream, function (err) {
+            AgoraRTC.Logger.error("[ERROR] : subscribe stream failed", err);
+          });
+        }
+      });
+      
+      window.agoraClient.on('stream-subscribed', function (evt) {
+        var remoteStream = evt.stream;
+        var remoteId = remoteStream.getId();
+        // console.log('Stream subscribed:', remoteId);
+        AgoraRTC.Logger.info("Subscribe remote stream successfully: " + remoteId);
+        window.AGORA_BROADCAST_CLIENT.addInjectedStreamMiniView(remoteStream);
       });
 
       window.agoraClient.on('stream-removed', function (evt) {
@@ -283,7 +305,10 @@ $current_user       = wp_get_current_user();
 
       // when a remote stream leaves the channel
       window.agoraClient.on('peer-leave', function(evt) {
-        console.log('Remote stream has left the channel: ' + evt.stream.getId());
+        var streamId = evt.stream.getId();
+        console.log('Remote stream has left the channel: ' + streamId);
+        var remoteContainerID = '#' + streamId + '_container';
+        jQuery(remoteContainerID).empty().remove(); // 
       });
 
       // show mute icon whenever a remote has muted their mic
@@ -303,8 +328,6 @@ $current_user       = wp_get_current_user();
       window.agoraClient.on('unmute-video', function (evt) {
         console.log('Unmute Video for: ' + evt.uid);
       });
-
-      */ ?>
     });
 
     window.AGORA_TOKEN_UTILS = {

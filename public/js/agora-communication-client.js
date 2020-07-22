@@ -205,7 +205,7 @@ function addRemoteStreamMiniView(remoteStream){
   if (remoteStreamsDiv.length>0) {
     playerFound = true;
     remoteStreamsDiv.append(
-      jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-stream-container col'}).append(
+      jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-streams-container col'}).append(
         jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
             jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
         ),
@@ -221,7 +221,7 @@ function addRemoteStreamMiniView(remoteStream){
       playerFound = true;
       const circle = avatarCircleDiv.find('.avatar-circle');
       circle.append(
-        jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-stream-container'}).append(
+        jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-streams-container'}).append(
           jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
             jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
           ),
