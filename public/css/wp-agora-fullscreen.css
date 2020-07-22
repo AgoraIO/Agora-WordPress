@@ -72,21 +72,21 @@
   width: 110px;
   height: 110px;
 }
-.avatar.circle .remote-stream-container {
+.avatar.circle .remote-streams-container {
   display: block;
 }
-.avatar-circle .remote-stream-container .remote-video { width: 100%; top: 0; }
-.avatar-circle .remote-stream-container .mute-overlay { 
+.avatar-circle .remote-streams-container .remote-video { width: 100%; top: 0; }
+.avatar-circle .remote-streams-container .mute-overlay { 
   bottom: -5px;
   left: 34%;
   top: auto;
 }
-.avatar-circle .remote-stream-container .no-video-overlay {
+.avatar-circle .remote-streams-container .no-video-overlay {
   top: 7%;
   width: 100%;
 }
-.avatar-circle .remote-stream-container .mute-overlay .fas { font-size: 1.2rem; }
-.avatar-circle .remote-stream-container .no-video-overlay .fas { font-size: 1.6rem; }
+.avatar-circle .remote-streams-container .mute-overlay .fas { font-size: 1.2rem; }
+.avatar-circle .remote-streams-container .no-video-overlay .fas { font-size: 1.6rem; }
 
 
 .agora .controls-bottom #buttons-container {

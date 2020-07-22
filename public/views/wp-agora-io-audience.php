@@ -22,6 +22,11 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
 <div class="agora agora-broadcast agora-audience" <?php echo $agoraStyle ?>>
   <div class="container-fluid p-0">
     <div id="full-screen-video" style="display: none; <?php echo $screenStyles; ?>"></div>
+    <div id="remote-streams-container" class="row hidden fixed-bottom mb-1 container col-9 ml-1">
+      <div id="remote-streams" class="row">
+        <!-- insert remote streams dynamically -->
+      </div>
+    </div>
     <div id="watch-live-overlay" class="overlay">
       <div id="overlay-container">
           <div class="col-md text-center">
@@ -100,6 +105,7 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
         AgoraRTC.Logger.info('Subscribing to remote stream:' + streamId);
         jQuery("#watch-live-closed").hide();
         jQuery("#full-screen-video").fadeIn();
+        jQuery("#remote-streams-container").removeClass("hidden");
         // Subscribe to the stream.
         window.agoraClient.subscribe(stream, function (err) {
           AgoraRTC.Logger.error('[ERROR] : subscribe stream failed', err);
@@ -115,7 +121,12 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
 
       window.agoraClient.on('stream-subscribed', function (evt) {
         var remoteStream = evt.stream;
-        remoteStream.play('full-screen-video');
+        // remoteStream.play('full-screen-video');
+        if(jQuery('#full-screen-video').is(':empty') ) { 
+          remoteStream.play('full-screen-video');
+        } else {
+          addInjectedStreamMiniView(remoteStream);
+        }
         AgoraRTC.Logger.info('Successfully subscribed to remote stream: ' + remoteStream.getId());
       });
 
@@ -212,5 +223,35 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
       }
       ?>;
     }
+
+  function addInjectedStreamMiniView(remoteStream){
+    var streamId = remoteStream.getId();
+    remoteStreams[streamId] = remoteStream;
+    console.log('Adding remote to miniview:', streamId);
+    // append the remote stream template to #remote-streams
+    const remoteStreamsDiv = jQuery('#remote-streams');
+    let playerFound = false;
+    if (remoteStreamsDiv.length>0) {
+      playerFound = true;
+      remoteStreamsDiv.append(
+        jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-streams-container col'}).append(
+          jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
+        )
+      );
+    } else {
+      const avatarCircleDiv = jQuery('#uid-'+streamId);
+      if (avatarCircleDiv.length>0) {
+        playerFound = true;
+        const circle = avatarCircleDiv.find('.avatar-circle');
+        circle.append(
+          jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-streams-container'}).append(
+            jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
+          )
+        )
+        circle.find('img').hide();
+      }
+    }
+    playerFound && remoteStream.play('agora_remote_' + streamId); 
+  }
   </script>
 </div>
