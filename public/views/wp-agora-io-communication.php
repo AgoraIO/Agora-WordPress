@@ -1,3 +1,9 @@
+<?php
+$channelSettings    = $channel->get_properties();
+$videoSettings      = $channelSettings['settings'];
+$appearanceSettings = $channelSettings['appearance'];
+$current_user       = wp_get_current_user();
+?>
 <?php $current_user = wp_get_current_user(); ?>
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <div class="agora agora-communication">
@@ -14,7 +20,7 @@
       </div>
     </div>
 
-    <?php require_once "parts/footer.php" ?>
+    <?php require_once "parts/footer-communication.php" ?>
   </section>
 
   <script>
@@ -28,7 +34,6 @@
       window.userID = parseInt(`${<?php echo $current_user->ID; ?>}`, 10);
       window.agoraMode = 'communication';
 
-      window.AGORA_COMMUNICATION_UI.calculateVideoScreenSize();
       window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel(window.agoraAppId, window.channelName);
     });
 

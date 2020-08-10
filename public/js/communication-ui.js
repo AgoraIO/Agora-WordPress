@@ -114,7 +114,6 @@ window.AGORA_COMMUNICATION_UI = {
       if (devCount>0) {
         var id = devices[0].deviceId;
         // console.log('Device:', devices[0])
-        // console.log("getDevices: " + JSON.stringify(devices));
       }
     });
 
@@ -146,27 +145,6 @@ window.AGORA_COMMUNICATION_UI = {
   },
 
 
-  calculateVideoScreenSize: function () {
-    var container = jQuery('#full-screen-video');
-    // console.log('Video SIZE:', container.outerWidth());
-    var size = window.AGORA_COMMUNICATION_UI.getSizeFromVideoProfile();
-
-    // https://math.stackexchange.com/a/180805
-    var newHeight = 0;
-    console.log('Width:', container.outerWidth());
-    if (container.outerWidth() > 520) {
-      newHeight = container.outerWidth() * size.height / size.width;
-    } else {
-      newHeight = container.outerWidth();
-    }
-    console.log('newHeight:', newHeight);
-    container.outerHeight(newHeight);
-    return {
-      width: container.outerWidth(),
-      height: container.outerHeight()
-    };
-  },
-
   // get sizes based on the video quality settings
   getSizeFromVideoProfile: function () {
     // https://docs.agora.io/en/Interactive%20Broadcast/videoProfile_web?platform=Web#video-profile-table
@@ -184,52 +162,5 @@ window.AGORA_COMMUNICATION_UI = {
       case '1080p_3':
       case '1080p_5': return { width: 1920, height: 1080 };
     }
-  },
-
-  fullscreenInit: function () {
-    const resizeVideo = function(firstTime) {
-      const size = window.AGORA_COMMUNICATION_UI.calculateVideoScreenSize();
-      const sliderSize = size.width - 200;
-      
-      if (!firstTime) {
-        // jQuery('.slick-avatars').slick('breakpoint')
-      } else {
-        jQuery('.remote-users').outerWidth(sliderSize);
-      }
-      return size;
-    }
-
-    const size = resizeVideo(true);
-    jQuery(window).smartresize(resizeVideo);
-
-    const sliderSize = size.width - 200;
-    const slidesToShow = Math.floor(sliderSize / 110);
-    window.slickSettings = {
-      dots: false,
-      slidesToShow,
-      centerMode: false,
-      responsive: [{
-        breakpoint: 480,
-        settings: {slidesToShow: 1}
-      }, {
-        breakpoint: 600,
-        settings: {slidesToShow: 2}
-      }, {
-        breakpoint: 960,
-        settings: {slidesToShow: 3}
-      }, {
-        breakpoint: 1128,
-        settings: {slidesToShow: 4}
-      }, {
-        breakpoint: 1366,
-        settings: {slidesToShow: 5}
-      }]
-    };
-    
-    jQuery('#slick-avatars').slick(window.slickSettings);
-    // jQuery('.slick-avatars').on('breakpoint', function(event, slick, breakpoint) {
-    //   console.log('breakpoint:', breakpoint)
-    // })
-    window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel(window.agoraAppId, window.channelName);
   }
 }

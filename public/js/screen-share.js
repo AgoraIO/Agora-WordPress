@@ -1,3 +1,4 @@
+
 window.AGORA_SCREENSHARE_UTILS = {
   toggleScreenShareBtn: function () {
     jQuery('#screen-share-btn').toggleClass('btn-danger');
@@ -29,7 +30,6 @@ window.AGORA_SCREENSHARE_UTILS = {
         audio: false, // Set the audio attribute as false to avoid any echo during the call.
         video: false,
         screen: true, // screen stream
-        extensionId: 'minllpmhdgpndnkomcoccfekfegnlikg', // Google Chrome:
         mediaSource:  'screen', // Firefox: 'screen', 'application', 'window' (select one)
       });
       screenStream.setScreenProfile(screenVideoProfile); // set the profile of the screen
@@ -49,7 +49,7 @@ window.AGORA_SCREENSHARE_UTILS = {
         localStreams.screen.stream = {}; // reset the screen stream
         window.screenShareActive = false; // resest screenShare
         cb(err, null);
-        window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn(); // toggle the button icon back (will appear disabled)
+        // window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn(); // toggle the button icon back (will appear disabled)
         if (err&& err.info) {
           alert(err.info);
         }
@@ -79,8 +79,8 @@ window.AGORA_SCREENSHARE_UTILS = {
       if (typeof mainStreamId !== 'undefined') {
         remoteStreams[mainStreamId].stop(); // stop the main video stream playback
         
-        if (window.AGORA_COMMUNICATION_CLIENT.addRemoteStreamMiniView) {
-          window.AGORA_COMMUNICATION_CLIENT.addRemoteStreamMiniView(remoteStreams[mainStreamId]); // send the main video stream to a container
+        if (window.AGORA_COMMUNICATION_CLIENT.addRemoteStreamView) {
+          window.AGORA_COMMUNICATION_CLIENT.addRemoteStreamView(remoteStreams[mainStreamId]); // send the main video stream to a container
         }
       }
       // localStreams.screen.stream.play('full-screen-video'); // play the screen share as full-screen-video (vortext effect?)

@@ -31,7 +31,7 @@ class WP_Agora_PageTemplate {
     add_filter( 'template_include', array( $this, 'view_project_template') );
 
     // Add your templates to this array.
-    $this->templates = array( 'agora-fullscreen-template.php' => 'Agora.io FullScreen');
+    $this->templates = array( 'agora-fullscreen-communication.php' => 'Agora.io FullScreen');
   }
 
   public function add_new_template( $posts_templates ) {
@@ -116,15 +116,13 @@ class WP_Agora_PageTemplate {
       $bootstrap_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.js';
       $bootstrap_popper_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/popper.min.js';
       // wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
-      // wp_enqueue_script( 'bootstrap_popper', $bootstrap_popper_js, array('jquery'), null );
-      // wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
+      wp_enqueue_script( 'bootstrap_popper', $bootstrap_popper_js, array('jquery'), null );
+      wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
 
-      // wp_enqueue_style( 'fontawesome',
-      //   plugin_dir_url( __FILE__ ) . 'css/fontawesome/css/all.min.css', array(), null, 'all' );
-      // wp_enqueue_style( 'agora-fullscreen',
-      //   plugin_dir_url( __FILE__ ) . 'css/wp-agora-fullscreen.css', array(), null, 'all' );
-      wp_enqueue_style( 'agora-styles',
-        plugin_dir_url( __FILE__ ) . 'css/wp-agora-styles2.css', array(), null, 'all' );
+      wp_enqueue_style( 'fontawesome',
+        plugin_dir_url( __FILE__ ) . 'css/fontawesome/css/all.min.css', array(), null, 'all' );
+      // wp_enqueue_style( 'agora-fullscreen',  plugin_dir_url( __FILE__ ) . 'css/wp-agora-fullscreen.css', array(), null, 'all' );
+      // wp_enqueue_style( 'agora-styles', plugin_dir_url( __FILE__ ) . 'css/wp-agora-styles2.css', array(), null, 'all' );
 
 
       // Return default template if we don't have a custom one defined
@@ -148,7 +146,7 @@ class WP_Agora_PageTemplate {
           wp_enqueue_script('screen-share', 
             plugin_dir_url( __FILE__ ) . "js/screen-share.js", array('jquery'), null, true);
         } else {
-          $file = str_replace('agora-fullscreen-template.php', 'agora-fullscreen-audience.php', $file);
+          $file = str_replace('agora-fullscreen-communication.php', 'agora-fullscreen-audience.php', $file);
           // $agoraUserScript = 'js/agora-broadcast-client.js';
         }
       }

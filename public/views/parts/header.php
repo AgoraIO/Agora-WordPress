@@ -1,3 +1,3 @@
 <div class="agora-header">
-	<i class="icon-enlarge"></i>
+	<i id="fullscreen-expand" class="fas fa-expand-arrows-alt"></i>
 </div>

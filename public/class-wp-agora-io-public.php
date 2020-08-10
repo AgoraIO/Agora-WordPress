@@ -151,14 +151,14 @@ class WP_Agora_Public {
 		$bootstrap_css = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.css';
 		$bootstrap_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.js';
 		$bootstrap_popper_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/popper.min.js';
-	  	$fontawesome = plugin_dir_url( __FILE__ ) . 'css/fontawesome/css/solid.min.css';
+	  	$fontawesome = plugin_dir_url( __FILE__ ) . 'css/fontawesome/css/all.min.css';
 	  // wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
-	  // wp_enqueue_style( 'fontawesome', $fontawesome, array('bootstrap'), null, 'all' );
+	  wp_enqueue_style( 'fontawesome', $fontawesome, array('bootstrap'), null, 'all' );
 	  
 	  wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-3.0.2.121.js', array('jquery'), null );
-	  // wp_enqueue_script( 'bootstrap_popper', $bootstrap_popper_js, array('jquery'), null );
-	  // wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
-
+	  wp_enqueue_script( 'bootstrap_popper', $bootstrap_popper_js, array('jquery'), null );
+	  wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
+	  
 	  wp_enqueue_script( $this->plugin_name.'-screen', plugin_dir_url( __FILE__ ) . 'js/screen-share.js', array( 'jquery' ), $this->version, false );
 	  
 	  $scriptUI = $type==='broadcast' ? 'js/broadcast-ui.js' : 'js/communication-ui.js';
