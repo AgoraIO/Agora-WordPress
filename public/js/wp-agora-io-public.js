@@ -142,5 +142,33 @@ window.AGORA_UTILS = {
     }).fail(function(err) {
       console.error('Avatar not available:', err);
     });
+  },
+
+  updateUsersCounter: function(count) {
+    // console.log('updating to', count);
+    jQuery('#count-users').html(count);
+
+    let countClass = count;
+    switch(count) {
+      case 3:
+      case 4:
+        countClass = '3-4';
+        break;
+      case 5:
+      case 6:
+        countClass = '5-6';
+        break;
+      case 7:
+      case 8:
+        countClass = '7-8';
+        break;
+      case 9: case 10:
+      case 11: case 12:
+        countClass = '9-12';
+        break;
+    }
+
+    // Update users class to keep layout organized
+    document.getElementById('screen-users').classList = "screen-users screen-users-" + countClass;
   }
 }

@@ -6,7 +6,7 @@ var agoraClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'});
 window.screenClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'}); 
 
 // stream references (keep track of active streams) 
-var remoteStreams = {}; // remote streams obj struct [id : stream] 
+window.remoteStreams = {}; // remote streams obj struct [id : stream] 
 
 
 // keep track of streams
@@ -72,7 +72,7 @@ agoraClient.on('stream-added', function (evt) {
 agoraClient.on('stream-subscribed', function (evt) {
   var remoteStream = evt.stream;
   var remoteId = remoteStream.getId();
-  remoteStreams[remoteId] = remoteStream;
+  window.remoteStreams[remoteId] = remoteStream;
   // console.log('Stream subscribed:', remoteId);
 
   AgoraRTC.Logger.info("Subscribe remote stream successfully: " + remoteId);
@@ -81,7 +81,10 @@ agoraClient.on('stream-subscribed', function (evt) {
   //   remoteStream.play('video-canvas');
   // }
   addRemoteStreamView(remoteStream);
-
+  
+  // always is +1 due to the remote streams + local user
+  const usersCount = Object.keys(window.remoteStreams).length + 1
+  window.AGORA_UTILS.updateUsersCounter(usersCount)
 });
 
 agoraClient.on('stream-removed', function(evt) {
@@ -104,7 +107,9 @@ agoraClient.on("peer-leave", function(evt) {
     const remoteContainerID = '#' + streamId + '_container';
     jQuery(remoteContainerID).empty().remove(); 
 
-    // window.AGORA_UTILS.updateUsersCounter()
+    // always is +1 due to the remote streams + local user
+    const usersCount = Object.keys(window.remoteStreams).length + 1
+    window.AGORA_UTILS.updateUsersCounter(usersCount)
   }
 });
 
@@ -207,29 +212,6 @@ function addRemoteStreamView(remoteStream){
     );
 
   remoteStream.play('agora_remote_' + streamId);
-
-  const streams = Object.keys(remoteStreams);
-  const count = streams.length + 1;
-  let countClass = count;
-  switch(count) {
-    case 3:
-    case 4:
-      countClass = '3-4';
-      break;
-    case 5:
-    case 6:
-      countClass = '5-6';
-      break;
-    case 7:
-    case 8:
-      countClass = '7-8';
-      break;
-    case 9: case 10:
-    case 11: case 12:
-      countClass = '9-12';
-      break;
-  }
-  streamsContainer[0].classList = "screen-users screen-users-" + countClass;
 
   /*
   var containerId = '#' + streamId + '_container';
