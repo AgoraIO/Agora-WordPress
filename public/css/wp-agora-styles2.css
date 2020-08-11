@@ -169,7 +169,6 @@ html, body {
   height: 50vh;
 }
 .agora-fullscreen .screen-users-1 .user {
-  width: 100%;
   height: 69.5vh;
 }
 
@@ -198,9 +197,7 @@ html, body {
   height: 25vh;
 }
 .agora-fullscreen .screen-users-5-6 .user{
-  width: 33%;
   height: 34vh;
-  padding: .5em;
 }
 
 /* screen with 7 y 8 users */

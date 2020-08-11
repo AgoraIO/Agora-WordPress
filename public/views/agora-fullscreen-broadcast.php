@@ -28,7 +28,6 @@ $current_user       = wp_get_current_user();
           </div>
         </div>
       </div>
-
       <?php require_once "parts/footer-broadcast.php" ?>
     </section>
     

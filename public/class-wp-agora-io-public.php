@@ -163,6 +163,7 @@ class WP_Agora_Public {
 	  
 	  $scriptUI = $type==='broadcast' ? 'js/broadcast-ui.js' : 'js/communication-ui.js';
 	  wp_enqueue_script( $this->plugin_name.'-ui', plugin_dir_url( __FILE__ ) . $scriptUI, array( 'jquery' ), $this->version, false );
+
 	}
 
 

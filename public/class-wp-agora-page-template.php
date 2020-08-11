@@ -124,6 +124,9 @@ class WP_Agora_PageTemplate {
       // wp_enqueue_style( 'agora-fullscreen',  plugin_dir_url( __FILE__ ) . 'css/wp-agora-fullscreen.css', array(), null, 'all' );
       // wp_enqueue_style( 'agora-styles', plugin_dir_url( __FILE__ ) . 'css/wp-agora-styles2.css', array(), null, 'all' );
 
+      wp_enqueue_script('screen-share', 
+            plugin_dir_url( __FILE__ ) . "js/screen-share.js", array('jquery'), null, true);
+
 
       // Return default template if we don't have a custom one defined
       $template_in_use = get_post_meta( $post->ID, '_wp_page_template', true );
@@ -134,6 +137,7 @@ class WP_Agora_PageTemplate {
       $file = plugin_dir_path(__FILE__) . 'views/' . get_post_meta($post->ID, '_wp_page_template', true);
 
       if (strpos($post->post_content, '[agora-broadcast')!==false) {
+        die($post->post_content);
         $current_user = wp_get_current_user();
         $props = $channel->get_properties();
         if ((int)$props['host']===$current_user->ID) {
@@ -143,8 +147,6 @@ class WP_Agora_PageTemplate {
             plugin_dir_url( __FILE__ ) . "js/agora-broadcast-client.js", array('jquery'), null, true);
           wp_enqueue_script('broadcast-ui', 
             plugin_dir_url( __FILE__ ) . "js/broadcast-ui.js", array('jquery'), null, true);
-          wp_enqueue_script('screen-share', 
-            plugin_dir_url( __FILE__ ) . "js/screen-share.js", array('jquery'), null, true);
         } else {
           $file = str_replace('agora-fullscreen-communication.php', 'agora-fullscreen-audience.php', $file);
           // $agoraUserScript = 'js/agora-broadcast-client.js';

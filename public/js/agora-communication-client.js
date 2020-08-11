@@ -59,6 +59,7 @@ agoraClient.on('stream-added', function (evt) {
   var stream = evt.stream;
   var streamId = stream.getId();
   // AgoraRTC.Logger.info("new stream added: " + streamId);
+
   // Check if the stream is local
   if (streamId != window.localStreams.screen.id) {
     AgoraRTC.Logger.info('subscribe to remote stream:' + streamId);
@@ -76,13 +77,11 @@ agoraClient.on('stream-subscribed', function (evt) {
   // console.log('Stream subscribed:', remoteId);
 
   AgoraRTC.Logger.info("Subscribe remote stream successfully: " + remoteId);
-  // if( jQuery('#video-canvas').is(':empty') ) { 
-  //   mainStreamId = remoteId;
-  //   remoteStream.play('video-canvas');
-  // }
+
+  // show new stream on screen:
   addRemoteStreamView(remoteStream);
   
-  // always is +1 due to the remote streams + local user
+  // always add 1 due to the remote streams + local user
   const usersCount = Object.keys(window.remoteStreams).length + 1
   window.AGORA_UTILS.updateUsersCounter(usersCount)
 });
