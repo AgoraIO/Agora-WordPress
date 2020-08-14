@@ -21,6 +21,10 @@ html, body {
   grid-template-rows: 5% 80% 15%;
   font-family: 14px
 }
+.agora-container.no-footer {
+  grid-template-rows: 6% 94%;
+}
+
 /*  total 100vh - 32px of wp admin bar */
 .agora-fullscreen .agora-container {
   grid-template-rows: 5vh 85vh 10vh;
@@ -50,6 +54,7 @@ html, body {
   background-color: var(--agora-background);
   display: grid;
   grid-template-rows: 12% 88%;
+  overflow: hidden;
 }
 .agora-fullscreen .agora-content {
   grid-template-rows: 8vh 92vh;
@@ -125,9 +130,8 @@ html, body {
 }
 
 .agora .screen {
-  border-radius: 5px;
-  height: 55vh;
-  padding: 0 15px;
+  height: 100%;
+  padding: 0 15px 30px;
 }
 .agora.agora-fullscreen .screen {
   height: 69.5vh;
@@ -153,15 +157,6 @@ html, body {
      object-fit: cover; */
   transform: rotateY(180deg);
 }
-
-/*.agora .screen-users .user:nth-child(2n+1),
-.agora-fullscreen .screen-users .user:nth-child(2n+1) {
-  padding-left: 0;
-}
-.agora .screen-users .user:nth-child(2n),
-.agora-fullscreen .screen-users .user:nth-child(2n) {
-  padding-right: 0;
-}*/
 
 /* screen with 1 user */
 .agora .screen-users-1 .user {
@@ -247,6 +242,9 @@ html, body {
 }
 .agora .fas {
     color: #efefef;
+}
+.agora-audience button .fas {
+  color: #0096E6;
 }
 .btn-group {
     position: relative;
@@ -524,26 +522,28 @@ button.close {
  * Cloud Recording Controls
  */
 .agora .start-rec .inner-icon {
-  background-color: red;
+  background-color: #fff;
   border-radius: 50%;
-  height: 16px;
-  width: 16px;
+  height: 15px;
+  width: 15px;
   min-width: 16px;
+  display: inline-block;
 }
 
 .agora .stop-rec .inner-icon {
   border-radius: 0;
-  width: 12px;
-  height: 12px;
-  background-color: black;
+  width: 15px;
+  height: 15px;
+  background-color: #fff;
+  display: inline-block;
 }
 
 .agora .load-rec .inner-icon {
   display: inline-block;
-  width: 1rem;
-  height: 1rem;
+  width: 16px;
+  height: 16px;
   vertical-align: text-bottom;
-  border: .2em solid red;
+  border: .2em solid #da4964;
   border-right-color: transparent;
   border-radius: 50%;
   -webkit-animation: spinner-border .75s linear infinite;
@@ -552,9 +552,36 @@ button.close {
 
 
 /*
+ * Audience Page styles
+ */
+.agora.agora-audience .overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.agora.agora-audience .overlay button {
+  display: block;
+  /* margin: -50px auto; */
+  color: #0096e6;
+  background: #fff;
+}
+
+.agora.agora-audience .overlay img {
+  height: auto;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.agora.agora-audience .overlay button i {
+  padding: 0 10px;
+}
+
+
+
+/*
  * Responsive Media Queries
  */
-
 @media screen and (max-width: 1023px){
   .agora .screen-users-9-12 .user{
     width: 22%;
