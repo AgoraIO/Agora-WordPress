@@ -170,7 +170,8 @@ $current_user       = wp_get_current_user();
       // set log level:
       // -- .DEBUG for dev 
       // -- .NONE for prod
-      window.agoraLogLevel = window.location.href.indexOf('localhost')>0 ? AgoraRTC.Logger.DEBUG : AgoraRTC.Logger.ERROR;
+      // window.agoraLogLevel = window.location.href.indexOf('localhost')>0 ? AgoraRTC.Logger.DEBUG : AgoraRTC.Logger.ERROR;
+      window.agoraLogLevel = window.location.href.indexOf('localhost')>0 ? AgoraRTC.Logger.ERROR : AgoraRTC.Logger.NONE;
       AgoraRTC.Logger.setLogLevel(window.agoraLogLevel);
       // TODO: set DEBUG or NOE according to the current host (localhost or not)
 

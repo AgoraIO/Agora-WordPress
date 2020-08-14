@@ -57,4 +57,7 @@ $recordingSettings = $channelSettings['recording']; ?>
             <small class="btn-title"><?php _e('Capture', 'agoraio') ?></small>
         </div>
 	</div>
+    <div class="error-container">
+        <span id="error-msg" class="text-danger"></span>
+    </div>
 </footer>

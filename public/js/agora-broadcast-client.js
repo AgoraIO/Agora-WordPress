@@ -109,7 +109,7 @@ function createCameraStream(uid, deviceIds) {
 
 function agoraLeaveChannel() {
 
-  window.agoraClient.leave(function() {
+  window.agoraClient.leave(function callbackLeave() {
     AgoraRTC.Logger.info('client leaves channel');
     window.localStreams.camera.stream.stop() // stop the camera stream playback
     window.localStreams.camera.stream.close(); // clean up and close the camera stream
@@ -120,6 +120,9 @@ function agoraLeaveChannel() {
     jQuery('#exit-btn').prop('disabled', true);
     jQuery("#add-rtmp-btn").prop("disabled", true);
     jQuery("#rtmp-config-btn").prop("disabled", true);
+    jQuery("#cloud-recording-btn").prop("disabled", true);
+
+    window.localStreams.camera.stream = null;
   }, function(err) {
     AgoraRTC.Logger.error('client leave failed ', err); //error handling
   });

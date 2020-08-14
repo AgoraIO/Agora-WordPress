@@ -22,7 +22,7 @@ window.AGORA_SCREENSHARE_UTILS = {
   joinChannelAsScreenShare: function (cb) {
     var userId = null; // window.userID or set to null to auto generate uid on successfull connection
     var successJoin = function(uid) {
-      localStreams.screen.id = uid;  // keep track of the uid of the screen stream.
+      window.localStreams.screen.id = uid;  // keep track of the uid of the screen stream.
       
       // Create the stream for screen sharing.
       var screenStream = AgoraRTC.createStream({
@@ -35,7 +35,7 @@ window.AGORA_SCREENSHARE_UTILS = {
       screenStream.setScreenProfile(screenVideoProfile); // set the profile of the screen
       screenStream.init(function(){
         AgoraRTC.Logger.info("getScreen successful");
-        localStreams.screen.stream = screenStream; // keep track of the screen stream
+        window.localStreams.screen.stream = screenStream; // keep track of the screen stream
         window.screenClient.publish(screenStream, function (err) {
           AgoraRTC.Logger.error("[ERROR] : publish screen stream error: " + err);
         });
@@ -45,13 +45,13 @@ window.AGORA_SCREENSHARE_UTILS = {
         cb(null, true);
       }, function (err) {
         AgoraRTC.Logger.error("[ERROR] : getScreen failed", err);
-        localStreams.screen.id = ""; // reset screen stream id
-        localStreams.screen.stream = {}; // reset the screen stream
+        window.localStreams.screen.id = ""; // reset screen stream id
+        window.localStreams.screen.stream = {}; // reset the screen stream
         window.screenShareActive = false; // resest screenShare
         cb(err, null);
         // window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn(); // toggle the button icon back (will appear disabled)
         if (err&& err.info) {
-          alert(err.info);
+          alert('ScreenShare Error: ' + err.info);
         }
       });
     };

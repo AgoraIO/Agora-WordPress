@@ -6,6 +6,7 @@ window.AGORA_BROADCAST_UI = {
     jQuery("#video-btn").prop("disabled", false);
     jQuery("#exit-btn").prop("disabled", false);
     jQuery("#add-rtmp-btn").prop("disabled", false);
+    jQuery("#cloud-recording-btn").prop("disabled", false);
 
     jQuery("#mic-btn").click(function(){
       window.AGORA_BROADCAST_UI.toggleMic();
@@ -116,16 +117,40 @@ window.AGORA_BROADCAST_UI = {
   },
 
   toggleVideo: function () {
-    window.AGORA_UTILS.toggleBtn(jQuery("#video-btn")); // toggle button colors
-    window.AGORA_UTILS.toggleBtn(jQuery("#cam-dropdown"));
-    if (jQuery("#video-icon").hasClass('fa-video')) {
-      window.localStreams.camera.stream.muteVideo(); // enable the local video
-      // console.log("muteVideo");
-    } else {
-      window.localStreams.camera.stream.unmuteVideo(); // disable the local video
-      // console.log("unMuteVideo");
+    if (window.localStreams.camera.stream) {
+      window.AGORA_UTILS.toggleBtn(jQuery("#video-btn")); // toggle button colors
+      window.AGORA_UTILS.toggleBtn(jQuery("#cam-dropdown"));
+      if (jQuery("#video-icon").hasClass('fa-video')) {
+        window.localStreams.camera.stream.muteVideo(); // enable the local video
+        // console.log("muteVideo");
+      } else {
+        window.localStreams.camera.stream.unmuteVideo(); // disable the local video
+        // console.log("unMuteVideo");
+      }
+      jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
     }
-    jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
+  },
+
+  showErrorMessage: function(error) {
+    if (error) {
+      const ERROR_SHOW_TIME = 10000; // 10 seconds
+      let msg = '';
+      console.error(error);
+      if (error.responseJSON) {
+        msg = Object.values(error.responseJSON.errors).join(', ')
+      } else {
+        msg = typeof error === 'string' ? error : error.toString();
+      }
+
+      console.error('Error:', msg)
+      const errorEl = jQuery('#error-msg');
+      errorEl.html('Agora Error: ' + msg);
+      errorEl.parent().show();
+      setTimeout(function(el) {
+        el.html('');
+        el.parent().hide();
+      }, ERROR_SHOW_TIME, errorEl)
+    }
   },
 
   toggleRecording: function () {
@@ -139,6 +164,8 @@ window.AGORA_BROADCAST_UI = {
       btn.removeClass('start-rec').addClass('load-rec').attr('title', 'Stop Recording');
       console.log("Starting rec...");
       window.AGORA_BROADCAST_UI.startVideoRecording(function(err, res) {
+        if (err) { window.AGORA_BROADCAST_UI.showErrorMessage(err); }
+
         if (res) {
           btn.removeClass('load-rec').addClass('stop-rec');
         } else {
@@ -150,13 +177,15 @@ window.AGORA_BROADCAST_UI = {
       console.log("Stoping rec...");
       window.AGORA_BROADCAST_UI.stopVideoRecording(function(err, res) {
         if (err) {
-          console.error(err);
+          // console.error(err);
+          window.AGORA_BROADCAST_UI.showErrorMessage(err);
         } else {
           if(!res.errors) {
             console.log(res);
             btn.removeClass('stop-rec').addClass('start-rec').attr('title', 'Start Recording');
           } else {
             console.error(res.errors);
+            window.AGORA_BROADCAST_UI.showErrorMessage(res.errors);
           }
         }
       })
@@ -216,9 +245,6 @@ window.AGORA_BROADCAST_UI = {
         cb(res, null);
       }
     }).fail(function(err) {
-      if (err.responseJSON) {
-        console.error('API Error:', err.responseJSON.errors);
-      }
       cb(err, null);
     })
   },
@@ -241,7 +267,7 @@ window.AGORA_BROADCAST_UI = {
       cb(null, res);
 
     }).fail(function(err) {
-      console.error('API Error:', err.responseJSON.errors);
+      console.error('API Error:', err.responseJSON ? err.responseJSON.errors : err);
       cb(err, null);
     })
   },

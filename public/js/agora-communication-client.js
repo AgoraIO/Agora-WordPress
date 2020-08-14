@@ -58,7 +58,7 @@ agoraClient.on('stream-published', function (evt) {
 agoraClient.on('stream-added', function (evt) {
   var stream = evt.stream;
   var streamId = stream.getId();
-  // AgoraRTC.Logger.info("new stream added: " + streamId);
+  AgoraRTC.Logger.info("new stream added: " + streamId);
 
   // Check if the stream is local
   if (streamId != window.localStreams.screen.id) {
@@ -252,8 +252,6 @@ function agoraLeaveChannel() {
 
     jQuery('#rejoin-container').show();
     jQuery('#buttons-container').addClass('hidden');
-
-    jQuery('#slick-avatars').slick('unslick').html('').slick(window.slickSettings);
     
     // show the modal overlay to join
     // jQuery("#modalForm").modal("show"); 

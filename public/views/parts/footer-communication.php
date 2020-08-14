@@ -61,4 +61,7 @@ $recordingSettings = $channelSettings['recording'];
             <small class="btn-title"><?php _e('Chat', 'agoraio') ?></small>
         </div>
 	</div>
+    <div class="error-container">
+        <span id="error-msg" class="text-danger"></span>
+    </div>
 </footer>
