@@ -206,7 +206,7 @@ $current_user       = wp_get_current_user();
         console.log("streaming Injected:", evt);
       });
       window.agoraClient.on('exception', function (ex) {
-        console.log("Agora Exception:", ex);
+        console.error("Agora Exception:", ex);
       });
 
     });// end addEventListener Load

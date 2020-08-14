@@ -165,12 +165,12 @@ window.AGORA_BROADCAST_UI = {
 
   calculateVideoScreenSize: function () {
     var container = jQuery('#full-screen-video');
-    console.log('Video SIZE:', container.outerWidth());
     var size = window.AGORA_BROADCAST_UI.getSizeFromVideoProfile();
 
     // https://math.stackexchange.com/a/180805
     var newHeight = container.outerWidth() * size.height / size.width;
     container.outerHeight(newHeight);
+    console.log('Video SIZE:', newHeight);
   },
 
   getSizeFromVideoProfile: function () {

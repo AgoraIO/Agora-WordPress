@@ -100,18 +100,7 @@ class WP_Agora_PageTemplate {
 
 
       wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-3.0.2.121.js', array('jquery'), null );
-      if (strpos($post->post_content, '[agora-communication')>=0) {
-        $slickURL = plugin_dir_url( __FILE__ ) . 'js/slick-1.8.1/';
-        wp_enqueue_script( 'jquery.slick', $slickURL . 'slick.min.js', array('jquery'), null );
-        wp_enqueue_style( 'jquery.slick.css', $slickURL . 'slick.css', null, null );
-        wp_enqueue_style( 'jquery.slick.theme', $slickURL . 'slick-theme.css', null, null );
-
-        wp_enqueue_script( 'agora-communication-client',
-          plugin_dir_url( __FILE__ ) .'js/agora-communication-client.js', array('jquery'), null, true );
-        wp_enqueue_script( 'agora-communication-ui',
-          plugin_dir_url( __FILE__ ) .'js/communication-ui.js', array('jquery'), null, true );
-      }
-
+      
       $bootstrap_css = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.css';
       $bootstrap_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.js';
       $bootstrap_popper_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/popper.min.js';
@@ -124,34 +113,50 @@ class WP_Agora_PageTemplate {
       // wp_enqueue_style( 'agora-fullscreen',  plugin_dir_url( __FILE__ ) . 'css/wp-agora-fullscreen.css', array(), null, 'all' );
       // wp_enqueue_style( 'agora-styles', plugin_dir_url( __FILE__ ) . 'css/wp-agora-styles2.css', array(), null, 'all' );
 
-      wp_enqueue_script('screen-share', 
-            plugin_dir_url( __FILE__ ) . "js/screen-share.js", array('jquery'), null, true);
+      // duplicated file??
+      // wp_enqueue_script('screen-share', plugin_dir_url( __FILE__ ) . "js/screen-share.js", array('jquery'), null, true);
 
 
       // Return default template if we don't have a custom one defined
       $template_in_use = get_post_meta( $post->ID, '_wp_page_template', true );
       if ( !isset( $this->templates[$template_in_use] ) ) {
         return $template;
-      } 
+      }
 
       $file = plugin_dir_path(__FILE__) . 'views/' . get_post_meta($post->ID, '_wp_page_template', true);
 
-      if (strpos($post->post_content, '[agora-broadcast')!==false) {
-        die($post->post_content);
+      
+      if ( strpos($post->post_content, '[agora-communication')!==FALSE ) {
+        // $slickURL = plugin_dir_url( __FILE__ ) . 'js/slick-1.8.1/';
+        // wp_enqueue_script( 'jquery.slick', $slickURL . 'slick.min.js', array('jquery'), null );
+        // wp_enqueue_style( 'jquery.slick.css', $slickURL . 'slick.css', null, null );
+        // wp_enqueue_style( 'jquery.slick.theme', $slickURL . 'slick-theme.css', null, null );
+
+        wp_enqueue_script( 'agora-communication-client',
+          plugin_dir_url( __FILE__ ) .'js/agora-communication-client.js', array('jquery'), null, true );
+        wp_enqueue_script( 'agora-communication-ui',
+          plugin_dir_url( __FILE__ ) .'js/communication-ui.js', array('jquery'), null, true );
+
+      } else if (strpos($post->post_content, '[agora-broadcast')!==FALSE) {
+      
         $current_user = wp_get_current_user();
         $props = $channel->get_properties();
+        
         if ((int)$props['host']===$current_user->ID) {
-          $file = str_replace('agora-fullscreen-template.php', 'agora-fullscreen-broadcast.php', $file);
+          // die('f1:'. $file);
+          $file = str_replace('agora-fullscreen-communication.php', 'agora-fullscreen-broadcast.php', $file);
 
           wp_enqueue_script('broadcast-client',
             plugin_dir_url( __FILE__ ) . "js/agora-broadcast-client.js", array('jquery'), null, true);
           wp_enqueue_script('broadcast-ui', 
             plugin_dir_url( __FILE__ ) . "js/broadcast-ui.js", array('jquery'), null, true);
         } else {
+          // die('f2:'. $file);
           $file = str_replace('agora-fullscreen-communication.php', 'agora-fullscreen-audience.php', $file);
           // $agoraUserScript = 'js/agora-broadcast-client.js';
         }
       }
+      // die( 'f:' . $file );
 
 
       // Just to be safe, we check if the file exist first

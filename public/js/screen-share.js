@@ -74,7 +74,8 @@ window.AGORA_SCREENSHARE_UTILS = {
     window.screenClient.on('stream-published', function (evt) {
       AgoraRTC.Logger.info("Publish screen stream successfully");
       localStreams.camera.stream.muteVideo(); // disable the local video stream (will send a mute signal)
-      localStreams.camera.stream.stop(); // stop playing the local stream
+      // localStreams.camera.stream.stop(); // stop playing the local stream
+      
       // TODO: add logic to swap main video feed back from container
       if (typeof mainStreamId !== 'undefined') {
         remoteStreams[mainStreamId].stop(); // stop the main video stream playback

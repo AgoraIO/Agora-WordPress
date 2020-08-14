@@ -80,7 +80,8 @@ function createCameraStream(uid, deviceIds) {
   });
 
   localStream.init(function() {
-    window.AGORA_BROADCAST_UI.calculateVideoScreenSize();
+    // window.AGORA_BROADCAST_UI.calculateVideoScreenSize();
+    
     AgoraRTC.Logger.info('getUserMedia successfully');
     localStream.play('full-screen-video'); // play the local stream on the main div
     // publish local stream

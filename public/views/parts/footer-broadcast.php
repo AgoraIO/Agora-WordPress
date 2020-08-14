@@ -35,18 +35,12 @@ $recordingSettings = $channelSettings['recording']; ?>
             !empty($recordingSettings['accessKey'])) : ?>
         <div class="btn-with-title">
             <button id="cloud-recording-btn" type="button" class="btnIcon start-rec" title="<?php _e('Start Recording', 'agoraio'); ?>">
-                <i id="screen-share-icon" class="fas fa-dot-circle"></i>
+                <i id="screen-share-icon" class="fas fa-dot-circle" style="display: none"></i>
+                <i id="screen-share-icon" class="inner-icon"></i>
             </button>
             <small class="btn-title"><?php _e('Record', 'agoraio') ?></small>
         </div>
         <?php endif; ?>
-
-        <div class="btn-with-title">
-    		<button id="participants-btn" type="button" class="btnIcon">
-    			<i id="participants-icon" class="fas fa-users"></i>
-    		</button>
-            <small class="btn-title"><?php _e('Participants', 'agoraio') ?></small>
-        </div>
 
         <div class="btn-with-title">
             <button id="rtmp-config-btn" type="button" class="btnIcon" 
