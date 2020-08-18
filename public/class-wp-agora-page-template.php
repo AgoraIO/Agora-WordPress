@@ -106,8 +106,8 @@ class WP_Agora_PageTemplate {
       $bootstrap_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.js';
       $bootstrap_popper_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/popper.min.js';
       // wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
-      // wp_enqueue_script( 'bootstrap_popper', $bootstrap_popper_js, array('jquery'), null );
-      // wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
+      wp_enqueue_script( 'bootstrap_popper', $bootstrap_popper_js, array('jquery'), null );
+      wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
 
       wp_enqueue_style( 'fontawesome', plugin_dir_url( __FILE__ ) . 'css/fontawesome/css/all.min.css', array(), null, 'all' );
       // wp_enqueue_style( 'agora-fullscreen',  plugin_dir_url( __FILE__ ) . 'css/wp-agora-fullscreen.css', array(), null, 'all' );
