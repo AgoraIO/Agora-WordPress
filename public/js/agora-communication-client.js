@@ -3,7 +3,8 @@
  */
 // create client instances for camera (client) and screen share (screenClient)
 var agoraClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'}); 
-window.screenClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'}); 
+window.screenClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'});
+
 
 // stream references (keep track of active streams) 
 window.remoteStreams = {}; // remote streams obj struct [id : stream] 
@@ -40,6 +41,9 @@ window.AGORA_COMMUNICATION_CLIENT = {
 };
 
 function initClientAndJoinChannel(agoraAppId, channelName) {
+  window.rtmClient = AgoraRTM.createInstance(agoraAppId);
+  window.rtmChannel = rtmClient.createChannel(channelName);
+
   // init Agora SDK
   agoraClient.init(agoraAppId, function () {
     AgoraRTC.Logger.info("AgoraRTC client initialized");
@@ -47,6 +51,53 @@ function initClientAndJoinChannel(agoraAppId, channelName) {
   }, function (err) {
     AgoraRTC.Logger.error("[ERROR] : AgoraRTC client init failed", err);
   });
+
+}
+
+function setupRTMlisteners(uid) {
+
+  window.rtmClient.on('ConnectionStateChange', (newState, reason) => {
+    AgoraRTC.Logger.info('on connection state changed to ' + newState + ' reason: ' + reason);
+  });
+
+  // event listener for receiving a peer-to-peer message.
+  window.rtmClient.on('MessageFromPeer', ({ text }, peerId) => { 
+    // text: text of the received message; peerId: User ID of the sender.
+    console.log('AgoraRTM msg from user ' + peerId + ' recieved: \n' + text);
+  });
+
+  // event listener for receiving a channel message
+  window.rtmChannel.on('ChannelMessage', ({ text }, senderId) => { 
+    // text: text of the received channel message; senderId: user ID of the sender.
+    console.log('AgoraRTM msg from user ' + senderId + ' recieved: \n' + text);
+  });
+
+
+  const token = window.AGORA_TOKEN_UTILS.agoraGenerateToken();
+  const numberUID = uid < 1000 ? uid + 1000 : uid;
+  const finalUID = 'x' + String(numberUID);
+
+  const successToken = (err, token) => {
+    if (err) {
+      console.error('Token error', err);
+      alert('Your Token Server is not Configured, this page will reload!');
+      window.location.reload(true);
+      return;
+    }
+
+    const loginData = { token, uid: finalUID };
+    window.rtmClient.login(loginData).then(() => {
+      console.log('Agora RTM client login success');
+      window.rtmChannel.join().catch(err => {
+        console.error('RTM Join Error', err)
+        window.rtmChannel = false;
+      })
+    }).catch(err => {
+      console.error('Agora RTM login failure!', err);
+    });
+  };
+  
+  window.AGORA_SCREENSHARE_UTILS.agora_generateAjaxTokenRTM(successToken, finalUID);
 }
 
 
@@ -60,13 +111,15 @@ agoraClient.on('stream-added', function (evt) {
   var streamId = stream.getId();
   AgoraRTC.Logger.info("new stream added: " + streamId);
 
-  // Check if the stream is local
+  // Check if the stream is the local screen
   if (streamId != window.localStreams.screen.id) {
     AgoraRTC.Logger.info('subscribe to remote stream:' + streamId);
     // Subscribe to the stream.
     agoraClient.subscribe(stream, function (err) {
       AgoraRTC.Logger.error("[ERROR] : subscribe stream failed", err);
     });
+  } else {
+    // show this stream on main screen
   }
 });
 
@@ -143,6 +196,8 @@ function agoraJoinChannel(channelName) {
     AgoraRTC.Logger.info("User " + uid + " join channel successfully");
     window.localStreams.camera.id = uid; // keep track of the stream uid 
     createCameraStream(uid);
+
+    setupRTMlisteners(uid);
   }, function(err) {
       AgoraRTC.Logger.error("[ERROR] : join channel failed", err);
   });
@@ -199,16 +254,16 @@ function addRemoteStreamView(remoteStream){
   const streamsContainer = jQuery('#screen-users');
 
   streamsContainer.append(
-      jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container'}).append(
-        jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
-            jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
-        ),
-        jQuery('<div/>', {'id': streamId + '_no-video', 'class': 'no-video-overlay text-center'}).append(
-          jQuery('<i/>', {'class': 'fas fa-user'})
-        ),
-        jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
-      )
-    );
+    jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container'}).append(
+      jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
+          jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
+      ),
+      jQuery('<div/>', {'id': streamId + '_no-video', 'class': 'no-video-overlay text-center'}).append(
+        jQuery('<i/>', {'class': 'fas fa-user'})
+      ),
+      jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
+    )
+  );
 
   remoteStream.play('agora_remote_' + streamId);
 

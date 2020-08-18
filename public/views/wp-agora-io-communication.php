@@ -27,13 +27,15 @@ $current_user       = wp_get_current_user();
     // video profile settings
     window.cameraVideoProfile = '<?php echo $instance['videoprofile'] ?>'; // 640x480 @ 30fps & 750kbs
     window.screenVideoProfile = '<?php echo $instance['screenprofile'] ?>';
+    window.agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
+    window.channelName = '<?php echo $channel->title() ?>'; // set channel name
+    window.channelId = '<?php echo $channel->id() ?>'; // set channel name
+    window.userID = parseInt(`${<?php echo $current_user->ID; ?>}`, 10);
+    window.agoraMode = 'communication';
+    
     window.addEventListener('load', function() {
-      window.agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
-      window.channelName = '<?php echo $channel->title() ?>'; // set channel name
-      window.channelId = '<?php echo $channel->id() ?>'; // set channel name
-      window.userID = parseInt(`${<?php echo $current_user->ID; ?>}`, 10);
-      window.agoraMode = 'communication';
-
+      window.agoraLogLevel = window.location.href.indexOf('localhost')>0 ? AgoraRTC.Logger.ERROR : AgoraRTC.Logger.NONE;
+      AgoraRTC.Logger.setLogLevel(window.agoraLogLevel);
       window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel(window.agoraAppId, window.channelName);
     });
 

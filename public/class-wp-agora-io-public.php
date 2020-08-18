@@ -44,18 +44,19 @@ class WP_Agora_Public {
 		}
 
 		$ajaxTokenServer = array($this, 'ajaxTokenServer');
-    add_action( 'wp_ajax_generate_token', $ajaxTokenServer );
-    add_action( 'wp_ajax_nopriv_generate_token', $ajaxTokenServer );
+	    add_action( 'wp_ajax_generate_token', $ajaxTokenServer );
+	    add_action( 'wp_ajax_nopriv_generate_token', $ajaxTokenServer );
 
-    $userAvatarAjax = array($this, 'getUserAvatar');
-    add_action( 'wp_ajax_get_user_avatar', $userAvatarAjax );
-    add_action( 'wp_ajax_nopriv_get_user_avatar', $userAvatarAjax );
+	    $userAvatarAjax = array($this, 'getUserAvatar');
+	    add_action( 'wp_ajax_get_user_avatar', $userAvatarAjax );
+	    add_action( 'wp_ajax_nopriv_get_user_avatar', $userAvatarAjax );
 
-    // Page Template loader for FullScreen
-    require_once plugin_dir_path(dirname( __FILE__ )) . 'public/class-wp-agora-page-template.php';
-    new WP_Agora_PageTemplate($this);
+	    // Page Template loader for FullScreen
+	    require_once plugin_dir_path(dirname( __FILE__ )) . 'public/class-wp-agora-page-template.php';
+	    new WP_Agora_PageTemplate($this);
 
-    require_once(__DIR__.'/../includes/token-server/RtcTokenBuilder.php');
+	    require_once(__DIR__.'/../includes/token-server/RtcTokenBuilder.php');
+	    require_once(__DIR__.'/../includes/token-server/RtmTokenBuilder.php');
 	}
 
 	public function getUserAvatar() {
@@ -79,17 +80,20 @@ class WP_Agora_Public {
 
 
 		$appID = $this->settings['appId'];
-    $appCertificate = $this->settings['appCertificate'];
-    
-    if($appCertificate && strlen($appCertificate)>0) {
+	    $appCertificate = $this->settings['appCertificate'];
+	    
+	    if($appCertificate && strlen($appCertificate)>0) {
 			$cid = isset($_POST['cid']) ? sanitize_key($_POST['cid']) : 0;
-			
+				
 			$current_user = wp_get_current_user();
-    	$uid = isset($_POST['uid']) ? sanitize_key($_POST['uid']) : $current_user->ID; // Get current user id
-    	// die("<pre>".print_r($uid, true)."</pre>");
-    	$uid = intval($uid);
+	    	$uid = isset($_POST['uid']) ? sanitize_key($_POST['uid']) : $current_user->ID; // Get current user id
+	    	// die("<pre>".print_r($uid, true)."</pre>");
+	    	// $uid = intval($uid);
 
-			$token = $this->generateNewToken($cid, $uid);
+	    	// RTM or RTC
+	    	$tokenType = isset($_POST['type']) ? sanitize_key($_POST['type']) : 'RTC';
+
+			$token = $this->generateNewToken($cid, $uid, $tokenType);
 
 			if (is_wp_error( $token )) {
 				header("HTTP/1.1 404 Channel Not Found"); 
@@ -98,37 +102,44 @@ class WP_Agora_Public {
 				return;
 			}
 
-      echo json_encode(array( "token" => $token ));
-    } else {
-      header("HTTP/1.1 400 Token not configured"); 
-			echo '{"error": "Token Server not configured!", "code": "400"}';
-    }
+	      echo json_encode(array( "token" => $token ));
+	    } else {
+	      header("HTTP/1.1 400 Token not configured"); 
+				echo '{"error": "Token Server not configured!", "code": "400"}';
+	    }
 
-    wp_die();
+	    wp_die();
 	}
 
 	//
-	public function generateNewToken($channel_id, $uid) {
+	public function generateNewToken($channel_id, $uid, $tokenType) {
 		$channel = WP_Agora_Channel::get_instance($channel_id);
 		if (!$channel->id()) {
 			return new WP_Error('Channel', 'Channel not found');
 		}
 
 		$appID = $this->settings['appId'];
-    $appCertificate = $this->settings['appCertificate'];
+    	$appCertificate = $this->settings['appCertificate'];
 
 		$channelName = $channel->title();
 		
-    // role should be based on the current user host...
-    // $settings = $channel->get_properties();
-    // $current_user = wp_get_current_user();
+	    // role should be based on the current user host...
+	    // $settings = $channel->get_properties();
+	    // $current_user = wp_get_current_user();
 
-    // TODO: Validate if this should be changed according to the current user and current shortcode from the ajax call...
-    $role = 'Role_Publisher'; 
-    $privilegeExpireTs = 0;
-    $token = AgoraRtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs);
+	    // TODO: Validate if this should be changed according to the current user and current shortcode from the ajax call...
+	    $privilegeExpireTs = 0;
 
-    return $token;
+	    if ($tokenType==='rtm') {
+	    	// $appID, $appCertificate, $userAccount, $role, $privilegeExpireTs
+	    	$role = '1';
+	    	$token = AgoraRtmTokenBuilder::buildToken($appID, $appCertificate, $uid, $role, $privilegeExpireTs);
+	    } else {
+	    	$role = 'Role_Publisher';
+	    	$token = AgoraRtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs);
+	    }
+
+	    return $token;
 	}
 
 	/**  Render Agora Commnication shortcode **/
@@ -156,8 +167,9 @@ class WP_Agora_Public {
 	  wp_enqueue_style( 'fontawesome', $fontawesome, array('bootstrap'), null, 'all' );
 	  
 	  wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-3.0.2.121.js', array('jquery'), null );
-	  wp_enqueue_script( 'bootstrap_popper', $bootstrap_popper_js, array('jquery'), null );
-	  wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
+	  wp_enqueue_script( 'AgoraRTM', plugin_dir_url( __FILE__ ).'js/agora/agora-rtm-sdk-1.2.2.js', array('jquery'), null );
+	  // wp_enqueue_script( 'bootstrap_popper', $bootstrap_popper_js, array('jquery'), null );
+	  // wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
 	  
 	  wp_enqueue_script( $this->plugin_name.'-screen', plugin_dir_url( __FILE__ ) . 'js/screen-share.js', array( 'jquery' ), $this->version, false );
 	  
