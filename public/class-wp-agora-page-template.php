@@ -133,9 +133,9 @@ class WP_Agora_PageTemplate {
         // wp_enqueue_style( 'jquery.slick.theme', $slickURL . 'slick-theme.css', null, null );
 
         wp_enqueue_script( 'agora-communication-client',
-          plugin_dir_url( __FILE__ ) .'js/agora-communication-client.js', array('jquery'), null, true );
+          plugin_dir_url( __FILE__ ) .'js/agora-communication-client.js', array('jquery'), $this->agora->version, true );
         wp_enqueue_script( 'agora-communication-ui',
-          plugin_dir_url( __FILE__ ) .'js/communication-ui.js', array('jquery'), null, true );
+          plugin_dir_url( __FILE__ ) .'js/communication-ui.js', array('jquery'), $this->agora->version, true );
 
       } else if (strpos($post->post_content, '[agora-broadcast')!==FALSE) {
       
@@ -147,9 +147,9 @@ class WP_Agora_PageTemplate {
           $file = str_replace('agora-fullscreen-communication.php', 'agora-fullscreen-broadcast.php', $file);
 
           wp_enqueue_script('broadcast-client',
-            plugin_dir_url( __FILE__ ) . "js/agora-broadcast-client.js", array('jquery'), null, true);
+            plugin_dir_url( __FILE__ ) . "js/agora-broadcast-client.js", array('jquery'), $this->agora->version, true);
           wp_enqueue_script('broadcast-ui', 
-            plugin_dir_url( __FILE__ ) . "js/broadcast-ui.js", array('jquery'), null, true);
+            plugin_dir_url( __FILE__ ) . "js/broadcast-ui.js", array('jquery'), $this->agora->version, true);
         } else {
           // die('f2:'. $file);
           $file = str_replace('agora-fullscreen-communication.php', 'agora-fullscreen-audience.php', $file);

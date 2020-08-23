@@ -12,7 +12,7 @@
 class WP_Agora_Public {
 
 	private $plugin_name;
-	private $version;
+	public $version;
 
 	private static $shortcodeRendered = array();
 
@@ -231,7 +231,7 @@ class WP_Agora_Public {
 		// TODO: Auto detect bootstrap or use a custom one version of bootstrap for CSS Styles
 		$use_bootstrap = false;
 		if($use_bootstrap==='true') {
-			$bootstrap_css = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.css';
+			// $bootstrap_css = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.css';
 			// wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
 		}
 	}
