@@ -52,9 +52,14 @@ window.AGORA_SCREENSHARE_UTILS = {
       screenStream.init(function successInit(){
         AgoraRTC.Logger.info("getScreen successful");
         window.localStreams.screen.stream = screenStream; // keep track of the screen stream
+
+
         window.screenClient.publish(screenStream, function (err) {
           AgoraRTC.Logger.error("[ERROR] : publish screen stream error: " + err);
         });
+
+        // access to real MediaStream from browser:
+        window.localStreams.screen.stream.stream.getVideoTracks()[0].onended = window.AGORA_SCREENSHARE_UTILS.stopScreenShare;
 
         jQuery("#screen-share-btn").prop("disabled", false); // enable button
         window.screenShareActive = true;
@@ -89,7 +94,7 @@ window.AGORA_SCREENSHARE_UTILS = {
 
     window.screenClient.on('stream-published', function (evt) {
       AgoraRTC.Logger.info("Publish screen stream successfully");
-      localStreams.camera.stream.muteVideo(); // disable the local video stream (will send a mute signal)
+      // localStreams.camera.stream.muteVideo(); // disable the local video stream (will send a mute signal)
       // localStreams.camera.stream.stop(); // stop playing the local stream
       
       // TODO: add logic to swap main video feed back from container
@@ -108,7 +113,6 @@ window.AGORA_SCREENSHARE_UTILS = {
     window.screenClient.on('stopScreenSharing', function (evt) {
       AgoraRTC.Logger.info("screen sharing stopped", err);
     });
-
   },
 
   stopScreenShare: function (cb) {
@@ -127,11 +131,42 @@ window.AGORA_SCREENSHARE_UTILS = {
       localStreams.screen.stream.close(); // close the screen client stream
       localStreams.screen.id = ""; // reset the screen id
       localStreams.screen.stream = {}; // reset the stream obj
-      cb(null, true);
+      cb && typeof cb==='function' && cb(null, true);
     }, function(err) {
       AgoraRTC.Logger.info("client leave failed ", err); //error handling
-      cb(err, null);
+      cb && typeof cb==='function' && cb(err, null);
     }); 
+  },
+
+
+  addRemoteScreenshare: function (remoteStream) {
+    const streamsContainer = jQuery('#screen-zone');
+    streamsContainer.toggleClass('sharescreen');
+    
+    const streamId = remoteStream.getId();
+    console.log('Adding remote screen share:', streamId);
+
+    streamsContainer.append(
+      jQuery('<div/>', {'id': streamId + '_container',  'class': 'screenshare-container'}).append(
+        jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
+            jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
+        ),
+        jQuery('<div/>', {'id': streamId + '_no-video', 'class': 'no-video-overlay text-center'}).append(
+          jQuery('<i/>', {'class': 'fas fa-user'})
+        ),
+        jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
+      )
+    );
+
+    const remoteEl = document.getElementById(streamId + '_container');
+    const divWidth = remoteEl.getBoundingClientRect().width;
+    remoteEl.style.height = (divWidth / 1.35) + 'px'; // ratio 16:10
+
+    // Play the new screen stream
+    remoteStream.play('agora_remote_' + streamId);
+    const videoEl = document.getElementById('agora_remote_' + streamId).querySelector('video');
+    videoEl.style.objectFit = 'contain';
+    videoEl.style.objectPosition = 'top';
   },
 
   agora_generateAjaxTokenRTM: function (cb, uid) {

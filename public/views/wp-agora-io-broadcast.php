@@ -22,7 +22,7 @@ $current_user       = wp_get_current_user();
       <div class="agora-content">
         <?php require_once "parts/header-controls.php" ?>
 
-        <div class="screen">
+        <div id="screen-zone" class="screen">
           <div id="screen-users" class="screen-users screen-users-1">
             <div id="full-screen-video" class="user"></div>
           </div>

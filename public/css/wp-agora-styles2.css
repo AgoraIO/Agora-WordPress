@@ -116,8 +116,8 @@ html, body {
 .mute-overlay {
   position: absolute;
   z-index: 2;
-  top: 2px;
-  color: #d9d9d9;
+  bottom: 28px;
+  left: calc(50% - 14px);
   font-size: 1.5em;
   padding: 2px 0 0 2px;
   display: none;
@@ -161,6 +161,24 @@ html, body {
   /* border-radius: 5px;
      object-fit: cover; */
   transform: rotateY(180deg);
+}
+
+.agora .screen.sharescreen {
+  padding: 0;
+}
+.agora .screen.sharescreen .screen-users .user {
+  width: calc(100px * 1.5);
+  height: 100px;
+}
+.agora .screen.sharescreen .screen-users {
+  overflow: hidden;
+  margin: 0;
+  flex-wrap: nowrap;
+}
+
+.agora .screen.sharescreen .screenshare-container {
+  width: 100%;
+  height: 50vh;
 }
 
 /* screen with 1 user */

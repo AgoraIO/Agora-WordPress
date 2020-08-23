@@ -13,9 +13,11 @@ $current_user       = wp_get_current_user();
     <div class="agora-content">
       <?php require_once "parts/header-controls.php" ?>
 
-      <div class="screen">
+      <div id="screen-zone" class="screen">
         <div id="screen-users" class="screen-users screen-users-1">
+
           <div id="local-video" class="user"></div>
+
         </div>
       </div>
     </div>
@@ -32,7 +34,7 @@ $current_user       = wp_get_current_user();
     window.channelId = '<?php echo $channel->id() ?>'; // set channel name
     window.userID = parseInt(`${<?php echo $current_user->ID; ?>}`, 10);
     window.agoraMode = 'communication';
-    
+
     window.addEventListener('load', function() {
       window.agoraLogLevel = window.location.href.indexOf('localhost')>0 ? AgoraRTC.Logger.ERROR : AgoraRTC.Logger.NONE;
       AgoraRTC.Logger.setLogLevel(window.agoraLogLevel);
