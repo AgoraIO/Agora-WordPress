@@ -26,6 +26,7 @@ window.AGORA_COMMUNICATION_UI = {
       var toggleLoader = function(err, next) {
         loaderIcon.hide();
         closeIcon.show();
+        jQuery("#screen-share-btn").prop("disabled", false);
         // TODO: is not needed but I could capture the callback result here...
         if (err) {
           // alert('Ops, this function could not started')
@@ -33,7 +34,7 @@ window.AGORA_COMMUNICATION_UI = {
         }
       }
 
-      jQuery("#screen-share-btn").prop("disabled",true); // disable the button on click
+      jQuery("#screen-share-btn").prop("disabled", true); // disable the button on click
       if(window.screenShareActive){
         window.AGORA_SCREENSHARE_UTILS.stopScreenShare(toggleLoader);
       } else {

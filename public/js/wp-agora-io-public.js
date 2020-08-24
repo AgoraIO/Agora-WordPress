@@ -107,6 +107,28 @@ window.AGORA_UTILS = {
   getMicDevices: getMicDevices,
   getCameraDevices: getCameraDevices,
 
+  showErrorMessage: function(error) {
+    if (error) {
+      const ERROR_SHOW_TIME = 10000; // 10 seconds
+      let msg = '';
+      console.error(error);
+      if (error.responseJSON) {
+        msg = Object.values(error.responseJSON.errors).join(', ')
+      } else {
+        msg = typeof error === 'string' ? error : error.toString();
+      }
+
+      console.error('Error:', msg)
+      const errorEl = jQuery('#error-msg');
+      errorEl.html('Agora Error: ' + msg);
+      errorEl.parent().show();
+      setTimeout(function(el) {
+        el.html('');
+        el.parent().hide();
+      }, ERROR_SHOW_TIME, errorEl)
+    }
+  },
+
   agoraApiRequest: function (endpoint_url, endpoint_data) {
     var ajaxRequestParams = {
       method: 'POST',

@@ -8,6 +8,15 @@ window.AGORA_SCREENSHARE_UTILS = {
 
   // SCREEN SHARING
   initScreenShare: function (cb) {
+
+    // TODO: Validate window.remoteStreams length !== 0 ?
+    if (Object.keys(window.screenshareClients).length>0) {
+      cb('Screen sharing in progress', null);
+      window.AGORA_UTILS.showErrorMessage('There is another screen sharing session in progress');
+      return;
+    }
+
+
     window.screenClient.init(agoraAppId, function (e) {
       AgoraRTC.Logger.info("AgoraRTC screenClient initialized", e);
       window.AGORA_SCREENSHARE_UTILS.joinChannelAsScreenShare(cb);
@@ -47,6 +56,7 @@ window.AGORA_SCREENSHARE_UTILS = {
         video: false,
         screen: true, // screen stream
         mediaSource:  'screen', // Firefox: 'screen', 'application', 'window' (select one)
+        screenAudio: true
       });
       screenStream.setScreenProfile(screenVideoProfile); // set the profile of the screen
       screenStream.init(function successInit(){

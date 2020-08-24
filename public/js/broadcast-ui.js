@@ -131,28 +131,6 @@ window.AGORA_BROADCAST_UI = {
     }
   },
 
-  showErrorMessage: function(error) {
-    if (error) {
-      const ERROR_SHOW_TIME = 10000; // 10 seconds
-      let msg = '';
-      console.error(error);
-      if (error.responseJSON) {
-        msg = Object.values(error.responseJSON.errors).join(', ')
-      } else {
-        msg = typeof error === 'string' ? error : error.toString();
-      }
-
-      console.error('Error:', msg)
-      const errorEl = jQuery('#error-msg');
-      errorEl.html('Agora Error: ' + msg);
-      errorEl.parent().show();
-      setTimeout(function(el) {
-        el.html('');
-        el.parent().hide();
-      }, ERROR_SHOW_TIME, errorEl)
-    }
-  },
-
   toggleRecording: function () {
     if (window.loadingRecord) {
       return false;
@@ -164,7 +142,7 @@ window.AGORA_BROADCAST_UI = {
       btn.removeClass('start-rec').addClass('load-rec').attr('title', 'Stop Recording');
       console.log("Starting rec...");
       window.AGORA_BROADCAST_UI.startVideoRecording(function(err, res) {
-        if (err) { window.AGORA_BROADCAST_UI.showErrorMessage(err); }
+        if (err) { window.AGORA_UTILS.showErrorMessage(err); }
 
         if (res) {
           btn.removeClass('load-rec').addClass('stop-rec');
@@ -178,14 +156,14 @@ window.AGORA_BROADCAST_UI = {
       window.AGORA_BROADCAST_UI.stopVideoRecording(function(err, res) {
         if (err) {
           // console.error(err);
-          window.AGORA_BROADCAST_UI.showErrorMessage(err);
+          window.AGORA_UTILS.showErrorMessage(err);
         } else {
           if(!res.errors) {
             console.log(res);
             btn.removeClass('stop-rec').addClass('start-rec').attr('title', 'Start Recording');
           } else {
             console.error(res.errors);
-            window.AGORA_BROADCAST_UI.showErrorMessage(res.errors);
+            window.AGORA_UTILS.showErrorMessage(res.errors);
           }
         }
       })

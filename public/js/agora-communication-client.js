@@ -57,6 +57,7 @@ function initClientAndJoinChannel(agoraAppId, channelName) {
 function setupRTMlisteners(uid) {
 
   window.rtmClient.on('ConnectionStateChange', (newState, reason) => {
+    alert(newState)
     AgoraRTC.Logger.info('on connection state changed to ' + newState + ' reason: ' + reason);
   });
 
@@ -76,22 +77,6 @@ function setupRTMlisteners(uid) {
 
   window.rtmChannel.on('MemberJoined', memberId => {
     console.log('arrived member', memberId)
-
-    // if i'm sharing my screen, update the new users layouts
-    if (window.localStreams.screen.id && window.localStreams.screen.id>1) {
-      const msg = { 
-        description: undefined,
-        messageType: 'TEXT',
-        rawMessage: undefined,
-        text: window.localStreams.screen.id + ': start screen share'
-      } 
-      const options = { enableHistoricalMessaging: true, enableOfflineMessaging: false };
-      window.rtmClient.sendMessageToPeer(msg, memberId, options).then(() => {
-        // channel message-send success
-      }).catch(error => {
-        console.error('RTM Error', error)
-      });
-    }
   })
 
 
@@ -126,6 +111,12 @@ function processRtmRequest(value) {
   const msgParts = value.split(':');
   if (value.indexOf('start screen share')>0) {
     const uid = msgParts[0];
+    if (window.screenshareClients[uid]) {
+      console.log(uid, 'Already added as screenshare')
+      return;
+    }
+    console.log('Adding remote screen share:', uid)
+
     window.screenshareClients[uid] = 1;
 
     // in case the screen stream is already shown in the layout, it's needed to udpate the layout:
@@ -139,6 +130,7 @@ function processRtmRequest(value) {
       window.AGORA_UTILS.updateUsersCounter(usersCount);
 
       window.AGORA_SCREENSHARE_UTILS.addRemoteScreenshare(screenStream);
+      window.screenshareClients[uid] = screenStream;
     }
   }
 }
@@ -185,6 +177,23 @@ agoraClient.on('stream-subscribed', function (evt) {
     // always add 1 due to the remote streams + local user
     const usersCount = Object.keys(window.remoteStreams).length + 1
     window.AGORA_UTILS.updateUsersCounter(usersCount);
+
+    // if i'm sharing my screen, update the new users layouts
+    if (window.localStreams.screen.id && window.localStreams.screen.id>1) {
+      window.setTimeout(function reportScreenShareOnRTM(){
+        const msg = { 
+          description: undefined,
+          messageType: 'TEXT',
+          rawMessage: undefined,
+          text: window.localStreams.screen.id + ': start screen share'
+        }
+        window.rtmChannel.sendMessage(msg).then(() => {
+          console.log('Reported ScreenShare to RTM channel.')
+        }).catch(error => {
+          console.error('RTM Error', error)
+        });
+      }, 1000);
+    }
   }
   
 });
@@ -203,18 +212,20 @@ agoraClient.on("peer-leave", function(evt) {
   var streamId = evt.stream.getId(); // the the stream id
   jQuery('#uid-'+streamId).remove();
 
-  if(remoteStreams[streamId] !== undefined) {
+  if(window.remoteStreams[streamId] !== undefined) {
     deleteRemoteStream(streamId);
+    // always is +1 due to the remote streams + local user
+    const usersCount = Object.keys(window.remoteStreams).length + 1
+    window.AGORA_UTILS.updateUsersCounter(usersCount)
+  }
 
-    if (window.screenshareClients[streamId]) {
-      const streamsContainer = jQuery('#screen-zone');
-      streamsContainer.toggleClass('sharescreen');
-    } else {
-      // always is +1 due to the remote streams + local user
-      const usersCount = Object.keys(window.remoteStreams).length + 1
-      window.AGORA_UTILS.updateUsersCounter(usersCount)
-    }
-
+  if (window.screenshareClients[streamId]) {
+    window.screenshareClients[streamId].stop && window.screenshareClients[streamId].stop();
+    const remoteContainerID = '#' + streamId + '_container';
+    jQuery(remoteContainerID).empty().remove();
+    const streamsContainer = jQuery('#screen-zone');
+    streamsContainer.toggleClass('sharescreen');
+    delete window.screenshareClients[streamId];
   }
 });
 
@@ -255,11 +266,12 @@ function agoraJoinChannel(channelName) {
   var token = window.AGORA_TOKEN_UTILS.agoraGenerateToken();
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
   agoraClient.join(token, channelName, userId, function(uid) {
+    setupRTMlisteners(uid);
+
     AgoraRTC.Logger.info("User " + uid + " join channel successfully");
     window.localStreams.camera.id = uid; // keep track of the stream uid 
     createCameraStream(uid);
 
-    setupRTMlisteners(uid);
   }, function(err) {
       AgoraRTC.Logger.error("[ERROR] : join channel failed", err);
   });
