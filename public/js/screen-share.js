@@ -69,7 +69,14 @@ window.AGORA_SCREENSHARE_UTILS = {
         });
 
         // access to real MediaStream from browser:
-        window.localStreams.screen.stream.stream.getVideoTracks()[0].onended = window.AGORA_SCREENSHARE_UTILS.stopScreenShare;
+        window.localStreams.screen.stream.stream.getVideoTracks()[0].onended = function() {
+          window.AGORA_SCREENSHARE_UTILS.stopScreenShare();
+          window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn();
+          const loaderIcon = jQuery("#screen-share-btn").find('.spinner-border');
+          const closeIcon = jQuery('#screen-share-icon');
+          loaderIcon.hide();
+          closeIcon.show();
+        }
 
         jQuery("#screen-share-btn").prop("disabled", false); // enable button
         window.screenShareActive = true;

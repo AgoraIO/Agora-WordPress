@@ -92,8 +92,11 @@ html, body {
   border: 1px solid #d94964;
   border-radius: 5px;
   padding: .5em 1em;
-  background-color: #d94964;
   margin-left: 1em;
+}
+.agora .btn-danger,
+.agora .btnIcon.btn-danger {
+  background-color: #d94964;
 }
 
 .agora .icon-cog {

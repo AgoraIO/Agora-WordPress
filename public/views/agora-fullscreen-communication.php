@@ -48,7 +48,7 @@ $current_path = plugins_url('wp-agora-io') . '/public';
 
     window.addEventListener('load', function() {
       window.agoraLogLevel = window.location.href.indexOf('localhost')>0 ? AgoraRTC.Logger.ERROR : AgoraRTC.Logger.NONE;
-      AgoraRTC.Logger.setLogLevel(window.agoraLogLevel);
+      AgoraRTC.Logger.setLogLevel(AgoraRTC.Logger.ERROR);
 
       window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel(window.agoraAppId, window.channelName);
     });

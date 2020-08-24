@@ -34,6 +34,8 @@ window.AGORA_BROADCAST_CLIENT = {
 
 // join a channel
 function agoraJoinChannel() {
+  window.AGORA_RTM_UTILS.setupRTM(window.agoraAppId, window.channelName);
+
   window.agoraToken = window.AGORA_TOKEN_UTILS.agoraGenerateToken(); // rendered on PHP
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
 
@@ -45,9 +47,11 @@ function agoraJoinChannel() {
   });
   
   window.agoraClient.join(window.agoraToken, window.channelName, userId, function(uid) {
-      createCameraStream(uid, {});
-      window.localStreams.uid = uid; // keep track of the stream uid  
-      AgoraRTC.Logger.info('User ' + uid + ' joined channel successfully');
+    window.AGORA_RTM_UTILS.joinRTMChannel(uid);
+    
+    createCameraStream(uid, {});
+    window.localStreams.uid = uid; // keep track of the stream uid  
+    AgoraRTC.Logger.info('User ' + uid + ' joined channel successfully');
   }, function(err) {
       AgoraRTC.Logger.error('[ERROR] : join channel failed', err);
   });
