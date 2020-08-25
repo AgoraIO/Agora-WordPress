@@ -8,6 +8,8 @@ window.AGORA_COMMUNICATION_UI = {
     jQuery("#screen-share-btn").prop("disabled", false);
     jQuery("#exit-btn").prop("disabled", false);
 
+    jQuery('#fullscreen-expand').click(window.AGORA_UTILS.toggleFullscreen);
+
     jQuery("#mic-btn").click(function(){
       window.AGORA_COMMUNICATION_UI.toggleMic(localStream);
     });

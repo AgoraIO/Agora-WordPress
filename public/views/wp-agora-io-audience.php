@@ -19,7 +19,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
 $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
 // die("<pre>".print_r($user_avatar['url'], true)."</pre>");
 ?>
-<div class="agora agora-broadcast agora-audience">
+<div id="agora-root" class="agora agora-broadcast agora-audience">
   <section class="agora-container no-footer">
     <?php require_once "parts/header.php" ?>
 
@@ -59,6 +59,8 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
 
   <script>
     window.addEventListener('load', function() {
+      jQuery('#fullscreen-expand').click(window.AGORA_UTILS.toggleFullscreen);
+      
       var agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
       window.channelName = '<?php echo $channel->title() ?>'; // set channel name
       window.channelId = '<?php echo $channel->id() ?>'; // set channel name

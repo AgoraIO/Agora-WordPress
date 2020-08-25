@@ -16,7 +16,7 @@ $current_path = plugins_url('wp-agora-io') . '/public';
   <?php wp_head() ?>
 </head>
 <body <?php body_class(); ?>>
-  <div class="agora agora-fullscreen">
+  <div id="agora-root" class="agora agora-fullscreen">
     <section class="agora-container">
       <?php require_once "parts/header.php" ?>
 

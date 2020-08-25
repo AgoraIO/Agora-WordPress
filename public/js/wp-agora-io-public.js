@@ -107,6 +107,21 @@ window.AGORA_UTILS = {
   getMicDevices: getMicDevices,
   getCameraDevices: getCameraDevices,
 
+  toggleFullscreen: function() {
+    const root = jQuery('#agora-root');
+    if(document.webkitFullscreenElement) {
+      document.webkitCancelFullScreen();
+      if (root.hasClass('agora-fullscreen')) {
+        root.removeClass('agora-fullscreen')
+      }
+    } else {
+      root[0].webkitRequestFullScreen();
+      if (!root.hasClass('agora-fullscreen')) {
+        root.addClass('agora-fullscreen')
+      }
+    };
+  },
+
   showErrorMessage: function(error) {
     if (error) {
       const ERROR_SHOW_TIME = 10000; // 10 seconds

@@ -8,6 +8,8 @@ window.AGORA_BROADCAST_UI = {
     jQuery("#add-rtmp-btn").prop("disabled", false);
     jQuery("#cloud-recording-btn").prop("disabled", false);
 
+    jQuery('#fullscreen-expand').click(window.AGORA_UTILS.toggleFullscreen);
+
     jQuery("#mic-btn").click(function(){
       window.AGORA_BROADCAST_UI.toggleMic();
     });

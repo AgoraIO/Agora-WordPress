@@ -5,7 +5,7 @@ $videoSettings      = $channelSettings['settings'];
 $appearanceSettings = $channelSettings['appearance'];
 $current_user       = wp_get_current_user();
 ?>
-<div class="agora agora-broadcast">
+<div id="agora-root" class="agora agora-broadcast">
       <?php /* if(is_array($recordingSettings) && 
             !empty($recordingSettings['bucket']) &&
             !empty($recordingSettings['accessKey'])) : ?>
