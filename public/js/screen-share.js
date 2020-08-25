@@ -33,18 +33,14 @@ window.AGORA_SCREENSHARE_UTILS = {
     var userId = null; // window.userID or set to null to auto generate uid on successfull connection
     var successJoin = function(uid) {
 
-      if (window.rtmChannel) {
-        const msg = { 
+      if (window.AGORA_RTM_UTILS) {
+        const msg = {
           description: undefined,
           messageType: 'TEXT',
           rawMessage: undefined,
-          text: uid + ': start screen share'
+          text: `${uid}: start screen share`
         } 
-        window.rtmChannel.sendMessage(msg).then(() => {
-          // channel message-send success
-        }).catch(error => {
-          console.error('RTM Error', error)
-        });
+        window.AGORA_RTM_UTILS.sendChannelMessage(msg);
       }
 
       window.localStreams.screen.id = uid;  // keep track of the uid of the screen stream.

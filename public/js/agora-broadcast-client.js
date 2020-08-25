@@ -47,7 +47,7 @@ function agoraJoinChannel() {
   });
   
   window.agoraClient.join(window.agoraToken, window.channelName, userId, function(uid) {
-    window.AGORA_RTM_UTILS.joinRTMChannel(uid);
+    window.AGORA_RTM_UTILS.joinChannel(uid);
     
     createCameraStream(uid, {});
     window.localStreams.uid = uid; // keep track of the stream uid  

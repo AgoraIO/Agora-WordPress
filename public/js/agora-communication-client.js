@@ -167,7 +167,7 @@ function agoraJoinChannel(channelName) {
   var token = window.AGORA_TOKEN_UTILS.agoraGenerateToken();
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
   agoraClient.join(token, channelName, userId, function(uid) {
-    window.AGORA_RTM_UTILS.joinRTMChannel(uid);
+    window.AGORA_RTM_UTILS.joinChannel(uid);
 
     AgoraRTC.Logger.info("User " + uid + " join channel successfully");
     window.localStreams.camera.id = uid; // keep track of the stream uid 
@@ -271,9 +271,7 @@ function agoraLeaveChannel() {
     jQuery('#buttons-container').addClass('hidden');
 
     // leave also RTM Channel
-    window.rtmChannel.leave().catch(err => {
-      console.error('Failing leaving rtm channel', err)
-    })
+    window.AGORA_RTM_UTILS.leaveChannel();
     
     // show the modal overlay to join
     // jQuery("#modalForm").modal("show"); 

@@ -13,19 +13,20 @@ window.AGORA_RTM_UTILS = {
 		// event listener for receiving a peer-to-peer message.
 		window.rtmClient.on('MessageFromPeer', ({ text }, peerId) => { 
 			// text: text of the received message; peerId: User ID of the sender.
-			console.log('AgoraRTM msg from user ' + peerId + ' received: \n' + text);
+			AgoraRTC.Logger.info('AgoraRTM peer msg from user ' + peerId + ' received: \n' + text);
 			processRtmRequest(text);
 		});
 
 		// event listener for receiving a channel message
 		window.rtmChannel.on('ChannelMessage', ({ text }, senderId) => {
 			// text: text of the received channel message; senderId: user ID of the sender.
-			console.log('AgoraRTM msg from user ' + senderId + ' received: \n' + text);
+			AgoraRTC.Logger.info('AgoraRTM msg from user ' + senderId + ' received: \n' + text);
 			processRtmRequest(text);
 		});
 
 		window.rtmChannel.on('MemberJoined', memberId => {
-			console.log('arrived member', memberId)
+			console.info('arrived joined:', memberId)
+			
 			// if i'm sharing my screen, update the new users layouts
 		    if (window.localStreams.screen.id && window.localStreams.screen.id>1) {
 		      const msg = { 
@@ -34,16 +35,12 @@ window.AGORA_RTM_UTILS = {
 		        rawMessage: undefined,
 		        text: window.localStreams.screen.id + ': start screen share'
 		      }
-		      window.rtmClient.sendMessageToPeer(msg, memberId).then(() => {
-		        console.log('Reported ScreenShare to RTM client.')
-		      }).catch(error => {
-		        console.error('RTM Error', error)
-		      });
+		      window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
 		    }
 		})
 	},
 
-	joinRTMChannel: function(uid) {
+	joinChannel: function(uid) {
 		const token = window.AGORA_TOKEN_UTILS.agoraGenerateToken();
 		const numberUID = uid < 1000 ? uid + 1000 : uid;
 		const finalUID = 'x' + String(numberUID);
@@ -62,7 +59,7 @@ window.AGORA_RTM_UTILS = {
 
 				window.rtmChannel.join().catch(err => {
 					console.error('RTM Join Error', err)
-					window.rtmChannel = false;
+					window.rtmChannel = null;
 				})
 			}).catch(err => {
 				console.error('Agora RTM login failure!', err);
@@ -70,6 +67,28 @@ window.AGORA_RTM_UTILS = {
 		};
 
 		window.AGORA_SCREENSHARE_UTILS.agora_generateAjaxTokenRTM(successToken, finalUID);
+	},
+
+	leaveChannel: function() {
+		window.rtmChannel.leave().catch(err => {
+	      console.error('Failing leaving rtm channel', err)
+	    })
+	},
+
+	sendChannelMessage: function(msg) {
+		window.rtmChannel.sendMessage(msg).then(() => {
+          // channel message-send success
+        }).catch(error => {
+          console.error('RTM Error', error)
+        });
+	},
+
+	sendPeerMessage: function(msg, peerId) {
+		window.rtmClient.sendMessageToPeer(msg, peerId).then(() => {
+			console.info('Reported ScreenShare to RTM client', peerId)
+		}).catch(error => {
+			console.error('RTM Error', error)
+		});
 	}
 }
 
