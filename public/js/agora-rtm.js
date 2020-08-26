@@ -26,6 +26,7 @@ window.AGORA_RTM_UTILS = {
 
 		window.rtmChannel.on('MemberJoined', memberId => {
 			console.info('arrived joined:', memberId);
+			updateUsersCount()
 
 			// if i'm sharing my screen, update the new users layouts
 		    if (window.localStreams.screen.id && window.localStreams.screen.id>1) {
@@ -41,6 +42,8 @@ window.AGORA_RTM_UTILS = {
 
 		window.rtmChannel.on('MemberLeft', memberId => {
 			// TODO: Don something?
+
+			updateUsersCount()
 		})
 
 		window.rtmChannel.onMemberCountUpdated = updateUsersCount;
@@ -102,9 +105,10 @@ window.AGORA_RTM_UTILS = {
 }
 
 
-function updateUsersCount(count) {
-	console.log('USERS ON THIS CHANNEL:', count, window.rtmChannel.memberCount)
-	// jQuery('#count-users').html(window.rtmChannel.memberCount);
+async function updateUsersCount() {
+	const members = await window.rtmChannel.getMembers();
+	// console.log('USERS ON THIS CHANNEL:', members.length)
+	jQuery('#count-users').html(members.length);
 }
 
 function processRtmRequest(value) {
