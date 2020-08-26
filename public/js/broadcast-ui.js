@@ -27,6 +27,31 @@ window.AGORA_BROADCAST_UI = {
       window.AGORA_BROADCAST_CLIENT.agoraLeaveChannel(); 
     });
 
+    jQuery("#screen-share-btn").click(function() {
+      window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn(); // set screen share button icon
+      const loaderIcon = jQuery(this).find('.spinner-border');
+      const closeIcon = jQuery('#screen-share-icon');
+      loaderIcon.show();
+      closeIcon.hide();
+
+      const toggleLoader = function(err, next) {
+        loaderIcon.hide();
+        closeIcon.show();
+        jQuery("#screen-share-btn").prop("disabled", false);
+
+        if (err) {
+          window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn();
+        }
+      }
+
+      jQuery(this).prop("disabled", true); // disable the button on click
+      if(window.screenShareActive){
+        window.AGORA_SCREENSHARE_UTILS.stopScreenShare(toggleLoader);
+      } else {
+        window.AGORA_SCREENSHARE_UTILS.initScreenShare(toggleLoader);
+      }
+    });
+
     jQuery("#start-RTMP-broadcast").click(function(){
       var formValid = document.getElementById('rtmp-config').checkValidity();
       var errorEl = jQuery('#rtmp-error-msg');
@@ -56,30 +81,6 @@ window.AGORA_BROADCAST_UI = {
       jQuery('#add-external-source-modal').modal('toggle');
     });
 
-    jQuery("#screen-share-btn").click(function(){
-      window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn(); // set screen share button icon
-      var loaderIcon = jQuery(this).find('.spinner-border');
-      var closeIcon = jQuery('#screen-share-icon');
-      loaderIcon.show();
-      closeIcon.hide();
-
-      var toggleLoader = function(err, next) {
-        loaderIcon.hide();
-        closeIcon.show();
-        if (err) {
-          window.screenShareActive = false;
-          window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn();
-        }
-        jQuery("#screen-share-btn").prop("disabled", false);
-      }
-
-      jQuery("#screen-share-btn").prop("disabled", true); // disable the button on click
-      if(window.screenShareActive){
-        window.AGORA_SCREENSHARE_UTILS.stopScreenShare(toggleLoader);
-      } else {
-        window.AGORA_SCREENSHARE_UTILS.initScreenShare(toggleLoader);
-      }
-    });
 
     // keyboard listeners 
     jQuery(document).keypress(function(e) {

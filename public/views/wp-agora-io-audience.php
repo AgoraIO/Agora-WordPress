@@ -26,13 +26,13 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
     <div class="agora-content">
       <?php require_once "parts/header-controls.php" ?>
 
-      <div id="splash-screen" class="screen" <?php echo $agoraStyle ?>>
+      <div id="screen-zone" class="screen" <?php echo $agoraStyle ?>>
         <div id="screen-users" class="screen-users screen-users-1">
           <div id="full-screen-video" class="user" style="display: none; <?php echo $screenStyles; ?>"></div>
 
           <div id="watch-live-overlay" class="overlay user">
             <div id="overlay-container">
-              <button id="watch-live-btn" type="button">
+              <button id="watch-live-btn" type="button" class="room-title">
                 <?php if($buttonIcon) { ?>
                   <i id="watch-live-icon" class="fas fa-broadcast-tower"></i>
                 <?php } ?>
@@ -42,7 +42,7 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
           </div>
           <div id="watch-live-closed" class="overlay user" style="display: none">
             <div id="overlay-container">
-              <button id="watch-live--btn" type="button">
+              <button id="watch-live--btn" type="button" class="room-title">
                 <?php if($buttonIcon) { ?>
                   <i id="watch-live-icon" class="fas fa-broadcast-tower"></i>
                 <?php } ?>
@@ -57,29 +57,27 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
 
   </section>
 
+  <?php require_once "parts/scripts-common.php" ?>
   <script>
+    window.agoraCurrentRole = 'audience';
+    window.agoraMode = 'audience';
+    window.remoteStreams = {};
+
+    // set log level:
+    // -- .DEBUG for dev 
+    // -- .NONE for prod
+    window.agoraLogLevel = window.location.href.indexOf('localhost')>0 ? AgoraRTC.Logger.ERROR : AgoraRTC.Logger.ERROR;
+    AgoraRTC.Logger.setLogLevel(window.agoraLogLevel);
+    // window.AGORA_BROADCAST_UI.calculateVideoScreenSize();
+
+
     window.addEventListener('load', function() {
-      jQuery('#fullscreen-expand').click(window.AGORA_UTILS.toggleFullscreen);
-      
-      var agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
-      window.channelName = '<?php echo $channel->title() ?>'; // set channel name
-      window.channelId = '<?php echo $channel->id() ?>'; // set channel name
-      window.agoraCurrentRole = 'audience';
-      window.agoraMode = 'audience';
-      window.remoteStreams = {};
-
-      // create client 
-      // vp8 to work across mobile devices
+      // create client, vp8 to work across mobile devices
       window.agoraClient = AgoraRTC.createClient({mode: 'live', codec: 'vp8'});
-      window.cameraVideoProfile = '<?php echo $instance['videoprofile'] ?>';
-      window.screenVideoProfile = '<?php echo $instance['screenprofile'] ?>';
 
-      // set log level:
-      // -- .DEBUG for dev 
-      // -- .NONE for prod
-      window.agoraLogLevel = window.location.href.indexOf('localhost')>0 ? AgoraRTC.Logger.DEBUG : AgoraRTC.Logger.ERROR;
-      AgoraRTC.Logger.setLogLevel(window.agoraLogLevel);
-      // window.AGORA_BROADCAST_UI.calculateVideoScreenSize();
+      window.AGORA_RTM_UTILS.setupRTM(window.agoraAppId, window.channelName);
+
+      jQuery('#fullscreen-expand').click(window.AGORA_UTILS.toggleFullscreen);
 
       const exitBtn = jQuery('#exit-btn')
       exitBtn.hide();
@@ -103,7 +101,7 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
         // init Agora SDK
         window.agoraClient.init(agoraAppId, function () {
           jQuery("#watch-live-overlay").remove();
-          jQuery("#splash-screen").css('background', 'none')
+          jQuery("#screen-zone").css('background', 'none')
           jQuery("#full-screen-video").fadeIn();
           AgoraRTC.Logger.info('AgoraRTC client initialized');
           joinChannel(); // join channel upon successfull init
@@ -149,17 +147,52 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
       });
 
       window.agoraClient.on('stream-subscribed', function (evt) {
-        var remoteStream = evt.stream;
-        remoteStream.play('full-screen-video');
+        const remoteStream = evt.stream;
+        const remoteId = remoteStream.getId();
         AgoraRTC.Logger.info('Successfully subscribed to remote stream: ' + remoteStream.getId());
+
+        if (window.screenshareClients[remoteId]) {
+          // this is a screen share stream:
+          console.log('Screen stream arrived:');
+          window.AGORA_SCREENSHARE_UTILS.addRemoteScreenshare(remoteStream);
+        } else {
+          remoteStream.play('full-screen-video');
+        }
       });
 
       // remove the remote-container when a user leaves the channel
       window.agoraClient.on('peer-leave', function(evt) {
         AgoraRTC.Logger.info('Remote stream has left the channel: ' + evt.uid);
+        
+        if (!evt || !evt.stream) {
+          console.error('Stream undefined cannot be removed', evt);
+          return false;
+        }
+
+        // debugger;
+        const streamId = evt.stream.getId(); // the the stream id
         evt.stream.stop(); // stop the stream
-        if (jQuery('#full-screen-video').children().length>=0) {
-          finishVideoScreen();
+        jQuery('#uid-'+streamId).remove();
+
+        if(window.remoteStreams[streamId] !== undefined) {
+          window.remoteStreams[streamId].stop(); // stop playing the feed
+          delete window.remoteStreams[streamId]; // remove stream from list
+
+          const usersCount = Object.keys(window.remoteStreams).length;
+          window.AGORA_UTILS.updateUsersCounter(usersCount)
+        }
+
+        if (window.screenshareClients[streamId]) {
+          typeof window.screenshareClients[streamId].stop==='function' && window.screenshareClients[streamId].stop();
+          const remoteContainerID = '#' + streamId + '_container';
+          jQuery(remoteContainerID).empty().remove();
+          const streamsContainer = jQuery('#screen-zone');
+          streamsContainer.toggleClass('sharescreen');
+          delete window.screenshareClients[streamId];
+        } else {
+          if (jQuery('#full-screen-video').children().length>=0) {
+            finishVideoScreen();
+          }
         }
       });
 
@@ -197,7 +230,7 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
 
     // join a channel
     function joinChannel() {
-      const token = agoraGenerateToken();
+      const token = window.AGORA_TOKEN_UTILS.agoraGenerateToken();
 
       // set the role
       window.agoraClient.setClientRole('audience', function() {
@@ -213,6 +246,7 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
       ?>
       window.agoraClient.join(token, channelName, userID, function(uid) {
           AgoraRTC.Logger.info('User ' + uid + ' join channel successfully');
+          window.AGORA_RTM_UTILS.joinChannel(uid);
       }, function(err) {
           AgoraRTC.Logger.error('[ERROR] : join channel failed', err);
       });
@@ -224,26 +258,6 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
       }, function(err) {
         AgoraRTC.Logger.error('client leave failed ', err); //error handling
       });
-    }
-
-    // use tokens for added security
-    function agoraGenerateToken() {
-      return <?php
-      $appID = $agora->settings['appId'];
-      $appCertificate = $agora->settings['appCertificate'];
-      if($appCertificate && strlen($appCertificate)>0) {
-        $channelName = $channel->title();
-        $current_user = wp_get_current_user();
-        $uid = $current_user->ID; // Get urrent user id
-
-        // role should be based on the current user host...
-        $role = 2; // Subscriber
-        $privilegeExpireTs = 0;
-        echo '"'.AgoraRtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs). '"';
-      } else {
-        echo 'null';
-      }
-      ?>;
     }
   </script>
 </div>

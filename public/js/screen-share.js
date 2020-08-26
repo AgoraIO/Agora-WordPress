@@ -1,4 +1,7 @@
 
+window.screenClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'});
+window.screenshareClients = {}; // remote streams from screen shares
+
 window.AGORA_SCREENSHARE_UTILS = {
 
   toggleScreenShareBtn: function () {
@@ -16,13 +19,9 @@ window.AGORA_SCREENSHARE_UTILS = {
       return;
     }
 
-
-    window.screenClient.init(agoraAppId, function (e) {
+    window.screenClient.init(window.agoraAppId, function (e) {
       AgoraRTC.Logger.info("AgoraRTC screenClient initialized", e);
       window.AGORA_SCREENSHARE_UTILS.joinChannelAsScreenShare(cb);
-      // window.screenShareActive = true;
-
-      // TODO: add logic to swap button
     }, function (err) {
       AgoraRTC.Logger.error("[ERROR] : AgoraRTC screenClient init failed", err);
       cb(err, null);
@@ -30,8 +29,8 @@ window.AGORA_SCREENSHARE_UTILS = {
   },
 
   joinChannelAsScreenShare: function (cb) {
-    var userId = null; // window.userID or set to null to auto generate uid on successfull connection
-    var successJoin = function(uid) {
+    const userId = null; // window.userID or set to null to auto generate uid on successfull connection
+    const successJoin = function(uid) {
 
       if (window.AGORA_RTM_UTILS) {
         const msg = {
@@ -51,8 +50,8 @@ window.AGORA_SCREENSHARE_UTILS = {
         audio: false, // Set the audio attribute as false to avoid any echo during the call.
         video: false,
         screen: true, // screen stream
+        screenAudio: true,
         mediaSource:  'screen', // Firefox: 'screen', 'application', 'window' (select one)
-        screenAudio: true
       });
       screenStream.setScreenProfile(screenVideoProfile); // set the profile of the screen
       screenStream.init(function successInit(){
@@ -84,12 +83,12 @@ window.AGORA_SCREENSHARE_UTILS = {
         window.screenShareActive = false; // resest screenShare
         cb(err, null);
         // window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn(); // toggle the button icon back (will appear disabled)
-        if (err&& err.info) {
+        if (err && err.info) {
           alert('ScreenShare Error: ' + err.info);
         }
       });
     };
-    var failedJoin = function(err) {
+    const failedJoin = function(err) {
       AgoraRTC.Logger.error("[ERROR] : join channel as screen-share failed", err);
       cb(err, null);
     };
@@ -130,20 +129,21 @@ window.AGORA_SCREENSHARE_UTILS = {
 
   stopScreenShare: function (cb) {
     localStreams.screen.stream.muteVideo(); // disable the local video stream (will send a mute signal)
-    localStreams.screen.stream.stop(); // stop playing the local stream
-    localStreams.camera.stream.enableVideo(); // enable the camera feed
+    localStreams.screen.stream.isPlaying() && localStreams.screen.stream.stop(); // stop playing the local stream
+    // localStreams.camera.stream.enableVideo(); // enable the camera feed
 
     var videoContainer = window.agoraMode==='communication' ? 'local-video' : 'full-screen-video';
     localStreams.camera.stream.play(videoContainer); // play the camera within the full-screen-video div
     jQuery("#video-btn").prop("disabled",false);
     window.screenClient.leave(function() {
-      window.screenShareActive = false; 
       AgoraRTC.Logger.info("screen client leaves channel");
       jQuery("#screen-share-btn").prop("disabled", false); // enable button
+
       window.screenClient.unpublish(localStreams.screen.stream); // unpublish the screen client
       localStreams.screen.stream.close(); // close the screen client stream
       localStreams.screen.id = ""; // reset the screen id
       localStreams.screen.stream = {}; // reset the stream obj
+      window.screenShareActive = false; 
       cb && typeof cb==='function' && cb(null, true);
     }, function(err) {
       AgoraRTC.Logger.info("client leave failed ", err); //error handling

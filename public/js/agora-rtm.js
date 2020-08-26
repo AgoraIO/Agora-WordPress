@@ -25,11 +25,11 @@ window.AGORA_RTM_UTILS = {
 		});
 
 		window.rtmChannel.on('MemberJoined', memberId => {
-			console.info('arrived joined:', memberId)
-			
+			console.info('arrived joined:', memberId);
+
 			// if i'm sharing my screen, update the new users layouts
 		    if (window.localStreams.screen.id && window.localStreams.screen.id>1) {
-		      const msg = { 
+		      const msg = {
 		        description: undefined,
 		        messageType: 'TEXT',
 		        rawMessage: undefined,
@@ -38,9 +38,15 @@ window.AGORA_RTM_UTILS = {
 		      window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
 		    }
 		})
+
+		window.rtmChannel.on('MemberLeft', memberId => {
+			// TODO: Don something?
+		})
+
+		window.rtmChannel.onMemberCountUpdated = updateUsersCount;
 	},
 
-	joinChannel: function(uid) {
+	joinChannel: function(uid, cb) {
 		const token = window.AGORA_TOKEN_UTILS.agoraGenerateToken();
 		const numberUID = uid < 1000 ? uid + 1000 : uid;
 		const finalUID = 'x' + String(numberUID);
@@ -48,18 +54,21 @@ window.AGORA_RTM_UTILS = {
 		const successToken = (err, token) => {
 			if (err) {
 				console.error('Token error', err);
+				cb && cb(err, null);
 				alert('Your Token Server is not Configured, this page will reload!');
 				window.location.reload(true);
 				return;
 			}
 
 			const loginData = { token, uid: finalUID };
+			console.log('RTM UID:', loginData.uid)
 			window.rtmClient.login(loginData).then(() => {
 				console.log('Agora RTM client login success');
 
-				window.rtmChannel.join().catch(err => {
+				window.rtmChannel.join().then(cb).catch(err => {
 					console.error('RTM Join Error', err)
 					window.rtmChannel = null;
+					cb && cb(err, null)
 				})
 			}).catch(err => {
 				console.error('Agora RTM login failure!', err);
@@ -92,6 +101,12 @@ window.AGORA_RTM_UTILS = {
 	}
 }
 
+
+function updateUsersCount(count) {
+	console.log('USERS ON THIS CHANNEL:', count, window.rtmChannel.memberCount)
+	// jQuery('#count-users').html(window.rtmChannel.memberCount);
+}
+
 function processRtmRequest(value) {
 	const msgParts = value.split(':');
 	if (value.indexOf('start screen share')>0) {
@@ -108,7 +123,7 @@ function processRtmRequest(value) {
 	    if (window.remoteStreams[uid]) {
 	      // first remove the current screen stream from the normal users layout
 	      const screenStream = window.remoteStreams[uid];
-	      deleteRemoteStream(uid);
+	      window.AGORA_UTILS.deleteRemoteStream(uid);
 	      screenStream.stop();
 	      
 	      const usersCount = Object.keys(window.remoteStreams).length + 1

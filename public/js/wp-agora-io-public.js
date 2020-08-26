@@ -120,6 +120,12 @@ window.AGORA_UTILS = {
         root.addClass('agora-fullscreen')
       }
     };
+
+    const remoteEl = document.getQuerySelector('.screenshare-container')
+    if (remoteEl) {
+      const divWidth = remoteEl.getBoundingClientRect().width;
+      remoteEl.style.height = (divWidth / 1.35) + 'px'; // ratio 16:10
+    }
   },
 
   showErrorMessage: function(error) {
@@ -207,5 +213,12 @@ window.AGORA_UTILS = {
 
     // Update users class to keep layout organized
     document.getElementById('screen-users').classList = "screen-users screen-users-" + countClass;
+  },
+
+  deleteRemoteStream: function(streamId) {
+    window.remoteStreams[streamId].stop(); // stop playing the feed
+    delete window.remoteStreams[streamId]; // remove stream from list
+    const remoteContainerID = '#' + streamId + '_container';
+    jQuery(remoteContainerID).empty().remove();
   }
 }

@@ -2,13 +2,10 @@
  * JS Interface for Agora.io SDK
  */
 // create client instances for camera (client) and screen share (screenClient)
-var agoraClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'}); 
-window.screenClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'});
-
+var agoraClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'});
 
 // stream references (keep track of active streams) 
 window.remoteStreams = {}; // remote streams obj struct [id : stream] 
-window.screenshareClients = {}; // remote streams from screen shares
 
 // keep track of streams
 window.localStreams = {
@@ -60,8 +57,8 @@ agoraClient.on('stream-published', function (evt) {
 
 // connect remote streams
 agoraClient.on('stream-added', function (evt) {
-  var stream = evt.stream;
-  var streamId = stream.getId();
+  const stream = evt.stream;
+  const streamId = stream.getId();
   AgoraRTC.Logger.info("new stream added: " + streamId);
 
   // Check if the stream is the local screen
@@ -114,7 +111,7 @@ agoraClient.on("peer-leave", function(evt) {
   jQuery('#uid-'+streamId).remove();
 
   if(window.remoteStreams[streamId] !== undefined) {
-    deleteRemoteStream(streamId);
+    window.AGORA_UTILS.deleteRemoteStream(streamId);
     // always is +1 due to the remote streams + local user
     const usersCount = Object.keys(window.remoteStreams).length + 1
     window.AGORA_UTILS.updateUsersCounter(usersCount)
@@ -129,14 +126,6 @@ agoraClient.on("peer-leave", function(evt) {
     delete window.screenshareClients[streamId];
   }
 });
-
-
-function deleteRemoteStream(streamId) {
-  window.remoteStreams[streamId].stop(); // stop playing the feed
-  delete window.remoteStreams[streamId]; // remove stream from list
-  const remoteContainerID = '#' + streamId + '_container';
-  jQuery(remoteContainerID).empty().remove();
-}
 
 
 // show mute icon whenever a remote has muted their mic

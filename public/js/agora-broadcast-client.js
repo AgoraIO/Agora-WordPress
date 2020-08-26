@@ -4,7 +4,7 @@
 const AGORA_RADIX_DECIMAL = 10;
 const AGORA_RADIX_HEX = 16;
 // stream references (keep track of active streams) 
-var remoteStreams = {}; // remote streams obj struct [id : stream] 
+window.remoteStreams = {}; // remote streams obj struct [id : stream] 
 
 // keep track of streams
 window.localStreams = {
@@ -40,14 +40,16 @@ function agoraJoinChannel() {
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
 
   // set the role
-  window.agoraClient.setClientRole(window.agoraCurrentRole, function() {
-    AgoraRTC.Logger.info('Client role set as host.');
-  }, function(e) {
-    AgoraRTC.Logger.error('setClientRole failed', e);
-  });
+  // window.agoraClient.setClientRole(window.agoraCurrentRole, function() {
+  //   AgoraRTC.Logger.info('Client role set as host.');
+  // }, function(e) {
+  //   AgoraRTC.Logger.error('setClientRole failed', e);
+  // });
   
   window.agoraClient.join(window.agoraToken, window.channelName, userId, function(uid) {
-    window.AGORA_RTM_UTILS.joinChannel(uid);
+    window.AGORA_RTM_UTILS.joinChannel(uid, function(){
+      console.log('RTM Joined!!!')
+    });
     
     createCameraStream(uid, {});
     window.localStreams.uid = uid; // keep track of the stream uid  

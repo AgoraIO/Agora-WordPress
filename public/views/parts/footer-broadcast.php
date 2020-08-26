@@ -29,6 +29,15 @@ $recordingSettings = $channelSettings['recording']; ?>
             <small class="btn-title"><?php _e('Video', 'agoraio') ?></small>
         </div>
 
+        <div class="btn-separator"></div>
+
+        <div class="btn-with-title">
+            <button id="screen-share-btn" type="button" class="btnIcon" title="<?php _e('Screen Share', 'agoraio'); ?>">
+              <i id="screen-share-icon" class="fas fa-desktop"></i>
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none"></span>
+            </button>
+            <small class="btn-title"><?php _e('Share', 'agoraio') ?></small>
+        </div>
 
         <?php if(is_array($recordingSettings) && 
             !empty($recordingSettings['bucket']) &&
@@ -41,6 +50,8 @@ $recordingSettings = $channelSettings['recording']; ?>
             <small class="btn-title"><?php _e('Record', 'agoraio') ?></small>
         </div>
         <?php endif; ?>
+
+        <div class="btn-separator"></div>
 
         <div class="btn-with-title">
             <button id="rtmp-config-btn" type="button" class="btnIcon" 

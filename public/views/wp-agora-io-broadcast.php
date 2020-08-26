@@ -37,30 +37,25 @@ $current_user       = wp_get_current_user();
 
     <?php require_once "parts/modal-external-url.php" ?>    
 
-
+  <?php require_once "parts/scripts-common.php" ?>
   <script>
     /**
      * Agora Broadcast Client 
      */
+    window.agoraCurrentRole = 'host';
+    window.agoraMode = 'audience';
+
     window.addEventListener('load', function() {
       
-      window.agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
-      window.channelName = '<?php echo $channel->title() ?>'; // set channel name
-      window.channelId = '<?php echo $channel->id() ?>'; // set channel name
-      window.agoraCurrentRole = 'host';
-      window.agoraMode = 'audience';
-      window.userID = parseInt(`${<?php echo $current_user->ID; ?>}`, 10);
 
       // create client instance
       window.agoraClient = AgoraRTC.createClient({mode: 'live', codec: 'vp8'}); // h264 better detail at a higher motion
-      window.screenClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'}); 
-
+      
       window.mainStreamId; // reference to main stream
 
       // set video profile 
       // [full list: https://docs.agora.io/en/Interactive%20Broadcast/videoProfile_web?platform=Web#video-profile-table]
-      window.cameraVideoProfile = '<?php echo $instance['videoprofile'] ?>';
-      window.screenVideoProfile = '<?php echo $instance['screenprofile'] ?>';
+      
 
       window.externalBroadcastUrl = '';
       // default config for rtmp
@@ -134,29 +129,6 @@ $current_user       = wp_get_current_user();
       });
     });
 
-    window.AGORA_TOKEN_UTILS = {
-      agoraGenerateToken: agoraGenerateToken
-    }
-    // use tokens for added security...
-    function agoraGenerateToken() {
-      return <?php
-      $appID = $agora->settings['appId'];
-      $appCertificate = $agora->settings['appCertificate'];
-      if($appCertificate && strlen($appCertificate)>0) {
-        $channelName = $channel->title();
-        $current_user = wp_get_current_user();
-        $uid = $current_user->ID; // Get urrent user id
-
-        // role should be based on the current user host...
-        $settings = $channel->get_properties();
-        $role = 1;
-        $privilegeExpireTs = 0;
-        echo '"'.AgoraRtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs). '"';
-      } else {
-        echo 'null';
-      }
-      ?>;
-    }
   </script>
   <style>
     <?php if (isset($appearanceSettings['activeButtonColor']) && $appearanceSettings['activeButtonColor']!=='') { ?>

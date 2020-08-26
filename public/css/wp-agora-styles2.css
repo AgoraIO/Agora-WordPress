@@ -53,6 +53,11 @@ html, body {
 }
 .agora-header .fas {
   cursor: pointer;
+  color: #dfdfdf;
+}
+.agora-header .fas:hover {
+  color: #ffffff;
+  transform: scale(1.2);
 }
 
 .agora-content {
@@ -81,7 +86,7 @@ html, body {
 .agora .room-title {
   color: #6c757e;
   border: 1px solid #d7d7d7;
-  border-radius: 5px;
+  border-radius: 6px;
   padding: .5em 1em;
   background-color: #d7d7d7;
   margin: 0;
@@ -191,6 +196,10 @@ html, body {
 }
 .agora-fullscreen .screen-users-1 .user {
   height: 69.5vh;
+}
+
+.agora.agora-audience .screen-users-1 .user {
+  height: 65vh;
 }
 
 /* screeen with 2 users */
@@ -603,9 +612,18 @@ button.close {
 }
 .agora.agora-audience .overlay button {
   display: block;
-  /* margin: -50px auto; */
   color: #0096e6;
   background: #fff;
+  padding: 12px 22px;
+  transition: background ease 1s, border 1s ease;
+}
+.agora.agora-audience .overlay button:hover {
+  background: #ededed;
+  border-bottom-color: #999;
+  border-right-color: #999;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+  text-decoration: underline;
 }
 
 .agora.agora-audience .overlay img {
