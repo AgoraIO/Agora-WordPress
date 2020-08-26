@@ -133,13 +133,21 @@ html, body {
 .no-video-overlay {
   position: absolute;
   z-index: 3;
-  width: 100%;
+  width: calc(100% - 0.4em);
   top: 40%;
   color: #cccccc;
   font-size: 2.5em;
   margin: 0 auto;
   display: none;
   text-align: center;
+}
+.agora .screen.sharescreen .no-video-overlay {
+  font-size: 1.8em;
+}
+.agora .screen.sharescreen .mute-overlay {
+  font-size: 1.2em;
+  bottom: 8px;
+  left: calc(50% - 10px);
 }
 
 .agora .screen {

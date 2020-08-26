@@ -51,7 +51,7 @@ $recordingSettings = $channelSettings['recording']; ?>
         </div>
         <?php endif; ?>
 
-        <div class="btn-separator"></div>
+        <!-- <div class="btn-separator"></div>
 
         <div class="btn-with-title">
             <button id="rtmp-config-btn" type="button" class="btnIcon" 
@@ -66,7 +66,7 @@ $recordingSettings = $channelSettings['recording']; ?>
     			<i id="add-rtmp-icon" class="fas fa-plug"></i>
     		</button>
             <small class="btn-title"><?php _e('Capture', 'agoraio') ?></small>
-        </div>
+        </div> -->
 	</div>
     <div class="error-container">
         <span id="error-msg" class="text-danger"></span>

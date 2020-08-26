@@ -119,7 +119,7 @@ window.AGORA_SCREENSHARE_UTILS = {
         }
       }
       // localStreams.screen.stream.play('full-screen-video'); // play the screen share as full-screen-video (vortext effect?)
-      jQuery("#video-btn").prop("disabled",true); // disable the video button (as cameara video stream is disabled)
+      // jQuery("#video-btn").prop("disabled",true); // disable the video button (as cameara video stream is disabled)
     });
     
     window.screenClient.on('stopScreenSharing', function (evt) {
@@ -133,8 +133,8 @@ window.AGORA_SCREENSHARE_UTILS = {
     // localStreams.camera.stream.enableVideo(); // enable the camera feed
 
     var videoContainer = window.agoraMode==='communication' ? 'local-video' : 'full-screen-video';
-    localStreams.camera.stream.play(videoContainer); // play the camera within the full-screen-video div
-    jQuery("#video-btn").prop("disabled",false);
+    localStreams.camera.stream && localStreams.camera.stream.play(videoContainer); // play the camera within the full-screen-video div
+    // jQuery("#video-btn").prop("disabled",false);
     window.screenClient.leave(function() {
       AgoraRTC.Logger.info("screen client leaves channel");
       jQuery("#screen-share-btn").prop("disabled", false); // enable button

@@ -148,15 +148,29 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
 
       window.agoraClient.on('stream-subscribed', function (evt) {
         const remoteStream = evt.stream;
-        const remoteId = remoteStream.getId();
-        AgoraRTC.Logger.info('Successfully subscribed to remote stream: ' + remoteStream.getId());
+        const streamId = remoteStream.getId();
+        AgoraRTC.Logger.info('Successfully subscribed to remote stream: ' + streamId);
 
-        if (window.screenshareClients[remoteId]) {
+        if (window.screenshareClients[streamId]) {
           // this is a screen share stream:
           console.log('Screen stream arrived:');
           window.AGORA_SCREENSHARE_UTILS.addRemoteScreenshare(remoteStream);
         } else {
-          remoteStream.play('full-screen-video');
+          const streamsContainer = jQuery('#full-screen-video');
+          streamsContainer.append(
+            jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container'}).append(
+              jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
+                  jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
+              ),
+              jQuery('<div/>', {'id': streamId + '_no-video', 'class': 'no-video-overlay text-center'}).append(
+                jQuery('<i/>', {'class': 'fas fa-user'})
+              ),
+              jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
+            )
+          );
+
+          remoteStream.play('agora_remote_' + streamId);
+          // remoteStream.play('full-screen-video');
         }
       });
 
@@ -171,11 +185,11 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
 
         // debugger;
         const streamId = evt.stream.getId(); // the the stream id
-        evt.stream.stop(); // stop the stream
-        jQuery('#uid-'+streamId).remove();
+        evt.stream.isPlaying() && evt.stream.stop(); // stop the stream
+        // jQuery('#uid-'+streamId).remove();
 
         if(window.remoteStreams[streamId] !== undefined) {
-          window.remoteStreams[streamId].stop(); // stop playing the feed
+          window.remoteStreams[streamId].isPlaying() && window.remoteStreams[streamId].stop(); // stop playing the feed
           delete window.remoteStreams[streamId]; // remove stream from list
 
           const usersCount = Object.keys(window.remoteStreams).length;
@@ -183,7 +197,9 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
         }
 
         if (window.screenshareClients[streamId]) {
-          typeof window.screenshareClients[streamId].stop==='function' && window.screenshareClients[streamId].stop();
+          if (typeof window.screenshareClients[streamId].stop==='function') {
+            window.screenshareClients[streamId].isPlaying() && window.screenshareClients[streamId].stop();
+          }
           const remoteContainerID = '#' + streamId + '_container';
           jQuery(remoteContainerID).empty().remove();
           const streamsContainer = jQuery('#screen-zone');
@@ -196,28 +212,23 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
         }
       });
 
+
       // show mute icon whenever a remote has muted their mic
-      window.agoraClient.on('mute-audio', function (evt) {
-        var remoteId = evt.uid;
+      window.agoraClient.on("mute-audio", function (evt) {
+        window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', true);
       });
 
-      window.agoraClient.on('unmute-audio', function (evt) {
-        var remoteId = evt.uid;
+      window.agoraClient.on("unmute-audio", function (evt) {
+        window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', false);
       });
 
       // show user icon whenever a remote has disabled their video
-      window.agoraClient.on('mute-video', function (evt) {
-        var remoteId = evt.uid;
-        //console.log('Mute video from remote:', remoteId);
-        // jQuery('#user_gravatar_wrapper').toggleClass('d-none');
-        // jQuery('#full-screen-video').children().eq(0).hide();
+      window.agoraClient.on("mute-video", function (evt) {
+        window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', true);
       });
 
-      window.agoraClient.on('unmute-video', function (evt) {
-        var remoteId = evt.uid;
-        // console.log('Unmute video from remote:', remoteId);
-        // jQuery('#user_gravatar_wrapper').toggleClass('d-none');
-        // jQuery('#full-screen-video').children().eq(0).show();
+      window.agoraClient.on("unmute-video", function (evt) {
+        window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', false);
       });
 
       // ingested live stream 

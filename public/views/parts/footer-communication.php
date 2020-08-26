@@ -44,22 +44,22 @@ $recordingSettings = $channelSettings['recording'];
         <?php if(is_array($recordingSettings) && 
             !empty($recordingSettings['bucket']) &&
             !empty($recordingSettings['accessKey'])) : ?>
-        <div class="btn-with-title">
+        <!-- <div class="btn-with-title">
             <button id="cloud-recording-btn" type="button" class="btnIcon start-rec" title="<?php _e('Start Recording', 'agoraio'); ?>">
                 <i id="screen-share-icon" class="fas fa-dot-circle"></i>
             </button>
             <small class="btn-title"><?php _e('Record', 'agoraio') ?></small>
-        </div>
+        </div> -->
         <?php endif; ?>
 
-		<div class="btn-separator"></div>
+		<!-- <div class="btn-separator"></div>
 
         <div class="btn-with-title">
             <button id="chat-btn" class="btnIcon open-chat" title="<?php _e('Open Chat', 'agoraio'); ?>" type="button">
                 <i id="chat-icon" class="fas fa-comment-alt"></i>
             </button>
             <small class="btn-title"><?php _e('Chat', 'agoraio') ?></small>
-        </div>
+        </div> -->
 	</div>
     <div class="error-container">
         <span id="error-msg" class="text-danger"></span>

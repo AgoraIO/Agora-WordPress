@@ -41,12 +41,14 @@ window.AGORA_RTM_UTILS = {
 		})
 
 		window.rtmChannel.on('MemberLeft', memberId => {
-			// TODO: Don something?
-
 			updateUsersCount()
 		})
 
 		window.rtmChannel.onMemberCountUpdated = updateUsersCount;
+
+		window.addEventListener("beforeunload", function(event) {
+			window.AGORA_RTM_UTILS.leaveChannel();
+		});
 	},
 
 	joinChannel: function(uid, cb) {
@@ -105,10 +107,13 @@ window.AGORA_RTM_UTILS = {
 }
 
 
-async function updateUsersCount() {
-	const members = await window.rtmChannel.getMembers();
-	// console.log('USERS ON THIS CHANNEL:', members.length)
-	jQuery('#count-users').html(members.length);
+function updateUsersCount() {
+	window.rtmChannel.getMembers().then(members => {
+		// console.log('USERS ON THIS CHANNEL:', members.length)
+		jQuery('#count-users').html(members.length);
+	}).catch(err => {
+		console.error('Members count error.', err);
+	})
 }
 
 function processRtmRequest(value) {

@@ -121,7 +121,7 @@ window.AGORA_UTILS = {
       }
     };
 
-    const remoteEl = document.getQuerySelector('.screenshare-container')
+    const remoteEl = document.querySelector('.screenshare-container')
     if (remoteEl) {
       const divWidth = remoteEl.getBoundingClientRect().width;
       remoteEl.style.height = (divWidth / 1.35) + 'px'; // ratio 16:10
@@ -164,11 +164,7 @@ window.AGORA_UTILS = {
   },
 
   toggleVisibility: function (elementID, visible) {
-    if (visible) {
-      jQuery(elementID).attr("style", "display:block");
-    } else {
-      jQuery(elementID).attr("style", "display:none");
-    }
+    document.getElementById(elementID.replace('#', '')).style.display = visible ? "block" : "none";
   },
 
   agora_getUserAvatar: function (user_id, cb) {
