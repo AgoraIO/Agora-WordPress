@@ -28,7 +28,127 @@
 })(jQuery,'smartresize');
 
 
+
+function changeStreamSource (deviceIndex, deviceType) {
+  AgoraRTC.Logger.info('Switching stream sources for: ' + deviceType);
+  var deviceId;
+  var existingStream = false;
+  
+  if (deviceType === "video") {
+    deviceId = window.devices.cameras[deviceIndex].deviceId
+  }
+
+  if(deviceType === "audio") {
+    deviceId = window.devices.mics[deviceIndex].deviceId;
+  }
+
+  window.localStreams.camera.stream.switchDevice(deviceType, deviceId, function(){
+    AgoraRTC.Logger.info('successfully switched to new device with id: ' + JSON.stringify(deviceId));
+    // set the active device ids
+    if(deviceType === "audio") {
+      window.localStreams.camera.micId = deviceId;
+    } else if (deviceType === "video") {
+      window.localStreams.camera.camId = deviceId;
+    } else {
+      AgoraRTC.Logger.warning("unable to determine deviceType: " + deviceType);
+    }
+  }, function(){
+    AgoraRTC.Logger.error('failed to switch to new device with id: ' + JSON.stringify(deviceId));
+  });
+}
+
+// helper methods
+function getCameraDevices() {
+  AgoraRTC.Logger.info("Checking for Camera window.devices.....")
+  window.agoraClient.getCameras (function(cameras) {
+    window.devices.cameras = cameras; // store cameras array
+    cameras.forEach(function(camera, i){
+      var name = camera.label.split('(')[0];
+      var optionId = 'camera_' + i;
+      var deviceId = camera.deviceId;
+      if(i === 0 && window.localStreams.camera.camId === ''){
+        window.localStreams.camera.camId = deviceId;
+      }
+      jQuery('#camera-list').append('<a class="dropdown-item" id="' + optionId + '">' + name + '</a>');
+    });
+    jQuery('#camera-list a').click(function(event) {
+      var index = event.target.id.split('_')[1];
+      changeStreamSource (index, "video");
+    });
+  });
+}
+
+function getMicDevices() {
+  AgoraRTC.Logger.info("Checking for Mic window.devices.....")
+  window.agoraClient.getRecordingDevices(function(mics) {
+    window.devices.mics = mics; // store mics array
+    mics.forEach(function(mic, i){
+      var name = mic.label.split('(')[0];
+      var optionId = 'mic_' + i;
+      var deviceId = mic.deviceId;
+      if(i === 0 && window.localStreams.camera.micId === ''){
+        window.localStreams.camera.micId = deviceId;
+      }
+      if(name.split('Default - ')[1] != undefined) {
+        name = '[Default Device]' // rename the default mic - only appears on Chrome & Opera
+      }
+      jQuery('#mic-list').append('<a class="dropdown-item" id="' + optionId + '">' + name + '</a>');
+    }); 
+    jQuery('#mic-list a').click(function(event) {
+      var index = event.target.id.split('_')[1];
+      changeStreamSource (index, "audio");
+    });
+  });
+}
+
+
 window.AGORA_UTILS = {
+
+  getMicDevices: getMicDevices,
+  getCameraDevices: getCameraDevices,
+
+  toggleFullscreen: function() {
+    const root = jQuery('#agora-root');
+    if(document.webkitFullscreenElement) {
+      document.webkitCancelFullScreen();
+      if (root.hasClass('agora-fullscreen')) {
+        root.removeClass('agora-fullscreen')
+      }
+    } else {
+      root[0].webkitRequestFullScreen();
+      if (!root.hasClass('agora-fullscreen')) {
+        root.addClass('agora-fullscreen')
+      }
+    };
+
+    const remoteEl = document.querySelector('.screenshare-container')
+    if (remoteEl) {
+      const divWidth = remoteEl.getBoundingClientRect().width;
+      remoteEl.style.height = (divWidth / 1.35) + 'px'; // ratio 16:10
+    }
+  },
+
+  showErrorMessage: function(error) {
+    if (error) {
+      const ERROR_SHOW_TIME = 10000; // 10 seconds
+      let msg = '';
+      console.error(error);
+      if (error.responseJSON) {
+        msg = Object.values(error.responseJSON.errors).join(', ')
+      } else {
+        msg = typeof error === 'string' ? error : error.toString();
+      }
+
+      console.error('Error:', msg)
+      const errorEl = jQuery('#error-msg');
+      errorEl.html('Agora Error: ' + msg);
+      errorEl.parent().show();
+      setTimeout(function(el) {
+        el.html('');
+        el.parent().hide();
+      }, ERROR_SHOW_TIME, errorEl)
+    }
+  },
 
   agoraApiRequest: function (endpoint_url, endpoint_data) {
     var ajaxRequestParams = {
@@ -44,11 +164,7 @@ window.AGORA_UTILS = {
   },
 
   toggleVisibility: function (elementID, visible) {
-    if (visible) {
-      jQuery(elementID).attr("style", "display:block");
-    } else {
-      jQuery(elementID).attr("style", "display:none");
-    }
+    document.getElementById(elementID.replace('#', '')).style.display = visible ? "block" : "none";
   },
 
   agora_getUserAvatar: function (user_id, cb) {
@@ -65,5 +181,40 @@ window.AGORA_UTILS = {
     }).fail(function(err) {
       console.error('Avatar not available:', err);
     });
+  },
+
+  updateUsersCounter: function(count) {
+    // console.log('updating to', count);
+    jQuery('#count-users').html(count);
+
+    let countClass = count;
+    switch(count) {
+      case 3:
+      case 4:
+        countClass = '3-4';
+        break;
+      case 5:
+      case 6:
+        countClass = '5-6';
+        break;
+      case 7:
+      case 8:
+        countClass = '7-8';
+        break;
+      case 9: case 10:
+      case 11: case 12:
+        countClass = '9-12';
+        break;
+    }
+
+    // Update users class to keep layout organized
+    document.getElementById('screen-users').classList = "screen-users screen-users-" + countClass;
+  },
+
+  deleteRemoteStream: function(streamId) {
+    window.remoteStreams[streamId].stop(); // stop playing the feed
+    delete window.remoteStreams[streamId]; // remove stream from list
+    const remoteContainerID = '#' + streamId + '_container';
+    jQuery(remoteContainerID).empty().remove();
   }
 }

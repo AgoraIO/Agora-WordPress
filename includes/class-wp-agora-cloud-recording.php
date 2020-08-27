@@ -110,7 +110,7 @@ class AgoraCloudRecording {
         $data['uid'] = ''.rand(AGORA_MIN_RAND_VALUE, AGORA_MAX_RAND_VALUE);
 
         $resource = $this->acquire($data);
-        // die("<pre>".print_r($resource, true)."</pre>");
+        // die("R:<pre>".print_r($resource, true)."</pre>");
         $resourceId = $resource->resourceId;
         
         $channel = WP_Agora_Channel::get_instance($data['cid']);
@@ -141,7 +141,8 @@ class AgoraCloudRecording {
         $month = strtolower(date("m", strtotime($t)));
         $year = strtolower(date("Y", strtotime($t)));
         
-        $folderName = $month.$day.$year.preg_replace('/\s+/', '', $channel->title());
+        $fixedTitle = str_replace('-', '', $channel->title());
+        $folderName = $month.$day.$year.preg_replace('/\s+/', '', $fixedTitle);
         $clientRequest->storageConfig->fileNamePrefix = array( $folderName );
         
         $newToken = $this->parent->generateNewToken($data['cid'], $data['uid']);
@@ -154,7 +155,7 @@ class AgoraCloudRecording {
             'clientRequest' => $clientRequest
         );
 
-        // die("<pre>".print_r($params, true)."</pre>");
+        // die("<pre>".print_r($endpoint, true)."</pre>");
         $out = $this->callAPI($endpoint, $params, 'POST');
         if (!is_wp_error( $out )) {
             $out->uid = $data['uid'];

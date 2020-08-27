@@ -4,7 +4,27 @@
 const AGORA_RADIX_DECIMAL = 10;
 const AGORA_RADIX_HEX = 16;
 // stream references (keep track of active streams) 
-var remoteStreams = {}; // remote streams obj struct [id : stream] 
+window.remoteStreams = {}; // remote streams obj struct [id : stream] 
+
+// keep track of streams
+window.localStreams = {
+  uid: '',
+  camera: {
+    camId: '',
+    micId: '',
+    stream: {}
+  },
+  screen: {
+    id: "",
+    stream: {}
+  }
+};
+
+// keep track of devices
+window.devices = {
+  cameras: [],
+  mics: []
+}
 
 window.AGORA_BROADCAST_CLIENT = {
   startLiveTranscoding: startLiveTranscoding,
@@ -14,20 +34,26 @@ window.AGORA_BROADCAST_CLIENT = {
 
 // join a channel
 function agoraJoinChannel() {
+  window.AGORA_RTM_UTILS.setupRTM(window.agoraAppId, window.channelName);
+
   window.agoraToken = window.AGORA_TOKEN_UTILS.agoraGenerateToken(); // rendered on PHP
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
 
   // set the role
-  window.agoraClient.setClientRole(window.agoraCurrentRole, function() {
-    AgoraRTC.Logger.info('Client role set as host.');
-  }, function(e) {
-    AgoraRTC.Logger.error('setClientRole failed', e);
-  });
+  // window.agoraClient.setClientRole(window.agoraCurrentRole, function() {
+  //   AgoraRTC.Logger.info('Client role set as host.');
+  // }, function(e) {
+  //   AgoraRTC.Logger.error('setClientRole failed', e);
+  // });
   
   window.agoraClient.join(window.agoraToken, window.channelName, userId, function(uid) {
-      createCameraStream(uid, {});
-      window.localStreams.uid = uid; // keep track of the stream uid  
-      AgoraRTC.Logger.info('User ' + uid + ' joined channel successfully');
+    window.AGORA_RTM_UTILS.joinChannel(uid, function(){
+      console.log('RTM Joined!!!')
+    });
+    
+    createCameraStream(uid, {});
+    window.localStreams.uid = uid; // keep track of the stream uid  
+    AgoraRTC.Logger.info('User ' + uid + ' joined channel successfully');
   }, function(err) {
       AgoraRTC.Logger.error('[ERROR] : join channel failed', err);
   });
@@ -49,8 +75,8 @@ function createCameraStream(uid, deviceIds) {
   localStream.on("accessAllowed", function() {
     if(window.devices.cameras.length === 0 && window.devices.mics.length === 0) {
       AgoraRTC.Logger.info('[DEBUG] : checking for cameras & mics');
-      getCameraDevices();
-      getMicDevices();
+      window.AGORA_UTILS.getCameraDevices();
+      window.AGORA_UTILS.getMicDevices();
     }
     AgoraRTC.Logger.info("accessAllowed");
   });
@@ -60,7 +86,8 @@ function createCameraStream(uid, deviceIds) {
   });
 
   localStream.init(function() {
-    window.AGORA_BROADCAST_UI.calculateVideoScreenSize();
+    // window.AGORA_BROADCAST_UI.calculateVideoScreenSize();
+    
     AgoraRTC.Logger.info('getUserMedia successfully');
     localStream.play('full-screen-video'); // play the local stream on the main div
     // publish local stream
@@ -88,7 +115,7 @@ function createCameraStream(uid, deviceIds) {
 
 function agoraLeaveChannel() {
 
-  window.agoraClient.leave(function() {
+  window.agoraClient.leave(function callbackLeave() {
     AgoraRTC.Logger.info('client leaves channel');
     window.localStreams.camera.stream.stop() // stop the camera stream playback
     window.localStreams.camera.stream.close(); // clean up and close the camera stream
@@ -99,83 +126,15 @@ function agoraLeaveChannel() {
     jQuery('#exit-btn').prop('disabled', true);
     jQuery("#add-rtmp-btn").prop("disabled", true);
     jQuery("#rtmp-config-btn").prop("disabled", true);
+    jQuery("#cloud-recording-btn").prop("disabled", true);
+
+    window.localStreams.camera.stream = null;
   }, function(err) {
     AgoraRTC.Logger.error('client leave failed ', err); //error handling
   });
 }
 // window.AGORA_BROADCAST_CLIENT.agoraLeaveChannel = agoraLeaveChannel;
 
-function changeStreamSource (deviceIndex, deviceType) {
-  AgoraRTC.Logger.info('Switching stream sources for: ' + deviceType);
-  var deviceId;
-  var existingStream = false;
-  
-  if (deviceType === "video") {
-    deviceId = window.devices.cameras[deviceIndex].deviceId
-  }
-
-  if(deviceType === "audio") {
-    deviceId = window.devices.mics[deviceIndex].deviceId;
-  }
-
-  window.localStreams.camera.stream.switchDevice(deviceType, deviceId, function(){
-    AgoraRTC.Logger.info('successfully switched to new device with id: ' + JSON.stringify(deviceId));
-    // set the active device ids
-    if(deviceType === "audio") {
-      window.localStreams.camera.micId = deviceId;
-    } else if (deviceType === "video") {
-      window.localStreams.camera.camId = deviceId;
-    } else {
-      AgoraRTC.Logger.warning("unable to determine deviceType: " + deviceType);
-    }
-  }, function(){
-    AgoraRTC.Logger.error('failed to switch to new device with id: ' + JSON.stringify(deviceId));
-  });
-}
-
-// helper methods
-function getCameraDevices() {
-  AgoraRTC.Logger.info("Checking for Camera window.devices.....")
-  window.agoraClient.getCameras (function(cameras) {
-    window.devices.cameras = cameras; // store cameras array
-    cameras.forEach(function(camera, i){
-      var name = camera.label.split('(')[0];
-      var optionId = 'camera_' + i;
-      var deviceId = camera.deviceId;
-      if(i === 0 && window.localStreams.camera.camId === ''){
-        window.localStreams.camera.camId = deviceId;
-      }
-      jQuery('#camera-list').append('<a class="dropdown-item" id="' + optionId + '">' + name + '</a>');
-    });
-    jQuery('#camera-list a').click(function(event) {
-      var index = event.target.id.split('_')[1];
-      changeStreamSource (index, "video");
-    });
-  });
-}
-
-function getMicDevices() {
-  AgoraRTC.Logger.info("Checking for Mic window.devices.....")
-  window.agoraClient.getRecordingDevices(function(mics) {
-    window.devices.mics = mics; // store mics array
-    mics.forEach(function(mic, i){
-      var name = mic.label.split('(')[0];
-      var optionId = 'mic_' + i;
-      var deviceId = mic.deviceId;
-      if(i === 0 && window.localStreams.camera.micId === ''){
-        window.localStreams.camera.micId = deviceId;
-      }
-      if(name.split('Default - ')[1] != undefined) {
-        name = '[Default Device]' // rename the default mic - only appears on Chrome & Opera
-      }
-      jQuery('#mic-list').append('<a class="dropdown-item" id="' + optionId + '">' + name + '</a>');
-    }); 
-    jQuery('#mic-list a').click(function(event) {
-      var index = event.target.id.split('_')[1];
-      changeStreamSource (index, "audio");
-    });
-  });
-}
 
 function startLiveTranscoding() {
   AgoraRTC.Logger.info("Start live transcoding..."); 

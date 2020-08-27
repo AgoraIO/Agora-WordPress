@@ -2,15 +2,17 @@
  * JS Interface for Agora.io SDK
  */
 // create client instances for camera (client) and screen share (screenClient)
-var agoraClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'}); 
-window.screenClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'}); 
+var agoraClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'});
 
 // stream references (keep track of active streams) 
-var remoteStreams = {}; // remote streams obj struct [id : stream] 
+window.remoteStreams = {}; // remote streams obj struct [id : stream] 
 
-var localStreams = {
+// keep track of streams
+window.localStreams = {
+  uid: '',
   camera: {
-    id: "",
+    camId: '',
+    micId: '',
     stream: {}
   },
   screen: {
@@ -19,17 +21,25 @@ var localStreams = {
   }
 };
 
+// keep track of devices
+window.devices = {
+  cameras: [],
+  mics: []
+}
+
 var mainStreamId; // reference to main stream
 var screenShareActive = false; // flag for screen share 
 
 window.AGORA_COMMUNICATION_CLIENT = {
   initClientAndJoinChannel: initClientAndJoinChannel,
   agoraJoinChannel: agoraJoinChannel,
-  addRemoteStreamMiniView: addRemoteStreamMiniView,
+  addRemoteStreamView: addRemoteStreamView,
   agoraLeaveChannel: agoraLeaveChannel
 };
 
 function initClientAndJoinChannel(agoraAppId, channelName) {
+  window.AGORA_RTM_UTILS.setupRTM(agoraAppId, channelName);
+
   // init Agora SDK
   agoraClient.init(agoraAppId, function () {
     AgoraRTC.Logger.info("AgoraRTC client initialized");
@@ -37,6 +47,7 @@ function initClientAndJoinChannel(agoraAppId, channelName) {
   }, function (err) {
     AgoraRTC.Logger.error("[ERROR] : AgoraRTC client init failed", err);
   });
+
 }
 
 
@@ -46,49 +57,43 @@ agoraClient.on('stream-published', function (evt) {
 
 // connect remote streams
 agoraClient.on('stream-added', function (evt) {
-  var stream = evt.stream;
-  var streamId = stream.getId();
-  // AgoraRTC.Logger.info("new stream added: " + streamId);
-  // Check if the stream is local
-  if (streamId != localStreams.screen.id) {
+  const stream = evt.stream;
+  const streamId = stream.getId();
+  AgoraRTC.Logger.info("new stream added: " + streamId);
+
+  // Check if the stream is the local screen
+  if (streamId != window.localStreams.screen.id) {
     AgoraRTC.Logger.info('subscribe to remote stream:' + streamId);
     // Subscribe to the stream.
     agoraClient.subscribe(stream, function (err) {
       AgoraRTC.Logger.error("[ERROR] : subscribe stream failed", err);
     });
+  } else {
+    // show this stream on main screen
   }
 });
 
 agoraClient.on('stream-subscribed', function (evt) {
   var remoteStream = evt.stream;
   var remoteId = remoteStream.getId();
-  remoteStreams[remoteId] = remoteStream;
+  window.remoteStreams[remoteId] = remoteStream;
   // console.log('Stream subscribed:', remoteId);
-  const callbackRemoteStreams = function() {
-    AgoraRTC.Logger.info("Subscribe remote stream successfully: " + remoteId);
-    if( jQuery('#video-canvas').is(':empty') ) { 
-      mainStreamId = remoteId;
-      remoteStream.play('video-canvas');
-    } else {
-      addRemoteStreamMiniView(remoteStream);
-    }
+
+  AgoraRTC.Logger.info("Subscribe remote stream successfully: " + remoteId);
+
+  if (window.screenshareClients[remoteId]) {
+    // this is a screen share stream:
+    console.log('Screen stream arrived:');
+    window.AGORA_SCREENSHARE_UTILS.addRemoteScreenshare(remoteStream);
+  } else {
+    // show new stream on screen:
+    addRemoteStreamView(remoteStream);
+
+    // always add 1 due to the remote streams + local user
+    const usersCount = Object.keys(window.remoteStreams).length + 1
+    window.AGORA_UTILS.updateUsersCounter(usersCount);
   }
   
-  const avatarsSlider = jQuery('#slick-avatars');
-  if (avatarsSlider.length>0) {
-    window.AGORA_UTILS.agora_getUserAvatar(remoteId, function(gravatar) {
-      // console.log('callback gravatar:', gravatar);
-      const url = gravatar.avatar.url;
-      // const index = remoteId;
-      const template = '<div id="uid-'+remoteId+'"><div class="avatar-circle"><img src="'+url+'" alt="gravatar" /></div></div>';
-      jQuery('#slick-avatars').slick('slickAdd', template);
-
-      callbackRemoteStreams();
-    });
-  } else {
-    callbackRemoteStreams();
-  }
-
 });
 
 agoraClient.on('stream-removed', function(evt) {
@@ -105,25 +110,23 @@ agoraClient.on("peer-leave", function(evt) {
   var streamId = evt.stream.getId(); // the the stream id
   jQuery('#uid-'+streamId).remove();
 
-  if(remoteStreams[streamId] !== undefined) {
-    remoteStreams[streamId].stop(); // stop playing the feed
-    delete remoteStreams[streamId]; // remove stream from list
-    if (streamId == mainStreamId) {
-      var streamIds = Object.keys(remoteStreams);
-      var randomId = streamIds[Math.floor(Math.random()*streamIds.length)]; // select from the remaining streams
-      if (remoteStreams[randomId]) {
-        remoteStreams[randomId].stop(); // stop the stream's existing playback
-        var remoteContainerID = '#' + randomId + '_container';
-        jQuery(remoteContainerID).empty().remove(); // remove the stream's miniView container
-        remoteStreams[randomId].play('video-canvas'); // play the random stream as the main stream
-        mainStreamId = randomId; // set the new main remote stream
-      }
-    } else {
-      var remoteContainerID = '#' + streamId + '_container';
-      jQuery(remoteContainerID).empty().remove(); // 
-    }
+  if(window.remoteStreams[streamId] !== undefined) {
+    window.AGORA_UTILS.deleteRemoteStream(streamId);
+    // always is +1 due to the remote streams + local user
+    const usersCount = Object.keys(window.remoteStreams).length + 1
+    window.AGORA_UTILS.updateUsersCounter(usersCount)
+  }
+
+  if (window.screenshareClients[streamId]) {
+    typeof window.screenshareClients[streamId].stop==='function' && window.screenshareClients[streamId].stop();
+    const remoteContainerID = '#' + streamId + '_container';
+    jQuery(remoteContainerID).empty().remove();
+    const streamsContainer = jQuery('#screen-zone');
+    streamsContainer.toggleClass('sharescreen');
+    delete window.screenshareClients[streamId];
   }
 });
+
 
 // show mute icon whenever a remote has muted their mic
 agoraClient.on("mute-audio", function (evt) {
@@ -153,9 +156,12 @@ function agoraJoinChannel(channelName) {
   var token = window.AGORA_TOKEN_UTILS.agoraGenerateToken();
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
   agoraClient.join(token, channelName, userId, function(uid) {
+    window.AGORA_RTM_UTILS.joinChannel(uid);
+
     AgoraRTC.Logger.info("User " + uid + " join channel successfully");
-    localStreams.camera.id = uid; // keep track of the stream uid 
+    window.localStreams.camera.id = uid; // keep track of the stream uid 
     createCameraStream(uid);
+
   }, function(err) {
       AgoraRTC.Logger.error("[ERROR] : join channel failed", err);
   });
@@ -170,6 +176,15 @@ function createCameraStream(uid) {
     screen: false
   });
   localStream.setVideoProfile(window.cameraVideoProfile);
+  localStream.on("accessAllowed", function() {
+    if(window.devices.cameras.length === 0 && window.devices.mics.length === 0) {
+      AgoraRTC.Logger.info('[DEBUG] : checking for cameras & mics');
+      window.AGORA_UTILS.getCameraDevices();
+      window.AGORA_UTILS.getMicDevices();
+    }
+    AgoraRTC.Logger.info("accessAllowed");
+  });
+
   localStream.init(function() {
     jQuery('#rejoin-container').hide();
     jQuery('#buttons-container').removeClass('hidden');
@@ -188,7 +203,7 @@ function createCameraStream(uid) {
     });
   
     window.AGORA_COMMUNICATION_UI.enableUiControls(localStream); // move after testing
-    localStreams.camera.stream = localStream; // keep track of the camera stream for later
+    window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
   }, function (err) {
     AgoraRTC.Logger.error("[ERROR] : getUserMedia failed", err);
   });
@@ -196,61 +211,29 @@ function createCameraStream(uid) {
 
 
 // REMOTE STREAMS UI
-function addRemoteStreamMiniView(remoteStream){
-  var streamId = remoteStream.getId();
-  console.log('Adding remote to miniview:', streamId);
+function addRemoteStreamView(remoteStream){
+  const streamId = remoteStream.getId();
+  console.log('Adding remote to main view:', streamId);
   // append the remote stream template to #remote-streams
-  const remoteStreamsDiv = jQuery('#remote-streams');
-  let playerFound = false;
-  if (remoteStreamsDiv.length>0) {
-    playerFound = true;
-    remoteStreamsDiv.append(
-      jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-stream-container col'}).append(
-        jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
-            jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
-        ),
-        jQuery('<div/>', {'id': streamId + '_no-video', 'class': 'no-video-overlay text-center'}).append(
-          jQuery('<i/>', {'class': 'fas fa-user'})
-        ),
-        jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
-      )
-    );
-  } else {
-    const avatarCircleDiv = jQuery('#uid-'+streamId);
-    if (avatarCircleDiv.length>0) {
-      playerFound = true;
-      const circle = avatarCircleDiv.find('.avatar-circle');
-      circle.append(
-        jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-stream-container'}).append(
-          jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
-            jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
-          ),
-          jQuery('<div/>', {'id': streamId + '_no-video', 'class': 'no-video-overlay text-center'}).append(
-            jQuery('<i/>', {'class': 'fas fa-user'})
-          ),
-          jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
-        )
-      )
-      circle.find('img').hide();
-    }
-  }
-  playerFound && remoteStream.play('agora_remote_' + streamId); 
+  const streamsContainer = jQuery('#screen-users');
 
-  var containerId = '#' + streamId + '_container';
-  jQuery(containerId).dblclick(function() {
-    // play selected container as full screen - swap out current full screen stream
-    remoteStreams[mainStreamId].stop(); // stop the main video stream playback
-    addRemoteStreamMiniView(remoteStreams[mainStreamId]); // send the main video stream to a container
-    const parentCircle = jQuery(containerId).parent();
-    if (parentCircle.hasClass('avatar-circle')) {
-      parentCircle.find('img').show();
-    }
-    jQuery(containerId).empty().remove(); // remove the stream's miniView container
-    remoteStreams[streamId].stop() // stop the container's video stream playback
-    remoteStreams[streamId].play('video-canvas'); // play the remote stream as the full screen video
-    mainStreamId = streamId; // set the container stream id as the new main stream id
-  });
+  streamsContainer.append(
+    jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container'}).append(
+      jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
+          jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
+      ),
+      jQuery('<div/>', {'id': streamId + '_no-video', 'class': 'no-video-overlay text-center'}).append(
+        jQuery('<i/>', {'class': 'fas fa-user'})
+      ),
+      jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
+    )
+  );
+
+  remoteStream.play('agora_remote_' + streamId);
 }
+
+
+
 
 function agoraLeaveChannel() {
   
@@ -260,10 +243,10 @@ function agoraLeaveChannel() {
 
   agoraClient.leave(function() {
     AgoraRTC.Logger.info("client leaves channel");
-    localStreams.camera.stream.stop() // stop the camera stream playback
-    agoraClient.unpublish(localStreams.camera.stream); // unpublish the camera stream
-    localStreams.camera.stream.close(); // clean up and close the camera stream
-    jQuery("#remote-streams").empty() // clean up the remote feeds
+    window.localStreams.camera.stream.stop() // stop the camera stream playback
+    agoraClient.unpublish(window.localStreams.camera.stream); // unpublish the camera stream
+    window.localStreams.camera.stream.close(); // clean up and close the camera stream
+    jQuery(".remote-stream-container").empty() // clean up the remote feeds
     //disable the UI elements
     jQuery("#mic-btn").prop("disabled", true);
     jQuery("#video-btn").prop("disabled", true);
@@ -276,7 +259,8 @@ function agoraLeaveChannel() {
     jQuery('#rejoin-container').show();
     jQuery('#buttons-container').addClass('hidden');
 
-    jQuery('#slick-avatars').slick('unslick').html('').slick(window.slickSettings);
+    // leave also RTM Channel
+    window.AGORA_RTM_UTILS.leaveChannel();
     
     // show the modal overlay to join
     // jQuery("#modalForm").modal("show"); 

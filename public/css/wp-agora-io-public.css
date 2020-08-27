@@ -37,24 +37,7 @@ body .agora {
   align-items: center;
 }
 
-.agora .controls-top #cloud-recording-container {
-  position: absolute;
-  left: 15px;
-  z-index: 99;
-}
-
-#cloud-recording-container .btn {
-  border-radius: 50%;
-  background: white;
-  width: 40px;
-  height: 40px;
-  /* border: 1px solid #efefef; */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 10px 0px #999 !important;
-}
-#cloud-recording-container .start-rec .inner-icon {
+.agora .start-rec .inner-icon {
   background-color: red;
   border-radius: 50%;
   height: 16px;
@@ -62,14 +45,14 @@ body .agora {
   min-width: 16px;
 }
 
-#cloud-recording-container .stop-rec .inner-icon {
+.agora .stop-rec .inner-icon {
   border-radius: 0;
   width: 12px;
   height: 12px;
   background-color: black;
 }
 
-#cloud-recording-container .load-rec .inner-icon {
+.agora .load-rec .inner-icon {
   display: inline-block;
   width: 1rem;
   height: 1rem;
@@ -81,16 +64,11 @@ body .agora {
   animation: spinner-border .75s linear infinite;
 }
 
-.agora .controls-top #buttons-container,
-.agora .controls-top #screen-share-btn-container {
+.agora .controls-top #buttons-container {
   position: absolute;
   z-index: 2;
   width: 100%;
   top: 0;
-}
-.agora .controls-top #screen-share-btn-container {
-  right: 0;
-  z-index: 9;
 }
 
 .agora-broadcast #lower-ui-bar {

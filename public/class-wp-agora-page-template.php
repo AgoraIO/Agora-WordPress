@@ -31,7 +31,7 @@ class WP_Agora_PageTemplate {
     add_filter( 'template_include', array( $this, 'view_project_template') );
 
     // Add your templates to this array.
-    $this->templates = array( 'agora-fullscreen-template.php' => 'Agora.io FullScreen');
+    $this->templates = array( 'agora-fullscreen-communication.php' => 'Agora.io FullScreen');
   }
 
   public function add_new_template( $posts_templates ) {
@@ -100,56 +100,64 @@ class WP_Agora_PageTemplate {
 
 
       wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-3.0.2.121.js', array('jquery'), null );
-      if (strpos($post->post_content, '[agora-communication')>=0) {
-        $slickURL = plugin_dir_url( __FILE__ ) . 'js/slick-1.8.1/';
-        wp_enqueue_script( 'jquery.slick', $slickURL . 'slick.min.js', array('jquery'), null );
-        wp_enqueue_style( 'jquery.slick.css', $slickURL . 'slick.css', null, null );
-        wp_enqueue_style( 'jquery.slick.theme', $slickURL . 'slick-theme.css', null, null );
-
-        wp_enqueue_script( 'agora-communication-client',
-          plugin_dir_url( __FILE__ ) .'js/agora-communication-client.js', array('jquery'), null, true );
-        wp_enqueue_script( 'agora-communication-ui',
-          plugin_dir_url( __FILE__ ) .'js/communication-ui.js', array('jquery'), null, true );
-      }
-
+      wp_enqueue_script( 'AgoraRTM', plugin_dir_url( __FILE__ ).'js/agora/agora-rtm-sdk-1.2.2.js', array('jquery'), null );
+      wp_enqueue_script( 'AgoraRTM-setup', plugin_dir_url( __FILE__ ).'js/agora-rtm.js', array('AgoraRTM'), $this->agora->version, true );
+      
       $bootstrap_css = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.css';
       $bootstrap_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.js';
       $bootstrap_popper_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/popper.min.js';
-      wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
+      // wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
       wp_enqueue_script( 'bootstrap_popper', $bootstrap_popper_js, array('jquery'), null );
       wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
 
-      wp_enqueue_style( 'fontawesome',
-        plugin_dir_url( __FILE__ ) . 'css/fontawesome/css/all.min.css', array(), null, 'all' );
-      wp_enqueue_style( 'agora-fullscreen',
-        plugin_dir_url( __FILE__ ) . 'css/wp-agora-fullscreen.css', array(), null, 'all' );
+      wp_enqueue_style( 'fontawesome', plugin_dir_url( __FILE__ ) . 'css/fontawesome/css/all.min.css', array(), null, 'all' );
+      // wp_enqueue_style( 'agora-fullscreen',  plugin_dir_url( __FILE__ ) . 'css/wp-agora-fullscreen.css', array(), null, 'all' );
+      // wp_enqueue_style( 'agora-styles', plugin_dir_url( __FILE__ ) . 'css/wp-agora-styles2.css', array(), null, 'all' );
+
+      // duplicated file??
+      // wp_enqueue_script('screen-share', plugin_dir_url( __FILE__ ) . "js/screen-share.js", array('jquery'), null, true);
 
 
       // Return default template if we don't have a custom one defined
       $template_in_use = get_post_meta( $post->ID, '_wp_page_template', true );
       if ( !isset( $this->templates[$template_in_use] ) ) {
         return $template;
-      } 
+      }
 
       $file = plugin_dir_path(__FILE__) . 'views/' . get_post_meta($post->ID, '_wp_page_template', true);
 
-      if (strpos($post->post_content, '[agora-broadcast')!==false) {
+      
+      if ( strpos($post->post_content, '[agora-communication')!==FALSE ) {
+        // $slickURL = plugin_dir_url( __FILE__ ) . 'js/slick-1.8.1/';
+        // wp_enqueue_script( 'jquery.slick', $slickURL . 'slick.min.js', array('jquery'), null );
+        // wp_enqueue_style( 'jquery.slick.css', $slickURL . 'slick.css', null, null );
+        // wp_enqueue_style( 'jquery.slick.theme', $slickURL . 'slick-theme.css', null, null );
+
+        wp_enqueue_script( 'agora-communication-client',
+          plugin_dir_url( __FILE__ ) .'js/agora-communication-client.js', array('jquery'), $this->agora->version, true );
+        wp_enqueue_script( 'agora-communication-ui',
+          plugin_dir_url( __FILE__ ) .'js/communication-ui.js', array('jquery'), $this->agora->version, true );
+
+      } else if (strpos($post->post_content, '[agora-broadcast')!==FALSE) {
+      
         $current_user = wp_get_current_user();
         $props = $channel->get_properties();
+        
         if ((int)$props['host']===$current_user->ID) {
-          $file = str_replace('agora-fullscreen-template.php', 'agora-fullscreen-broadcast.php', $file);
+          // die('f1:'. $file);
+          $file = str_replace('agora-fullscreen-communication.php', 'agora-fullscreen-broadcast.php', $file);
 
           wp_enqueue_script('broadcast-client',
-            plugin_dir_url( __FILE__ ) . "js/agora-broadcast-client.js", array('jquery'), null, true);
+            plugin_dir_url( __FILE__ ) . "js/agora-broadcast-client.js", array('jquery'), $this->agora->version, true);
           wp_enqueue_script('broadcast-ui', 
-            plugin_dir_url( __FILE__ ) . "js/broadcast-ui.js", array('jquery'), null, true);
-          wp_enqueue_script('screen-share', 
-            plugin_dir_url( __FILE__ ) . "js/screen-share.js", array('jquery'), null, true);
+            plugin_dir_url( __FILE__ ) . "js/broadcast-ui.js", array('jquery'), $this->agora->version, true);
         } else {
-          $file = str_replace('agora-fullscreen-template.php', 'agora-fullscreen-audience.php', $file);
+          // die('f2:'. $file);
+          $file = str_replace('agora-fullscreen-communication.php', 'agora-fullscreen-audience.php', $file);
           // $agoraUserScript = 'js/agora-broadcast-client.js';
         }
       }
+      // die( 'f:' . $file );
 
 
       // Just to be safe, we check if the file exist first

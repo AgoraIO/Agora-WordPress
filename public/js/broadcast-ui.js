@@ -6,6 +6,9 @@ window.AGORA_BROADCAST_UI = {
     jQuery("#video-btn").prop("disabled", false);
     jQuery("#exit-btn").prop("disabled", false);
     jQuery("#add-rtmp-btn").prop("disabled", false);
+    jQuery("#cloud-recording-btn").prop("disabled", false);
+
+    jQuery('#fullscreen-expand').click(window.AGORA_UTILS.toggleFullscreen);
 
     jQuery("#mic-btn").click(function(){
       window.AGORA_BROADCAST_UI.toggleMic();
@@ -22,6 +25,31 @@ window.AGORA_BROADCAST_UI = {
     jQuery("#exit-btn").click(function(){
       console.log("so sad to see you leave the channel");
       window.AGORA_BROADCAST_CLIENT.agoraLeaveChannel(); 
+    });
+
+    jQuery("#screen-share-btn").click(function() {
+      window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn(); // set screen share button icon
+      const loaderIcon = jQuery(this).find('.spinner-border');
+      const closeIcon = jQuery('#screen-share-icon');
+      loaderIcon.show();
+      closeIcon.hide();
+
+      const toggleLoader = function(err, next) {
+        loaderIcon.hide();
+        closeIcon.show();
+        jQuery("#screen-share-btn").prop("disabled", false);
+
+        if (err) {
+          window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn();
+        }
+      }
+
+      jQuery(this).prop("disabled", true); // disable the button on click
+      if(window.screenShareActive){
+        window.AGORA_SCREENSHARE_UTILS.stopScreenShare(toggleLoader);
+      } else {
+        window.AGORA_SCREENSHARE_UTILS.initScreenShare(toggleLoader);
+      }
     });
 
     jQuery("#start-RTMP-broadcast").click(function(){
@@ -53,30 +81,6 @@ window.AGORA_BROADCAST_UI = {
       jQuery('#add-external-source-modal').modal('toggle');
     });
 
-    jQuery("#screen-share-btn").click(function(){
-      window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn(); // set screen share button icon
-      var loaderIcon = jQuery(this).find('.spinner-border');
-      var closeIcon = jQuery('#screen-share-icon');
-      loaderIcon.show();
-      closeIcon.hide();
-
-      var toggleLoader = function(err, next) {
-        loaderIcon.hide();
-        closeIcon.show();
-        if (err) {
-          window.screenShareActive = false;
-          window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn();
-        }
-        jQuery("#screen-share-btn").prop("disabled", false);
-      }
-
-      jQuery("#screen-share-btn").prop("disabled", true); // disable the button on click
-      if(window.screenShareActive){
-        window.AGORA_SCREENSHARE_UTILS.stopScreenShare(toggleLoader);
-      } else {
-        window.AGORA_SCREENSHARE_UTILS.initScreenShare(toggleLoader);
-      }
-    });
 
     // keyboard listeners 
     jQuery(document).keypress(function(e) {
@@ -116,16 +120,18 @@ window.AGORA_BROADCAST_UI = {
   },
 
   toggleVideo: function () {
-    window.AGORA_UTILS.toggleBtn(jQuery("#video-btn")); // toggle button colors
-    window.AGORA_UTILS.toggleBtn(jQuery("#cam-dropdown"));
-    if (jQuery("#video-icon").hasClass('fa-video')) {
-      window.localStreams.camera.stream.muteVideo(); // enable the local video
-      // console.log("muteVideo");
-    } else {
-      window.localStreams.camera.stream.unmuteVideo(); // disable the local video
-      // console.log("unMuteVideo");
+    if (window.localStreams.camera.stream) {
+      window.AGORA_UTILS.toggleBtn(jQuery("#video-btn")); // toggle button colors
+      window.AGORA_UTILS.toggleBtn(jQuery("#cam-dropdown"));
+      if (jQuery("#video-icon").hasClass('fa-video')) {
+        window.localStreams.camera.stream.muteVideo(); // enable the local video
+        // console.log("muteVideo");
+      } else {
+        window.localStreams.camera.stream.unmuteVideo(); // disable the local video
+        // console.log("unMuteVideo");
+      }
+      jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
     }
-    jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
   },
 
   toggleRecording: function () {
@@ -139,6 +145,8 @@ window.AGORA_BROADCAST_UI = {
       btn.removeClass('start-rec').addClass('load-rec').attr('title', 'Stop Recording');
       console.log("Starting rec...");
       window.AGORA_BROADCAST_UI.startVideoRecording(function(err, res) {
+        if (err) { window.AGORA_UTILS.showErrorMessage(err); }
+
         if (res) {
           btn.removeClass('load-rec').addClass('stop-rec');
         } else {
@@ -150,13 +158,15 @@ window.AGORA_BROADCAST_UI = {
       console.log("Stoping rec...");
       window.AGORA_BROADCAST_UI.stopVideoRecording(function(err, res) {
         if (err) {
-          console.error(err);
+          // console.error(err);
+          window.AGORA_UTILS.showErrorMessage(err);
         } else {
           if(!res.errors) {
             console.log(res);
             btn.removeClass('stop-rec').addClass('start-rec').attr('title', 'Start Recording');
           } else {
             console.error(res.errors);
+            window.AGORA_UTILS.showErrorMessage(res.errors);
           }
         }
       })
@@ -165,12 +175,12 @@ window.AGORA_BROADCAST_UI = {
 
   calculateVideoScreenSize: function () {
     var container = jQuery('#full-screen-video');
-    console.log('Video SIZE:', container.outerWidth());
     var size = window.AGORA_BROADCAST_UI.getSizeFromVideoProfile();
 
     // https://math.stackexchange.com/a/180805
     var newHeight = container.outerWidth() * size.height / size.width;
     container.outerHeight(newHeight);
+    console.log('Video SIZE:', newHeight);
   },
 
   getSizeFromVideoProfile: function () {
@@ -216,9 +226,6 @@ window.AGORA_BROADCAST_UI = {
         cb(res, null);
       }
     }).fail(function(err) {
-      if (err.responseJSON) {
-        console.error('API Error:', err.responseJSON.errors);
-      }
       cb(err, null);
     })
   },
@@ -241,7 +248,7 @@ window.AGORA_BROADCAST_UI = {
       cb(null, res);
 
     }).fail(function(err) {
-      console.error('API Error:', err.responseJSON.errors);
+      console.error('API Error:', err.responseJSON ? err.responseJSON.errors : err);
       cb(err, null);
     })
   },
