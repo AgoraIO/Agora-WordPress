@@ -66,7 +66,7 @@ agoraClient.on('stream-subscribed', function (evt) {
   // console.log('Stream subscribed:', remoteId);
   const callbackRemoteStreams = function() {
     AgoraRTC.Logger.info("Subscribe remote stream successfully: " + remoteId);
-    if( jQuery('#video-canvas').is(':empty') ) { 
+    if(jQuery('#video-canvas').is(':empty') ) { 
       mainStreamId = remoteId;
       remoteStream.play('video-canvas');
     } else {
@@ -205,7 +205,7 @@ function addRemoteStreamMiniView(remoteStream){
   if (remoteStreamsDiv.length>0) {
     playerFound = true;
     remoteStreamsDiv.append(
-      jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-stream-container col'}).append(
+      jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-streams-container col'}).append(
         jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
             jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
         ),
@@ -221,7 +221,7 @@ function addRemoteStreamMiniView(remoteStream){
       playerFound = true;
       const circle = avatarCircleDiv.find('.avatar-circle');
       circle.append(
-        jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-stream-container'}).append(
+        jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-streams-container'}).append(
           jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
             jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
           ),

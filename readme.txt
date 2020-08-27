@@ -4,7 +4,7 @@ Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
 Tested up to: 5.4
 Requires PHP: 7.2
-Stable tag: 1.5.2
+Stable tag: 1.6.2
 Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -123,6 +123,11 @@ Version 1.5.2
 Updated to resolves issues with saving Agora Settings created by previous hotfix. Release resolves issues:
 - [52](https://github.com/AgoraIO/Agora-Word-Press/issues/52) 
 
+Version 1.6.2
+Updated to resolves issues with with screen sharing in Chrome browser. Resolves issue with injected stream not displaying in broadcast channel. Release resolves issues:
+- [42](https://github.com/AgoraIO/Agora-Word-Press/issues/42) 
+- [60](https://github.com/AgoraIO/Agora-Word-Press/issues/60) 
+
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
@@ -150,5 +155,5 @@ Updated to resolves issues with saving Agora Settings created by previous hotfix
   Browsers require a secure connection (HTTPS) for accessing a device's microphone and camera. When testing locally, localhost is a whitelisted URL but once you deploy to production you will need to have a secure connection for the plugin to function properly.
 
 == Upgrade Notice ==
-Version 1.5.2 updates to resolve issues with saving Settings.
+Version 1.6.2 updates to resolve issues with stream inject and screen sharing in Chrome browser.
 ...

@@ -29,9 +29,10 @@ window.AGORA_SCREENSHARE_UTILS = {
         audio: false, // Set the audio attribute as false to avoid any echo during the call.
         video: false,
         screen: true, // screen stream
-        extensionId: 'minllpmhdgpndnkomcoccfekfegnlikg', // Google Chrome:
-        mediaSource:  'screen', // Firefox: 'screen', 'application', 'window' (select one)
+        screenAudio: true,
+        mediaSource: 'screen'
       });
+
       screenStream.setScreenProfile(screenVideoProfile); // set the profile of the screen
       screenStream.init(function(){
         AgoraRTC.Logger.info("getScreen successful");
@@ -137,5 +138,5 @@ window.AGORA_SCREENSHARE_UTILS = {
       }
     })
     
-  }
+  },
 }
