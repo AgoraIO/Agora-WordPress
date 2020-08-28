@@ -45,6 +45,8 @@ class AgoraCloudRecording {
             $out = $this->stopRecording($_POST);
         } else if ($action==='query-recording') {
             $out = $this->queryRecording($_POST);
+        } else if ($action==='updateLayout') {
+            $out = $this->updateLayout($_POST);
         } else {
             $out = array('error' => 'SDK Action not defined!');
         }
@@ -77,6 +79,35 @@ class AgoraCloudRecording {
             'clientRequest' => json_decode("{}")
         );
         return $this->callAPI($endpoint, $params, 'POST');
+    }
+
+    private function updateLayout($data) {
+        
+        if (isset($data['resourceId']) && !empty($data['resourceId'])) {
+           $resourceId = $data['resourceId'];
+        } else {
+            $resource = $this->acquire($data);
+            $resourceId = $resource->resourceId;
+        }
+
+        if (!isset($data['recordingId']) ) {
+            return new WP_Error( 'data', "Incomplete data", $data );
+        }
+        
+        $endpointUL = $this->settings['appId'].'/cloud_recording/resourceid/' . $resourceId . '/sid/' . $sid. '/mode/mix/updateLayout';
+
+        $clientRequest = new stdClass();
+        $clientRequest->mixedVideoLayout = 1; // best fit layout
+        $clientRequest->backgroundColor = "#000000";
+
+        $params = array(
+            'cname' => $data['cname'],
+            'uid' => $data['uid'],
+            'clientRequest' => $clientRequest
+        );
+        // header('HTTP/1.1 500 Internal Server Error');
+        // die("<pre>QUERY:".print_r($endpoint, true)."</pre>");
+        return $this->callAPI($endpointUL, $params, 'POST');
     }
 
     private function queryRecording($data) {
@@ -126,6 +157,13 @@ class AgoraCloudRecording {
         $clientRequest = new stdClass();
         $clientRequest->recordingConfig = new stdClass();
         $clientRequest->recordingConfig->channelType = 1; // 1 = broadcast,  0=Communication
+        $clientRequest->recordingConfig->transcodingConfig = new stdClass();
+        $clientRequest->recordingConfig->transcodingConfig->mixedVideoLayout = 1; // best fit layout
+        $clientRequest->recordingConfig->transcodingConfig->backgroundColor = "#000000";
+        $clientRequest->recordingConfig->transcodingConfig->width = 848;
+        $clientRequest->recordingConfig->transcodingConfig->height = 480;
+        $clientRequest->recordingConfig->transcodingConfig->bitrate = 930;
+        $clientRequest->recordingConfig->transcodingConfig->fps = 30;
 
         // $clientRequest->recordingConfig->subscribeVideoUids
         // $clientRequest->recordingConfig->subscribeAudioUids

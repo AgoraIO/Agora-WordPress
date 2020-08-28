@@ -24,7 +24,10 @@ $current_user       = wp_get_current_user();
 
         <div id="screen-zone" class="screen">
           <div id="screen-users" class="screen-users screen-users-1">
-            <div id="full-screen-video" class="user"></div>
+            <div id="full-screen-video" class="user">
+              <div id="mute-overlay" class="mute-overlay"><i class="fas fa-microphone-slash"></i></div>
+              <div id="no-local-video" class="no-video-overlay text-center"><i class="fas fa-user"></i></div>
+            </div>
           </div>
         </div>
       </div>
@@ -43,13 +46,9 @@ $current_user       = wp_get_current_user();
      * Agora Broadcast Client 
      */
     window.agoraCurrentRole = 'host';
-    window.agoraMode = 'audience';
+    window.agoraMode = 'broadcast';
 
     window.addEventListener('load', function() {
-      
-
-      // create client instance
-      window.agoraClient = AgoraRTC.createClient({mode: 'live', codec: 'vp8'}); // h264 better detail at a higher motion
       
       window.mainStreamId; // reference to main stream
 
@@ -99,14 +98,14 @@ $current_user       = wp_get_current_user();
       // set log level:
       // -- .DEBUG for dev 
       // -- .NONE for prod
-      window.agoraLogLevel = window.location.href.indexOf('local')>0 ? AgoraRTC.Logger.DEBUG : AgoraRTC.Logger.ERROR;
+      window.agoraLogLevel = window.location.href.indexOf('local')>0 ? AgoraRTC.Logger.ERROR : AgoraRTC.Logger.ERROR;
       AgoraRTC.Logger.setLogLevel(window.agoraLogLevel);
       // TODO: set DEBUG or NOE according to the current host (localhost or not)
 
       // init Agora SDK
       window.agoraClient.init(window.agoraAppId, function () {
         AgoraRTC.Logger.info('AgoraRTC client initialized');
-        agoraJoinChannel(); // join channel upon successfull init
+        window.AGORA_BROADCAST_CLIENT.agoraJoinChannel(); // join channel upon successfull init
       }, function (err) {
         AgoraRTC.Logger.error('[ERROR] : AgoraRTC client init failed', err);
       });
