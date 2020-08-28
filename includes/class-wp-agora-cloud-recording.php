@@ -107,7 +107,7 @@ class AgoraCloudRecording {
         );
         // header('HTTP/1.1 500 Internal Server Error');
         // die("<pre>QUERY:".print_r($endpoint, true)."</pre>");
-        return $this->callAPI($endpointUL, array(), 'POST');
+        return $this->callAPI($endpointUL, $params, 'POST');
     }
 
     private function queryRecording($data) {
