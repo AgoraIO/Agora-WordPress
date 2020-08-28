@@ -194,6 +194,10 @@ function loadHostBroadcastUsers(usersRaw) {
 }
 
 function renderUserChip(userId, name) {
+	if (!userId || !name) {
+		return;
+	}
+	
 	const chipHTML = `
 	<div class="chip" data-user-id="${userId}">
 	  <img src="%img_avatar%" alt="user-${userId}" width="96" height="96">
