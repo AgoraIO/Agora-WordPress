@@ -188,7 +188,7 @@ class WP_Agora_Public {
 	        'screen' => 'false',
 	        'background' => '',
 	        'screenprofile' => '720p_1',
-	        'videoprofile' => '720p_5' // https://docs.agora.io/en/Video/API%20Reference/web/interfaces/agorartc.stream.html#setvideoprofile
+	        'videoprofile' => '480p_9' // https://docs.agora.io/en/Video/API%20Reference/web/interfaces/agorartc.stream.html#setvideoprofile
 	      ), $attrs, $shortcode );
 
 	  if(!$instance) { $instance = []; }

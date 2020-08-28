@@ -160,10 +160,10 @@ class AgoraCloudRecording {
         $clientRequest->recordingConfig->transcodingConfig = new stdClass();
         $clientRequest->recordingConfig->transcodingConfig->mixedVideoLayout = 1; // best fit layout
         $clientRequest->recordingConfig->transcodingConfig->backgroundColor = "#000000";
-        $clientRequest->recordingConfig->transcodingConfig->width = 1024;
-        $clientRequest->recordingConfig->transcodingConfig->height = 768;
-        $clientRequest->recordingConfig->transcodingConfig->bitrate = 500;
-        $clientRequest->recordingConfig->transcodingConfig->fps = 15;
+        $clientRequest->recordingConfig->transcodingConfig->width = 848;
+        $clientRequest->recordingConfig->transcodingConfig->height = 480;
+        $clientRequest->recordingConfig->transcodingConfig->bitrate = 930;
+        $clientRequest->recordingConfig->transcodingConfig->fps = 30;
 
         // $clientRequest->recordingConfig->subscribeVideoUids
         // $clientRequest->recordingConfig->subscribeAudioUids
