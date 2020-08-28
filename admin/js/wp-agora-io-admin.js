@@ -168,6 +168,7 @@ function showAddMoreUsersRow() {
 }
 
 function toggleAddMoreUsersRow(show) {
+	jQuery('#add-user-error-msg').hide();
 	const rootBtn = jQuery('#add-more-users');
 	const row = jQuery('#add-more-users-controls');
 
@@ -292,6 +293,14 @@ function renderUserChip(userId, name) {
 	function addBroadcastUser() {
 		const userId = $('#host').val();
 		const name = $("#host option:selected").text();
+
+		const existing = jQuery('#broadcast-users-list').find('[data-user-id="'+userId+'"]');
+		if (existing.length>0) {
+			jQuery('#add-user-error-msg').show();
+			return;
+		} else {
+			jQuery('#add-user-error-msg').hide();
+		}
 
 		renderUserChip(userId, name);
 	}

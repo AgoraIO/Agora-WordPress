@@ -227,6 +227,9 @@ function render_agoraio_channel_form_settings($channel) {
               <span id="add-more-loader" class="agora-loader" style="display: none">
                 <img src="<?php echo plugin_dir_url(__DIR__ . '/../index.php') ?>css/loader.svg" width="38" alt="agora-loader" />
               </span>
+              <span id="add-user-error-msg" class="notice notice-error" style="display:none">
+                <?php _e('User already added.', 'agoraio') ?>
+              </span>
             </div>
 
           </td>
