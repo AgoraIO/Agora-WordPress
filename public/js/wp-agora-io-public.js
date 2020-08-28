@@ -434,11 +434,11 @@ window.AGORA_CLOUD_RECORDING = {
       resourceId: window.resourceId,
       recordingId: window.recordingId
     };
-    window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
-      console.log('Query:', res);
+    // window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
+    //   console.log('Query:', res);
 
-    }).fail(function(err) {
-      console.error('API Error:',err);
-    })
+    // }).fail(function(err) {
+    //   console.error('API Error:',err);
+    // })
   }
 }
