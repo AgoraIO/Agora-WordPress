@@ -22,7 +22,8 @@ function renderBroadcastShortcode($agora, $attrs) {
     $current_user = wp_get_current_user();
 
     ob_start();
-    if ( in_array($current_user->ID, $props['host']) ) {
+    $host = is_array($props['host']) ? $props['host'] : array($props['host']);
+    if ( in_array($current_user->ID, $host) ) {
       $agoraUserScript = 'js/agora-broadcast-client.js';
       require_once('views/wp-agora-io-broadcast.php');
     } else {
