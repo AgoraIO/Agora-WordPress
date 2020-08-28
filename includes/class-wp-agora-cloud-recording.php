@@ -93,32 +93,17 @@ class AgoraCloudRecording {
         if (!isset($data['recordingId']) ) {
             return new WP_Error( 'data', "Incomplete data", $data );
         }
-
-        $sid = $data['recordingId'];
-        $endpoint = $this->settings['appId'].'/cloud_recording/resourceid/' . $resourceId . '/sid/' . $sid. '/mode/mix/update';
-        
-        $params = array(
-            'cname' => $data['cname'],
-            'uid' => $data['uid'],
-            'clientRequest' => json_decode("{}")
-        );
-        // header('HTTP/1.1 500 Internal Server Error');
-        // die("<pre>QUERY:".print_r($endpoint, true)."</pre>");
-        $updateRes = $this->callAPI($endpoint, array(), 'POST');
-
         
         $endpointUL = $this->settings['appId'].'/cloud_recording/resourceid/' . $resourceId . '/sid/' . $sid. '/mode/mix/updateLayout';
 
         $clientRequest = new stdClass();
-        $clientRequest->recordingConfig = new stdClass();
-        $clientRequest->recordingConfig->transcodingConfig = new stdClass();
-        $clientRequest->recordingConfig->transcodingConfig->mixedVideoLayout = 1; // best fit layout
-        $clientRequest->recordingConfig->transcodingConfig->backgroundColor = "#000000";
+        $clientRequest->mixedVideoLayout = 1; // best fit layout
+        $clientRequest->backgroundColor = "#000000";
 
         $params = array(
             'cname' => $data['cname'],
             'uid' => $data['uid'],
-            'clientRequest' => json_decode("{}")
+            'clientRequest' => $clientRequest
         );
         // header('HTTP/1.1 500 Internal Server Error');
         // die("<pre>QUERY:".print_r($endpoint, true)."</pre>");
