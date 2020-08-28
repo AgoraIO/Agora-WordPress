@@ -24,7 +24,10 @@ $current_user       = wp_get_current_user();
 
         <div id="screen-zone" class="screen">
           <div id="screen-users" class="screen-users screen-users-1">
-            <div id="full-screen-video" class="user"></div>
+            <div id="full-screen-video" class="user">
+              <div id="mute-overlay" class="mute-overlay"><i class="fas fa-microphone-slash"></i></div>
+              <div id="no-local-video" class="no-video-overlay text-center"><i class="fas fa-user"></i></div>
+            </div>
           </div>
         </div>
       </div>
@@ -32,70 +35,9 @@ $current_user       = wp_get_current_user();
     </section>
     
 
-    <!-- RTMP Config Modal -->
-    <div class="modal fade slideInLeft animated" id="addRtmpConfigModal" tabindex="-1" role="dialog" aria-labelledby="rtmpConfigLabel" aria-hidden="true" data-keyboard=true>
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="rtmpConfigLabel"><i class="fas fa-sliders-h"></i></h5>
-            <button type="button" class="close" data-dismiss="modal" data-reset="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form id="rtmp-config" action="" method="post" onSubmit="return false;">
-              <div class="form-group">
-                <label for="input_rtmp_url">RTMP Server URL</label>
-                <input type="url" class="form-control" id="input_rtmp_url" placeholder="Enter the RTMP Server URL" value="" required />
-              </div>
-              <div class="form-group">
-                <label for="input_private_key">Stream key</label>
-                <input type="text" class="form-control" id="input_private_key" placeholder="Enter stream key" required />
-              </div>
-              <input type="submit" value="Start RTMP" style="position:fixed; top:-999999px">
-            </form>
-          </div>
-          <div class="modal-footer">
-            <span id="rtmp-error-msg" class="error text-danger" style="display: none">Please complete the information!</span>
-            <button type="button" id="start-RTMP-broadcast" class="btn btn-primary">
-              <i class="fas fa-satellite-dish"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- end Modal -->
+    <?php require_once "parts/modal-rtmp.php" ?>
 
-    <!-- External Injest Url Modal -->
-    <div class="modal fade slideInLeft animated" id="add-external-source-modal" tabindex="-1" role="dialog" aria-labelledby="add-external-source-url-label" aria-hidden="true" data-keyboard=true>
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="add-external-source-url-label">
-              <i class="fas fa-broadcast-tower"></i> [add external url]
-            </h5>
-            <button id="hide-external-url-modal" type="button" class="close" data-dismiss="modal" data-reset="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form id="external-inject-config">
-              <div class="form-group">
-                <label for="input_external_url">External URL</label>
-                <input type="url" class="form-control" id="input_external_url" placeholder="Enter the external URL" required>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <span id="external-url-error" class="error text-danger" style="display: none">Please enter a valid external URL</span>
-            <button type="button" id="add-external-stream" class="btn btn-primary">
-                <i id="add-rtmp-icon" class="fas fa-plug"></i>  
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- end Modal -->
+    <?php require_once "parts/modal-external-url.php" ?>   
     
   </div>
 
@@ -145,10 +87,7 @@ $current_user       = wp_get_current_user();
       videoGop: <?php echo $videoSettings['inject-videoGop'] ?>,
     };
 
-    window.addEventListener('load', function() {
-
-      // create client instance
-      window.agoraClient = AgoraRTC.createClient({mode: 'live', codec: 'vp8'}); // h264 better detail at a higher motion
+    window.addEventListener('load', function() {      
       
       window.mainStreamId; // reference to main stream
 
@@ -168,7 +107,7 @@ $current_user       = wp_get_current_user();
       // init Agora SDK
       window.agoraClient.init(window.agoraAppId, function () {
         AgoraRTC.Logger.info('AgoraRTC client initialized');
-        agoraJoinChannel(); // join channel upon successfull init
+        window.AGORA_BROADCAST_CLIENT.agoraJoinChannel(); // join channel upon successfull init
       }, function (err) {
         AgoraRTC.Logger.error('[ERROR] : AgoraRTC client init failed', err);
       });

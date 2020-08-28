@@ -4,7 +4,7 @@ Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
 Tested up to: 5.4
 Requires PHP: 7.1
-Stable tag: 2.0.0-b.04
+Stable tag: 2.0.0-b.05
 Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html

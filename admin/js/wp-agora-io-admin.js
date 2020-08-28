@@ -149,6 +149,85 @@ function activateAgoraTabs() {
 }
 
 
+function removeChip(chipEl) {
+	chipEl.parentElement.remove();
+	const list = jQuery('#broadcast-users-list');
+	if (list.find('.chip').length===0) {
+		list.find('.helper-text').show();
+	}
+}
+window.removeChip = removeChip;
+
+function cancelAddMoreUsersRow() {
+	jQuery('#host').val(null)
+	toggleAddMoreUsersRow(false);
+}
+
+function showAddMoreUsersRow() {
+	toggleAddMoreUsersRow(true);
+}
+
+function toggleAddMoreUsersRow(show) {
+	const rootBtn = jQuery('#add-more-users');
+	const row = jQuery('#add-more-users-controls');
+
+	if (show) {
+		rootBtn.hide();
+		row.show();
+	} else {
+		row.hide();
+		rootBtn.show();
+	}
+}
+
+function loadHostBroadcastUsers(usersRaw) {
+	const allUsersOptions = jQuery('#host option');
+	const usernames = {}
+	allUsersOptions.each((index, option) => {
+		usernames[option.value] = option.text
+	});
+	// console.log('U:', usernames);
+	usersRaw.forEach(uid => {
+		renderUserChip(uid, usernames[uid])
+	});
+}
+
+function renderUserChip(userId, name) {
+	const chipHTML = `
+	<div class="chip" data-user-id="${userId}">
+	  <img src="%img_avatar%" alt="user-${userId}" width="96" height="96">
+	  ${name}
+	  <span class="closebtn" onclick="window.removeChip(this)">&times;</span>
+	</div>`;
+
+	jQuery('#add-more-buttons').hide();
+	jQuery('#add-more-loader').show();
+
+	var params = {
+      action: 'get_user_avatar', // wp ajax action
+      uid: userId, // needed to get the avatar from the WP user
+    };
+    var ajaxParams = {
+		type: 'POST',
+		url: ajaxurl, // from wp admin...
+		data: params
+	};
+	jQuery.ajax(ajaxParams).then(function(data) {
+		const out = chipHTML.replace('%img_avatar%', data.avatar.url)
+		jQuery('#broadcast-users-list').append(out);
+		jQuery('#broadcast-users-list').find('.helper-text').hide();
+		jQuery('#add-more-loader').hide();
+		jQuery('#add-more-buttons').show();
+		cancelAddMoreUsersRow();
+
+		const usersRow = document.getElementById('broadcast-users-list');
+		usersRow.style.borderColor = "#666"
+	}).fail(function(error) {
+		console.error('Avatar not supported:', error);
+		callback && callback(error, null);
+	});
+}
+
 
 (function( $ ) {
 	'use strict';
@@ -162,12 +241,60 @@ function activateAgoraTabs() {
 
 			$('#type').change(validateChannelType);
 
-			var channelType = $('#type').val();
+			const channelType = $('#type').val();
 			if (channelType && channelType.length>0) {
 				$('#type').change();
 			}
+			$('#type').attr('required', 'required')
+
+			$('#add-more-users').click(showAddMoreUsersRow);
+			$('#agora-add-user').click(addBroadcastUser);
+			$('#agora-cancel-add-user').click(cancelAddMoreUsersRow);
+
+			$('#agoraio-admin-form-element').submit(submitNewChannel);
+
+			const usersRow = $('#broadcast-users-list');
+			if (usersRow.data('load-users')) {
+				loadHostBroadcastUsers( usersRow.data('load-users') );
+			}
 		}
 	});
+
+
+	function submitNewChannel(e) {
+		const channelType = $('#type').val();
+
+		if (channelType==='communication') {
+			return true;
+		}
+
+		const users = [];
+		const usersRow = jQuery('#broadcast-users-list');
+		usersRow.find('.chip').each(function getUserFromChip(){
+			const uid = jQuery(this).data('user-id')
+			users.push(uid)
+		})
+
+		if (users.length===0) {
+			usersRow[0].style.borderColor = "red";
+			document.getElementById('type').scrollIntoView({behavior: 'smooth'})
+			e.preventDefault();
+			return false;
+		}
+		usersRow.find('input').remove()
+		users.forEach(uid => {
+			usersRow.append(`<input type="hidden" name="host[]" value="${uid}" />`)
+		});
+
+		return true;
+	}
+
+	function addBroadcastUser() {
+		const userId = $('#host').val();
+		const name = $("#host option:selected").text();
+
+		renderUserChip(userId, name);
+	}
 
 	function validateChannelType() {
 		var typeChannel = $(this).val();

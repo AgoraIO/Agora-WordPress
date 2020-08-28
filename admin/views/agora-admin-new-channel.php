@@ -168,8 +168,9 @@ function render_agoraio_channel_form_settings($channel) {
   // echo "<pre>Settings:".print_r(, true)."</pre>";
   $props = $channel->get_properties();
   $type = $props['type'];
-  $userHost = $props['host'];
+  $userHost = is_array($props['host']) ? $props['host'] : array($props['host']);
   $settings = $props['settings'];
+  // echo("<pre>".print_r($userHost, true)."</pre>");
   ?>
   <ul class="nav nav-tabs">
     <li class="active">
@@ -203,19 +204,31 @@ function render_agoraio_channel_form_settings($channel) {
           $props
         ) ?>
         <tr id="broadcast-host-row">
-          <th scope="row"><label for="host"><?php _e('Broadcaster User', 'agoraio'); ?></label></th>
+          <th scope="row"><label for="host"><?php _e('Broadcast Users', 'agoraio'); ?></label></th>
           <td>
-            <?php
-            $dropdownParams = array(
-              "id" => "host",
-              "name" => "host",
-              "class" => "large-dropdown",
-            );
-            if (!empty($userHost)) {
-              $dropdownParams['selected'] = $userHost;
-            }
-            wp_dropdown_users($dropdownParams);
-            ?>
+            <div id="broadcast-users-list" data-load-users='<?php echo json_encode($userHost) ?>'>
+              <span class="helper-text help-add-more-users"><?php _e('Please add at least one user', 'agoraio') ?></span>
+            </div>
+            <button id="add-more-users" class="button-secondary" type="button">Add User</button>
+            <div id="add-more-users-controls" class="add-more-users-controls">
+              <?php
+              $dropdownParams = array(
+                "id" => "host",
+                "name" => "host",
+                "class" => "large-dropdown",
+              );
+              // if (!empty($userHost)) { $dropdownParams['selected'] = $userHost; }
+              wp_dropdown_users($dropdownParams);
+              ?>
+              <span id="add-more-buttons">
+                <button id="agora-add-user" class="button-primary" type="button">Add</button>
+                <button id="agora-cancel-add-user" class="button-cancel" type="button">Cancel</button>
+              </span>
+              <span id="add-more-loader" class="agora-loader" style="display: none">
+                <img src="<?php echo plugin_dir_url(__DIR__ . '/../index.php') ?>css/loader.svg" width="38" alt="agora-loader" />
+              </span>
+            </div>
+
           </td>
         </tr>
       </table>

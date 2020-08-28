@@ -242,7 +242,9 @@ class WP_Agora_Channel {
     update_post_meta($post_id, 'channel_appearance_settings', $appearanceSettings);
     update_post_meta($post_id, 'channel_recording_settings', $recordingSettings);
     update_post_meta($post_id, 'channel_type', sanitize_key($args['type']));
-    update_post_meta($post_id, 'channel_user_host', sanitize_key($args['host']));
+
+    $hosts = array_map('sanitize_key', $args['host']);
+    update_post_meta($post_id, 'channel_user_host', $hosts);
 
     unset($args['_wp_http_referer']);
     unset($args['agoraio-locale']);

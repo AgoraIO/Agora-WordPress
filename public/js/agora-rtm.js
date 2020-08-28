@@ -1,12 +1,13 @@
 
 
 window.AGORA_RTM_UTILS = {
+	connectionState: null,
 	setupRTM: function(agoraAppId, channelName) {
-		window.rtmClient = AgoraRTM.createInstance(agoraAppId);
+		window.rtmClient = AgoraRTM.createInstance(agoraAppId, {logFilter: AgoraRTM.LOG_FILTER_ERROR});
   		window.rtmChannel = rtmClient.createChannel(channelName);
 
-		window.rtmClient.on('ConnectionStateChange', (newState, reason) => {
-			alert(newState)
+		window.rtmClient.on('ConnectionStateChanged', (newState, reason) => {
+			window.AGORA_RTM_UTILS.connectionState = newState;
 			AgoraRTC.Logger.info('on connection state changed to ' + newState + ' reason: ' + reason);
 		});
 
@@ -29,7 +30,7 @@ window.AGORA_RTM_UTILS = {
 			updateUsersCount()
 
 			// if i'm sharing my screen, update the new users layouts
-		    if (window.localStreams.screen.id && window.localStreams.screen.id>1) {
+		    if (window.localStreams && window.localStreams.screen.id && window.localStreams.screen.id>1) {
 		      const msg = {
 		        description: undefined,
 		        messageType: 'TEXT',
@@ -84,9 +85,11 @@ window.AGORA_RTM_UTILS = {
 	},
 
 	leaveChannel: function() {
-		window.rtmChannel.leave().catch(err => {
-	      console.error('Failing leaving rtm channel', err)
-	    })
+		if (window.AGORA_RTM_UTILS.connectionState===AgoraRTM.ConnectionState.CONNECTED) {
+			window.rtmChannel.leave().catch(err => {
+		      console.error('Failing leaving rtm channel', err)
+		    })
+		}
 	},
 
 	sendChannelMessage: function(msg) {
