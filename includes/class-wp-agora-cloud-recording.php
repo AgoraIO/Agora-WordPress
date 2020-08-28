@@ -118,7 +118,7 @@ class AgoraCloudRecording {
         $params = array(
             'cname' => $data['cname'],
             'uid' => $data['uid'],
-            'clientRequest' => $clientRequest
+            'clientRequest' => json_decode("{}")
         );
         // header('HTTP/1.1 500 Internal Server Error');
         // die("<pre>QUERY:".print_r($endpoint, true)."</pre>");
@@ -175,6 +175,8 @@ class AgoraCloudRecording {
         $clientRequest->recordingConfig->transcodingConfig = new stdClass();
         $clientRequest->recordingConfig->transcodingConfig->mixedVideoLayout = 1; // best fit layout
         $clientRequest->recordingConfig->transcodingConfig->backgroundColor = "#000000";
+        $clientRequest->recordingConfig->transcodingConfig->width = "1024";
+        $clientRequest->recordingConfig->transcodingConfig->height = "768";
 
         // $clientRequest->recordingConfig->subscribeVideoUids
         // $clientRequest->recordingConfig->subscribeAudioUids
