@@ -44,12 +44,13 @@ $recordingSettings = $channelSettings['recording'];
         <?php if(is_array($recordingSettings) && 
             !empty($recordingSettings['bucket']) &&
             !empty($recordingSettings['accessKey'])) : ?>
-        <!-- <div class="btn-with-title">
+        <div class="btn-with-title">
             <button id="cloud-recording-btn" type="button" class="btnIcon start-rec" title="<?php _e('Start Recording', 'agoraio'); ?>">
-                <i id="screen-share-icon" class="fas fa-dot-circle"></i>
+                <i id="screen-share-icon" class="fas fa-dot-circle" style="display: none"></i>
+                <i id="screen-share-icon" class="inner-icon"></i>
             </button>
             <small class="btn-title"><?php _e('Record', 'agoraio') ?></small>
-        </div> -->
+        </div>
         <?php endif; ?>
 
 		<!-- <div class="btn-separator"></div>

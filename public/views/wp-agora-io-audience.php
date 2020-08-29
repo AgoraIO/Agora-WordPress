@@ -151,26 +151,18 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
         const streamId = remoteStream.getId();
         AgoraRTC.Logger.info('Successfully subscribed to remote stream: ' + streamId);
 
+        jQuery('#full-screen-video').hide();
+
         if (window.screenshareClients[streamId]) {
           // this is a screen share stream:
           console.log('Screen stream arrived:');
           window.AGORA_SCREENSHARE_UTILS.addRemoteScreenshare(remoteStream);
         } else {
-          const streamsContainer = jQuery('#full-screen-video');
-          streamsContainer.append(
-            jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container'}).append(
-              jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
-                  jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
-              ),
-              jQuery('<div/>', {'id': streamId + '_no-video', 'class': 'no-video-overlay text-center'}).append(
-                jQuery('<i/>', {'class': 'fas fa-user'})
-              ),
-              jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
-            )
-          );
+          // show new stream on screen:
+          window.AGORA_UTILS.addRemoteStreamView(remoteStream);
 
-          remoteStream.play('agora_remote_' + streamId);
-          // remoteStream.play('full-screen-video');
+          const usersCount = Object.keys(window.remoteStreams).length;
+          window.AGORA_UTILS.updateUsersCounter(usersCount);
         }
       });
 
@@ -191,6 +183,8 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
         if(window.remoteStreams[streamId] !== undefined) {
           window.remoteStreams[streamId].isPlaying() && window.remoteStreams[streamId].stop(); // stop playing the feed
           delete window.remoteStreams[streamId]; // remove stream from list
+          const remoteContainerID = '#' + streamId + '_container';
+          jQuery(remoteContainerID).empty().remove();
 
           const usersCount = Object.keys(window.remoteStreams).length;
           window.AGORA_UTILS.updateUsersCounter(usersCount)
@@ -206,7 +200,8 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
           streamsContainer.toggleClass('sharescreen');
           delete window.screenshareClients[streamId];
         } else {
-          if (jQuery('#full-screen-video').children().length>=0) {
+          const usersCount = Object.keys(window.remoteStreams).length;
+          if (usersCount===0) {
             finishVideoScreen();
           }
         }

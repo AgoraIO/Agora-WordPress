@@ -1,5 +1,5 @@
 window.AGORA_BROADCAST_UI = {
-// UI buttons
+  // UI buttons
   enableUiControls: function () {
 
     jQuery("#mic-btn").prop("disabled", false);
@@ -114,8 +114,10 @@ window.AGORA_BROADCAST_UI = {
     jQuery("#mic-icon").toggleClass('fa-microphone').toggleClass('fa-microphone-slash'); // toggle the mic icon
     if (jQuery("#mic-icon").hasClass('fa-microphone')) {
       window.localStreams.camera.stream.unmuteAudio(); // enable the local mic
+      window.AGORA_UTILS.toggleVisibility("#mute-overlay", false); // hide the muted mic icon
     } else {
       window.localStreams.camera.stream.muteAudio(); // mute the local mic
+      window.AGORA_UTILS.toggleVisibility("#mute-overlay", true); // show the muted mic icon
     }
   },
 
@@ -144,7 +146,7 @@ window.AGORA_BROADCAST_UI = {
       window.loadingRecord = true;
       btn.removeClass('start-rec').addClass('load-rec').attr('title', 'Stop Recording');
       console.log("Starting rec...");
-      window.AGORA_BROADCAST_UI.startVideoRecording(function(err, res) {
+      window.AGORA_CLOUD_RECORDING.startVideoRecording(function(err, res) {
         if (err) { window.AGORA_UTILS.showErrorMessage(err); }
 
         if (res) {
@@ -156,7 +158,7 @@ window.AGORA_BROADCAST_UI = {
       });
     } else {
       console.log("Stoping rec...");
-      window.AGORA_BROADCAST_UI.stopVideoRecording(function(err, res) {
+      window.AGORA_CLOUD_RECORDING.stopVideoRecording(function(err, res) {
         if (err) {
           // console.error(err);
           window.AGORA_UTILS.showErrorMessage(err);
@@ -199,76 +201,6 @@ window.AGORA_BROADCAST_UI = {
       case '1080p_3':
       case '1080p_5': return { width: 1920, height: 1080 };
     }
-  },
-
-  startVideoRecording: function (cb) {
-    var params = {
-      action: 'cloud_record', // wp ajax action
-      sdk_action: 'start-recording',
-      cid: window.channelId,
-      cname: window.channelName,
-      uid: window.userID,
-      token: window.agoraToken
-    };
-    window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
-      // var startRecordURL = agoraAPI + window.agoraAppId + '/cloud_recording/resourceid/' + res.resourceId + '/mode/mix/start';
-      console.log(res);
-      if (res && res.sid) {
-        window.resourceId = res.resourceId;
-        window.recordingId = res.sid;
-        window.uid = res.uid;
-
-        setTimeout(function() {
-          // window.resourceId = null;
-        }, 1000*60*5); // Agora DOCS: The resource ID is valid for five minutes.
-        cb(null, res);
-      } else {
-        cb(res, null);
-      }
-    }).fail(function(err) {
-      cb(err, null);
-    })
-  },
-
-
-  stopVideoRecording: function (cb) {
-    var params = {
-      action: 'cloud_record', // wp ajax action
-      sdk_action: 'stop-recording',
-      cid: window.channelId,
-      cname: window.channelName,
-      uid: window.uid,
-      resourceId: window.resourceId,
-      recordingId: window.recordingId
-    };
-    window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
-      // var startRecordURL = agoraAPI + window.agoraAppId + '/cloud_recording/resourceid/' + res.resourceId + '/mode/mix/start';
-      console.log('Stop:', res);
-      window.recording = res.serverResponse;
-      cb(null, res);
-
-    }).fail(function(err) {
-      console.error('API Error:', err.responseJSON ? err.responseJSON.errors : err);
-      cb(err, null);
-    })
-  },
-
-
-  queryVideoRecording: function () {
-    var params = {
-      action: 'cloud_record', // wp ajax action
-      sdk_action: 'query-recording',
-      cid: window.channelId,
-      cname: window.channelName,
-      uid: window.uid,
-      resourceId: window.resourceId,
-      recordingId: window.recordingId
-    };
-    window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
-      console.log('Query:', res);
-
-    }).fail(function(err) {
-      console.error('API Error:',err);
-    })
   }
+  
 }

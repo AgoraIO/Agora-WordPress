@@ -4,7 +4,7 @@
 **Requires at least:** 5.0.0  
 **Tested up to:** 5.4  
 **Requires PHP:** 7.1
-**Stable tag:** 2.0.0-b.04
+**Stable tag:** 2.0.0.beta1
 **License:** CC BY-ND 4.0    
 **License URI:** https://creativecommons.org/licenses/by-nd/4.0  
 **GitHub:** https://github.com/AgoraIO/Agora-Word-Press  
@@ -23,7 +23,7 @@ Features Include:
 -  Customizable UI
 -  Customizable configurations (credentials, video profile, Codec, etc.) and much more!
 
-Agora is a Real-Time Engagement Platform as a Service that provides a fully encrypted, GDPR and HIPPA-compliant network. Agora delivers easy to embed Real-Time Communications (RTC) and Engagement APIs which include all the development tools and cloud infrastructure needed for mobile, web, and desktop applications.
+Agora is a leading video, voice and live interactive streaming platform, helping developers deliver rich in-app experiences—including embedded voice and video chat, real-time recording, interactive live streaming, and real-time messaging.
 
 With over 200+ data centers globally, the Agora’s Software-Defined Real-time Network (SD-RTN™) is trusted and  widely used by the world’s biggest brands and provides ease of scaling for up to 1 million peak concurrent users (PCU) in a single session with unmatched quality of experience.  
 Agora  fully supports a range of development environments, making it easy to deliver deep integration of high-quality, extreme low-latency video calling across all platforms and channels.

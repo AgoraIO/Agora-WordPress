@@ -18,6 +18,11 @@ window.AGORA_COMMUNICATION_UI = {
       window.AGORA_COMMUNICATION_UI.toggleVideo(localStream);
     });
 
+    jQuery("#cloud-recording-btn").click(function(){
+      window.AGORA_COMMUNICATION_UI.toggleRecording();
+    });
+
+
     jQuery("#screen-share-btn").click(function() {
       window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn(); // set screen share button icon
       var loaderIcon = jQuery(this).find('.spinner-border');
@@ -169,5 +174,44 @@ window.AGORA_COMMUNICATION_UI = {
       case '1080p_3':
       case '1080p_5': return { width: 1920, height: 1080 };
     }
-  }
+  },
+
+  toggleRecording: function () {
+    if (window.loadingRecord) {
+      return false;
+    }
+
+    var btn = jQuery("#cloud-recording-btn");
+    if (btn.hasClass('start-rec')) {
+      window.loadingRecord = true;
+      btn.removeClass('start-rec').addClass('load-rec').attr('title', 'Stop Recording');
+      console.log("Starting rec...");
+      window.AGORA_CLOUD_RECORDING.startVideoRecording(function(err, res) {
+        if (err) { window.AGORA_UTILS.showErrorMessage(err); }
+
+        if (res) {
+          btn.removeClass('load-rec').addClass('stop-rec');
+        } else {
+          btn.removeClass('load-rec').addClass('start-rec').attr('title', 'Start Recording');
+        }
+        window.loadingRecord = false;
+      });
+    } else {
+      console.log("Stoping rec...");
+      window.AGORA_CLOUD_RECORDING.stopVideoRecording(function(err, res) {
+        if (err) {
+          // console.error(err);
+          window.AGORA_UTILS.showErrorMessage(err);
+        } else {
+          if(!res.errors) {
+            console.log(res);
+            btn.removeClass('stop-rec').addClass('start-rec').attr('title', 'Start Recording');
+          } else {
+            console.error(res.errors);
+            window.AGORA_UTILS.showErrorMessage(res.errors);
+          }
+        }
+      })
+    }
+  },
 }

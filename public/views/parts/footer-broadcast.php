@@ -38,7 +38,6 @@ $recordingSettings = $channelSettings['recording']; ?>
             </button>
             <small class="btn-title"><?php _e('Share', 'agoraio') ?></small>
         </div>
-
         <?php if(is_array($recordingSettings) && 
             !empty($recordingSettings['bucket']) &&
             !empty($recordingSettings['accessKey'])) : ?>
