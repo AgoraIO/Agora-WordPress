@@ -151,10 +151,7 @@
     <br class="clear" />
 
     <div class="inside">
-      <p>
-        <?php
-        _e('Global setting to enable or disable internal Agora Chat.<br />This setting can be overridden on each channel.', 'agoraio');
-        ?></p>
+      <p><?php _e('Global setting to enable or disable internal Agora Chat.', 'agoraio'); ?></p>
       <div class="flex" id="agora-chat">
         <div class="col label">
           Agora Chat
