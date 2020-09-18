@@ -56,8 +56,8 @@ window.AGORA_COMMUNICATION_UI = {
 
     jQuery('#rejoin-btn').click(window.AGORA_COMMUNICATION_UI.rejoinChannel);
 
-    // keyboard listeners 
-    jQuery(document).keypress(function(e) {
+    // keyboard listeners
+    function keyboardListeners(e) {
       switch (e.key) {
         case "m":
           console.log("quick toggle the mic");
@@ -88,7 +88,8 @@ window.AGORA_COMMUNICATION_UI = {
       if(e.key === "r") { 
         // window.history.back(); // quick reset
       }
-    });
+    };
+    // jQuery(document).keypress(keyboardListeners);
   },
 
   toggleMic: function (localStream) {

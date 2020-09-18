@@ -134,6 +134,8 @@ function agoraLeaveChannel() {
     jQuery("#cloud-recording-btn").prop("disabled", true);
 
     window.localStreams.camera.stream = null;
+
+    window.dispatchEvent(new CustomEvent("agora.leaveChannel"));
   }, function(err) {
     AgoraRTC.Logger.error('client leave failed ', err); //error handling
   });

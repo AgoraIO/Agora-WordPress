@@ -56,6 +56,8 @@ window.AGORA_UTILS.setupAgoraListeners();
 function agoraJoinChannel(channelName) {
   var token = window.AGORA_TOKEN_UTILS.agoraGenerateToken();
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
+
+  
   agoraClient.join(token, channelName, userId, function(uid) {
     window.AGORA_RTM_UTILS.joinChannel(uid);
 
@@ -63,6 +65,7 @@ function agoraJoinChannel(channelName) {
     window.localStreams.camera.id = uid; // keep track of the stream uid 
     createCameraStream(uid);
 
+    window.dispatchEvent(new CustomEvent("agora.communication.joinedChannel"));
   }, function(err) {
       AgoraRTC.Logger.error("[ERROR] : join channel failed", err);
   });
@@ -120,6 +123,8 @@ function agoraLeaveChannel() {
     window.AGORA_SCREENSHARE_UTILS.stopScreenShare();
   }
 
+  window.dispatchEvent(new CustomEvent("agora.leavingChannel"));
+
   agoraClient.leave(function() {
     AgoraRTC.Logger.info("client leaves channel");
     window.localStreams.camera.stream.stop() // stop the camera stream playback
@@ -140,6 +145,8 @@ function agoraLeaveChannel() {
 
     // leave also RTM Channel
     window.AGORA_RTM_UTILS.leaveChannel();
+
+    window.dispatchEvent(new CustomEvent("agora.leavedChannel"));
     
     // show the modal overlay to join
     // jQuery("#modalForm").modal("show"); 

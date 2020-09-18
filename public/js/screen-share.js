@@ -38,7 +38,7 @@ window.AGORA_SCREENSHARE_UTILS = {
           messageType: 'TEXT',
           rawMessage: undefined,
           text: `${uid}: start screen share`
-        } 
+        }
         window.AGORA_RTM_UTILS.sendChannelMessage(msg);
       }
 

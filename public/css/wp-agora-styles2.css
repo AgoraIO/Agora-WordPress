@@ -257,7 +257,7 @@ html, body {
 }
 
 
-.modal {
+.agora .modal, .agora .hidden {
   display: none
 }
 
@@ -268,10 +268,11 @@ html, body {
   align-items: center;
   z-index: 2;
   flex-direction: column;
+  position: relative;
 }
 .agora .buttons-bottom { margin: .5em; display: flex; }
 .agora .buttons-bottom .btn-group,
-.agora .buttons-bottom>.btn-with-title { margin: 0 7px; text-align: center; }
+.agora .buttons-bottom>.btn-with-title { margin: 0 7px; text-align: center; position: relative; }
 
 .agora .btnIcon {
   background: #6c757e;
@@ -280,7 +281,7 @@ html, body {
   color: white;
   font-size: 16px;
   line-height: 1.5;
-  padding: 8px .6rem;
+  padding: 8px 12px;
   text-align: center;
   user-select: none;
   transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
@@ -418,17 +419,17 @@ html, body {
 .fade {
     transition: opacity .15s linear;
 }
-.modal-dialog {
+.agora .modal-dialog {
     position: relative;
     width: auto;
     margin: .5rem;
     pointer-events: none;
 }
-.modal.show .modal-dialog {
+.agora .modal.show .modal-dialog {
     -webkit-transform: none;
     transform: none;
 }
-.modal.fade .modal-dialog {
+.agora .modal.fade .modal-dialog {
   transition: -webkit-transform .3s ease-out;
   transition: transform .3s ease-out;
   transition: transform .3s ease-out,-webkit-transform .3s ease-out;
@@ -645,6 +646,29 @@ button.close {
   padding: 0 10px;
 }
 
+
+/*
+ * Communication Chat
+ */
+.agora .fabs {
+  bottom: 0;
+  position: absolute;
+  margin: 1em;
+  right: 0;
+  z-index: 1031;
+}
+
+.agora .fabs .chat {
+  position: absolute;
+  right: -2px;
+  bottom: 0;
+  display: none;
+  opacity: 0;
+}
+.agora #chat-alert {
+  position: absolute;
+  opacity: 0;
+}
 
 
 /*
