@@ -1,3 +1,4 @@
+
 <script type="text/javascript">
   window.agora_base_url = '<?php echo str_replace("/views/", "/", plugin_dir_url( dirname( __FILE__ ))) ?>';
 	// video profile settings

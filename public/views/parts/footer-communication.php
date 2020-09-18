@@ -53,8 +53,10 @@ $recordingSettings = $channelSettings['recording'];
         </div>
         <?php endif; ?>
 
+        <?php $enableChat = false; ?>
+        <?php if (isset($agora->settings['agora-chat']) && $agora->settings['agora-chat']==='enabled') : ?>
+            <?php $enableChat = true; ?>
 		<div class="btn-separator"></div>
-
         <div class="btn-with-title">
             <button id="chat-btn" class="btnIcon open-chat" title="<?php _e('Open Chat', 'agoraio'); ?>" type="button">
                 <i id="chat-alert" class="fas fa-bell"></i>
@@ -62,9 +64,10 @@ $recordingSettings = $channelSettings['recording'];
             </button>
             <small class="btn-title"><?php _e('Chat', 'agoraio') ?></small>
         </div>
+        <?php endif; ?>
 	</div>
     <div class="error-container">
         <span id="error-msg" class="text-danger"></span>
     </div>
-    <?php require_once('chat-fab.php'); ?>
+    <?php if ($enableChat===true) { require_once('chat-fab.php'); } ?>
 </footer>
