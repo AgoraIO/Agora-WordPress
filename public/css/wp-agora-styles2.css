@@ -272,7 +272,12 @@ html, body {
 }
 .agora .buttons-bottom { margin: .5em; display: flex; }
 .agora .buttons-bottom .btn-group,
-.agora .buttons-bottom>.btn-with-title { margin: 0 7px; text-align: center; position: relative; }
+.agora .buttons-bottom>.btn-with-title { margin: 0 7px; text-align: center; position: relative; display: grid;
+    grid-template-columns: 1fr; grid-template-rows: 1fr; }
+.agora .buttons-bottom .btn-group {
+  grid-template-columns: 1fr 0.65fr;
+}
+
 
 .agora .btnIcon {
   background: #6c757e;
@@ -302,17 +307,18 @@ html, body {
 .btn-group>.btnIcon:not(:last-child):not(.dropdown-toggle) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    padding-right: 0.4em;
+    padding-right: 6px;
 }
 .btn-group>.btnIcon:not(:first-child) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
+.btn-group small.btn-title { grid-column: 1 / span 2; }
 .agora .buttons-bottom small {
   display: block;
   color: #808080;
 }
-.agora .btnIcon.dropdown-toggle { padding: 8px 0.5em; float: right; }
+.agora .btnIcon.dropdown-toggle { padding: 8px; float: right; }
 .dropdown-toggle::after {
     display: inline-block;
     /* margin-left: .255em; */
