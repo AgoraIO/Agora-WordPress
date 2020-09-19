@@ -717,7 +717,8 @@ button.close {
   .agora-fullscreen .screen-users-3 .user,
   .agora-fullscreen .screen-users-4 .user { height: 38vh; }
   .agora-fullscreen .screen-users-5-6 .user { width: 50%; height: 26vh; }
-  .agora-fullscreen .screen-users-7-9 .user { width: 50%; height: 20vh; }
+  .agora-fullscreen .screen-users-7-9 .user { width: 33%; height: 26vh; }
+  .agora-fullscreen .screen-users-10-12 .user { width: 25%; height: 26vh; }
 }
 @media screen and (max-width: 320px) {
   .agora .buttons-botton{
