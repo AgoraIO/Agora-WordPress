@@ -49,10 +49,12 @@ window.AGORA_COMMUNICATION_UI = {
       }
     });
 
-    jQuery("#exit-btn").click(function(){
+    const exitCall = function(){
       console.log("so sad to see you leave the channel");
       window.AGORA_COMMUNICATION_CLIENT.agoraLeaveChannel(); 
-    });
+    };
+    jQuery("#exit-btn").click(exitCall);
+    jQuery("#exit-btn-footer").click(exitCall);
 
     jQuery('#rejoin-btn').click(window.AGORA_COMMUNICATION_UI.rejoinChannel);
 

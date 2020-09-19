@@ -64,41 +64,53 @@ window.AGORA_RTM_UTILS = {
 		});
 	},
 
-	joinChannel: function(uid, cb) {
-		const token = window.AGORA_TOKEN_UTILS.agoraGenerateToken();
-		const numberUID = uid < 1000 ? uid + 1000 : uid;
-		const finalUID = 'x' + String(numberUID);
+	joinChannel: function(uid, next) {
+		function runJoin(cb) {
+			const token = window.AGORA_TOKEN_UTILS.agoraGenerateToken();
+			const numberUID = uid < 1000 ? uid + 1000 : uid;
+			const finalUID = 'x' + String(numberUID);
 
-		const successToken = (err, token) => {
-			if (err) {
-				console.error('Token error', err);
-				cb && cb(err, null);
-				alert('Your Token Server is not Configured, this page will reload!');
-				window.location.reload(true);
-				return;
-			}
+			const successToken = (err, token) => {
+				if (err) {
+					console.error('Token error', err);
+					cb && cb(err, null);
+					alert('Your Token Server is not Configured, this page will reload!');
+					window.location.reload(true);
+					return;
+				}
 
-			const loginData = { token, uid: finalUID };
-			console.log('RTM UID:', loginData.uid)
-			window.rtmClient.login(loginData).then(() => {
-				console.log('Agora RTM client login success');
+				const loginData = { token, uid: finalUID };
+				console.log('RTM UID:', loginData.uid)
+				window.rtmClient.login(loginData).then(() => {
+					console.log('Agora RTM client login success');
 
-				window.rtmChannel.join().then(() => {
-					cb && cb()
+					window.rtmChannel.join().then(() => {
+						cb && cb();
+						window.dispatchEvent(new CustomEvent('agora.rtm_init'));
+					}).catch(err => {
+						console.error('RTM Join Error', err)
+						window.rtmChannel = null;
+						cb && cb(err, null)
+					})
 
-					window.dispatchEvent(new CustomEvent('agora.rtm_init'));
 				}).catch(err => {
-					console.error('RTM Join Error', err)
-					window.rtmChannel = null;
+					console.error('Agora RTM login failure!', err);
 					cb && cb(err, null)
+				});
+			};
+
+			window.AGORA_SCREENSHARE_UTILS.agora_generateAjaxTokenRTM(successToken, finalUID);
+		}
+		if (next) {
+			runJoin(next)
+		} else {
+			return new Promise((resolve, reject) => {
+				runJoin(function(err) {
+					if (err) { reject(err); }
+					else { resolve(); }
 				})
-
-			}).catch(err => {
-				console.error('Agora RTM login failure!', err);
-			});
-		};
-
-		window.AGORA_SCREENSHARE_UTILS.agora_generateAjaxTokenRTM(successToken, finalUID);
+			})
+		}
 	},
 
 	leaveChannel: function() {
