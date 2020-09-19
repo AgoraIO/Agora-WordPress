@@ -14,7 +14,7 @@ $current_user       = wp_get_current_user();
   <title>Agora.io Communication Chat</title>
   <?php wp_head() ?>
 </head>
-<body <?php body_class(); ?>>
+<body <?php body_class(); ?> style="min-height: 100vh; min-height: -webkit-fill-available;">
   <div id="agora-root" class="agora agora-fullscreen">
     <section class="agora-container">
       <?php require_once "parts/header.php" ?>

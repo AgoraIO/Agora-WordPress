@@ -203,7 +203,7 @@ html, body {
 /* screeen with 2 users */
 .agora .screen-users-2 .user {
   width: 49%;
-  height: 35vh;
+  height: 45vh;
 }
 .agora-fullscreen .screen-users-2 .user {
   width: 50%;
@@ -696,7 +696,6 @@ button.close {
   }
 }
 @media screen and (max-width: 480px){
-  .agora-container { height: 100vh; }
   .agora .buttons-botton { font-size: 25px; }
   .agora .screen-users { margin: 0; }
   .agora .screen-users .user { padding: 0.1em; }
@@ -711,6 +710,7 @@ button.close {
   .agora .screen-users-5-6 .user { height: 22vh; }
   .agora .screen-users-7-9 .user { width: 32%; height: 21vh; }
 
+  .agora-fullscreen .agora-container { height: 100vh; }
   .agora.agora-fullscreen .screen { padding: 0 5px; }
   .agora-fullscreen .screen-users-1 .user{ height: 78vh; }
   .agora-fullscreen .screen-users-2 .user{ height: 40vh; }
