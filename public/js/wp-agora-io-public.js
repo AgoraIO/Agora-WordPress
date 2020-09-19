@@ -192,8 +192,10 @@ window.AGORA_UTILS = {
     let countClass = count;
     switch(count) {
       case 3:
+        countClass = '3';
+        break;
       case 4:
-        countClass = '3-4';
+        countClass = '4';
         break;
       case 5:
       case 6:
@@ -201,10 +203,12 @@ window.AGORA_UTILS = {
         break;
       case 7:
       case 8:
-        countClass = '7-8';
+      case 9:
+        countClass = '7-9';
         break;
-      case 9: case 10:
-      case 11: case 12:
+      case 10:
+      case 11:
+      case 12:
         countClass = '9-12';
         break;
     }

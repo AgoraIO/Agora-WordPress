@@ -2,7 +2,7 @@
 	--remote-bgcolor: rgba(0, 0, 0, 0.06);
 	--local-bgcolor: #42a5f5;
 
-	width: 300px;
+	width: 100%;
 	font-size: 12px;
 	line-height: 22px;
 	font-weight: 500;
@@ -11,6 +11,10 @@
 	-webkit-transition: all .2s ease-out;
 	-webkit-transition: all .2s ease-in-out;
 	transition: all .2s ease-in-out;
+}
+.agora .fabs {
+  width: 100%;
+  margin: 0;
 }
 
 .agora .chat_header {
@@ -555,28 +559,23 @@
     opacity: 0;
   }
 }
+
 /* SMARTPHONES PORTRAIT */
-
-@media only screen and (min-width: 300px) {
-  .agora .chat {
-    width: 300px;
-  }
-  .agora .chat_field {
-    width: 80%;
-  }
-}
 /* SMARTPHONES LANDSCAPE */
-
 @media only screen and (min-width: 480px) {
+  .agora .fabs {
+    width: auto;
+    margin: 1em;
+  }
   .agora .chat {
     width: 300px;
+    right: -2px;
   }
   .agora .chat_field {
     width: 80%;
   }
 }
 /* TABLETS PORTRAIT */
-
 @media only screen and (min-width: 768px) {
   .agora .chat {
     width: 300px;

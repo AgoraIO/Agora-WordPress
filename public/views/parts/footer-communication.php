@@ -33,7 +33,7 @@ $recordingSettings = $channelSettings['recording'];
 
         <div class="btn-separator"></div>
 
-        <div class="btn-with-title">
+        <div class="btn-with-title only-desktop">
     		<button id="screen-share-btn" type="button" class="btnIcon" title="<?php _e('Screen Share', 'agoraio'); ?>">
               <i id="screen-share-icon" class="fas fa-desktop"></i>
               <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none"></span>
@@ -44,7 +44,7 @@ $recordingSettings = $channelSettings['recording'];
         <?php if(is_array($recordingSettings) && 
             !empty($recordingSettings['bucket']) &&
             !empty($recordingSettings['accessKey'])) : ?>
-        <div class="btn-with-title">
+        <div class="btn-with-title only-desktop">
             <button id="cloud-recording-btn" type="button" class="btnIcon start-rec" title="<?php _e('Start Recording', 'agoraio'); ?>">
                 <i id="screen-share-icon" class="fas fa-dot-circle" style="display: none"></i>
                 <i id="screen-share-icon" class="inner-icon"></i>
@@ -65,6 +65,13 @@ $recordingSettings = $channelSettings['recording'];
             <small class="btn-title"><?php _e('Chat', 'agoraio') ?></small>
         </div>
         <?php endif; ?>
+
+        <div class="btn-with-title">
+            <button id="exit-btn-footer" class="btnIcon btn-danger only-mobile" type="button">
+                <i id="leave-call-icon" class="fas fa-phone"></i>
+            </button>
+            <small class="btn-title only-mobile"><?php _e('Exit', 'agoraio') ?></small>
+        </div>
 	</div>
     <div class="error-container">
         <span id="error-msg" class="text-danger"></span>

@@ -16,14 +16,9 @@ html, body {
   font-family: Arial;
 }
 
-.agora-container {
-  display: grid;
-  grid-template-rows: 5% 80% 15%;
-  font-family: 14px
-}
-.agora-container.no-footer {
+/* .agora-container.no-footer {  
   grid-template-rows: 6% 94%;
-}
+} */
 .agora .error-container {
   margin: 5px 0 20px;
   display: none;
@@ -31,6 +26,7 @@ html, body {
 
 /*  total 100vh - 32px of wp admin bar */
 .agora-fullscreen .agora-container {
+  display: grid;
   grid-template-rows: 5vh 85vh 10vh;
 }
 .admin-bar .agora-fullscreen .agora-container {
@@ -38,7 +34,6 @@ html, body {
 }
 
 .agora-container button {
-  font-size: 14px;
   font-weight: 500;
   text-transform: none;
   cursor: pointer;
@@ -49,7 +44,7 @@ html, body {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 0 7px;
+  padding: 10px 7px;
 }
 .agora-header .fas {
   cursor: pointer;
@@ -62,18 +57,16 @@ html, body {
 
 .agora-content {
   background-color: var(--agora-background);
-  display: grid;
-  grid-template-rows: 12% 88%;
-  overflow: hidden;
 }
 .agora-fullscreen .agora-content {
+  display: grid;
   grid-template-rows: 8vh 92vh;
 }
 
 .agora .buttons-top{
   display: flex;
   justify-content: space-between;
-  margin: 0 16px
+  padding: 10px 16px
 }
 .agora .left-button{
   display: inherit;
@@ -102,6 +95,10 @@ html, body {
 .agora .btn-danger,
 .agora .btnIcon.btn-danger {
   background-color: #d94964;
+}
+.agora .btn-danger:hover,
+.agora .btnIcon.btn-danger:hover {
+  background-color: #e63153;
 }
 
 .agora .icon-cog {
@@ -152,7 +149,7 @@ html, body {
 
 .agora .screen {
   height: 100%;
-  padding: 0 15px 30px;
+  padding: 0 15px;
 }
 .agora.agora-fullscreen .screen {
   height: 69.5vh;
@@ -171,7 +168,7 @@ html, body {
 .agora .screen-users .user {
   position: relative;
   overflow: hidden;
-  padding: 0.5em;
+  padding: 3px;
 }
 .screen-users .user video {
   /* border-radius: 5px;
@@ -213,7 +210,7 @@ html, body {
 /* screeen with 2 users */
 .agora .screen-users-2 .user {
   width: 49%;
-  height: 50vh;
+  height: 35vh;
 }
 .agora-fullscreen .screen-users-2 .user {
   width: 50%;
@@ -221,11 +218,13 @@ html, body {
 }
 
 /* screen with 3-4 users */
-.agora .screen-users-3-4 .user{
+.agora .screen-users-3 .user,
+.agora .screen-users-4 .user{
   width: 50%;
-  height: 25vh;
+  height: 30vh;
 }
-.agora-fullscreen .screen-users-3-4 .user{
+.agora-fullscreen .screen-users-3 .user,
+.agora-fullscreen .screen-users-4 .user{
   height: 36vh;
 }
 
@@ -239,20 +238,20 @@ html, body {
 }
 
 /* screen with 7 y 8 users */
-.agora .screen-users-7-8 .user{
-  width: 24.5%;
-  height: 24vh;
+.agora .screen-users-7-9 .user{
+  width: 33%;
+  height: 20vh;
 }
-.agora-fullscreen .screen-users-7-8 .user{
+.agora-fullscreen .screen-users-7-9 .user{
   height: 29vh;
 }
 
-/* pantalla 9, 10, 11 y 12*/
-.agora .screen-users-9-12 .user{
+/* pantalla 10, 11 y 12*/
+.agora .screen-users-10-12 .user{
   width: 24.5%;
   height: 17vh;
 }
-.agora-fullscreen .screen-users-9-12 .user{
+.agora-fullscreen .screen-users-10-12 .user{
   height: 24vh;
 }
 
@@ -270,7 +269,7 @@ html, body {
   flex-direction: column;
   position: relative;
 }
-.agora .buttons-bottom { margin: .5em; display: flex; }
+.agora .buttons-bottom { margin: 1em .5em; display: flex; }
 .agora .buttons-bottom .btn-group,
 .agora .buttons-bottom>.btn-with-title { margin: 0 7px; text-align: center; position: relative; display: grid;
     grid-template-columns: 1fr; grid-template-rows: 1fr; }
@@ -382,7 +381,7 @@ html, body {
   display: inline-block;
   border-left: 1px solid #555;
   padding: 0;
-  margin: 0 20px;
+  margin: 0 15px;
   height: 38px;
   vertical-align: bottom;
 }
@@ -658,15 +657,14 @@ button.close {
  */
 .agora .fabs {
   bottom: 0;
-  position: absolute;
-  margin: 1em;
   right: 0;
+  position: absolute;
   z-index: 1031;
 }
 
 .agora .fabs .chat {
   position: absolute;
-  right: -2px;
+  right: 0;
   bottom: 0;
   display: none;
   opacity: 0;
@@ -676,38 +674,48 @@ button.close {
   opacity: 0;
 }
 
+.only-mobile { display: none !important; }
 
 /*
  * Responsive Media Queries
  */
 @media screen and (max-width: 1023px){
-  .agora .screen-users-9-12 .user{
+  .agora .screen-users-10-12 .user{
     width: 22%;
   }
 }
-@media screen and (max-width:768px){
+@media screen and (max-width:768px) {
+  .agora { font-size: 13px; }
+  .agora .screen { padding: 5px 0; }
   .btn-separator { display: none }
+  .only-desktop { display: none !important; }
+  .only-mobile { display: block !important; }
 
   .agora .screen-users-2 .user {
     width: 46.5%;
   }
-  .agora .screen-users-3-4 .user{
+  .agora .screen-users-4 .user{
     width: 46%;
   }
-  .agora .screen-users-9-12 .user{
-    width: 19%;
+  .agora .screen-users-10-12 .user{
+    width: 32%;
   }
 }
 @media screen and (max-width: 480px){
+  .agora-container { height: 90vh; }
+  .agora .buttons-botton { font-size: 25px; }
+  .agora .screen-users { margin: 0 auto; }
+  .agora .screen-users .user { padding: 0.1em; }
+  .agora .screen-users-1 .user { height: 70vh; }
+  .agora .screen-users-3 .user,
+  .agora .screen-users-4 .user { width: 50%; height: 32vh; }
+  .agora .screen-users-3 .user:last-child{ width: 100%; }
   .agora .screen-users-2 .user{
-    width: 44.9%;
+    width: 100%;
+    height: 32vh;
   }
-  .agora .screen-users-3-4 .user{
-    width: 44%;
-  }
-  .agora .buttons-botton{
-    font-size: 25px;
-  }
+  .agora .screen-users-5-6 .user { height: 22vh; }
+  .agora .screen-users-7-9 .user { width: 32%; height: 21vh; }
 }
 @media screen and (max-width: 320px) {
   .agora .buttons-botton{
@@ -715,10 +723,6 @@ button.close {
   }
 }
 @media screen and (max-height: 480px) {
-  .agora .room-title,
-  .agora .leave-meeting{
-    padding: 0.3em;
-  }
   .agora .icon-cog{
     font-size: 16px;
   }
@@ -728,9 +732,6 @@ button.close {
   .agora .icon-enlarge{
     font-size: 16px;
     margin-right: 1.5em;
-  }
-  .agora .screen-users-3-4 .user{
-    padding: 0.03em 0.1em;
   }
   .agora .buttons-botton{
     font-size: 20px;
