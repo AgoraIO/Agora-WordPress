@@ -111,18 +111,14 @@ class WP_Agora_PageTemplate {
       wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
 
       wp_enqueue_style( 'fontawesome', plugin_dir_url( __FILE__ ) . 'css/fontawesome/css/all.min.css', array(), null, 'all' );
-      // wp_enqueue_style( 'agora-fullscreen',  plugin_dir_url( __FILE__ ) . 'css/wp-agora-fullscreen.css', array(), null, 'all' );
-      // wp_enqueue_style( 'agora-styles', plugin_dir_url( __FILE__ ) . 'css/wp-agora-styles2.css', array(), null, 'all' );
-
-      // duplicated file??
-      // wp_enqueue_script('screen-share', plugin_dir_url( __FILE__ ) . "js/screen-share.js", array('jquery'), null, true);
-
 
       // Return default template if we don't have a custom one defined
       $template_in_use = get_post_meta( $post->ID, '_wp_page_template', true );
       if ( !isset( $this->templates[$template_in_use] ) ) {
         return $template;
       }
+
+      wp_enqueue_script( 'agora-screen-share', plugin_dir_url( __FILE__ ) . 'js/screen-share.js', array( 'jquery' ), $this->agora->version, false );
 
       $file = plugin_dir_path(__FILE__) . 'views/' . get_post_meta($post->ID, '_wp_page_template', true);
 
