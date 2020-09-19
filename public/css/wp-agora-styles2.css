@@ -25,12 +25,8 @@ html, body {
 }
 
 /*  total 100vh - 32px of wp admin bar */
-.agora-fullscreen .agora-container {
-  display: grid;
-  grid-template-rows: 5vh 85vh 10vh;
-}
 .admin-bar .agora-fullscreen .agora-container {
-  grid-template-rows: 5vh 80vh 10vh;
+  height: calc(100vh - 32px)
 }
 
 .agora-container button {
@@ -55,7 +51,7 @@ html, body {
   transform: scale(1.2);
 }
 
-.agora-content {
+.agora-container {
   background-color: var(--agora-background);
 }
 .agora-fullscreen .agora-content {
@@ -152,10 +148,7 @@ html, body {
   padding: 0 15px;
 }
 .agora.agora-fullscreen .screen {
-  height: 69.5vh;
   align-items: center;
-  display: grid;
-  overflow: hidden;
   padding: 0 15px;
 }
 .agora .screen-users{
@@ -200,7 +193,7 @@ html, body {
   height: 50vh;
 }
 .agora-fullscreen .screen-users-1 .user {
-  height: 69.5vh;
+  height: 75vh;
 }
 
 .agora.agora-audience .screen-users-1 .user {
@@ -234,7 +227,7 @@ html, body {
   height: 25vh;
 }
 .agora-fullscreen .screen-users-5-6 .user{
-  height: 34vh;
+  height: 37vh;
 }
 
 /* screen with 7 y 8 users */
@@ -243,7 +236,7 @@ html, body {
   height: 20vh;
 }
 .agora-fullscreen .screen-users-7-9 .user{
-  height: 29vh;
+  height: 25vh;
 }
 
 /* pantalla 10, 11 y 12*/
@@ -269,6 +262,7 @@ html, body {
   flex-direction: column;
   position: relative;
 }
+.agora-fullscreen .agora-footer { width: 100%; position: fixed; bottom: 0; }
 .agora .buttons-bottom { margin: 1em .5em; display: flex; }
 .agora .buttons-bottom .btn-group,
 .agora .buttons-bottom>.btn-with-title { margin: 0 7px; text-align: center; position: relative; display: grid;
@@ -702,9 +696,9 @@ button.close {
   }
 }
 @media screen and (max-width: 480px){
-  .agora-container { height: 90vh; }
+  .agora-container { height: 100vh; }
   .agora .buttons-botton { font-size: 25px; }
-  .agora .screen-users { margin: 0 auto; }
+  .agora .screen-users { margin: 0; }
   .agora .screen-users .user { padding: 0.1em; }
   .agora .screen-users-1 .user { height: 70vh; }
   .agora .screen-users-3 .user,
@@ -716,6 +710,14 @@ button.close {
   }
   .agora .screen-users-5-6 .user { height: 22vh; }
   .agora .screen-users-7-9 .user { width: 32%; height: 21vh; }
+
+  .agora.agora-fullscreen .screen { padding: 0 5px; }
+  .agora-fullscreen .screen-users-1 .user{ height: 78vh; }
+  .agora-fullscreen .screen-users-2 .user{ height: 40vh; }
+  .agora-fullscreen .screen-users-3 .user,
+  .agora-fullscreen .screen-users-4 .user { height: 38vh; }
+  .agora-fullscreen .screen-users-5-6 .user { width: 50%; height: 26vh; }
+  .agora-fullscreen .screen-users-7-9 .user { width: 50%; height: 20vh; }
 }
 @media screen and (max-width: 320px) {
   .agora .buttons-botton{
