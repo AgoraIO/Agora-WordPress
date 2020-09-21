@@ -84,7 +84,10 @@
     border-radius: 50%;
     transition: opacity ease 1s;
 }
-
+.agora.agora-audience #chat-alert {
+  text-shadow: none;
+  box-shadow: 0px 0px 3px #585858;
+}
 
 .agora .chat_body {
   background: #fff;

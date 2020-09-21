@@ -1,5 +1,8 @@
 <div class="fabs">
-	<a id="chatToggleBtn" class="fab" style="display: none"><i class="fas fa-comment"></i></a>
+	<a id="chatToggleBtn" class="fab" style="display: none">
+		<i id="chat-alert" class="fas fa-bell"></i>
+		<i class="fas fa-comment"></i>
+	</a>
 	<div class="chat">
 		<div class="chat_header">
 			<?php _e('Chat', 'agoraio'); ?>

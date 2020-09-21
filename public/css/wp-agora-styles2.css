@@ -146,6 +146,7 @@ html, body {
 .agora .screen {
   height: 100%;
   padding: 0 15px;
+  overflow: hidden;
 }
 .agora.agora-fullscreen .screen {
   align-items: center;

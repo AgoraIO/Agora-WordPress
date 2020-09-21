@@ -113,6 +113,9 @@
 			textarea.focus()
 		}
 
+		chatNameInput.addEventListener('focus', function() {
+			chatNameInput.scrollIntoView({behavior: "smooth", block: "end"});
+		})
 	}
 
 
