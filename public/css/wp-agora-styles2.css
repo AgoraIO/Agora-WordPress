@@ -645,6 +645,9 @@ button.close {
   padding: 0 10px;
 }
 
+#watch-live-closed {
+  margin: 100px auto;
+}
 
 /*
  * Communication Chat

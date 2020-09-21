@@ -3,9 +3,10 @@
 	const TOKEN_SEP = 'ππ';	
 	const textarea = document.querySelector("#chatSend");
 	const chatMsgWindow = $('#chat_fullscreen');
-	const chatToggleBtn = $('#chat-btn');
+	const chatToggleBtn = $( window.agoraMode==='audience' ? '#chatToggleBtn' : '#chat-btn');
 	const chatMinBtn = $('#chat-minimize');
 	const chatNameInput = document.querySelector('#chat_name');
+	const chatAlert = document.querySelector('#chat-alert');
 	const chatRoot = $('.chat');
 	let lastUserChat = '';
 
@@ -30,8 +31,6 @@
 	$('#chat_converse').css('display', 'none');
 	$('#chat_body').css('display', 'none');
 	$('#chat_form').css('display', 'none');
-	
-
 
 	//Toggle chat and links
 	function toggleChatWindow() {
@@ -56,7 +55,11 @@
 				chatNameInput.focus()
 			}
 		}
-		document.querySelector('#chat-alert').style.opacity = 0;
+
+		// available only on broadcast and communication. not on audience view
+		if (chatAlert) {
+			chatAlert.style.opacity = 0;
+		}
 	}
 
 	chatMinBtn.click(toggleChatWindow);
@@ -142,7 +145,7 @@
 	function scrollToBottm() {
 	  chatMsgWindow.animate({
 	    scrollTop: chatMsgWindow[0].scrollHeight
-	 }, 500);
+	  }, 500);
 	}
 
 	function addLocalMsg(msg) {
@@ -224,8 +227,8 @@
 		
 		if (chatRoot.hasClass('is-visible')){
 			scrollToBottm();
-		} else {
-			document.querySelector('#chat-alert').style.opacity = 1;
+		} else if (chatAlert) {
+			chatAlert.style.opacity = 1;
 		}
 	}
 

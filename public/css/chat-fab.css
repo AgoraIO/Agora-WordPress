@@ -17,6 +17,15 @@
   margin: 0;
 }
 
+.agora-audience .fabs>.fab {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0 20px 25px 0;
+  font-size: 32px;
+  text-shadow: 2px 2px 4px #000;
+}
+
 .agora .chat_header {
 	font-size: 14px;
 	font-weight: 600;
@@ -46,8 +55,8 @@
 .agora .chat.is-visible {
   display: block;
   opacity: 1;
-  -webkit-animation: zoomIn .2s cubic-bezier(.42, 0, .58, 1);
-  animation: zoomIn .2s cubic-bezier(.42, 0, .58, 1);
+  -webkit-animation: chatZoomIn .2s cubic-bezier(.42, 0, .58, 1);
+  animation: chatZoomIn .2s cubic-bezier(.42, 0, .58, 1);
 }
 .agora .is-hide{
   opacity: 0
@@ -89,9 +98,11 @@
 .agora #chat_body{
     height: 450px;
 }
-.agora .chat_body li, p, a{
-    -webkit-animation: zoomIn .5s cubic-bezier(.42, 0, .58, 1);
-  animation: zoomIn .5s cubic-bezier(.42, 0, .58, 1);
+.agora .chat_body li,
+.agora .chat_body p,
+.agora .chat_body a {
+    -webkit-animation: chatZoomIn .5s cubic-bezier(.42, 0, .58, 1);
+  animation: chatZoomIn .5s cubic-bezier(.42, 0, .58, 1);
 }
 .agora .chat_body p {
   padding: 20px;
@@ -174,8 +185,9 @@
   resize: none;
   font-size: 13px;
   font-weight: 400;
-  min-height: 30px;
   overflow: hidden;
+  min-height: 30px;
+  width: 80%;
 }
 .agora .chat_category{
   text-align: left;
@@ -309,8 +321,8 @@
   display: block;
   word-wrap: break-word;
   border-radius: 3px;
-  -webkit-animation: zoomIn .5s cubic-bezier(.42, 0, .58, 1);
-  animation: zoomIn .5s cubic-bezier(.42, 0, .58, 1);
+  -webkit-animation: chatZoomIn .5s cubic-bezier(.42, 0, .58, 1);
+  animation: chatZoomIn .5s cubic-bezier(.42, 0, .58, 1);
   clear: both;
   z-index: 999;
 }
@@ -498,7 +510,7 @@
 }
 /*Animation*/
 
-@-webkit-keyframes zoomIn {
+@-webkit-keyframes chatZoomIn {
   0% {
     -webkit-transform: scale(0);
     transform: scale(0);
@@ -511,7 +523,7 @@
   }
 }
 
-@keyframes zoomIn {
+@keyframes chatZoomIn {
   0% {
     -webkit-transform: scale(0);
     transform: scale(0);
@@ -571,17 +583,11 @@
     width: 300px;
     right: -2px;
   }
-  .agora .chat_field {
-    width: 80%;
-  }
 }
 /* TABLETS PORTRAIT */
 @media only screen and (min-width: 768px) {
   .agora .chat {
     width: 300px;
-  }
-  .agora .chat_field {
-    width: 80%;
   }
 }
 /* TABLET LANDSCAPE / DESKTOP */
@@ -590,13 +596,10 @@
   .chat {
     width: 300px;
   }
-  .chat_field {
-    width: 80%;
-  }
 }
 /*Color Options*/
 
-/* Ripple */
+/* chatRipple */
 
 .agora .ink {
   display: block;
@@ -612,11 +615,11 @@
 /*animation effect*/
 
 .agora .ink.animate {
-  -webkit-animation: ripple 0.5s ease-in-out;
-          animation: ripple 0.5s ease-in-out;
+  -webkit-animation: chatRipple 0.5s ease-in-out;
+          animation: chatRipple 0.5s ease-in-out;
 }
 
-@-webkit-keyframes ripple {
+@-webkit-keyframes chatRipple {
   /*scale the element to 250% to safely cover the entire link and fade it out*/
   
   100% {
@@ -629,7 +632,7 @@
   }
 }
 
-@keyframes ripple {
+@keyframes chatRipple {
   /*scale the element to 250% to safely cover the entire link and fade it out*/
   
   100% {

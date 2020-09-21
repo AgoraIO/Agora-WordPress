@@ -1,4 +1,5 @@
 <div class="fabs">
+	<a id="chatToggleBtn" class="fab" style="display: none"><i class="fas fa-comment"></i></a>
 	<div class="chat">
 		<div class="chat_header">
 			<?php _e('Chat', 'agoraio'); ?>
@@ -23,7 +24,6 @@
 			<input type="hidden" id="error_name_invalid" value="<?php _e("Please, don't use special characters", 'agoraio'); ?>">
 		</div>
 	</div>
-	<!-- <a id="chatToggleBtn" class="fab"><i class="prime zmdi zmdi-comment-outline"></i></a> -->
 </div>
 <script type="text/javascript">
 	// window.addEventListener('agora.communication.joinedChannel', function loadChatApp() {

@@ -1,5 +1,6 @@
 <?php
 $settings = $channel->get_properties();
+// die ("<pre>".print_r($settings, true)."</pre>");
 $agoraStyle = '';
 if (!empty($settings['appearance']['splashImageURL'])) {
   $agoraStyle = 'style="background-size:cover;background-position:center center; background-image:url('.$settings['appearance']['splashImageURL'].')"';
@@ -55,6 +56,11 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
       </div>
     </div>
 
+    <?php
+    if (isset($agora->settings['agora-chat']) && $agora->settings['agora-chat']==='enabled') {
+      require_once('parts/chat-fab.php');
+    }  ?>
+
   </section>
 
   <?php require_once "parts/scripts-common.php" ?>
@@ -104,7 +110,7 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
           jQuery("#screen-zone").css('background', 'none')
           jQuery("#full-screen-video").fadeIn();
           AgoraRTC.Logger.info('AgoraRTC client initialized');
-          joinChannel(); // join channel upon successfull init
+          agoraJoinChannel(); // join channel upon successfull init
         }, function (err) {
           AgoraRTC.Logger.error('[ERROR] : AgoraRTC client init failed', err);
         });
@@ -122,6 +128,8 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
 
         AgoraRTC.Logger.info('New stream added: ' + streamId);
         AgoraRTC.Logger.info('Subscribing to remote stream:' + streamId);
+
+        document.querySelector('#chatToggleBtn').style.display = "block";
 
         jQuery("#watch-live-closed").hide();
         jQuery("#watch-live-overlay").hide();
@@ -202,6 +210,7 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
         } else {
           const usersCount = Object.keys(window.remoteStreams).length;
           if (usersCount===0) {
+            document.querySelector('#chatToggleBtn').style.display = "none";
             finishVideoScreen();
           }
         }
@@ -235,7 +244,7 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
     });
 
     // join a channel
-    function joinChannel() {
+    function agoraJoinChannel() {
       const token = window.AGORA_TOKEN_UTILS.agoraGenerateToken();
 
       // set the role
@@ -245,12 +254,7 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
         AgoraRTC.Logger.error('setClientRole failed', e);
       });
       
-      <?php
-      $current_user = wp_get_current_user();
-      $uid = $current_user->ID; // Get urrent user id
-      echo "var userID = ".$uid.";\n";
-      ?>
-      window.agoraClient.join(token, channelName, userID, function(uid) {
+      window.agoraClient.join(token, window.channelName, window.userID, function(uid) {
           AgoraRTC.Logger.info('User ' + uid + ' join channel successfully');
           window.AGORA_RTM_UTILS.joinChannel(uid);
       }, function(err) {
