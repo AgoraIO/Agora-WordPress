@@ -19,6 +19,8 @@
 
 		const localData = window.userID + TOKEN_SEP + window.wp_username;
 		showUserNotify(localData, 'welcome')
+
+		textarea.addEventListener(focus, addEventListener('focus', scrollOnMobileView));
 	} else {
 		document.querySelector('.fab_field.user').style.display='none';
 		chatMsgWindow.css('display', 'none');
@@ -113,9 +115,13 @@
 			textarea.focus()
 		}
 
-		chatNameInput.addEventListener('focus', function() {
-			chatNameInput.scrollIntoView({behavior: "smooth", block: "end"});
-		})
+		chatNameInput.addEventListener('focus', scrollOnMobileView)
+	}
+
+	function scrollOnMobileView() {
+		if (window.innerWidth < 561) {
+			this.scrollIntoView({behavior: "smooth", block: "center"});
+		}
 	}
 
 
