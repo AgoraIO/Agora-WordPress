@@ -64,9 +64,9 @@ $recordingSettings = $channelSettings['recording']; ?>
         <?php endif; ?>
 
 
-        <?php if (isset($channelSettings['settings']['external-rtmpServerURL']) && !empty($channelSettings['settings']['external-rtmpServerURL'])) : ?>
-        
         <div class="btn-separator"></div>
+
+        <?php if (isset($channelSettings['settings']['external-rtmpServerURL']) && !empty($channelSettings['settings']['external-rtmpServerURL'])) : ?>
         <div class="btn-with-title">
             <!-- data-toggle="modal" data-target="#addRtmpConfigModal" -->
             <button id="start-RTMP-broadcast" type="button" class="btnIcon" >
@@ -78,15 +78,18 @@ $recordingSettings = $channelSettings['recording']; ?>
         </div>
         <?php endif; ?>
 
-        <!-- <div class="btn-with-title">
+        <div class="btn-with-title">
     		<button id="add-rtmp-btn" type="button" class="btnIcon"
     			data-toggle="modal" data-target="#add-external-source-modal">
                 <i id="add-rtmp-loading-icon" class="inner-icon hidden"></i>
     			<i id="add-rtmp-icon" class="fas fa-plug"></i>
     		</button>
+            <button id="stop-rtmp-btn" type="button" class="btnIcon btn-danger hidden">
+                <i class="fas fa-plug"></i>
+            </button>
             <small id="label-inject-start" class="btn-title"><?php _e('Capture', 'agoraio') ?></small>
             <small id="label-inject-stop"  class="btn-title hidden"><?php _e('Stop', 'agoraio') ?></small>
-        </div> -->
+        </div>
 	</div>
     <div class="error-container">
         <span id="error-msg" class="text-danger"></span>

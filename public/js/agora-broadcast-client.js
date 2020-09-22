@@ -59,7 +59,7 @@ function agoraJoinChannel() {
     createCameraStream(uid, {});
     window.localStreams.uid = uid; // keep track of the stream uid  
     AgoraRTC.Logger.info('User ' + uid + ' joined channel successfully');
-    setupLiveStreamListeners();
+
   }, function(err) {
       AgoraRTC.Logger.error('[ERROR] : join channel failed', err);
   });
@@ -171,14 +171,13 @@ function startLiveTranscoding() {
 // window.AGORA_BROADCAST_CLIENT.startLiveTranscoding = startLiveTranscoding;
 
 function addExternalSource() {
-  var externalUrl = jQuery('#input_external_url').val();
+  const externalUrl = jQuery('#input_external_url').val();
   
   // set live transcoding config
-  window.agoraClient.addInjectStreamUrl(externalUrl, window.injectStreamConfig)
   window.injectedStreamURL = externalUrl;
+  window.agoraClient.addInjectStreamUrl(externalUrl, window.injectStreamConfig)
   // TODO: ADD view for external url (similar to rtmp url)
 }
-// window.AGORA_BROADCAST_CLIENT.addExternalSource = addExternalSource;
 
 // RTMP Connection (UI Component)
 function addExternalTransmitionMiniView(rtmpURL) {
@@ -212,6 +211,12 @@ function addExternalTransmitionMiniView(rtmpURL) {
     jQuery('#rtmp-container').remove();
   });
 }
+
+
+window.addEventListener('agora.rtm_init', function() {
+  setupLiveStreamListeners();
+  setupInjectStreamsListeners();
+});
 
 function setupLiveStreamListeners() {
   function toggleStreamButton(err, status) {
@@ -260,6 +265,27 @@ function setupLiveStreamListeners() {
 
   window.agoraClient.on('liveTranscodingUpdated', function (evt) {
     console.log("Live streaming updated", evt);
+  });
+}
+
+
+function setupInjectStreamsListeners() {
+  window.agoraClient.on('streamInjectedStatus', function (evt) {
+    console.log("Live streaming Injected Status:", evt);
+
+    const thisBtn = jQuery('#add-rtmp-btn');
+    const loaderIcon = thisBtn.find('#add-rtmp-loading-icon');
+    const captureIcon = thisBtn.find('#add-rtmp-icon');
+
+    if (evt.reason && evt.reason.indexOf('fail')>=0) {
+      window.AGORA_UTILS.showErrorMessage(evt.reason);
+      loaderIcon.hide();
+      captureIcon.show();
+    }
+  });
+
+  window.agoraClient.on('exception', function (ex) {
+    console.error("Agora Exception:", ex);
   });
 }
 

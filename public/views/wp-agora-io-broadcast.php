@@ -35,9 +35,6 @@ $current_user       = wp_get_current_user();
       <?php require_once "parts/footer-broadcast.php" ?>
     </section>
 
-
-    <?php // require_once "parts/modal-rtmp.php" ?>
-
     <?php require_once "parts/modal-external-url.php" ?>    
 
   <?php require_once "parts/scripts-common.php" ?>

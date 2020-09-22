@@ -19,7 +19,8 @@
           </form>
         </div>
         <div class="modal-footer">
-          <span id="external-url-error" class="error text-danger" style="display: none">Please enter a valid external URL</span>
+          <span id="external-url-error" class="error text-danger" style="display: none"><?php _e('Please enter a valid external URL', 'agoraio') ?></span>
+          <span id="external-url-too-long" class="error text-danger" style="display: none"><?php _e('The URL is too long. Max length supported is 255', 'agoraio') ?></span>
           <button type="button" id="add-external-stream" class="btn btn-primary">
               <i id="add-rtmp-icon" class="fas fa-plug"></i>  
           </button>

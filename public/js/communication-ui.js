@@ -69,7 +69,7 @@ window.AGORA_COMMUNICATION_UI = {
           console.log("quick toggle the video");
           window.AGORA_COMMUNICATION_UI.toggleVideo(localStream);
           break; 
-        /* case "s":
+        case "s":
           console.log("initializing screen share");
           toggleScreenShareBtn(); // set screen share button icon
           jQuery("#screen-share-btn").prop("disabled",true); // disable the button on click
@@ -78,7 +78,7 @@ window.AGORA_COMMUNICATION_UI = {
           } else {
             initScreenShare(); 
           }
-          break;  */
+          break;
         case "q":
           console.log("so sad to see you quit the channel");
           window.AGORA_COMMUNICATION_CLIENT.agoraLeaveChannel(); 

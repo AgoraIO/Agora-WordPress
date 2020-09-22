@@ -33,9 +33,6 @@ $current_user       = wp_get_current_user();
       </div>
       <?php require_once "parts/footer-broadcast.php" ?>
     </section>
-    
-
-    <?php // require_once "parts/modal-rtmp.php" ?>
 
     <?php require_once "parts/modal-external-url.php" ?>   
     
@@ -112,17 +109,6 @@ $current_user       = wp_get_current_user();
         window.AGORA_BROADCAST_CLIENT.agoraJoinChannel(); // join channel upon successfull init
       }, function (err) {
         AgoraRTC.Logger.error('[ERROR] : AgoraRTC client init failed', err);
-      });
-
-      window.agoraClient.on('streamInjectedStatus', function (evt) {
-        console.log("Live streaming Injected Status:", evt);
-      });
-
-      window.agoraClient.on('stream-added', function (evt) {
-        console.log("streaming Injected:", evt);
-      });
-      window.agoraClient.on('exception', function (ex) {
-        console.error("Agora Exception:", ex);
       });
 
     });// end addEventListener Load

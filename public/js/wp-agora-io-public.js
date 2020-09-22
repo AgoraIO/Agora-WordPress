@@ -266,13 +266,22 @@ window.AGORA_UTILS = {
         window.AGORA_UTILS.updateUsersCounter(usersCount)
       }
 
-      if (window.screenshareClients[streamId]) {
-        typeof window.screenshareClients[streamId].stop==='function' && window.screenshareClients[streamId].stop();
+      const remoteStream = evt.stream;
+      const isInjectedStream = window.injectedStreamURL && window.injectedStreamURL!=="";
+     
+      if (window.screenshareClients[streamId] || isInjectedStream) {
+        typeof remoteStream.stop==='function' && remoteStream.stop();
         const remoteContainerID = '#' + streamId + '_container';
         jQuery(remoteContainerID).empty().remove();
         const streamsContainer = jQuery('#screen-zone');
         streamsContainer.toggleClass('sharescreen');
-        delete window.screenshareClients[streamId];
+
+        if (isInjectedStream) {
+          window.injectedStreamURL = false;
+          window.AGORA_BROADCAST_UI.toggleCaptureStreamBtn(null, 'stopped');
+        } else {
+          delete window.screenshareClients[streamId];
+        }
       }
 
       if (window.AGORA_CLOUD_RECORDING.isCloudRecording) {
@@ -307,10 +316,15 @@ window.AGORA_UTILS = {
 
       AgoraRTC.Logger.info("Subscribe remote stream successfully: " + remoteId);
 
-      if (window.screenshareClients[remoteId]) {
+      const isInjectedStream = window.injectedStreamURL && window.injectedStreamURL!=="";
+      if (window.screenshareClients[remoteId] || isInjectedStream) {
         // this is a screen share stream:
         console.log('Screen stream arrived:');
         window.AGORA_SCREENSHARE_UTILS.addRemoteScreenshare(remoteStream);
+
+        if (isInjectedStream) {
+          window.AGORA_BROADCAST_UI.toggleCaptureStreamBtn(null, 'started');
+        }
       } else {
         // show new stream on screen:
         window.AGORA_UTILS.addRemoteStreamView(remoteStream);
