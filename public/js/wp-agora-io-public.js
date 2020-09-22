@@ -142,11 +142,14 @@ window.AGORA_UTILS = {
 
       console.error('Error:', msg)
       const errorEl = jQuery('#error-msg');
-      errorEl.html('Agora Error: ' + msg);
       errorEl.parent().show();
+      errorEl.html('Agora Error: ' + msg);
+      errorEl.css('opacity', 1)
       setTimeout(function(el) {
-        el.html('');
-        el.parent().hide();
+        el.css('opacity', 0)
+        setTimeout(function(){
+          el.parent().hide();
+        }, 500);
       }, ERROR_SHOW_TIME, errorEl)
     }
   },

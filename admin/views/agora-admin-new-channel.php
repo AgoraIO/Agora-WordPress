@@ -258,6 +258,12 @@ function agora_render_video_settings($settings, $prefix) {
   ?>
   <table class="form-table">
     <?php
+
+    if ($prefix==='external') {
+      agora_render_setting_row('rtmpServerURL', __('RTMP Server URL', 'agoraio'), $settings, $prefix, "text");
+      agora_render_setting_row('streamKey', __('Stream key', 'agoraio'), $settings, $prefix, "text");
+    }
+    
     agora_render_setting_row('width', __('Width', 'agoraio'), $settings, $prefix);
     agora_render_setting_row('height', __('Height', 'agoraio'), $settings, $prefix);
     agora_render_setting_row('videoBitrate', __('Video Bitrate', 'agoraio'), $settings, $prefix);

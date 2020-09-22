@@ -53,18 +53,28 @@ window.AGORA_BROADCAST_UI = {
     });
 
     jQuery("#start-RTMP-broadcast").click(function(){
-      var formValid = document.getElementById('rtmp-config').checkValidity();
-      var errorEl = jQuery('#rtmp-error-msg');
-      if (!formValid) {
-        errorEl.show();
-        return;
-      } else {
-        errorEl.hide();
-      }
 
-      window.AGORA_BROADCAST_CLIENT.startLiveTranscoding();
-      jQuery('#addRtmpConfigModal').modal('toggle');
-      // jQuery('#input_rtmp_url').val('');
+      const thisBtn = jQuery(this);
+      const loaderIcon = jQuery('#rtmp-loading-icon');
+      const configIcon = jQuery('#rtmp-config-icon');
+
+      if (thisBtn.hasClass('btn-danger')) {
+        thisBtn.toggleClass('btn-danger');
+        window.agoraClient.stopLiveStreaming( window.externalBroadcastUrl );
+        return false;
+      } else if (thisBtn.hasClass('load-rec')) {
+        return false;
+      } else {
+        thisBtn.toggleClass('load-rec');
+        configIcon.hide()
+        loaderIcon.show()
+      }
+      
+      if (window.defaultConfigRTMP['rtmpServerURL'] && window.defaultConfigRTMP['rtmpServerURL'].length>1) {
+        window.AGORA_BROADCAST_CLIENT.startLiveTranscoding();
+        // next step: function setupLiveStreamListeners on agora-broadcast-client.js
+      }
+      // jQuery('#addRtmpConfigModal').modal('toggle');
     });
 
     jQuery("#add-external-stream").click(function(){

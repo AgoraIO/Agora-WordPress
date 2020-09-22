@@ -23,6 +23,10 @@ html, body {
   margin: 5px 0 20px;
   display: none;
 }
+.agora .error-container span {
+  opacity: 0;
+  transition: opacity ease 0.5s;
+}
 
 /*  total 100vh - 32px of wp admin bar */
 .admin-bar .agora-fullscreen .agora-container {
@@ -284,6 +288,8 @@ html, body {
   text-align: center;
   user-select: none;
   transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+  max-width: 40px;
+  margin: 0 auto;
 }
 .agora .btnIcon:hover {
   background-color: #8795a3;
@@ -309,7 +315,6 @@ html, body {
 }
 .btn-group small.btn-title { grid-column: 1 / span 2; }
 .agora .buttons-bottom small {
-  display: block;
   color: #808080;
 }
 .agora .btnIcon.dropdown-toggle { padding: 8px; float: right; }
@@ -405,13 +410,14 @@ html, body {
 }
 .agora .modal {
     position: absolute;
-    top: 24px;
+    top: 0;
     left: 0;
     z-index: 1050;
     display: none;
     width: 100%;
     overflow: hidden;
     outline: 0;
+    padding-top: 68px;
 }
 .fade:not(.show) {
     opacity: 0;
@@ -422,7 +428,7 @@ html, body {
 .agora .modal-dialog {
     position: relative;
     width: auto;
-    margin: .5rem;
+    margin: 0 auto;
     pointer-events: none;
 }
 .agora .modal.show .modal-dialog {

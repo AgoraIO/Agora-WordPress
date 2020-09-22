@@ -43,7 +43,7 @@ $recordingSettings = $channelSettings['recording']; ?>
             !empty($recordingSettings['accessKey'])) : ?>
         <div class="btn-with-title">
             <button id="cloud-recording-btn" type="button" class="btnIcon start-rec" title="<?php _e('Start Recording', 'agoraio'); ?>">
-                <i id="screen-share-icon" class="fas fa-dot-circle" style="display: none"></i>
+                <i id="screen-share-icon" class="fas fa-dot-circle hidden"></i>
                 <i id="screen-share-icon" class="inner-icon"></i>
             </button>
             <small class="btn-title"><?php _e('Record', 'agoraio') ?></small>
@@ -63,22 +63,27 @@ $recordingSettings = $channelSettings['recording']; ?>
         </div>
         <?php endif; ?>
 
-        <!-- <div class="btn-separator"></div>
+        <div class="btn-separator"></div>
 
+        <?php if (isset($channelSettings['settings']['external-rtmpServerURL']) && !empty($channelSettings['settings']['external-rtmpServerURL'])) : ?>
         <div class="btn-with-title">
-            <button id="rtmp-config-btn" type="button" class="btnIcon" 
-                data-toggle="modal" data-target="#addRtmpConfigModal">
+            <!-- data-toggle="modal" data-target="#addRtmpConfigModal" -->
+            <button id="start-RTMP-broadcast" type="button" class="btnIcon" >
+                <i id="rtmp-loading-icon" class="inner-icon hidden"></i>
                 <i id="rtmp-config-icon" class="fas fa-rotate-270 fa-sign-out-alt"></i>
             </button>
-            <small class="btn-title"><?php _e('Stream', 'agoraio') ?></small>
+            <small id="label-stream-start" class="btn-title"><?php _e('Stream', 'agoraio') ?></small>
+            <small id="label-stream-stop" class="btn-title hidden"><?php _e('Stop', 'agoraio') ?></small>
         </div>
+        <?php endif; ?>
+
         <div class="btn-with-title">
     		<button id="add-rtmp-btn"  type="button" class="btnIcon"
     			data-toggle="modal" data-target="#add-external-source-modal">
     			<i id="add-rtmp-icon" class="fas fa-plug"></i>
     		</button>
             <small class="btn-title"><?php _e('Capture', 'agoraio') ?></small>
-        </div> -->
+        </div>
 	</div>
     <div class="error-container">
         <span id="error-msg" class="text-danger"></span>

@@ -36,7 +36,7 @@ $current_user       = wp_get_current_user();
     </section>
 
 
-    <?php require_once "parts/modal-rtmp.php" ?>
+    <?php // require_once "parts/modal-rtmp.php" ?>
 
     <?php require_once "parts/modal-external-url.php" ?>    
 
@@ -59,6 +59,8 @@ $current_user       = wp_get_current_user();
       window.externalBroadcastUrl = '';
       // default config for rtmp
       window.defaultConfigRTMP = {
+        rtmpServerURL: "<?php echo isset($videoSettings['external-rtmpServerURL']) ? $videoSettings['external-rtmpServerURL'] : '' ?>",
+        streamKey: "<?php echo isset($videoSettings['external-streamKey']) ? $videoSettings['external-streamKey'] : "" ?>",
         width: <?php echo $videoSettings['external-width'] ?>,
         height: <?php echo $videoSettings['external-height'] ?>,
         videoBitrate: <?php echo $videoSettings['external-videoBitrate'] ?>,
@@ -110,22 +112,6 @@ $current_user       = wp_get_current_user();
         AgoraRTC.Logger.error('[ERROR] : AgoraRTC client init failed', err);
       });
 
-
-      window.agoraClient.on('liveStreamingStarted', function (evt) {
-        console.log("Live streaming started", evt);
-      }); 
-
-      window.agoraClient.on('liveStreamingFailed', function (evt) {
-        console.log("Live streaming failed", evt);
-      }); 
-
-      window.agoraClient.on('liveStreamingStopped', function (evt) {
-        console.log("Live streaming stopped", evt);
-      });
-
-      window.agoraClient.on('liveTranscodingUpdated', function (evt) {
-        console.log("Live streaming updated", evt);
-      });
     });
 
   </script>
