@@ -11,7 +11,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form id="external-inject-config">
+          <form id="external-inject-config" onsubmit="return false">
             <div class="form-group">
               <label for="input_external_url">External URL</label>
               <input type="url" class="form-control" id="input_external_url" placeholder="Enter the external URL" required>
