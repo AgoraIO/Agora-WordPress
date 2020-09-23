@@ -1,6 +1,6 @@
 <?php
 $settings = $channel->get_properties();
-// die ("<pre>".print_r($settings, true)."</pre>");
+
 $agoraStyle = '';
 if (!empty($settings['appearance']['splashImageURL'])) {
   $agoraStyle = 'style="background-size:cover;background-position:center center; background-image:url('.$settings['appearance']['splashImageURL'].')"';
@@ -16,9 +16,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
   $screenStyles = "background-size:cover; background-image: url('".$settings['appearance']['noHostImageURL']."')";
 }
 
-// die("<pre>".print_r($settings, true)."</pre>");
-$user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
-// die("<pre>".print_r($user_avatar['url'], true)."</pre>");
+// $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
 ?>
 <div id="agora-root" class="agora agora-broadcast agora-audience">
   <section class="agora-container no-footer">

@@ -1,19 +1,20 @@
 *, ::after, ::before {
     box-sizing: border-box;
-    --agora-background: #343338;
-}
-html, body {
-  background-color: var(--agora-background) 
-}
-.text-danger {
-    color: #dc3545!important;
 }
 
 .agora {
+  --agora-background: #343338;
+  --red-bg-color: #d94964;
+
   font-size: 14px;
   position: relative;
   line-height: 16px;
   font-family: Arial;
+  background-color: var(--agora-background)
+}
+
+.agora .text-danger {
+    color: #dc3545!important;
 }
 
 /* .agora-container.no-footer {  
@@ -87,14 +88,14 @@ html, body {
 .agora .room-title .fas { color: #646161; }
 .agora .leave-meeting {
   color: white;
-  border: 1px solid #d94964;
+  border: 1px solid var(--red-bg-color);
   border-radius: 5px;
   padding: .5em 1em;
   margin-left: 1em;
 }
 .agora .btn-danger,
 .agora .btnIcon.btn-danger {
-  background-color: #d94964;
+  background-color: var(--red-bg-color);
 }
 .agora .btn-danger:hover,
 .agora .btnIcon.btn-danger:hover {

@@ -144,8 +144,9 @@
 .agora .fab_field.non-user label { width: 100%; }
 .agora .fab_field.non-user .error { color: #d94964; }
 .agora .fab_field.non-user .btnIcon {
-    font-size: 13px;
+  font-size: 13px;
 	margin-top: 10px;
+  max-width: none;
 }
 .agora .fab_field.non-user .chat_enter_name {
 	font-size: 14px;
