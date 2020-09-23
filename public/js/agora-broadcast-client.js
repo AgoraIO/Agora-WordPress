@@ -121,6 +121,8 @@ function createCameraStream(uid, deviceIds) {
 
 function agoraLeaveChannel() {
 
+  window.dispatchEvent(new CustomEvent("agora.leavingChannel"));
+
   window.agoraClient.leave(function callbackLeave() {
     AgoraRTC.Logger.info('client leaves channel');
     window.localStreams.camera.stream.stop() // stop the camera stream playback
@@ -129,14 +131,19 @@ function agoraLeaveChannel() {
     //disable the UI elements
     jQuery('#mic-btn').prop('disabled', true);
     jQuery('#video-btn').prop('disabled', true);
+    jQuery('#screen-share-btn').prop('disabled', true);
     jQuery('#exit-btn').prop('disabled', true);
     jQuery("#add-rtmp-btn").prop("disabled", true);
     jQuery("#rtmp-config-btn").prop("disabled", true);
+    jQuery("#start-RTMP-broadcast").prop("disabled", true);
     jQuery("#cloud-recording-btn").prop("disabled", true);
 
     window.localStreams.camera.stream = null;
 
-    window.dispatchEvent(new CustomEvent("agora.leaveChannel"));
+    // leave also RTM Channel
+    window.AGORA_RTM_UTILS.leaveChannel();
+
+    window.dispatchEvent(new CustomEvent("agora.leavedChannel"));
   }, function(err) {
     AgoraRTC.Logger.error('client leave failed ', err); //error handling
   });

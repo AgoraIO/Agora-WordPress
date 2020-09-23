@@ -178,6 +178,8 @@ function agoraLeaveChannel() {
     jQuery("#video-btn").prop("disabled", true);
     jQuery("#screen-share-btn").prop("disabled", true);
     jQuery("#exit-btn").prop("disabled", true);
+    jQuery("#cloud-recording-btn").prop("disabled", true);
+    
     // hide the mute/no-video overlays
     window.AGORA_UTILS.toggleVisibility("#mute-overlay", false); 
     window.AGORA_UTILS.toggleVisibility("#no-local-video", false);
