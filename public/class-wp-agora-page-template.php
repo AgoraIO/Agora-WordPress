@@ -111,12 +111,6 @@ class WP_Agora_PageTemplate {
       wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
 
       wp_enqueue_style( 'fontawesome', plugin_dir_url( __FILE__ ) . 'css/fontawesome/css/all.min.css', array(), null, 'all' );
-      // wp_enqueue_style( 'agora-fullscreen',  plugin_dir_url( __FILE__ ) . 'css/wp-agora-fullscreen.css', array(), null, 'all' );
-      // wp_enqueue_style( 'agora-styles', plugin_dir_url( __FILE__ ) . 'css/wp-agora-styles2.css', array(), null, 'all' );
-
-      // duplicated file??
-      // wp_enqueue_script('screen-share', plugin_dir_url( __FILE__ ) . "js/screen-share.js", array('jquery'), null, true);
-
 
       // Return default template if we don't have a custom one defined
       $template_in_use = get_post_meta( $post->ID, '_wp_page_template', true );
@@ -124,14 +118,12 @@ class WP_Agora_PageTemplate {
         return $template;
       }
 
+      wp_enqueue_script( 'agora-screen-share', plugin_dir_url( __FILE__ ) . 'js/screen-share.js', array( 'jquery' ), $this->agora->version, false );
+
       $file = plugin_dir_path(__FILE__) . 'views/' . get_post_meta($post->ID, '_wp_page_template', true);
 
       
       if ( strpos($post->post_content, '[agora-communication')!==FALSE ) {
-        // $slickURL = plugin_dir_url( __FILE__ ) . 'js/slick-1.8.1/';
-        // wp_enqueue_script( 'jquery.slick', $slickURL . 'slick.min.js', array('jquery'), null );
-        // wp_enqueue_style( 'jquery.slick.css', $slickURL . 'slick.css', null, null );
-        // wp_enqueue_style( 'jquery.slick.theme', $slickURL . 'slick-theme.css', null, null );
 
         wp_enqueue_script( 'agora-communication-client',
           plugin_dir_url( __FILE__ ) .'js/agora-communication-client.js', array('jquery'), $this->agora->version, true );
@@ -144,7 +136,6 @@ class WP_Agora_PageTemplate {
         $props = $channel->get_properties();
         
         if ((int)$props['host']===$current_user->ID) {
-          // die('f1:'. $file);
           $file = str_replace('agora-fullscreen-communication.php', 'agora-fullscreen-broadcast.php', $file);
 
           wp_enqueue_script('broadcast-client',
@@ -152,13 +143,9 @@ class WP_Agora_PageTemplate {
           wp_enqueue_script('broadcast-ui', 
             plugin_dir_url( __FILE__ ) . "js/broadcast-ui.js", array('jquery'), $this->agora->version, true);
         } else {
-          // die('f2:'. $file);
           $file = str_replace('agora-fullscreen-communication.php', 'agora-fullscreen-audience.php', $file);
-          // $agoraUserScript = 'js/agora-broadcast-client.js';
         }
       }
-      // die( 'f:' . $file );
-
 
       // Just to be safe, we check if the file exist first
       if ( file_exists( $file ) ) {

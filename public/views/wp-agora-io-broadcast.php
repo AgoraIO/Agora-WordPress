@@ -1,4 +1,3 @@
-<!-- Agora Broadcast View -->
 <?php
 $channelSettings    = $channel->get_properties();
 $videoSettings      = $channelSettings['settings'];
@@ -35,12 +34,10 @@ $current_user       = wp_get_current_user();
       <?php require_once "parts/footer-broadcast.php" ?>
     </section>
 
-
-    <?php require_once "parts/modal-rtmp.php" ?>
-
     <?php require_once "parts/modal-external-url.php" ?>    
 
   <?php require_once "parts/scripts-common.php" ?>
+  <?php require_once "parts/scripts-broadcast.php" ?>
   <script>
     /**
      * Agora Broadcast Client 
@@ -50,56 +47,12 @@ $current_user       = wp_get_current_user();
 
     window.addEventListener('load', function() {
       
-      window.mainStreamId; // reference to main stream
-
-      // set video profile 
-      // [full list: https://docs.agora.io/en/Interactive%20Broadcast/videoProfile_web?platform=Web#video-profile-table]
-      
-
-      window.externalBroadcastUrl = '';
-      // default config for rtmp
-      window.defaultConfigRTMP = {
-        width: <?php echo $videoSettings['external-width'] ?>,
-        height: <?php echo $videoSettings['external-height'] ?>,
-        videoBitrate: <?php echo $videoSettings['external-videoBitrate'] ?>,
-        videoFramerate: <?php echo $videoSettings['external-videoFramerate'] ?>,
-        lowLatency: <?php echo $videoSettings['external-lowLatency'] ?>,
-        audioSampleRate: <?php echo $videoSettings['external-audioSampleRate'] ?>,
-        audioBitrate: <?php echo $videoSettings['external-audioBitrate'] ?>,
-        audioChannels: <?php echo $videoSettings['external-audioChannels'] ?>,
-        videoGop: <?php echo $videoSettings['external-videoGop'] ?>,
-        videoCodecProfile: <?php echo $videoSettings['external-videoCodecProfile'] ?>,
-        userCount: 1,
-        userConfigExtraInfo: {},
-        backgroundColor: parseInt('<?php echo str_replace('#', '', $videoSettings['external-backgroundColor']) ?>', 16),
-        transcodingUsers: [{
-          uid: window.userID,
-          alpha: 1,
-          width: <?php echo $videoSettings['external-width'] ?>,
-          height: <?php echo $videoSettings['external-height'] ?>,
-          x: 0,
-          y: 0,
-          zOrder: 0
-        }],
-      };
-
-      window.injectStreamConfig = {
-        width: <?php echo $videoSettings['inject-width'] ?>,
-        height: <?php echo $videoSettings['inject-height'] ?>,
-        videoBitrate: <?php echo $videoSettings['inject-videoBitrate'] ?>,
-        videoFramerate: <?php echo $videoSettings['inject-videoFramerate'] ?>,
-        audioSampleRate: <?php echo $videoSettings['inject-audioSampleRate'] ?>,
-        audioBitrate: <?php echo $videoSettings['inject-audioBitrate'] ?>,
-        audioChannels: <?php echo $videoSettings['inject-audioChannels'] ?>,
-        videoGop: <?php echo $videoSettings['inject-videoGop'] ?>,
-      };
-
+      window.mainStreamId = null; // reference to main stream
 
       // set log level:
       // -- .DEBUG for dev 
       // -- .NONE for prod
-      window.agoraLogLevel = window.location.href.indexOf('local')>0 ? AgoraRTC.Logger.ERROR : AgoraRTC.Logger.ERROR;
-      AgoraRTC.Logger.setLogLevel(window.agoraLogLevel);
+      AgoraRTC.Logger.setLogLevel(AgoraRTC.Logger.ERROR);
       // TODO: set DEBUG or NOE according to the current host (localhost or not)
 
       // init Agora SDK
@@ -110,27 +63,11 @@ $current_user       = wp_get_current_user();
         AgoraRTC.Logger.error('[ERROR] : AgoraRTC client init failed', err);
       });
 
-
-      window.agoraClient.on('liveStreamingStarted', function (evt) {
-        console.log("Live streaming started", evt);
-      }); 
-
-      window.agoraClient.on('liveStreamingFailed', function (evt) {
-        console.log("Live streaming failed", evt);
-      }); 
-
-      window.agoraClient.on('liveStreamingStopped', function (evt) {
-        console.log("Live streaming stopped", evt);
-      });
-
-      window.agoraClient.on('liveTranscodingUpdated', function (evt) {
-        console.log("Live streaming updated", evt);
-      });
     });
 
   </script>
   <style>
-    <?php if (isset($appearanceSettings['activeButtonColor']) && $appearanceSettings['activeButtonColor']!=='') { ?>
+    <?php /* if (isset($appearanceSettings['activeButtonColor']) && $appearanceSettings['activeButtonColor']!=='') { ?>
     .agora #main-container .btn.btn-dark,
     .agora #main-container .btn.btn-dark:hover,
     .agora #main-container .btn.btn-dark:focus {
@@ -145,7 +82,7 @@ $current_user       = wp_get_current_user();
       background-color: <?php echo $appearanceSettings['disabledButtonColor'] ?>;
       border-color: <?php echo $appearanceSettings['disabledButtonColor'] ?>;
     }
-    <?php } ?>
+    <?php } */ ?>
   </style>
 </div>
 <!-- End Agora Broadcast View -->

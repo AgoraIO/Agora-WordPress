@@ -6,7 +6,7 @@
   </div>
   <div class="right-buttons">
 
-    <button id="exit-btn" class= "leave-meeting btn-danger">
+    <button id="exit-btn" class= "leave-meeting btn-danger only-desktop">
       <?php _e('Leave Meeting', 'agoraio'); ?>
     </button>
     <i class="icon-cog"></i>

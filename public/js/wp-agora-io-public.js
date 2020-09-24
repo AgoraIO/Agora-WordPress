@@ -52,8 +52,9 @@ function changeStreamSource (deviceIndex, deviceType) {
     } else {
       AgoraRTC.Logger.warning("unable to determine deviceType: " + deviceType);
     }
-  }, function(){
+  }, function(err){
     AgoraRTC.Logger.error('failed to switch to new device with id: ' + JSON.stringify(deviceId));
+    console.error(err);
   });
 }
 
@@ -141,11 +142,14 @@ window.AGORA_UTILS = {
 
       console.error('Error:', msg)
       const errorEl = jQuery('#error-msg');
-      errorEl.html('Agora Error: ' + msg);
       errorEl.parent().show();
+      errorEl.html('Agora Error: ' + msg);
+      errorEl.css('opacity', 1)
       setTimeout(function(el) {
-        el.html('');
-        el.parent().hide();
+        el.css('opacity', 0)
+        setTimeout(function(){
+          el.parent().hide();
+        }, 500);
       }, ERROR_SHOW_TIME, errorEl)
     }
   },
@@ -171,11 +175,9 @@ window.AGORA_UTILS = {
   },
 
   agora_getUserAvatar: function (user_id, cb) {
-    var uid = String(user_id).substring(3);
-    console.log('Real WP user ID:', uid)
     var params = {
       action: 'get_user_avatar', // wp ajax action
-      uid, // needed to get the avatar from the WP user
+      uid: user_id, // needed to get the avatar from the WP user
     };
     window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(data) {
       if (cb) {
@@ -193,8 +195,10 @@ window.AGORA_UTILS = {
     let countClass = count;
     switch(count) {
       case 3:
+        countClass = '3';
+        break;
       case 4:
-        countClass = '3-4';
+        countClass = '4';
         break;
       case 5:
       case 6:
@@ -202,10 +206,12 @@ window.AGORA_UTILS = {
         break;
       case 7:
       case 8:
-        countClass = '7-8';
+      case 9:
+        countClass = '7-9';
         break;
-      case 9: case 10:
-      case 11: case 12:
+      case 10:
+      case 11:
+      case 12:
         countClass = '9-12';
         break;
     }
@@ -260,13 +266,22 @@ window.AGORA_UTILS = {
         window.AGORA_UTILS.updateUsersCounter(usersCount)
       }
 
-      if (window.screenshareClients[streamId]) {
-        typeof window.screenshareClients[streamId].stop==='function' && window.screenshareClients[streamId].stop();
+      const remoteStream = evt.stream;
+      const isInjectedStream = window.injectedStreamURL && window.injectedStreamURL!=="";
+     
+      if (window.screenshareClients[streamId] || isInjectedStream) {
+        typeof remoteStream.stop==='function' && remoteStream.stop();
         const remoteContainerID = '#' + streamId + '_container';
         jQuery(remoteContainerID).empty().remove();
         const streamsContainer = jQuery('#screen-zone');
         streamsContainer.toggleClass('sharescreen');
-        delete window.screenshareClients[streamId];
+
+        if (isInjectedStream) {
+          window.injectedStreamURL = false;
+          window.AGORA_BROADCAST_UI.toggleCaptureStreamBtn(null, 'stopped');
+        } else {
+          delete window.screenshareClients[streamId];
+        }
       }
 
       if (window.AGORA_CLOUD_RECORDING.isCloudRecording) {
@@ -301,10 +316,15 @@ window.AGORA_UTILS = {
 
       AgoraRTC.Logger.info("Subscribe remote stream successfully: " + remoteId);
 
-      if (window.screenshareClients[remoteId]) {
+      const isInjectedStream = window.injectedStreamURL && window.injectedStreamURL!=="";
+      if (window.screenshareClients[remoteId] || isInjectedStream) {
         // this is a screen share stream:
         console.log('Screen stream arrived:');
         window.AGORA_SCREENSHARE_UTILS.addRemoteScreenshare(remoteStream);
+
+        if (isInjectedStream) {
+          window.AGORA_BROADCAST_UI.toggleCaptureStreamBtn(null, 'started');
+        }
       } else {
         // show new stream on screen:
         window.AGORA_UTILS.addRemoteStreamView(remoteStream);

@@ -234,6 +234,19 @@ function renderUserChip(userId, name) {
 }
 
 
+function agoraChatChange() {
+	const enabled = document.querySelector('#agora-chat-check').checked;
+	const box = document.querySelector('#chat-status-text');
+	const statusText = box.dataset[enabled ? 'enabled' : 'disabled'];
+	box.innerText = statusText;
+
+	updateSettingValue('agora-chat', statusText, function(err, res) {
+		if (!res || !res.updated) {
+			// TODO: Show error?
+		}
+	})
+}
+
 (function( $ ) {
 	'use strict';
 
@@ -262,6 +275,11 @@ function renderUserChip(userId, name) {
 			if (usersRow.data('load-users')) {
 				loadHostBroadcastUsers( usersRow.data('load-users') );
 			}
+		}
+
+		if (document.querySelector('#agora-chat-check')) {
+			$('#agora-chat-check').change(agoraChatChange);
+			agoraChatChange();
 		}
 	});
 

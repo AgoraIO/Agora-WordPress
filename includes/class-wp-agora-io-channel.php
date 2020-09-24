@@ -7,6 +7,8 @@ class WP_Agora_Channel {
   private static $found_items = 0;
   private static $current = null;
   private static $defaultVideoSettings = array(
+    'external-rtmpServerURL' => '',
+    'external-streamKey' => '',
     'external-width' => 640,
     'external-height' => 360,
     'external-videoBitrate' => 400,

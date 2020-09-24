@@ -1,44 +1,40 @@
 *, ::after, ::before {
     box-sizing: border-box;
-    --agora-background: #343338;
-}
-html, body {
-  background-color: var(--agora-background) 
-}
-.text-danger {
-    color: #dc3545!important;
 }
 
 .agora {
+  --agora-background: #343338;
+  --red-bg-color: #d94964;
+
   font-size: 14px;
   position: relative;
   line-height: 16px;
   font-family: Arial;
+  background-color: var(--agora-background)
 }
 
-.agora-container {
-  display: grid;
-  grid-template-rows: 5% 80% 15%;
-  font-family: 14px
+.agora .text-danger {
+    color: #dc3545!important;
 }
-.agora-container.no-footer {
+
+/* .agora-container.no-footer {  
   grid-template-rows: 6% 94%;
-}
+} */
 .agora .error-container {
   margin: 5px 0 20px;
   display: none;
 }
+.agora .error-container span {
+  opacity: 0;
+  transition: opacity ease 0.5s;
+}
 
 /*  total 100vh - 32px of wp admin bar */
-.agora-fullscreen .agora-container {
-  grid-template-rows: 5vh 85vh 10vh;
-}
 .admin-bar .agora-fullscreen .agora-container {
-  grid-template-rows: 5vh 80vh 10vh;
+  height: calc(100vh - 32px)
 }
 
 .agora-container button {
-  font-size: 14px;
   font-weight: 500;
   text-transform: none;
   cursor: pointer;
@@ -49,7 +45,7 @@ html, body {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 0 7px;
+  padding: 10px 7px;
 }
 .agora-header .fas {
   cursor: pointer;
@@ -60,20 +56,18 @@ html, body {
   transform: scale(1.2);
 }
 
-.agora-content {
+.agora-container {
   background-color: var(--agora-background);
-  display: grid;
-  grid-template-rows: 12% 88%;
-  overflow: hidden;
 }
 .agora-fullscreen .agora-content {
+  display: grid;
   grid-template-rows: 8vh 92vh;
 }
 
 .agora .buttons-top{
   display: flex;
   justify-content: space-between;
-  margin: 0 16px
+  padding: 10px 16px
 }
 .agora .left-button{
   display: inherit;
@@ -94,14 +88,18 @@ html, body {
 .agora .room-title .fas { color: #646161; }
 .agora .leave-meeting {
   color: white;
-  border: 1px solid #d94964;
+  border: 1px solid var(--red-bg-color);
   border-radius: 5px;
   padding: .5em 1em;
   margin-left: 1em;
 }
 .agora .btn-danger,
 .agora .btnIcon.btn-danger {
-  background-color: #d94964;
+  background-color: var(--red-bg-color);
+}
+.agora .btn-danger:hover,
+.agora .btnIcon.btn-danger:hover {
+  background-color: #e63153;
 }
 
 .agora .icon-cog {
@@ -152,13 +150,11 @@ html, body {
 
 .agora .screen {
   height: 100%;
-  padding: 0 15px 30px;
+  padding: 0 15px;
+  overflow: hidden;
 }
 .agora.agora-fullscreen .screen {
-  height: 69.5vh;
   align-items: center;
-  display: grid;
-  overflow: hidden;
   padding: 0 15px;
 }
 .agora .screen-users{
@@ -171,7 +167,7 @@ html, body {
 .agora .screen-users .user {
   position: relative;
   overflow: hidden;
-  padding: 0.5em;
+  padding: 3px;
 }
 .screen-users .user video {
   /* border-radius: 5px;
@@ -203,7 +199,7 @@ html, body {
   height: 50vh;
 }
 .agora-fullscreen .screen-users-1 .user {
-  height: 69.5vh;
+  height: 75vh;
 }
 
 .agora.agora-audience .screen-users-1 .user {
@@ -213,7 +209,7 @@ html, body {
 /* screeen with 2 users */
 .agora .screen-users-2 .user {
   width: 49%;
-  height: 50vh;
+  height: 45vh;
 }
 .agora-fullscreen .screen-users-2 .user {
   width: 50%;
@@ -221,11 +217,13 @@ html, body {
 }
 
 /* screen with 3-4 users */
-.agora .screen-users-3-4 .user{
+.agora .screen-users-3 .user,
+.agora .screen-users-4 .user{
   width: 50%;
-  height: 25vh;
+  height: 30vh;
 }
-.agora-fullscreen .screen-users-3-4 .user{
+.agora-fullscreen .screen-users-3 .user,
+.agora-fullscreen .screen-users-4 .user{
   height: 36vh;
 }
 
@@ -235,29 +233,29 @@ html, body {
   height: 25vh;
 }
 .agora-fullscreen .screen-users-5-6 .user{
-  height: 34vh;
+  height: 37vh;
 }
 
 /* screen with 7 y 8 users */
-.agora .screen-users-7-8 .user{
-  width: 24.5%;
-  height: 24vh;
+.agora .screen-users-7-9 .user{
+  width: 33%;
+  height: 20vh;
 }
-.agora-fullscreen .screen-users-7-8 .user{
-  height: 29vh;
+.agora-fullscreen .screen-users-7-9 .user{
+  height: 25vh;
 }
 
-/* pantalla 9, 10, 11 y 12*/
-.agora .screen-users-9-12 .user{
+/* pantalla 10, 11 y 12*/
+.agora .screen-users-10-12 .user{
   width: 24.5%;
   height: 17vh;
 }
-.agora-fullscreen .screen-users-9-12 .user{
+.agora-fullscreen .screen-users-10-12 .user{
   height: 24vh;
 }
 
 
-.modal {
+.agora .modal, .agora .hidden {
   display: none
 }
 
@@ -268,10 +266,17 @@ html, body {
   align-items: center;
   z-index: 2;
   flex-direction: column;
+  position: relative;
 }
-.agora .buttons-bottom { margin: .5em; display: flex; }
+.agora-fullscreen .agora-footer { width: 100%; position: fixed; bottom: 0; }
+.agora .buttons-bottom { margin: 1em .5em; display: flex; }
 .agora .buttons-bottom .btn-group,
-.agora .buttons-bottom>.btn-with-title { margin: 0 7px; text-align: center; }
+.agora .buttons-bottom>.btn-with-title { margin: 0 7px; text-align: center; position: relative; display: grid;
+    grid-template-columns: 1fr; grid-template-rows: 1fr; }
+.agora .buttons-bottom .btn-group {
+  grid-template-columns: 1fr 0.65fr;
+}
+
 
 .agora .btnIcon {
   background: #6c757e;
@@ -280,10 +285,12 @@ html, body {
   color: white;
   font-size: 16px;
   line-height: 1.5;
-  padding: 8px .6rem;
+  padding: 8px 12px;
   text-align: center;
   user-select: none;
   transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+  max-width: 40px;
+  margin: 0 auto;
 }
 .agora .btnIcon:hover {
   background-color: #8795a3;
@@ -301,17 +308,17 @@ html, body {
 .btn-group>.btnIcon:not(:last-child):not(.dropdown-toggle) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    padding-right: 0.4em;
+    padding-right: 6px;
 }
 .btn-group>.btnIcon:not(:first-child) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
+.btn-group small.btn-title { grid-column: 1 / span 2; }
 .agora .buttons-bottom small {
-  display: block;
   color: #808080;
 }
-.agora .btnIcon.dropdown-toggle { padding: 8px 0.5em; float: right; }
+.agora .btnIcon.dropdown-toggle { padding: 8px; float: right; }
 .dropdown-toggle::after {
     display: inline-block;
     /* margin-left: .255em; */
@@ -375,7 +382,7 @@ html, body {
   display: inline-block;
   border-left: 1px solid #555;
   padding: 0;
-  margin: 0 20px;
+  margin: 0 15px;
   height: 38px;
   vertical-align: bottom;
 }
@@ -404,13 +411,14 @@ html, body {
 }
 .agora .modal {
     position: absolute;
-    top: 24px;
+    top: 0;
     left: 0;
     z-index: 1050;
     display: none;
     width: 100%;
     overflow: hidden;
     outline: 0;
+    padding-top: 68px;
 }
 .fade:not(.show) {
     opacity: 0;
@@ -418,17 +426,17 @@ html, body {
 .fade {
     transition: opacity .15s linear;
 }
-.modal-dialog {
+.agora .modal-dialog {
     position: relative;
     width: auto;
-    margin: .5rem;
+    margin: 0 auto;
     pointer-events: none;
 }
-.modal.show .modal-dialog {
+.agora .modal.show .modal-dialog {
     -webkit-transform: none;
     transform: none;
 }
-.modal.fade .modal-dialog {
+.agora .modal.fade .modal-dialog {
   transition: -webkit-transform .3s ease-out;
   transition: transform .3s ease-out;
   transition: transform .3s ease-out,-webkit-transform .3s ease-out;
@@ -645,39 +653,83 @@ button.close {
   padding: 0 10px;
 }
 
+#watch-live-closed {
+  margin: 100px auto;
+}
 
+/*
+ * Communication Chat
+ */
+.agora .fabs {
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: 1031;
+}
+
+.agora .fabs .chat {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: none;
+  opacity: 0;
+}
+.agora #chat-alert {
+  position: absolute;
+  opacity: 0;
+}
+
+.only-mobile { display: none !important; }
 
 /*
  * Responsive Media Queries
  */
 @media screen and (max-width: 1023px){
-  .agora .screen-users-9-12 .user{
+  .agora .screen-users-10-12 .user{
     width: 22%;
   }
 }
-@media screen and (max-width:768px){
+@media screen and (max-width:768px) {
+  .agora { font-size: 13px; }
+  .agora .screen { padding: 5px 0; }
   .btn-separator { display: none }
+  .only-desktop { display: none !important; }
+  .only-mobile { display: block !important; }
 
   .agora .screen-users-2 .user {
     width: 46.5%;
   }
-  .agora .screen-users-3-4 .user{
+  .agora .screen-users-4 .user{
     width: 46%;
   }
-  .agora .screen-users-9-12 .user{
-    width: 19%;
+  .agora .screen-users-10-12 .user{
+    width: 32%;
   }
 }
 @media screen and (max-width: 480px){
+  .agora .buttons-botton { font-size: 25px; }
+  .agora .screen-users { margin: 0; }
+  .agora .screen-users .user { padding: 0.1em; }
+  .agora .screen-users-1 .user { height: 70vh; }
+  .agora .screen-users-3 .user,
+  .agora .screen-users-4 .user { width: 50%; height: 32vh; }
+  .agora .screen-users-3 .user:last-child{ width: 100%; }
   .agora .screen-users-2 .user{
-    width: 44.9%;
+    width: 100%;
+    height: 32vh;
   }
-  .agora .screen-users-3-4 .user{
-    width: 44%;
-  }
-  .agora .buttons-botton{
-    font-size: 25px;
-  }
+  .agora .screen-users-5-6 .user { height: 22vh; }
+  .agora .screen-users-7-9 .user { width: 32%; height: 21vh; }
+
+  .agora-fullscreen .agora-container { height: 100vh; }
+  .agora.agora-fullscreen .screen { padding: 0 5px; }
+  .agora-fullscreen .screen-users-1 .user{ height: 78vh; }
+  .agora-fullscreen .screen-users-2 .user{ height: 40vh; }
+  .agora-fullscreen .screen-users-3 .user,
+  .agora-fullscreen .screen-users-4 .user { height: 38vh; }
+  .agora-fullscreen .screen-users-5-6 .user { width: 50%; height: 26vh; }
+  .agora-fullscreen .screen-users-7-9 .user { width: 33%; height: 26vh; }
+  .agora-fullscreen .screen-users-10-12 .user { width: 25%; height: 26vh; }
 }
 @media screen and (max-width: 320px) {
   .agora .buttons-botton{
@@ -685,10 +737,6 @@ button.close {
   }
 }
 @media screen and (max-height: 480px) {
-  .agora .room-title,
-  .agora .leave-meeting{
-    padding: 0.3em;
-  }
   .agora .icon-cog{
     font-size: 16px;
   }
@@ -698,9 +746,6 @@ button.close {
   .agora .icon-enlarge{
     font-size: 16px;
     margin-right: 1.5em;
-  }
-  .agora .screen-users-3-4 .user{
-    padding: 0.03em 0.1em;
   }
   .agora .buttons-botton{
     font-size: 20px;

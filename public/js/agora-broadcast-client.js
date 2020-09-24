@@ -59,6 +59,7 @@ function agoraJoinChannel() {
     createCameraStream(uid, {});
     window.localStreams.uid = uid; // keep track of the stream uid  
     AgoraRTC.Logger.info('User ' + uid + ' joined channel successfully');
+
   }, function(err) {
       AgoraRTC.Logger.error('[ERROR] : join channel failed', err);
   });
@@ -120,6 +121,8 @@ function createCameraStream(uid, deviceIds) {
 
 function agoraLeaveChannel() {
 
+  window.dispatchEvent(new CustomEvent("agora.leavingChannel"));
+
   window.agoraClient.leave(function callbackLeave() {
     AgoraRTC.Logger.info('client leaves channel');
     window.localStreams.camera.stream.stop() // stop the camera stream playback
@@ -128,12 +131,19 @@ function agoraLeaveChannel() {
     //disable the UI elements
     jQuery('#mic-btn').prop('disabled', true);
     jQuery('#video-btn').prop('disabled', true);
+    jQuery('#screen-share-btn').prop('disabled', true);
     jQuery('#exit-btn').prop('disabled', true);
     jQuery("#add-rtmp-btn").prop("disabled", true);
     jQuery("#rtmp-config-btn").prop("disabled", true);
+    jQuery("#start-RTMP-broadcast").prop("disabled", true);
     jQuery("#cloud-recording-btn").prop("disabled", true);
 
     window.localStreams.camera.stream = null;
+
+    // leave also RTM Channel
+    window.AGORA_RTM_UTILS.leaveChannel();
+
+    window.dispatchEvent(new CustomEvent("agora.leavedChannel"));
   }, function(err) {
     AgoraRTC.Logger.error('client leave failed ', err); //error handling
   });
@@ -143,36 +153,38 @@ function agoraLeaveChannel() {
 
 function startLiveTranscoding() {
   AgoraRTC.Logger.info("Start live transcoding..."); 
-  var rtmpURL = jQuery('#input_rtmp_url').val();
-  var rtmpKey = jQuery('#input_private_key').val();
-  // var width = parseInt(jQuery('#window-scale-width').val(), AGORA_RADIX_DECIMAL);
-  // var height = parseInt(jQuery('#window-scale-height').val(), AGORA_RADIX_DECIMAL);
+  const rtmpURL = window.defaultConfigRTMP.rtmpServerURL;
+  const rtmpKey = window.defaultConfigRTMP.streamKey;
+
+  if (!rtmpURL || rtmpURL.indexOf('://')<0) {
+    alert('Please, configure a valid RTMP URL on your "External Networks" settings')
+    return false;
+  }
 
   // set live transcoding config
   window.defaultConfigRTMP.transcodingUsers[0].uid = window.localStreams.uid;
   window.agoraClient.setLiveTranscoding(window.defaultConfigRTMP);
 
-  if(rtmpURL.length>0 && rtmpKey.length>0) {
+  if (rtmpURL.length>0) {
     const sep = rtmpURL.lastIndexOf('/')===rtmpURL.length-1 ? '' : '/';
     window.externalBroadcastUrl = rtmpURL + sep + rtmpKey;
     console.log(window.externalBroadcastUrl);
 
     window.agoraClient.startLiveStreaming(window.externalBroadcastUrl, true)
-    addExternalTransmitionMiniView(window.externalBroadcastUrl)
+    // addExternalTransmitionMiniView(window.externalBroadcastUrl)
   }
 }
 
 // window.AGORA_BROADCAST_CLIENT.startLiveTranscoding = startLiveTranscoding;
 
 function addExternalSource() {
-  var externalUrl = jQuery('#input_external_url').val();
+  const externalUrl = jQuery('#input_external_url').val();
   
   // set live transcoding config
-  window.agoraClient.addInjectStreamUrl(externalUrl, window.injectStreamConfig)
   window.injectedStreamURL = externalUrl;
+  window.agoraClient.addInjectStreamUrl(externalUrl, window.injectStreamConfig)
   // TODO: ADD view for external url (similar to rtmp url)
 }
-// window.AGORA_BROADCAST_CLIENT.addExternalSource = addExternalSource;
 
 // RTMP Connection (UI Component)
 function addExternalTransmitionMiniView(rtmpURL) {
@@ -205,7 +217,83 @@ function addExternalTransmitionMiniView(rtmpURL) {
     window.externalBroadcastUrl = '';
     jQuery('#rtmp-container').remove();
   });
+}
 
+
+window.addEventListener('agora.rtm_init', function() {
+  setupLiveStreamListeners();
+  setupInjectStreamsListeners();
+});
+
+function setupLiveStreamListeners() {
+  function toggleStreamButton(err, status) {
+    const thisBtn    = jQuery("#start-RTMP-broadcast");
+    const loaderIcon = thisBtn.find('#rtmp-loading-icon');
+    const configIcon = thisBtn.find('#rtmp-config-icon');
+    const labelStart = thisBtn.parent().find('#label-stream-start');
+    const labelStop = thisBtn.parent().find('#label-stream-stop');
+
+    if (thisBtn.hasClass('load-rec')) {
+      thisBtn.toggleClass('load-rec');
+      configIcon.show()
+      loaderIcon.hide()
+    }
+
+    if (!err && status==='started') {
+      thisBtn.addClass('btn-danger');
+      labelStart.hide();
+      labelStop.show();
+
+    } else if (!err && status==='stopped') {
+      thisBtn.removeClass('btn-danger');
+      labelStart.show();
+      labelStop.hide();
+    }
+
+    if (err && err.reason) {
+      window.AGORA_UTILS.showErrorMessage(err.reason)
+    }
+  }
+
+  window.agoraClient.on('liveStreamingStarted', function (evt) {
+    console.log("Live streaming started", evt);
+    toggleStreamButton(null, 'started')
+  }); 
+
+  window.agoraClient.on('liveStreamingFailed', function (evt) {
+    console.log("Live streaming failed", evt);
+    toggleStreamButton(evt)
+  }); 
+
+  window.agoraClient.on('liveStreamingStopped', function (evt) {
+    console.log("Live streaming stopped", evt);
+    toggleStreamButton(null, 'stopped')
+  });
+
+  window.agoraClient.on('liveTranscodingUpdated', function (evt) {
+    console.log("Live streaming updated", evt);
+  });
+}
+
+
+function setupInjectStreamsListeners() {
+  window.agoraClient.on('streamInjectedStatus', function (evt) {
+    console.log("Live streaming Injected Status:", evt);
+
+    const thisBtn = jQuery('#add-rtmp-btn');
+    const loaderIcon = thisBtn.find('#add-rtmp-loading-icon');
+    const captureIcon = thisBtn.find('#add-rtmp-icon');
+
+    if (evt.reason && evt.reason.indexOf('fail')>=0) {
+      window.AGORA_UTILS.showErrorMessage(evt.reason);
+      loaderIcon.hide();
+      captureIcon.show();
+    }
+  });
+
+  window.agoraClient.on('exception', function (ex) {
+    console.error("Agora Exception:", ex);
+  });
 }
 
 window.AGORA_UTILS.setupAgoraListeners();

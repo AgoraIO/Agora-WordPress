@@ -1,21 +1,20 @@
 <?php
-$current_path = plugins_url('wp-agora-io') . '/public';
 $channelSettings    = $channel->get_properties();
 $videoSettings      = $channelSettings['settings'];
 $appearanceSettings = $channelSettings['appearance'];
 $recordingSettings  = $channelSettings['recording'];
 $current_user       = wp_get_current_user();
-$current_path = plugins_url('wp-agora-io') . '/public';
+$current_path       = plugins_url('wp-agora-io') . '/public';
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Agora.io Communication Chat</title>
+  <title>Agora.io Communication Video</title>
   <?php wp_head() ?>
 </head>
-<body <?php body_class(); ?>>
+<body <?php body_class(); ?> style="min-height: 100vh; min-height: -webkit-fill-available;">
   <div id="agora-root" class="agora agora-fullscreen">
     <section class="agora-container">
       <?php require_once "parts/header.php" ?>
@@ -44,7 +43,6 @@ $current_path = plugins_url('wp-agora-io') . '/public';
     window.agoraMode = 'communication';
 
     window.addEventListener('load', function() {
-      window.agoraLogLevel = window.location.href.indexOf('localhost')>0 ? AgoraRTC.Logger.ERROR : AgoraRTC.Logger.NONE;
       AgoraRTC.Logger.setLogLevel(AgoraRTC.Logger.ERROR);
 
       window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel(window.agoraAppId, window.channelName);

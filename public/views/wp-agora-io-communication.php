@@ -4,8 +4,6 @@ $videoSettings      = $channelSettings['settings'];
 $appearanceSettings = $channelSettings['appearance'];
 $current_user       = wp_get_current_user();
 ?>
-<?php $current_user = wp_get_current_user(); ?>
-<!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <div id="agora-root" class="agora agora-communication">
   <section class="agora-container">
     <?php require_once "parts/header.php" ?>

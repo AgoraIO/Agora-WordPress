@@ -29,8 +29,6 @@ class WP_Agora_Public {
 		add_shortcode( 'agora-communication', array($this, 'agoraCommunicationShortcode') );
 		add_shortcode( 'agora-broadcast', array($this, 'agoraBroadcastShortcode') );
 
-		add_action( 'widgets_init', array($this, 'initAgoraWidgets'));
-
 		$this->settings = get_option($this->plugin_name);
 		if (!$this->settings) {
 			$this->settings = array();
@@ -159,22 +157,22 @@ class WP_Agora_Public {
 	}
 
 	public function enqueueShortcodeStyles($type) {
-		$bootstrap_css = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.css';
 		$bootstrap_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.js';
 		$bootstrap_popper_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/popper.min.js';
 	  	$fontawesome = plugin_dir_url( __FILE__ ) . 'css/fontawesome/css/all.min.css';
-	  // wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
-	  wp_enqueue_style( 'fontawesome', $fontawesome, array('bootstrap'), null, 'all' );
-	  
-	  wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-3.1.2.js', array('jquery'), null );
-	  wp_enqueue_script( 'AgoraRTM', plugin_dir_url( __FILE__ ).'js/agora/agora-rtm-sdk-1.2.2.js', array('jquery'), null );
-	  wp_enqueue_script( 'bootstrap_popper', $bootstrap_popper_js, array('jquery'), null );
-	  wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
-	  
-	  wp_enqueue_script( $this->plugin_name.'-screen', plugin_dir_url( __FILE__ ) . 'js/screen-share.js', array( 'jquery' ), $this->version, false );
-	  
-	  $scriptUI = $type==='broadcast' ? 'js/broadcast-ui.js' : 'js/communication-ui.js';
-	  wp_enqueue_script( $this->plugin_name.'-ui', plugin_dir_url( __FILE__ ) . $scriptUI, array( 'jquery' ), $this->version, false );
+
+
+		wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-3.1.2.js', array('jquery'), null );
+		wp_enqueue_script( 'AgoraRTM', plugin_dir_url( __FILE__ ).'js/agora/agora-rtm-sdk-1.2.2.js', array('jquery'), null );
+		
+		wp_enqueue_style( 'fontawesome', $fontawesome, array('bootstrap'), null, 'all' );
+		wp_enqueue_script( 'bootstrap_popper', $bootstrap_popper_js, array('jquery'), null );
+		wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
+
+		wp_enqueue_script( $this->plugin_name.'-screen', plugin_dir_url( __FILE__ ) . 'js/screen-share.js', array( 'jquery' ), $this->version, false );
+
+		$scriptUI = $type==='broadcast' ? 'js/broadcast-ui.js' : 'js/communication-ui.js';
+		wp_enqueue_script( $this->plugin_name.'-ui', plugin_dir_url( __FILE__ ) . $scriptUI, array( 'jquery' ), $this->version, false );
 
 	}
 
@@ -186,7 +184,6 @@ class WP_Agora_Public {
 	        'audio' => 'true',
 	        'video' => 'true',
 	        'screen' => 'false',
-	        'background' => '',
 	        'screenprofile' => '720p_1',
 	        'videoprofile' => '480p_9' // https://docs.agora.io/en/Video/API%20Reference/web/interfaces/agorartc.stream.html#setvideoprofile
 	      ), $attrs, $shortcode );
@@ -215,36 +212,13 @@ class WP_Agora_Public {
 	}
 
 
-	public function initAgoraWidgets() {
-		// include("widget.agora-something.php");
-		// $agoraWidget = new Agora_Widget();
-		// register_widget( $agoraWidget );
-	}
-
-
 	// Overall public styles
 	public function enqueue_styles() {
-		// wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-agora-io-public.css', array(), $this->version, 'all' );
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-agora-styles2.css', array(), $this->version, 'all' );
-
-		// isset($this->plugin_data['agora_bootstrap']) ? $this->plugin_data['agora_bootstrap'] : '';
-		// TODO: Auto detect bootstrap or use a custom one version of bootstrap for CSS Styles
-		$use_bootstrap = false;
-		if($use_bootstrap==='true') {
-			// $bootstrap_css = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.css';
-			// wp_enqueue_style( 'bootstrap', $bootstrap_css, array(), null, 'all' );
-		}
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-agora-styles.css', array(), $this->version, 'all' );
 	}
 
 	public function enqueue_scripts() {
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-agora-io-public.js', array( 'jquery' ), $this->version, false );
-
-		// isset($this->api_data['agora_bootstrap']) ? $this->api_data['agora_bootstrap'] : '';
-		$use_bootstrap = false;
-		if($use_bootstrap==='true') {
-			$bootstrap_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.js';
-			// wp_enqueue_script( 'bootstrap', $bootstrap_js, array( 'jquery' ), null, true );
-		}
 
 		// add data before JS plugin
 		// useful to load dynamic settings and env vars
