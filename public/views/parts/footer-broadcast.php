@@ -4,7 +4,7 @@ $recordingSettings = $channelSettings['recording']; ?>
 <footer class="agora-footer">
 	<div class="buttons-bottom">
 		
-		<div id="audio-controls" class="col-md-2 text-center btn-group">
+		<div id="audio-options" class=" text-center btn-group">
 	        <button id="mic-btn" type="button" class="btnIcon">
 	            <i id="mic-icon" class="fas fa-microphone"></i>
 			</button>
@@ -17,7 +17,7 @@ $recordingSettings = $channelSettings['recording']; ?>
             <small class="btn-title"><?php _e('Mic', 'agoraio') ?></small>
         </div>
 
-        <div id="video-controls" class="col-md-2 text-center btn-group">
+        <div id="video-options" class=" text-center btn-group">
         	<button id="video-btn"  type="button" class="btnIcon">
         		<i id="video-icon" class="fas fa-video"></i>
         	</button>

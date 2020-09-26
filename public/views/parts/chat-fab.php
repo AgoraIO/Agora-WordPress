@@ -9,9 +9,7 @@
 			<a id="chat-minimize" class="right"><i class="fas fa-window-minimize"></i></a>
 		</div>
 
-		<div id="chat_fullscreen" class="chat_conversion chat_converse">
-			<!-- msgs will be dynamically added below -->
-		</div>
+		<div id="chat_fullscreen" class="chat_conversion chat_converse"> </div>
 		<input type="hidden" id="chat_notify_user_join" value="<?php _e('joined channel', 'agoraio'); ?>">
 		<input type="hidden" id="chat_notify_user_leave" value="<?php _e('leave channel', 'agoraio'); ?>">
 		<input type="hidden" id="chat_notify_user_welcome" value="<?php _e('Welcome', 'agoraio'); ?>">
@@ -29,7 +27,6 @@
 	</div>
 </div>
 <script type="text/javascript">
-	// window.addEventListener('agora.communication.joinedChannel', function loadChatApp() {
 	window.addEventListener('agora.rtm_init', function loadChatApp() {
         const headTag = document.head || document.getElementsByTagName("head")[0];
 

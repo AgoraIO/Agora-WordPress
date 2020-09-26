@@ -20,7 +20,7 @@
 		const localData = window.userID + TOKEN_SEP + window.wp_username;
 		showUserNotify(localData, 'welcome')
 
-		textarea.addEventListener(focus, addEventListener('focus', scrollOnMobileView));
+		textarea.addEventListener('focus', scrollOnMobileView);
 	} else {
 		document.querySelector('.fab_field.user').style.display='none';
 		chatMsgWindow.css('display', 'none');

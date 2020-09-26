@@ -273,9 +273,10 @@
 .agora .buttons-bottom .btn-group,
 .agora .buttons-bottom>.btn-with-title { margin: 0 7px; text-align: center; position: relative; display: grid;
     grid-template-columns: 1fr; grid-template-rows: 1fr; }
-.agora .buttons-bottom .btn-group {
-  grid-template-columns: 1fr 0.65fr;
-}
+.agora .buttons-bottom .btn-group { grid-template-columns: 1fr 0.65fr; }
+
+/* override default styles of .show class in case other themes and plugins are doing it */
+.agora .buttons-bottom .btn-group.show {display: grid !important;}
 
 
 .agora .btnIcon {
@@ -291,9 +292,13 @@
   transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
   max-width: 40px;
   margin: 0 auto;
+  position: static;
 }
 .agora .btnIcon:hover {
   background-color: #8795a3;
+}
+.agora .btnIcon:focus {
+
 }
 .agora .fas {
     color: #efefef;
@@ -692,9 +697,9 @@ button.close {
 @media screen and (max-width:768px) {
   .agora { font-size: 13px; }
   .agora .screen { padding: 5px 0; }
-  .btn-separator { display: none }
-  .only-desktop { display: none !important; }
-  .only-mobile { display: block !important; }
+  .agora .btn-separator { display: none }
+  .agora.agora-communication .only-desktop { display: none !important; }
+  .agora.agora-communication .only-mobile { display: block !important; }
 
   .agora .screen-users-2 .user {
     width: 46.5%;
