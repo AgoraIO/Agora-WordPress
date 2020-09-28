@@ -70,7 +70,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
     // set log level:
     // -- .DEBUG for dev 
     // -- .NONE for prod
-    window.agoraLogLevel = window.location.href.indexOf('localhost')>0 ? AgoraRTC.Logger.ERROR : AgoraRTC.Logger.ERROR;
+    window.agoraLogLevel = window.location.href.indexOf('local')>0 ? AgoraRTC.Logger.ERROR : AgoraRTC.Logger.ERROR;
     AgoraRTC.Logger.setLogLevel(window.agoraLogLevel);
     // window.AGORA_BROADCAST_UI.calculateVideoScreenSize();
 
@@ -90,10 +90,12 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
         window.remoteStreams = {};
         finishVideoScreen();
       })
+
       function finishVideoScreen() {
+        jQuery(".remote-stream-container").hide();
         jQuery("#full-screen-video").hide();
         jQuery("#watch-live-closed").show();
-        jQuery("#watch-live-closed").show();
+        agoraLeaveChannel();
         exitBtn.hide();
       }
       
@@ -127,7 +129,10 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
         AgoraRTC.Logger.info('New stream added: ' + streamId);
         AgoraRTC.Logger.info('Subscribing to remote stream:' + streamId);
 
-        document.querySelector('#chatToggleBtn').style.display = "block";
+        const chatBtn = document.querySelector('#chatToggleBtn');
+        if (chatBtn) {
+          chatBtn.style.display = "block";
+        }
 
         jQuery("#watch-live-closed").hide();
         jQuery("#watch-live-overlay").hide();
@@ -190,10 +195,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
           window.remoteStreams[streamId].isPlaying() && window.remoteStreams[streamId].stop(); // stop playing the feed
           delete window.remoteStreams[streamId]; // remove stream from list
           const remoteContainerID = '#' + streamId + '_container';
-          jQuery(remoteContainerID).empty().remove();
-
-          const usersCount = Object.keys(window.remoteStreams).length;
-          window.AGORA_UTILS.updateUsersCounter(usersCount)
+          // jQuery(remoteContainerID).empty().remove();
         }
 
         if (window.screenshareClients[streamId]) {
@@ -208,10 +210,17 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
         } else {
           const usersCount = Object.keys(window.remoteStreams).length;
           if (usersCount===0) {
-            document.querySelector('#chatToggleBtn').style.display = "none";
+            const chatBtn = document.querySelector('#chatToggleBtn');
+            if (chatBtn) {
+              chatBtn.style.display = "none";
+            }
+
             finishVideoScreen();
           }
         }
+
+        // const usersCount = Object.keys(window.remoteStreams).length;
+        // window.AGORA_UTILS.updateUsersCounter(usersCount)
       });
 
 
@@ -254,15 +263,23 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
       
       window.agoraClient.join(token, window.channelName, window.userID, function(uid) {
           AgoraRTC.Logger.info('User ' + uid + ' join channel successfully');
-          window.AGORA_RTM_UTILS.joinChannel(uid);
+          window.AGORA_RTM_UTILS.joinChannel(uid, function(err){
+            if (err) {
+              console.error(err)
+            }
+          });
       }, function(err) {
           AgoraRTC.Logger.error('[ERROR] : join channel failed', err);
       });
     }
 
     function agoraLeaveChannel() {
+      window.dispatchEvent(new CustomEvent("agora.leavingChannel"));
       window.agoraClient.leave(function() {
         AgoraRTC.Logger.info('client leaves channel');
+        window.AGORA_RTM_UTILS.leaveChannel();
+
+        window.dispatchEvent(new CustomEvent("agora.leavedChannel"));
       }, function(err) {
         AgoraRTC.Logger.error('client leave failed ', err); //error handling
       });
