@@ -172,7 +172,6 @@
 .screen-users .user video {
   /* border-radius: 5px;
      object-fit: cover; */
-  transform: rotateY(180deg);
 }
 
 .agora .screen.sharescreen {
