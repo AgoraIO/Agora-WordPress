@@ -169,6 +169,7 @@
   position: relative;
   overflow: hidden;
   padding: 3px;
+  background-color: #111;
 }
 .screen-users .user video {
   /* border-radius: 5px;

@@ -45,6 +45,7 @@ function initClientAndJoinChannel(agoraAppId, channelName) {
     agoraJoinChannel(channelName, function(err){
       if (err) {
         console.error(err);
+
         // TODO: Show Global error!
         window.AGORA_RTM_UTILS.leaveChannel();
       }
@@ -68,7 +69,6 @@ function agoraJoinChannel(channelName, cb) {
   agoraClient.join(token, channelName, userId, async function(uid) {
     AgoraRTC.Logger.info("User " + uid + " join channel successfully");
     window.localStreams.camera.id = uid; // keep track of the stream uid 
-    
     
     try {
       await window.AGORA_RTM_UTILS.joinChannel(uid);
@@ -120,6 +120,10 @@ function createCameraStream(uid, next) {
         window.AGORA_RTM_UTILS.sendChannelMessage(msg)
       }
     });
+
+    localStream.on("accessDenied", function() {
+      // alert('denied!')
+    })
     
 
     localStream.init(function initSuccess() {
@@ -155,12 +159,18 @@ function createCameraStream(uid, next) {
       AgoraRTC.Logger.error("[ERROR] : getUserMedia failed", err);
 
       if (err.msg==='NotAllowedError') {
+
         const msg = {
           text: "USER_JOINED_WITHOUT_PERMISSIONS**"+uid,
           messageType:"TEXT"
         }
         window.AGORA_RTM_UTILS.sendChannelMessage(msg)
+        
+        window.AGORA_COMMUNICATION_UI.enableExit()
+      } else {
+        cb && cb(err)
       }
+
     });
   }
 

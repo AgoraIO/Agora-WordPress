@@ -49,12 +49,7 @@ window.AGORA_COMMUNICATION_UI = {
       }
     });
 
-    const exitCall = function(){
-      console.log("so sad to see you leave the channel");
-      window.AGORA_COMMUNICATION_CLIENT.agoraLeaveChannel(); 
-    };
-    jQuery("#exit-btn").click(exitCall);
-    jQuery("#exit-btn-footer").click(exitCall);
+    window.AGORA_COMMUNICATION_UI.enableExit()
 
     jQuery('#rejoin-btn').click(window.AGORA_COMMUNICATION_UI.rejoinChannel);
 
@@ -92,6 +87,15 @@ window.AGORA_COMMUNICATION_UI = {
       }
     };
     // jQuery(document).keypress(keyboardListeners);
+  },
+
+  enableExit: function() {
+    const exitCall = function(){
+      console.log("so sad to see you leave the channel");
+      window.AGORA_COMMUNICATION_CLIENT.agoraLeaveChannel(); 
+    };
+    jQuery("#exit-btn").click(exitCall);
+    jQuery("#exit-btn-footer").click(exitCall);
   },
 
   toggleMic: function (localStream) {
