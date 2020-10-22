@@ -203,4 +203,6 @@ function processRtmRequest(value) {
 
 	  	return true;
 	}
+
+	return false;
 }

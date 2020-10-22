@@ -60,9 +60,18 @@ class WP_Agora_Public {
 	public function getUserAvatar() {
 		$uid = isset($_POST['uid']) ? sanitize_key($_POST['uid']) : 0;
 		$avatar = get_avatar_data( $uid, array('size' => 168) );
+		$user = get_user_by('ID', $uid);
+		$userData = null;
+		if ($user) {
+			$userData = array(
+				'display_name' => $user->data->display_name,
+				'user_nicename' => $user->data->user_nicename
+			);
+		}
 
 		header('Content-Type: application/json');
-		echo json_encode(array( "avatar" => $avatar ));
+		echo json_encode(array( "avatar" => $avatar, "user" => $userData  ));
+
 		wp_die();
 	}
 

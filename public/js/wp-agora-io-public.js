@@ -230,27 +230,27 @@ window.AGORA_UTILS = {
   setupAgoraListeners: function() {
 
     // show mute icon whenever a remote has muted their mic
-    window.agoraClient.on("mute-audio", function (evt) {
+    window.agoraClient.on("mute-audio", function muteAudio(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', true);
     });
 
-    window.agoraClient.on("unmute-audio", function (evt) {
+    window.agoraClient.on("unmute-audio", function unmuteAudio(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', false);
     });
 
     // show user icon whenever a remote has disabled their video
-    window.agoraClient.on("mute-video", function (evt) {
+    window.agoraClient.on("mute-video", function muteVideo(evt) {
       const remoteId = evt.uid;
       // if the main user stops their video select a random user from the list
       window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
     });
 
-    agoraClient.on("unmute-video", function (evt) {
+    agoraClient.on("unmute-video", function unmuteVideo(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', false);
     });
 
     // remove the remote-container when a user leaves the channel
-    window.agoraClient.on("peer-leave", function(evt) {
+    window.agoraClient.on("peer-leave", function peerLeave(evt) {
       if (!evt || !evt.stream) {
         console.error('Stream undefined cannot be removed', evt);
         return false;
@@ -291,7 +291,7 @@ window.AGORA_UTILS = {
 
 
     // connect remote streams
-    window.agoraClient.on('stream-added', function (evt) {
+    window.agoraClient.on('stream-added', function streamAdded(evt) {
       const stream = evt.stream;
       const streamId = stream.getId();
       AgoraRTC.Logger.info("new stream added: " + streamId);
@@ -308,7 +308,7 @@ window.AGORA_UTILS = {
       }
     });
 
-    window.agoraClient.on('stream-subscribed', function (evt) {
+    window.agoraClient.on('stream-subscribed', function streamSubscribed(evt) {
       var remoteStream = evt.stream;
       var remoteId = remoteStream.getId();
       window.remoteStreams[remoteId] = remoteStream;
@@ -338,6 +338,34 @@ window.AGORA_UTILS = {
         window.AGORA_CLOUD_RECORDING.updateLayout();
       }
     });
+
+    // Listener for Agora RTM Events
+    window.addEventListener('agora.rtmMessageFromChannel', function receiveRTMMessage(evt) {
+      if (evt.detail && evt.detail.text) {
+        if (evt.detail.text.indexOf('USER_JOINED_WITHOUT_')===0) {
+          const pos = evt.detail.text.indexOf('**') + 2;
+          const uid = evt.detail.text.substring(pos)
+
+          const titleModal = "New user joined"
+          let contentModal = "A new guest user has joined without video";
+          
+
+          window.AGORA_UTILS.agora_getUserAvatar(uid, function getUserAvatar(avatarData) {
+            if (avatarData && avatarData.user) {
+              contentModal = contentModal.replace('A new guest user', avatarData.user.display_name)
+
+              // make sure the name is capitalized
+              contentModal = contentModal.charAt(0).toUpperCase() + contentModal.slice(1)
+            }
+
+            document.getElementById('agora-toast-title').innerText = titleModal
+            document.getElementById('agora-toast-body').innerText = contentModal
+
+            jQuery('.toast').toast('show')
+          });
+        }
+      }
+    })
   },
 
   // REMOTE STREAMS UI

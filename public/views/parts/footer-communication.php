@@ -78,3 +78,5 @@ $recordingSettings = $channelSettings['recording'];
     </div>
     <?php if ($enableChat===true) { require_once('chat-fab.php'); } ?>
 </footer>
+
+<?php require_once "toast.php" ?>

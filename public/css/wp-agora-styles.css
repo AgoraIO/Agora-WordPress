@@ -10,7 +10,8 @@
   position: relative;
   line-height: 16px;
   font-family: Arial;
-  background-color: var(--agora-background)
+  background-color: var(--agora-background);
+  z-index: 10;
 }
 
 .agora .text-danger {
@@ -424,10 +425,10 @@
     outline: 0;
     padding-top: 68px;
 }
-.fade:not(.show) {
+.agora .fade:not(.show) {
     opacity: 0;
 }
-.fade {
+.agora .fade {
     transition: opacity .15s linear;
 }
 .agora .modal-dialog {
@@ -453,7 +454,7 @@
     margin: 2.5rem auto 0;
   }
 }
-.modal-content {
+.agora .modal-content {
   position: relative;
   display: -ms-flexbox;
   display: flex;
@@ -467,7 +468,7 @@
   border-radius: .3rem;
   outline: 0;
 }
-.modal-header {
+.agora .modal-header {
   display: -ms-flexbox;
   display: flex;
   -ms-flex-align: start;
@@ -479,13 +480,13 @@
   border-top-left-radius: .3rem;
   border-top-right-radius: .3rem;
 }
-.modal-body {
+.agora .modal-body {
   position: relative;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   padding: 1rem 1rem 0.25rem;
 }
-.modal-footer {
+.agora .modal-footer {
   display: -ms-flexbox;
   display: flex;
   -ms-flex-align: center;
@@ -497,23 +498,23 @@
   border-bottom-right-radius: .3rem;
   border-bottom-left-radius: .3rem;
 }
-.modal-footer>:not(:last-child) {
+.agora .modal-footer>:not(:last-child) {
     margin-right: .25rem;
 }
-.modal .btn {
+.agora .modal .btn {
   padding: .5rem .7rem;
   cursor: pointer;
 }
-.modal .btn.btn-primary {
+.agora .modal .btn.btn-primary {
   background-color: #6c757e;
   border: 1px solid #565b5f;
   border-radius: 3px;
 }
-.modal .btn.btn-primary:hover {
+.agora .modal .btn.btn-primary:hover {
   background-color: #878e96;
   border-color: #868c90;
 }
-.close {
+.agora .close {
     float: right;
     font-size: 24px;
     font-weight: 700;
@@ -522,19 +523,17 @@
     text-shadow: 0 1px 0 #fff;
     opacity: .5;
 }
-.close:hover {
+.agora .close:hover {
     color: #000;
     text-decoration: none;
     background: transparent;
 }
-.close:not(:disabled):not(.disabled) {
-    cursor: pointer;
-}
-.close:not(:disabled):not(.disabled):focus,
-.close:not(:disabled):not(.disabled):hover {
+.agora .close:not(:disabled):not(.disabled) { cursor: pointer; }
+.agora .close:not(:disabled):not(.disabled):focus,
+.agora .close:not(:disabled):not(.disabled):hover {
     opacity: .75;
 }
-button.close {
+.agora button.close {
   padding: 0;
   background-color: transparent;
   border: 0;
@@ -547,25 +546,53 @@ button.close {
   margin: .05rem 0 0;
 }
 .modal-title .fas { color: #8b8b8b; }
-.modal-backdrop.show {
-  opacity: .5;
+.modal-backdrop.show { opacity: .5; }
+.modal-backdrop { display: none }
+
+/*
+ * Bootstrap Toast Notifications
+ */
+.toast {
+    -ms-flex-preferred-size: 350px;
+    flex-basis: 350px;
+    max-width: 350px;
+    font-size: .875rem;
+    background-color: rgba(255,255,255,.85);
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.1);
+    box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,.1);
+    opacity: 0;
+    border-radius: .25rem;
 }
 
-.modal-backdrop.fade {
-    opacity: 0;
+.agora .toast {
+  position: absolute;
+  top: 88px;
+  left: 7px;
 }
-.modal-backdrop {
-    z-index: 999;
+
+.toast:not(:last-child) { margin-bottom: 0.75rem; }
+
+.toast.showing { opacity: 1; }
+.toast.show { display: block; opacity: 1; }
+.toast.hide { display: none; }
+.toast-header {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: .25rem .75rem;
+    color: #6c757d;
+    background-color: rgba(255,255,255,.85);
+    background-clip: padding-box;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+    border-top-left-radius: calc(.25rem - 1px);
+    border-top-right-radius: calc(.25rem - 1px);
 }
-.modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1040;
-    width: 100vw;
-    height: 100vh;
-    background-color: #000;
-}
+.toast-body { padding: .75rem; }
+.agora .mr-auto, .agora .mx-auto { margin-right: auto!important; }
+.agora .ml-2, .agora .mx-2 { margin-left: .5rem!important; }
+.agora .mb-1, .agora .my-1 { margin-bottom: .25rem!important; }
 
 /*
  * Bootstrap Form Styles

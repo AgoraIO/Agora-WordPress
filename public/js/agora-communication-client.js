@@ -66,16 +66,14 @@ function agoraJoinChannel(channelName, cb) {
 
   
   agoraClient.join(token, channelName, userId, async function(uid) {
-    const resJoin = window.AGORA_RTM_UTILS.joinChannel(uid);
-
     AgoraRTC.Logger.info("User " + uid + " join channel successfully");
     window.localStreams.camera.id = uid; // keep track of the stream uid 
     
-    const resCam = createCameraStream(uid);
     
     try {
-      await resJoin;
-      await resCam;
+      await window.AGORA_RTM_UTILS.joinChannel(uid);
+      await createCameraStream(uid);
+      cb && cb(null)
     } catch(err) {
       AgoraRTC.Logger.error("[ERROR] : join channel failed", err);
       cb && cb(err)
@@ -87,13 +85,23 @@ function agoraJoinChannel(channelName, cb) {
   });
 }
 
+//camera validation 
+async function isVideoAvailable() {
+  let md = navigator.mediaDevices;
+  if (!md || !md.enumerateDevices) return false;
+
+  const devices = await md.enumerateDevices()
+  return devices.some(device => 'videoinput' === device.kind);
+}
+
 // video streams for channel
 function createCameraStream(uid, next) {
-  function runCameraStream(cb) {
+  async function runCameraStream(cb) {
+    const hasVideo = await isVideoAvailable()
     const localStream = AgoraRTC.createStream({
       streamID: uid,
       audio: true,
-      video: true,
+      video: hasVideo,
       screen: false
     });
     localStream.setVideoProfile(window.cameraVideoProfile);
@@ -104,9 +112,17 @@ function createCameraStream(uid, next) {
         window.AGORA_UTILS.getMicDevices();
       }
       AgoraRTC.Logger.info("accessAllowed");
+      if(!hasVideo){
+        const msg = {
+          text: "USER_JOINED_WITHOUT_VIDEO**"+uid,
+          messageType: "TEXT"
+        }
+        window.AGORA_RTM_UTILS.sendChannelMessage(msg)
+      }
     });
+    
 
-    localStream.init(function() {
+    localStream.init(function initSuccess() {
       jQuery('#rejoin-container').hide();
       jQuery('#buttons-container').removeClass('hidden');
 
@@ -135,8 +151,16 @@ function createCameraStream(uid, next) {
         alert("Your video cannot be started!")
         cb && cb(ex)
       }
-    }, function (err) {
+    }, function initError(err) {
       AgoraRTC.Logger.error("[ERROR] : getUserMedia failed", err);
+
+      if (err.msg==='NotAllowedError') {
+        const msg = {
+          text: "USER_JOINED_WITHOUT_PERMISSIONS**"+uid,
+          messageType:"TEXT"
+        }
+        window.AGORA_RTM_UTILS.sendChannelMessage(msg)
+      }
     });
   }
 

@@ -36,7 +36,7 @@ $current_path       = plugins_url('wp-agora-io') . '/public';
       <?php require_once "parts/footer-broadcast.php" ?>
     </section>
 
-    <?php require_once "parts/modal-external-url.php" ?>   
+    <?php require_once "parts/modal-external-url.php" ?>
     
   </div>
 
