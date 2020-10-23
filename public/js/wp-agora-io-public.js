@@ -388,7 +388,57 @@ window.AGORA_UTILS = {
     );
 
     remoteStream.play('agora_remote_' + streamId);
-  }
+  },
+
+
+  showPermissionsModal: function() {
+    const browser = window.AGORA_UTILS.getBrowser();
+    const img = document.getElementById('img-permissions-instructions');
+    
+    let textId = 'text-permissions-URL';
+    if (browser==='unknow') {
+      textId = 'text-permissions-any';
+      img.classList.add('hidden');
+    }
+    document.getElementById(textId).classList.remove('hidden')
+
+    imgSrc = window.agora_base_url.replace('public/', 'assets/permissions/') + browser + '.jpg'
+    img.setAttribute('src', imgSrc)
+
+    jQuery('#permissions-notification-modal').modal('toggle')
+  },
+
+  getBrowser: function() {
+      // Get the user-agent string 
+      let userAgentString = navigator.userAgent;
+
+      // Detect Chrome 
+      if (userAgentString.indexOf("Chrome") > -1) {
+        return "chrome"
+      }
+    
+      // Detect Internet Explorer 
+      // if (userAgentString.indexOf("MSIE") > -1 || userAgentString.indexOf("rv:") > -1) {
+      //   return "ie"
+      // }
+    
+      // Detect Firefox 
+      if (userAgentString.indexOf("Firefox") > -1) {
+        return "firefox"
+      }
+    
+      // Detect Safari   
+      if (userAgentString.indexOf("Safari") > -1) {
+        return "safari"
+      }
+      
+      // Detect Opera 
+      // if (userAgentString.indexOf("OP") > -1) {
+      //   return "opera"
+      // }
+
+      return "unknow"
+    }
 }
 
 

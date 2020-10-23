@@ -138,6 +138,8 @@ async function createCameraStream(uid, deviceIds) {
         messageType:"TEXT"
       }
       window.AGORA_RTM_UTILS.sendChannelMessage(msg)
+      window.AGORA_COMMUNICATION_UI.enableExit()
+      window.AGORA_UTILS.showPermissionsModal()
     }
   });
 }

@@ -59,6 +59,7 @@
 
 .agora-container {
   background-color: var(--agora-background);
+  padding: 0;
 }
 .agora-fullscreen .agora-content {
   display: grid;
@@ -256,9 +257,8 @@
 }
 
 
-.agora .modal, .agora .hidden {
-  display: none
-}
+.agora .modal,
+.agora .hidden { display: none }
 
 .agora-footer {
   background: var(--agora-background);
@@ -549,6 +549,13 @@
 .modal-title .fas { color: #8b8b8b; }
 .modal-backdrop.show { opacity: .5; }
 .modal-backdrop { display: none }
+.modal .img-permissions {
+  margin: auto;
+  display: block;
+  min-height: 100px;
+  max-height: 280px;
+  border: 1px solid #eee;
+}
 
 /*
  * Bootstrap Toast Notifications

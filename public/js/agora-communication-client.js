@@ -167,6 +167,7 @@ function createCameraStream(uid, next) {
         window.AGORA_RTM_UTILS.sendChannelMessage(msg)
         
         window.AGORA_COMMUNICATION_UI.enableExit()
+        window.AGORA_UTILS.showPermissionsModal()
       } else {
         cb && cb(err)
       }
