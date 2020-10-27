@@ -162,6 +162,9 @@ Updated to resolves issues with with screen sharing in Chrome browser. Resolves 
 ### Version 2.0.0 ###
 Updated with a new UI, improved screen sharing, multi-host broadcasts, real-time chat, and other features/improvements.
 - [47](https://github.com/AgoraIO/Agora-WordPress/issues/47) 
+- [48](https://github.com/AgoraIO/Agora-WordPress/issues/48) 
+- [49](https://github.com/AgoraIO/Agora-WordPress/issues/49) 
+- [50](https://github.com/AgoraIO/Agora-WordPress/issues/50) 
 - [62](https://github.com/AgoraIO/Agora-WordPress/issues/62) 
 - [63](https://github.com/AgoraIO/Agora-WordPress/issues/63) 
 - [65](https://github.com/AgoraIO/Agora-WordPress/issues/65) 
