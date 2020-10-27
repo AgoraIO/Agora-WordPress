@@ -67,7 +67,7 @@ Agora’s flexible APIs enable deep integration of high quality, low latency –
 [Wiki - FAQ](https://github.com/AgoraIO/Agora-WordPress/wiki/FAQ): a list of frequently accessed questions.
 
 ## Changelog ##
-[Wiki - FAQ](https://github.com/AgoraIO/Agora-WordPress/wiki/Change-Log): a list of updates made in each version.
+[Wiki - Change Log](https://github.com/AgoraIO/Agora-WordPress/wiki/Change-Log): a list of updates made in each version.
 
 ## Pricing ##
 See Agora website for pricing details: [https://www.agora.io/pricing](https://www.agora.io/pricing)
