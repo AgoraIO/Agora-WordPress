@@ -53,6 +53,7 @@ window.AGORA_SCREENSHARE_UTILS = {
         screenAudio: true,
         mediaSource:  'screen', // Firefox: 'screen', 'application', 'window' (select one)
       });
+
       screenStream.setScreenProfile(screenVideoProfile); // set the profile of the screen
       screenStream.init(function successInit(){
         AgoraRTC.Logger.info("getScreen successful");
@@ -210,5 +211,5 @@ window.AGORA_SCREENSHARE_UTILS = {
       }
     })
     
-  }
+  },
 }

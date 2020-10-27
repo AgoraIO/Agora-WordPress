@@ -2,9 +2,15 @@
 Contributors: jalejo08, hermesf
 Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
+<<<<<<< HEAD
 Tested up to: 5.5.1
 Requires PHP: 7.1
 Stable tag: 2.0.0
+=======
+Tested up to: 5.4
+Requires PHP: 7.2
+Stable tag: 1.6.2
+>>>>>>> master
 Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -124,8 +130,9 @@ Updated to resolves issues with saving Agora Settings created by previous hotfix
 - [52](https://github.com/AgoraIO/Agora-Word-Press/issues/52) 
 
 Version 1.6.2
-Updated to resolves issues with screenshare and stream inject. Release resolves issues:
-- [42](https://github.com/AgoraIO/Agora-WordPress/issues/42) 
+Updated to resolves issues with with screen sharing in Chrome browser. Resolves issue with injected stream not displaying in broadcast channel. Release resolves issues:
+- [42](https://github.com/AgoraIO/Agora-Word-Press/issues/42) 
+- [60](https://github.com/AgoraIO/Agora-Word-Press/issues/60) 
 
 Version 2.0.0
 Updated with a new UI, improved screen sharing, multi-host broadcasts, real-time chat, and other features/improvements.
@@ -135,6 +142,7 @@ Updated with a new UI, improved screen sharing, multi-host broadcasts, real-time
 - [65](https://github.com/AgoraIO/Agora-WordPress/issues/65) 
 - [66](https://github.com/AgoraIO/Agora-WordPress/issues/66) 
 - [71](https://github.com/AgoraIO/Agora-WordPress/issues/71) 
+
 
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 

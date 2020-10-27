@@ -54,7 +54,6 @@ function initClientAndJoinChannel(agoraAppId, channelName) {
     AgoraRTC.Logger.error("[ERROR] : AgoraRTC client init failed", err);
     window.AGORA_RTM_UTILS.leaveChannel();
   });
-
 }
 
 
@@ -124,7 +123,6 @@ function createCameraStream(uid, next) {
     localStream.on("accessDenied", function() {
       // alert('denied!')
     })
-    
 
     localStream.init(function initSuccess() {
       jQuery('#rejoin-container').hide();
@@ -136,9 +134,7 @@ function createCameraStream(uid, next) {
 
       AgoraRTC.Logger.info("getUserMedia successfully");
       try {
-        // TODO: add check for other streams. play local stream full size if alone in channel
         localStream.play('local-video'); // play the given stream within the local-video div
-
         // publish local stream
         agoraClient.publish(localStream, function (err) {
           AgoraRTC.Logger.error("[ERROR] : publish local stream error: " + err);
@@ -186,10 +182,6 @@ function createCameraStream(uid, next) {
     })
   }
 }
-
-
-
-
 
 function agoraLeaveChannel() {
   
