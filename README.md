@@ -58,16 +58,16 @@ Agora’s flexible APIs enable deep integration of high quality, low latency –
  [https://medium.com/agora-io/agora-video-for-wordpress-plugin-quickstart-guide-b8838abd4245](https://medium.com/agora-io/agora-video-for-wordpress-plugin-quickstart-guide-b8838abd4245)
 
 ## Installation ##
-See: [Wiki - Installation](https://github.com/AgoraIO/Agora-WordPress/wiki/Installation): describes how to install the plugin 
+[Wiki - Installation](https://github.com/AgoraIO/Agora-WordPress/wiki/Installation): describes how to install the plugin 
 
 ## Setup ##
-See: [Wiki - Setup](https://github.com/AgoraIO/Agora-WordPress/wiki/Setup): describes how to configre the plugin settings
+[Wiki - Setup](https://github.com/AgoraIO/Agora-WordPress/wiki/Setup): describes how to configre the plugin settings
 
 ## Frequently Asked Questions ##
-See: [Wiki - FAQ](https://github.com/AgoraIO/Agora-WordPress/wiki/FAQ): a list of frequently accessed questions.
+[Wiki - FAQ](https://github.com/AgoraIO/Agora-WordPress/wiki/FAQ): a list of frequently accessed questions.
 
 ## Changelog ##
-See: [Wiki - FAQ](https://github.com/AgoraIO/Agora-WordPress/wiki/Change-Log): a list of updates made in each version.
+[Wiki - FAQ](https://github.com/AgoraIO/Agora-WordPress/wiki/Change-Log): a list of updates made in each version.
 
 # Screen Shots
 ![Channels List](/assets/screenshot-1.png?raw=true "Channels List")
