@@ -65,10 +65,13 @@
         <div class="col label">
           App Certificate
         </div>
-        <div class="col value">
+        <div class="col value" data-masked="true">
           <?php
           $value = isset($agora_options['appCertificate']) ? $agora_options['appCertificate'] : '';
-          echo $value;
+          if ($value) {
+            for($i=0;$i<strlen($value)-4;$i++) echo "*";
+            echo substr($value, strlen($value)-4);
+          }
           ?>
         </div>
       </div>
@@ -98,11 +101,13 @@
         <div class="col label">
           RESTFul Customer ID
         </div>
-        <div class="col value">
+        <div class="col value" data-masked="true">
           <?php
           $value = isset($agora_options['customerID']) ? $agora_options['customerID'] : '';
-          // $value = "https://4045media-cloudrecordings.s3.amazonaws.com";
-          echo $value;
+          if ($value) {
+            for($i=0;$i<strlen($value)-4;$i++) echo "*";
+            echo substr($value, strlen($value)-4);
+          }
           ?>
         </div>
       </div>
@@ -131,11 +136,13 @@
         <div class="col label">
           RESTFul Customer Certificate
         </div>
-        <div class="col value">
+        <div class="col value" data-masked="true">
           <?php
           $value = isset($agora_options['customerCertificate']) ? $agora_options['customerCertificate'] : '';
-          // $value = "https://4045media-cloudrecordings.s3.amazonaws.com";
-          echo $value;
+          if ($value) {
+            for($i=0;$i<strlen($value)-4;$i++) echo "*";
+            echo substr($value, strlen($value)-4);
+          }
           ?>
         </div>
       </div>
@@ -161,7 +168,7 @@
         // $value = "https://4045media-cloudrecordings.s3.amazonaws.com";
         $chatCheck = $value==='enabled' ? 'checked' : '';
         ?>
-        <div class="col value">
+        <div class="col value" data-masked="true">
           <label class="switch">
             <input type="checkbox" <?php echo $chatCheck ?> id="agora-chat-check" value="chat-enabled">
             <span class="slider round"></span>
