@@ -138,6 +138,7 @@ Updated with a new UI, improved screen sharing, multi-host broadcasts, real-time
 - [63](https://github.com/AgoraIO/Agora-WordPress/issues/63) 
 - [65](https://github.com/AgoraIO/Agora-WordPress/issues/65) 
 - [66](https://github.com/AgoraIO/Agora-WordPress/issues/66) 
+- [67](https://github.com/AgoraIO/Agora-WordPress/issues/67) 
 - [71](https://github.com/AgoraIO/Agora-WordPress/issues/71) 
 
 
