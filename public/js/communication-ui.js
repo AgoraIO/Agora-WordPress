@@ -8,6 +8,8 @@ window.AGORA_COMMUNICATION_UI = {
     jQuery("#screen-share-btn").prop("disabled", false);
     jQuery("#exit-btn").prop("disabled", false);
 
+    jQuery('#fullscreen-expand').click(window.AGORA_UTILS.toggleFullscreen);
+
     jQuery("#mic-btn").click(function(){
       window.AGORA_COMMUNICATION_UI.toggleMic(localStream);
     });
@@ -15,6 +17,11 @@ window.AGORA_COMMUNICATION_UI = {
     jQuery("#video-btn").click(function(){
       window.AGORA_COMMUNICATION_UI.toggleVideo(localStream);
     });
+
+    jQuery("#cloud-recording-btn").click(function(){
+      window.AGORA_COMMUNICATION_UI.toggleRecording();
+    });
+
 
     jQuery("#screen-share-btn").click(function() {
       window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn(); // set screen share button icon
@@ -26,10 +33,15 @@ window.AGORA_COMMUNICATION_UI = {
       var toggleLoader = function(err, next) {
         loaderIcon.hide();
         closeIcon.show();
+        jQuery("#screen-share-btn").prop("disabled", false);
         // TODO: is not needed but I could capture the callback result here...
+        if (err) {
+          // alert('Ops, this function could not started')
+          window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn();
+        }
       }
 
-      jQuery("#screen-share-btn").prop("disabled",true); // disable the button on click
+      jQuery("#screen-share-btn").prop("disabled", true); // disable the button on click
       if(window.screenShareActive){
         window.AGORA_SCREENSHARE_UTILS.stopScreenShare(toggleLoader);
       } else {
@@ -37,15 +49,12 @@ window.AGORA_COMMUNICATION_UI = {
       }
     });
 
-    jQuery("#exit-btn").click(function(){
-      console.log("so sad to see you leave the channel");
-      window.AGORA_COMMUNICATION_CLIENT.agoraLeaveChannel(); 
-    });
+    window.AGORA_COMMUNICATION_UI.enableExit()
 
     jQuery('#rejoin-btn').click(window.AGORA_COMMUNICATION_UI.rejoinChannel);
 
-    // keyboard listeners 
-    jQuery(document).keypress(function(e) {
+    // keyboard listeners
+    function keyboardListeners(e) {
       switch (e.key) {
         case "m":
           console.log("quick toggle the mic");
@@ -55,7 +64,7 @@ window.AGORA_COMMUNICATION_UI = {
           console.log("quick toggle the video");
           window.AGORA_COMMUNICATION_UI.toggleVideo(localStream);
           break; 
-        /* case "s":
+        case "s":
           console.log("initializing screen share");
           toggleScreenShareBtn(); // set screen share button icon
           jQuery("#screen-share-btn").prop("disabled",true); // disable the button on click
@@ -64,7 +73,7 @@ window.AGORA_COMMUNICATION_UI = {
           } else {
             initScreenShare(); 
           }
-          break;  */
+          break;
         case "q":
           console.log("so sad to see you quit the channel");
           window.AGORA_COMMUNICATION_CLIENT.agoraLeaveChannel(); 
@@ -76,12 +85,23 @@ window.AGORA_COMMUNICATION_UI = {
       if(e.key === "r") { 
         // window.history.back(); // quick reset
       }
-    });
+    };
+    // jQuery(document).keypress(keyboardListeners);
+  },
+
+  enableExit: function() {
+    const exitCall = function(){
+      console.log("so sad to see you leave the channel");
+      window.AGORA_COMMUNICATION_CLIENT.agoraLeaveChannel(); 
+    };
+    jQuery("#exit-btn").click(exitCall);
+    jQuery("#exit-btn-footer").click(exitCall);
   },
 
   toggleMic: function (localStream) {
     // console.log(localStream)
     window.AGORA_UTILS.toggleBtn(jQuery("#mic-btn")); // toggle button colors
+    window.AGORA_UTILS.toggleBtn(jQuery("#mic-dropdown"));
     jQuery("#mic-icon").toggleClass('fa-microphone', localStream.userMuteAudio).toggleClass('fa-microphone-slash', !localStream.userMuteAudio); // toggle the mic icon
 
     if (!localStream.userMuteAudio) {
@@ -95,6 +115,7 @@ window.AGORA_COMMUNICATION_UI = {
 
   toggleVideo: function (localStream) {
     window.AGORA_UTILS.toggleBtn(jQuery("#video-btn")); // toggle button colors
+      window.AGORA_UTILS.toggleBtn(jQuery("#cam-dropdown"));
     jQuery("#video-icon").toggleClass('fa-video', localStream.userMuteVideo).toggleClass('fa-video-slash', !localStream.userMuteVideo); // toggle the video icon
 
     if (!localStream.userMuteVideo) {
@@ -114,7 +135,6 @@ window.AGORA_COMMUNICATION_UI = {
       if (devCount>0) {
         var id = devices[0].deviceId;
         // console.log('Device:', devices[0])
-        // console.log("getDevices: " + JSON.stringify(devices));
       }
     });
 
@@ -146,27 +166,6 @@ window.AGORA_COMMUNICATION_UI = {
   },
 
 
-  calculateVideoScreenSize: function () {
-    var container = jQuery('#full-screen-video');
-    // console.log('Video SIZE:', container.outerWidth());
-    var size = window.AGORA_COMMUNICATION_UI.getSizeFromVideoProfile();
-
-    // https://math.stackexchange.com/a/180805
-    var newHeight = 0;
-    console.log('Width:', container.outerWidth());
-    if (container.outerWidth() > 520) {
-      newHeight = container.outerWidth() * size.height / size.width;
-    } else {
-      newHeight = container.outerWidth();
-    }
-    console.log('newHeight:', newHeight);
-    container.outerHeight(newHeight);
-    return {
-      width: container.outerWidth(),
-      height: container.outerHeight()
-    };
-  },
-
   // get sizes based on the video quality settings
   getSizeFromVideoProfile: function () {
     // https://docs.agora.io/en/Interactive%20Broadcast/videoProfile_web?platform=Web#video-profile-table
@@ -186,50 +185,42 @@ window.AGORA_COMMUNICATION_UI = {
     }
   },
 
-  fullscreenInit: function () {
-    const resizeVideo = function(firstTime) {
-      const size = window.AGORA_COMMUNICATION_UI.calculateVideoScreenSize();
-      const sliderSize = size.width - 200;
-      
-      if (!firstTime) {
-        // jQuery('.slick-avatars').slick('breakpoint')
-      } else {
-        jQuery('.remote-users').outerWidth(sliderSize);
-      }
-      return size;
+  toggleRecording: function () {
+    if (window.loadingRecord) {
+      return false;
     }
 
-    const size = resizeVideo(true);
-    jQuery(window).smartresize(resizeVideo);
+    var btn = jQuery("#cloud-recording-btn");
+    if (btn.hasClass('start-rec')) {
+      window.loadingRecord = true;
+      btn.removeClass('start-rec').addClass('load-rec').attr('title', 'Stop Recording');
+      console.log("Starting rec...");
+      window.AGORA_CLOUD_RECORDING.startVideoRecording(function(err, res) {
+        if (err) { window.AGORA_UTILS.showErrorMessage(err); }
 
-    const sliderSize = size.width - 200;
-    const slidesToShow = Math.floor(sliderSize / 110);
-    window.slickSettings = {
-      dots: false,
-      slidesToShow,
-      centerMode: false,
-      responsive: [{
-        breakpoint: 480,
-        settings: {slidesToShow: 1}
-      }, {
-        breakpoint: 600,
-        settings: {slidesToShow: 2}
-      }, {
-        breakpoint: 960,
-        settings: {slidesToShow: 3}
-      }, {
-        breakpoint: 1128,
-        settings: {slidesToShow: 4}
-      }, {
-        breakpoint: 1366,
-        settings: {slidesToShow: 5}
-      }]
-    };
-    
-    jQuery('#slick-avatars').slick(window.slickSettings);
-    // jQuery('.slick-avatars').on('breakpoint', function(event, slick, breakpoint) {
-    //   console.log('breakpoint:', breakpoint)
-    // })
-    window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel(window.agoraAppId, window.channelName);
-  }
+        if (res) {
+          btn.removeClass('load-rec').addClass('stop-rec');
+        } else {
+          btn.removeClass('load-rec').addClass('start-rec').attr('title', 'Start Recording');
+        }
+        window.loadingRecord = false;
+      });
+    } else {
+      console.log("Stoping rec...");
+      window.AGORA_CLOUD_RECORDING.stopVideoRecording(function(err, res) {
+        if (err) {
+          // console.error(err);
+          window.AGORA_UTILS.showErrorMessage(err);
+        } else {
+          if(!res.errors) {
+            console.log(res);
+            btn.removeClass('stop-rec').addClass('start-rec').attr('title', 'Start Recording');
+          } else {
+            console.error(res.errors);
+            window.AGORA_UTILS.showErrorMessage(res.errors);
+          }
+        }
+      })
+    }
+  },
 }

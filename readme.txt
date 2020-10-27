@@ -2,9 +2,15 @@
 Contributors: jalejo08, hermesf
 Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
+<<<<<<< HEAD
+Tested up to: 5.5.1
+Requires PHP: 7.1
+Stable tag: 2.0.0
+=======
 Tested up to: 5.4
 Requires PHP: 7.2
 Stable tag: 1.6.2
+>>>>>>> master
 Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,7 +29,7 @@ Features Include:
 -  Customizable UI
 -  Customizable configurations (credentials, video profile, Codec, etc.) and much more!
 
-Agora is a Real-Time Engagement Platform as a Service that provides a fully encrypted, GDPR and HIPPA-compliant network. Agora delivers easy to embed Real-Time Communications (RTC) and Engagement APIs which include all the development tools and cloud infrastructure needed for mobile, web, and desktop applications.
+Agora is a leading video, voice and live interactive streaming platform, helping developers deliver rich in-app experiences—including embedded voice and video chat, real-time recording, interactive live streaming, and real-time messaging.
 
 With over 200+ data centers globally, the Agora’s Software-Defined Real-time Network (SD-RTN™) is trusted and  widely used by the world’s biggest brands and provides ease of scaling for up to 1 million peak concurrent users (PCU) in a single session with unmatched quality of experience.  
 Agora  fully supports a range of development environments, making it easy to deliver deep integration of high-quality, extreme low-latency video calling across all platforms and channels.
@@ -128,6 +134,16 @@ Updated to resolves issues with with screen sharing in Chrome browser. Resolves 
 - [42](https://github.com/AgoraIO/Agora-Word-Press/issues/42) 
 - [60](https://github.com/AgoraIO/Agora-Word-Press/issues/60) 
 
+Version 2.0.0
+Updated with a new UI, improved screen sharing, multi-host broadcasts, real-time chat, and other features/improvements.
+- [47](https://github.com/AgoraIO/Agora-WordPress/issues/47) 
+- [62](https://github.com/AgoraIO/Agora-WordPress/issues/62) 
+- [63](https://github.com/AgoraIO/Agora-WordPress/issues/63) 
+- [65](https://github.com/AgoraIO/Agora-WordPress/issues/65) 
+- [66](https://github.com/AgoraIO/Agora-WordPress/issues/66) 
+- [71](https://github.com/AgoraIO/Agora-WordPress/issues/71) 
+
+
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
@@ -155,5 +171,5 @@ Updated to resolves issues with with screen sharing in Chrome browser. Resolves 
   Browsers require a secure connection (HTTPS) for accessing a device's microphone and camera. When testing locally, localhost is a whitelisted URL but once you deploy to production you will need to have a secure connection for the plugin to function properly.
 
 == Upgrade Notice ==
-Version 1.6.2 updates to resolve issues with stream inject and screen sharing in Chrome browser.
+[Major Update] Version 2.0.0 updates UI, multi-host, chat, and more.
 ...

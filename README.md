@@ -1,11 +1,11 @@
 # Agora Video for WordPress #  
 **Contributors:** jalamprea, digitallysavvy  
 **Tags:** live streaming, video streaming, video call, video conference  
-**Requires at least:** 5.0.0  
-**Tested up to:** 5.4  
-**Requires PHP:** 7.2  
-**Stable tag:** 1.5.2  
-**License:** CC BY-ND 4.0    
+**Requires at least:** 5.0.0   
+**Tested up to:** 5.5.1   
+**Requires PHP:** 7.1   
+**Stable tag:** 2.0.0  
+**License:** CC BY-ND 4.0   
 **License URI:** https://creativecommons.org/licenses/by-nd/4.0  
 **GitHub:** https://github.com/AgoraIO/Agora-Word-Press  
 
@@ -23,7 +23,7 @@ Features Include:
 -  Customizable UI
 -  Customizable configurations (credentials, video profile, Codec, etc.) and much more!
 
-Agora is a Real-Time Engagement Platform as a Service that provides a fully encrypted, GDPR and HIPPA-compliant network. Agora delivers easy to embed Real-Time Communications (RTC) and Engagement APIs which include all the development tools and cloud infrastructure needed for mobile, web, and desktop applications.
+Agora is a leading video, voice and live interactive streaming platform, helping developers deliver rich in-app experiences—including embedded voice and video chat, real-time recording, interactive live streaming, and real-time messaging.
 
 With over 200+ data centers globally, the Agora’s Software-Defined Real-time Network (SD-RTN™) is trusted and  widely used by the world’s biggest brands and provides ease of scaling for up to 1 million peak concurrent users (PCU) in a single session with unmatched quality of experience.  
 Agora  fully supports a range of development environments, making it easy to deliver deep integration of high-quality, extreme low-latency video calling across all platforms and channels.
@@ -158,3 +158,12 @@ Updated to resolves issues with saving Agora Settings created by previous hotfix
 Updated to resolves issues with with screen sharing in Chrome browser. Resolves issue with injected stream not displaying in broadcast channel. Release resolves issues:
 - [42](https://github.com/AgoraIO/Agora-Word-Press/issues/42) 
 - [60](https://github.com/AgoraIO/Agora-Word-Press/issues/60) 
+
+### Version 2.0.0 ###
+Updated with a new UI, improved screen sharing, multi-host broadcasts, real-time chat, and other features/improvements.
+- [47](https://github.com/AgoraIO/Agora-WordPress/issues/47) 
+- [62](https://github.com/AgoraIO/Agora-WordPress/issues/62) 
+- [63](https://github.com/AgoraIO/Agora-WordPress/issues/63) 
+- [65](https://github.com/AgoraIO/Agora-WordPress/issues/65) 
+- [66](https://github.com/AgoraIO/Agora-WordPress/issues/66) 
+- [71](https://github.com/AgoraIO/Agora-WordPress/issues/71) 

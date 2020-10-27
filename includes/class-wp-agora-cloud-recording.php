@@ -45,6 +45,8 @@ class AgoraCloudRecording {
             $out = $this->stopRecording($_POST);
         } else if ($action==='query-recording') {
             $out = $this->queryRecording($_POST);
+        } else if ($action==='updateLayout') {
+            $out = $this->updateLayout($_POST);
         } else {
             $out = array('error' => 'SDK Action not defined!');
         }
@@ -79,6 +81,35 @@ class AgoraCloudRecording {
         return $this->callAPI($endpoint, $params, 'POST');
     }
 
+    private function updateLayout($data) {
+        
+        if (isset($data['resourceId']) && !empty($data['resourceId'])) {
+           $resourceId = $data['resourceId'];
+        } else {
+            $resource = $this->acquire($data);
+            $resourceId = $resource->resourceId;
+        }
+
+        if (!isset($data['recordingId']) ) {
+            return new WP_Error( 'data', "Incomplete data", $data );
+        }
+        
+        $endpointUL = $this->settings['appId'].'/cloud_recording/resourceid/' . $resourceId . '/sid/' . $sid. '/mode/mix/updateLayout';
+
+        $clientRequest = new stdClass();
+        $clientRequest->mixedVideoLayout = 1; // best fit layout
+        $clientRequest->backgroundColor = "#000000";
+
+        $params = array(
+            'cname' => $data['cname'],
+            'uid' => $data['uid'],
+            'clientRequest' => $clientRequest
+        );
+        // header('HTTP/1.1 500 Internal Server Error');
+        // die("<pre>QUERY:".print_r($endpoint, true)."</pre>");
+        return $this->callAPI($endpointUL, $params, 'POST');
+    }
+
     private function queryRecording($data) {
         
         if (isset($data['resourceId']) && !empty($data['resourceId'])) {
@@ -110,7 +141,7 @@ class AgoraCloudRecording {
         $data['uid'] = ''.rand(AGORA_MIN_RAND_VALUE, AGORA_MAX_RAND_VALUE);
 
         $resource = $this->acquire($data);
-        // die("<pre>".print_r($resource, true)."</pre>");
+        // die("R:<pre>".print_r($resource, true)."</pre>");
         $resourceId = $resource->resourceId;
         
         $channel = WP_Agora_Channel::get_instance($data['cid']);
@@ -126,6 +157,13 @@ class AgoraCloudRecording {
         $clientRequest = new stdClass();
         $clientRequest->recordingConfig = new stdClass();
         $clientRequest->recordingConfig->channelType = 1; // 1 = broadcast,  0=Communication
+        $clientRequest->recordingConfig->transcodingConfig = new stdClass();
+        $clientRequest->recordingConfig->transcodingConfig->mixedVideoLayout = 1; // best fit layout
+        $clientRequest->recordingConfig->transcodingConfig->backgroundColor = "#000000";
+        $clientRequest->recordingConfig->transcodingConfig->width = 848;
+        $clientRequest->recordingConfig->transcodingConfig->height = 480;
+        $clientRequest->recordingConfig->transcodingConfig->bitrate = 930;
+        $clientRequest->recordingConfig->transcodingConfig->fps = 30;
 
         // $clientRequest->recordingConfig->subscribeVideoUids
         // $clientRequest->recordingConfig->subscribeAudioUids
@@ -141,7 +179,8 @@ class AgoraCloudRecording {
         $month = strtolower(date("m", strtotime($t)));
         $year = strtolower(date("Y", strtotime($t)));
         
-        $folderName = $month.$day.$year.preg_replace('/\s+/', '', $channel->title());
+        $fixedTitle = str_replace('-', '', $channel->title());
+        $folderName = $month.$day.$year.preg_replace('/\s+/', '', $fixedTitle);
         $clientRequest->storageConfig->fileNamePrefix = array( $folderName );
         
         $newToken = $this->parent->generateNewToken($data['cid'], $data['uid']);
@@ -154,7 +193,7 @@ class AgoraCloudRecording {
             'clientRequest' => $clientRequest
         );
 
-        // die("<pre>".print_r($params, true)."</pre>");
+        // die("<pre>".print_r($endpoint, true)."</pre>");
         $out = $this->callAPI($endpoint, $params, 'POST');
         if (!is_wp_error( $out )) {
             $out->uid = $data['uid'];

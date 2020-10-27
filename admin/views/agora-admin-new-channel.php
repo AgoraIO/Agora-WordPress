@@ -168,8 +168,9 @@ function render_agoraio_channel_form_settings($channel) {
   // echo "<pre>Settings:".print_r(, true)."</pre>";
   $props = $channel->get_properties();
   $type = $props['type'];
-  $userHost = $props['host'];
+  $userHost = is_array($props['host']) ? $props['host'] : array($props['host']);
   $settings = $props['settings'];
+  // echo("<pre>".print_r($userHost, true)."</pre>");
   ?>
   <ul class="nav nav-tabs">
     <li class="active">
@@ -203,19 +204,34 @@ function render_agoraio_channel_form_settings($channel) {
           $props
         ) ?>
         <tr id="broadcast-host-row">
-          <th scope="row"><label for="host"><?php _e('Broadcaster User', 'agoraio'); ?></label></th>
+          <th scope="row"><label for="host"><?php _e('Broadcast Users', 'agoraio'); ?></label></th>
           <td>
-            <?php
-            $dropdownParams = array(
-              "id" => "host",
-              "name" => "host",
-              "class" => "large-dropdown",
-            );
-            if (!empty($userHost)) {
-              $dropdownParams['selected'] = $userHost;
-            }
-            wp_dropdown_users($dropdownParams);
-            ?>
+            <div id="broadcast-users-list" data-load-users='<?php echo json_encode($userHost) ?>'>
+              <span class="helper-text help-add-more-users"><?php _e('Please add at least one user', 'agoraio') ?></span>
+            </div>
+            <button id="add-more-users" class="button-secondary" type="button">Add User</button>
+            <div id="add-more-users-controls" class="add-more-users-controls">
+              <?php
+              $dropdownParams = array(
+                "id" => "host",
+                "name" => "host",
+                "class" => "large-dropdown",
+              );
+              // if (!empty($userHost)) { $dropdownParams['selected'] = $userHost; }
+              wp_dropdown_users($dropdownParams);
+              ?>
+              <span id="add-more-buttons">
+                <button id="agora-add-user" class="button-primary" type="button">Add</button>
+                <button id="agora-cancel-add-user" class="button-cancel" type="button">Cancel</button>
+              </span>
+              <span id="add-more-loader" class="agora-loader" style="display: none">
+                <img src="<?php echo plugin_dir_url(__DIR__ . '/../index.php') ?>css/loader.svg" width="38" alt="agora-loader" />
+              </span>
+              <span id="add-user-error-msg" class="notice notice-error" style="display:none">
+                <?php _e('User already added.', 'agoraio') ?>
+              </span>
+            </div>
+
           </td>
         </tr>
       </table>
@@ -242,6 +258,12 @@ function agora_render_video_settings($settings, $prefix) {
   ?>
   <table class="form-table">
     <?php
+
+    if ($prefix==='external') {
+      agora_render_setting_row('rtmpServerURL', __('RTMP Server URL', 'agoraio'), $settings, $prefix, "text");
+      agora_render_setting_row('streamKey', __('Stream key', 'agoraio'), $settings, $prefix, "text");
+    }
+    
     agora_render_setting_row('width', __('Width', 'agoraio'), $settings, $prefix);
     agora_render_setting_row('height', __('Height', 'agoraio'), $settings, $prefix);
     agora_render_setting_row('videoBitrate', __('Video Bitrate', 'agoraio'), $settings, $prefix);

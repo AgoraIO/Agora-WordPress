@@ -7,6 +7,8 @@ class WP_Agora_Channel {
   private static $found_items = 0;
   private static $current = null;
   private static $defaultVideoSettings = array(
+    'external-rtmpServerURL' => '',
+    'external-streamKey' => '',
     'external-width' => 640,
     'external-height' => 360,
     'external-videoBitrate' => 400,
@@ -242,7 +244,15 @@ class WP_Agora_Channel {
     update_post_meta($post_id, 'channel_appearance_settings', $appearanceSettings);
     update_post_meta($post_id, 'channel_recording_settings', $recordingSettings);
     update_post_meta($post_id, 'channel_type', sanitize_key($args['type']));
-    update_post_meta($post_id, 'channel_user_host', sanitize_key($args['host']));
+
+    if (isset($args['host'])) {
+      if (is_array($args['host'])) {
+        $hosts = array_map('sanitize_key', $args['host']);
+      } else {
+        $hosts = sanitize_key($args['host']);
+      }
+      update_post_meta($post_id, 'channel_user_host', $hosts);
+    }
 
     unset($args['_wp_http_referer']);
     unset($args['agoraio-locale']);

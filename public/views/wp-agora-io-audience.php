@@ -1,8 +1,9 @@
 <?php
 $settings = $channel->get_properties();
+
 $agoraStyle = '';
 if (!empty($settings['appearance']['splashImageURL'])) {
-  $agoraStyle = 'style="background-image:url('.$settings['appearance']['splashImageURL'].')"';
+  $agoraStyle = 'style="background-size:cover;background-position:center center; background-image:url('.$settings['appearance']['splashImageURL'].')"';
 }
 $buttonText = __('Watch the Live Stream', 'agoraio'); // watchButtonText
 if(!empty($settings['appearance']['watchButtonText'])) {
@@ -12,70 +13,91 @@ $buttonIcon = $settings['appearance']['watchButtonIcon']!=='false';
 
 $screenStyles = '';
 if (!empty($settings['appearance']['noHostImageURL'])) {
-  $screenStyles = "background-image: url('".$settings['appearance']['noHostImageURL']."')";
+  $screenStyles = "background-size:cover; background-image: url('".$settings['appearance']['noHostImageURL']."')";
 }
 
-// die("<pre>".print_r($settings, true)."</pre>");
-$user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
-// die("<pre>".print_r($user_avatar['url'], true)."</pre>");
+// $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
 ?>
-<div class="agora agora-broadcast agora-audience" <?php echo $agoraStyle ?>>
-  <div class="container-fluid p-0">
-    <div id="full-screen-video" style="display: none; <?php echo $screenStyles; ?>"></div>
-    <div id="remote-streams-container" class="row hidden fixed-bottom mb-1 container col-9 ml-1">
-      <div id="remote-streams" class="row">
-        <!-- insert remote streams dynamically -->
-      </div>
-    </div>
-    <div id="watch-live-overlay" class="overlay">
-      <div id="overlay-container">
-          <div class="col-md text-center">
-            <button id="watch-live-btn" type="button" class="btn btn-block btn-primary btn-xlg">
-              <?php if($buttonIcon) { ?>
-                <i id="watch-live-icon" class="fas fa-broadcast-tower"></i>
-              <?php } ?>
-              <span><?php echo $buttonText ?></span>
-            </button>
+<div id="agora-root" class="agora agora-broadcast agora-audience">
+  <section class="agora-container no-footer">
+    <?php require_once "parts/header.php" ?>
+
+    <div class="agora-content">
+      <?php require_once "parts/header-controls.php" ?>
+
+      <div id="screen-zone" class="screen" <?php echo $agoraStyle ?>>
+        <div id="screen-users" class="screen-users screen-users-1">
+          <div id="full-screen-video" class="user" style="display: none; <?php echo $screenStyles; ?>"></div>
+
+          <div id="watch-live-overlay" class="overlay user">
+            <div id="overlay-container">
+              <button id="watch-live-btn" type="button" class="room-title">
+                <?php if($buttonIcon) { ?>
+                  <i id="watch-live-icon" class="fas fa-broadcast-tower"></i>
+                <?php } ?>
+                <span><?php echo $buttonText ?></span>
+              </button>
+            </div>
           </div>
-      </div>
-    </div>
-    <div id="watch-live-closed" class="overlay" style="display: none">
-      <div id="overlay-container">
-          <div class="col-md text-center">
-            <button id="watch-live--btn" type="button" class="btn btn-block btn-primary btn-xlg">
-              <i id="watch-live-icon" class="fas fa-broadcast-tower"></i><span>The Live Stream has finished</span>
-            </button>
+          <div id="watch-live-closed" class="overlay user" style="display: none">
+            <div id="overlay-container">
+              <button id="watch-live--btn" type="button" class="room-title">
+                <?php if($buttonIcon) { ?>
+                  <i id="watch-live-icon" class="fas fa-broadcast-tower"></i>
+                <?php } ?>
+                <span>The Live Stream has finished</span>
+              </button>
+            </div>
           </div>
+
+        </div>
       </div>
     </div>
-    <?php if ($user_avatar) : ?>
-    <div id="user_gravatar_wrapper" class="user_gravatar_wrapper d-none">
-      <div class="user_gravatar_circle">
-        <img src="<?php echo $user_avatar['url'] ?>" alt="Broadcast User">
-      </div>
-    </div>
-    <?php endif; ?>
-  </div>
+
+    <?php
+    if (isset($agora->settings['agora-chat']) && $agora->settings['agora-chat']==='enabled') {
+      require_once('parts/chat-fab.php');
+    }  ?>
+
+  </section>
+
+  <?php require_once "parts/scripts-common.php" ?>
   <script>
+    window.agoraCurrentRole = 'audience';
+    window.agoraMode = 'audience';
+    window.remoteStreams = {};
+
+    // set log level:
+    // -- .DEBUG for dev 
+    // -- .NONE for prod
+    window.agoraLogLevel = window.location.href.indexOf('local')>0 ? AgoraRTC.Logger.ERROR : AgoraRTC.Logger.ERROR;
+    AgoraRTC.Logger.setLogLevel(window.agoraLogLevel);
+    // window.AGORA_BROADCAST_UI.calculateVideoScreenSize();
+
+
     window.addEventListener('load', function() {
-      var agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
-      window.channelName = '<?php echo $channel->title() ?>'; // set channel name
-      window.channelId = '<?php echo $channel->id() ?>'; // set channel name
-      window.agoraCurrentRole = 'audience';
-      window.agoraMode = 'audience';
-
-      // create client 
-      // vp8 to work across mobile devices
+      // create client, vp8 to work across mobile devices
       window.agoraClient = AgoraRTC.createClient({mode: 'live', codec: 'vp8'});
-      window.cameraVideoProfile = '<?php echo $instance['videoprofile'] ?>';
-      window.screenVideoProfile = '<?php echo $instance['screenprofile'] ?>';
 
-      // set log level:
-      // -- .DEBUG for dev 
-      // -- .NONE for prod
-      window.agoraLogLevel = window.location.href.indexOf('localhost')>0 ? AgoraRTC.Logger.DEBUG : AgoraRTC.Logger.ERROR;
-      AgoraRTC.Logger.setLogLevel(window.agoraLogLevel);
-      window.AGORA_BROADCAST_UI.calculateVideoScreenSize();
+      window.AGORA_RTM_UTILS.setupRTM(window.agoraAppId, window.channelName);
+
+      jQuery('#fullscreen-expand').click(window.AGORA_UTILS.toggleFullscreen);
+
+      const exitBtn = jQuery('#exit-btn')
+      exitBtn.hide();
+      exitBtn.click(function() {
+        Object.values(window.remoteStreams).forEach(stream => stream.close());
+        window.remoteStreams = {};
+        finishVideoScreen();
+      })
+
+      function finishVideoScreen() {
+        jQuery(".remote-stream-container").hide();
+        jQuery("#full-screen-video").hide();
+        jQuery("#watch-live-closed").show();
+        agoraLeaveChannel();
+        exitBtn.hide();
+      }
       
       // Due to broswer restrictions on auto-playing video, 
       // user must click to init and join channel
@@ -85,9 +107,10 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
         // init Agora SDK
         window.agoraClient.init(agoraAppId, function () {
           jQuery("#watch-live-overlay").remove();
+          jQuery("#screen-zone").css('background', 'none')
           jQuery("#full-screen-video").fadeIn();
           AgoraRTC.Logger.info('AgoraRTC client initialized');
-          joinChannel(); // join channel upon successfull init
+          agoraJoinChannel(); // join channel upon successfull init
         }, function (err) {
           AgoraRTC.Logger.error('[ERROR] : AgoraRTC client init failed', err);
         });
@@ -98,71 +121,120 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
       });
 
       // connect remote streams
-      window.agoraClient.on('stream-added', function (evt) {
-        var stream = evt.stream;
-        var streamId = stream.getId();
+      window.agoraClient.on('stream-added', function addStream(evt) {
+        const stream = evt.stream;
+        const streamId = stream.getId();
+        window.remoteStreams[streamId] = stream;
+
         AgoraRTC.Logger.info('New stream added: ' + streamId);
         AgoraRTC.Logger.info('Subscribing to remote stream:' + streamId);
+
+        const chatBtn = document.querySelector('#chatToggleBtn');
+        if (chatBtn) {
+          chatBtn.style.display = "block";
+        }
+
         jQuery("#watch-live-closed").hide();
-        jQuery("#full-screen-video").fadeIn();
-        jQuery("#remote-streams-container").removeClass("hidden");
+        jQuery("#watch-live-overlay").hide();
+        jQuery("#full-screen-video").css('background', 'none').fadeIn();
+        exitBtn.show();
+
         // Subscribe to the stream.
         window.agoraClient.subscribe(stream, function (err) {
           AgoraRTC.Logger.error('[ERROR] : subscribe stream failed', err);
         });
       });
 
-      window.agoraClient.on('stream-removed', function (evt) {
-        var stream = evt.stream;
+      window.agoraClient.on('stream-removed', function closeStream(evt) {
+        const stream = evt.stream;
+        const streamId = stream.getId();
         stream.stop(); // stop the stream
         stream.close(); // clean up and close the camera stream
+
+        window.remoteStreams[streamId] = null;
+        delete window.remoteStreams[streamId];
+
         AgoraRTC.Logger.warning("Remote stream is removed " + stream.getId());
       });
 
       window.agoraClient.on('stream-subscribed', function (evt) {
-        var remoteStream = evt.stream;
-        // remoteStream.play('full-screen-video');
-        if(jQuery('#full-screen-video').is(':empty') ) { 
-          remoteStream.play('full-screen-video');
+        const remoteStream = evt.stream;
+        const streamId = remoteStream.getId();
+        AgoraRTC.Logger.info('Successfully subscribed to remote stream: ' + streamId);
+
+        jQuery('#full-screen-video').hide();
+
+        if (window.screenshareClients[streamId]) {
+          // this is a screen share stream:
+          console.log('Screen stream arrived:');
+          window.AGORA_SCREENSHARE_UTILS.addRemoteScreenshare(remoteStream);
         } else {
-          addInjectedStreamMiniView(remoteStream);
+          // show new stream on screen:
+          window.AGORA_UTILS.addRemoteStreamView(remoteStream);
+
+          const usersCount = Object.keys(window.remoteStreams).length;
+          window.AGORA_UTILS.updateUsersCounter(usersCount);
         }
-        AgoraRTC.Logger.info('Successfully subscribed to remote stream: ' + remoteStream.getId());
       });
 
       // remove the remote-container when a user leaves the channel
       window.agoraClient.on('peer-leave', function(evt) {
         AgoraRTC.Logger.info('Remote stream has left the channel: ' + evt.uid);
-        evt.stream.stop(); // stop the stream
-        if (jQuery('#full-screen-video').children().length===0) {
-          jQuery("#full-screen-video").fadeOut();
-          jQuery("#watch-live-closed").show();
+        
+        if (!evt || !evt.stream) {
+          console.error('Stream undefined cannot be removed', evt);
+          return false;
         }
 
+        // debugger;
+        const streamId = evt.stream.getId(); // the the stream id
+        evt.stream.isPlaying() && evt.stream.stop(); // stop the stream
+  
+        if(window.remoteStreams[streamId] !== undefined) {
+          window.remoteStreams[streamId].isPlaying() && window.remoteStreams[streamId].stop(); // stop playing the feed
+          delete window.remoteStreams[streamId]; // remove stream from list
+          const remoteContainerID = '#' + streamId + '_container';
+        }
+
+        if (window.screenshareClients[streamId]) {
+          if (typeof window.screenshareClients[streamId].stop==='function') {
+            window.screenshareClients[streamId].isPlaying() && window.screenshareClients[streamId].stop();
+          }
+          const remoteContainerID = '#' + streamId + '_container';
+          jQuery(remoteContainerID).empty().remove();
+          const streamsContainer = jQuery('#screen-zone');
+          streamsContainer.toggleClass('sharescreen');
+          delete window.screenshareClients[streamId];
+        } else {
+          const usersCount = Object.keys(window.remoteStreams).length;
+          if (usersCount===0) {
+            const chatBtn = document.querySelector('#chatToggleBtn');
+            if (chatBtn) {
+              chatBtn.style.display = "none";
+            }
+
+            finishVideoScreen();
+          }
+        }
       });
+
 
       // show mute icon whenever a remote has muted their mic
-      window.agoraClient.on('mute-audio', function (evt) {
-        var remoteId = evt.uid;
+      window.agoraClient.on("mute-audio", function (evt) {
+        window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', true);
       });
 
-      window.agoraClient.on('unmute-audio', function (evt) {
-        var remoteId = evt.uid;
+      window.agoraClient.on("unmute-audio", function (evt) {
+        window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', false);
       });
 
       // show user icon whenever a remote has disabled their video
-      window.agoraClient.on('mute-video', function (evt) {
-        var remoteId = evt.uid;
-        //console.log('Mute video from remote:', remoteId);
-        // jQuery('#user_gravatar_wrapper').toggleClass('d-none');
-        // jQuery('#full-screen-video').children().eq(0).hide();
+      window.agoraClient.on("mute-video", function (evt) {
+        window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', true);
       });
 
-      window.agoraClient.on('unmute-video', function (evt) {
-        var remoteId = evt.uid;
-        // console.log('Unmute video from remote:', remoteId);
-        // jQuery('#user_gravatar_wrapper').toggleClass('d-none');
-        // jQuery('#full-screen-video').children().eq(0).show();
+      window.agoraClient.on("unmute-video", function (evt) {
+        window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', false);
       });
 
       // ingested live stream 
@@ -174,8 +246,8 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
     });
 
     // join a channel
-    function joinChannel() {
-      var token = agoraGenerateToken();
+    function agoraJoinChannel() {
+      const token = window.AGORA_TOKEN_UTILS.agoraGenerateToken();
 
       // set the role
       window.agoraClient.setClientRole('audience', function() {
@@ -184,74 +256,28 @@ $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
         AgoraRTC.Logger.error('setClientRole failed', e);
       });
       
-      <?php
-      $current_user = wp_get_current_user();
-      $uid = $current_user->ID; // Get urrent user id
-      echo "var userID = ".$uid.";\n";
-      ?>
-      window.agoraClient.join(token, channelName, userID, function(uid) {
+      window.agoraClient.join(token, window.channelName, window.userID, function(uid) {
           AgoraRTC.Logger.info('User ' + uid + ' join channel successfully');
+          window.AGORA_RTM_UTILS.joinChannel(uid, function(err){
+            if (err) {
+              console.error(err)
+            }
+          });
       }, function(err) {
           AgoraRTC.Logger.error('[ERROR] : join channel failed', err);
       });
     }
 
     function agoraLeaveChannel() {
+      window.dispatchEvent(new CustomEvent("agora.leavingChannel"));
       window.agoraClient.leave(function() {
         AgoraRTC.Logger.info('client leaves channel');
+        window.AGORA_RTM_UTILS.leaveChannel();
+
+        window.dispatchEvent(new CustomEvent("agora.leavedChannel"));
       }, function(err) {
         AgoraRTC.Logger.error('client leave failed ', err); //error handling
       });
     }
-
-    // use tokens for added security
-    function agoraGenerateToken() {
-      return <?php
-      $appID = $agora->settings['appId'];
-      $appCertificate = $agora->settings['appCertificate'];
-      if($appCertificate && strlen($appCertificate)>0) {
-        $channelName = $channel->title();
-        $current_user = wp_get_current_user();
-        $uid = $current_user->ID; // Get urrent user id
-
-        // role should be based on the current user host...
-        $role = 2; // Subscriber
-        $privilegeExpireTs = 0;
-        echo '"'.AgoraRtcTokenBuilder::buildTokenWithUid($appID, $appCertificate, $channelName, $uid, $role, $privilegeExpireTs). '"';
-      } else {
-        echo 'null';
-      }
-      ?>;
-    }
-
-  function addInjectedStreamMiniView(remoteStream){
-    var streamId = remoteStream.getId();
-    remoteStreams[streamId] = remoteStream;
-    console.log('Adding remote to miniview:', streamId);
-    // append the remote stream template to #remote-streams
-    const remoteStreamsDiv = jQuery('#remote-streams');
-    let playerFound = false;
-    if (remoteStreamsDiv.length>0) {
-      playerFound = true;
-      remoteStreamsDiv.append(
-        jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-streams-container col'}).append(
-          jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
-        )
-      );
-    } else {
-      const avatarCircleDiv = jQuery('#uid-'+streamId);
-      if (avatarCircleDiv.length>0) {
-        playerFound = true;
-        const circle = avatarCircleDiv.find('.avatar-circle');
-        circle.append(
-          jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-streams-container'}).append(
-            jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
-          )
-        )
-        circle.find('img').hide();
-      }
-    }
-    playerFound && remoteStream.play('agora_remote_' + streamId); 
-  }
   </script>
 </div>
