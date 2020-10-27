@@ -34,11 +34,7 @@ window.AGORA_BROADCAST_CLIENT = {
   startLiveTranscoding: startLiveTranscoding,
   addExternalSource: addExternalSource,
   agoraLeaveChannel: agoraLeaveChannel,
-<<<<<<< HEAD
   agoraJoinChannel: agoraJoinChannel
-=======
-  addInjectedStreamMiniView: addInjectedStreamMiniView
->>>>>>> master
 };
 
 // join a channel
@@ -219,14 +215,8 @@ function addExternalSource() {
   
   // set live transcoding config
   window.injectedStreamURL = externalUrl;
-<<<<<<< HEAD
   window.agoraClient.addInjectStreamUrl(externalUrl, window.injectStreamConfig)
-  // TODO: ADD view for external url (similar to rtmp url)
 }
-=======
-}
-window.AGORA_BROADCAST_CLIENT.addExternalSource = addExternalSource;
->>>>>>> master
 
 // RTMP Connection (UI Component)
 function addExternalTransmitionMiniView(rtmpURL) {
@@ -317,8 +307,6 @@ function setupLiveStreamListeners() {
   });
 }
 
-<<<<<<< HEAD
-
 function setupInjectStreamsListeners() {
   window.agoraClient.on('streamInjectedStatus', function (evt) {
     console.log("Live streaming Injected Status:", evt);
@@ -340,41 +328,3 @@ function setupInjectStreamsListeners() {
 }
 
 window.AGORA_UTILS.setupAgoraListeners();
-=======
-// REMOTE STREAMS UI
-function addInjectedStreamMiniView(remoteStream){
-  var streamId = remoteStream.getId();
-  remoteStreams[streamId] = remoteStream;
-  console.log('Adding remote to miniview:', streamId);
-  // append the remote stream template to #remote-streams
-  const remoteStreamsDiv = jQuery('#remote-streams');
-  let playerFound = false;
-  if (remoteStreamsDiv.length>0) {
-    playerFound = true;
-    remoteStreamsDiv.append(
-      jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-streams-container col'}).append(
-        jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
-      )
-    );
-  } else {
-    const avatarCircleDiv = jQuery('#uid-'+streamId);
-    if (avatarCircleDiv.length>0) {
-      playerFound = true;
-      const circle = avatarCircleDiv.find('.avatar-circle');
-      circle.append(
-        jQuery('<div/>', {'id': streamId + '_container',  'class': 'remote-streams-container'}).append(
-          jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
-        )
-      )
-      circle.find('img').hide();
-    }
-  }
-  playerFound && remoteStream.play('agora_remote_' + streamId); 
-
-  var containerId = '#' + streamId + '_container';
-  jQuery(containerId).dblclick(function() {
-    // double click to stop Stream Inject
-    window.agoraClient.removeInjectStreamUrl(window.injectedStreamURL);
-  });
-}
->>>>>>> master
