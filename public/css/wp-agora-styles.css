@@ -1,0 +1,793 @@
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+.agora {
+  --agora-background: #343338;
+  --red-bg-color: #d94964;
+
+  font-size: 14px;
+  position: relative;
+  line-height: 16px;
+  font-family: Arial;
+  background-color: var(--agora-background);
+  z-index: 10;
+}
+
+.agora .text-danger {
+    color: #dc3545!important;
+}
+
+/* .agora-container.no-footer {  
+  grid-template-rows: 6% 94%;
+} */
+.agora .error-container {
+  margin: 5px 0 20px;
+  display: none;
+}
+.agora .error-container span {
+  opacity: 0;
+  transition: opacity ease 0.5s;
+}
+
+/*  total 100vh - 32px of wp admin bar */
+.admin-bar .agora-fullscreen .agora-container {
+  height: calc(100vh - 32px)
+}
+
+.agora-container button {
+  font-weight: 500;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.agora-header {
+  background: #6c757e;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px 7px;
+}
+.agora-header .fas {
+  cursor: pointer;
+  color: #dfdfdf;
+}
+.agora-header .fas:hover {
+  color: #ffffff;
+  transform: scale(1.2);
+}
+
+.agora-container {
+  background-color: var(--agora-background);
+  padding: 0;
+}
+.agora-fullscreen .agora-content {
+  display: grid;
+  grid-template-rows: 8vh 92vh;
+}
+
+.agora .buttons-top{
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 16px
+}
+.agora .left-button{
+  display: inherit;
+  align-items: center;
+}
+.agora .right-buttons{
+  display: inherit;
+  align-items: center;
+}
+.agora .room-title {
+  color: #6c757e;
+  border: 1px solid #d7d7d7;
+  border-radius: 6px;
+  padding: .5em 1em;
+  background-color: #d7d7d7;
+  margin: 0;
+}
+.agora .room-title .fas { color: #646161; }
+.agora .leave-meeting {
+  color: white;
+  border: 1px solid var(--red-bg-color);
+  border-radius: 5px;
+  padding: .5em 1em;
+  margin-left: 1em;
+}
+.agora .btn-danger,
+.agora .btnIcon.btn-danger {
+  background-color: var(--red-bg-color);
+}
+.agora .btn-danger:hover,
+.agora .btnIcon.btn-danger:hover {
+  background-color: #e63153;
+}
+
+.agora .icon-cog {
+  font-size: 28px;
+  color: #6c757e;
+  cursor: pointer;
+}
+.agora .icon-enlarge {
+  font-size: 20px;
+  color: #efefef;
+  margin: .2em 1em;
+  cursor: pointer;
+}
+
+.remote-video {
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+}
+.mute-overlay {
+  position: absolute;
+  z-index: 2;
+  bottom: 28px;
+  left: calc(50% - 14px);
+  font-size: 1.5em;
+  padding: 2px 0 0 2px;
+  display: none;
+}
+.no-video-overlay {
+  position: absolute;
+  z-index: 3;
+  width: calc(100% - 0.4em);
+  top: 40%;
+  color: #cccccc;
+  font-size: 2.5em;
+  margin: 0 auto;
+  display: none;
+  text-align: center;
+}
+.agora .screen.sharescreen .no-video-overlay {
+  font-size: 1.8em;
+}
+.agora .screen.sharescreen .mute-overlay {
+  font-size: 1.2em;
+  bottom: 8px;
+  left: calc(50% - 10px);
+}
+
+.agora .screen {
+  height: 100%;
+  padding: 0 15px;
+  overflow: hidden;
+}
+.agora.agora-fullscreen .screen {
+  align-items: center;
+  padding: 0 15px;
+}
+.agora .screen-users{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-left: -10px;
+  margin-right: -10px;
+}
+.agora .screen-users .user {
+  position: relative;
+  overflow: hidden;
+  padding: 3px;
+  background-color: #111;
+}
+.screen-users .user video {
+  /* border-radius: 5px;
+     object-fit: cover; */
+}
+
+.agora .screen.sharescreen {
+  padding: 0;
+}
+.agora .screen.sharescreen .screen-users .user {
+  width: calc(100px * 1.5);
+  height: 100px;
+}
+.agora .screen.sharescreen .screen-users {
+  overflow: hidden;
+  margin: 0;
+  flex-wrap: nowrap;
+}
+
+.agora .screen.sharescreen .screenshare-container {
+  width: 100%;
+  height: 50vh;
+}
+
+/* screen with 1 user */
+.agora .screen-users-1 .user {
+  width: 100%;
+  height: 50vh;
+}
+.agora-fullscreen .screen-users-1 .user {
+  height: 75vh;
+}
+
+.agora.agora-audience .screen-users-1 .user {
+  height: 65vh;
+}
+
+/* screeen with 2 users */
+.agora .screen-users-2 .user {
+  width: 49%;
+  height: 45vh;
+}
+.agora-fullscreen .screen-users-2 .user {
+  width: 50%;
+  height: 69.5vh;
+}
+
+/* screen with 3-4 users */
+.agora .screen-users-3 .user,
+.agora .screen-users-4 .user{
+  width: 50%;
+  height: 30vh;
+}
+.agora-fullscreen .screen-users-3 .user,
+.agora-fullscreen .screen-users-4 .user{
+  height: 36vh;
+}
+
+/* screen with 5 y 6 users */
+.agora .screen-users-5-6 .user{
+  width: 33%;
+  height: 25vh;
+}
+.agora-fullscreen .screen-users-5-6 .user{
+  height: 37vh;
+}
+
+/* screen with 7 y 8 users */
+.agora .screen-users-7-9 .user{
+  width: 33%;
+  height: 20vh;
+}
+.agora-fullscreen .screen-users-7-9 .user{
+  height: 25vh;
+}
+
+/* pantalla 10, 11 y 12*/
+.agora .screen-users-10-12 .user{
+  width: 24.5%;
+  height: 17vh;
+}
+.agora-fullscreen .screen-users-10-12 .user{
+  height: 24vh;
+}
+
+
+.agora .modal,
+.agora .hidden { display: none }
+
+.agora-footer {
+  background: var(--agora-background);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  flex-direction: column;
+  position: relative;
+}
+.agora-fullscreen .agora-footer { width: 100%; position: fixed; bottom: 0; }
+.agora .buttons-bottom { margin: 1em .5em; display: flex; }
+.agora .buttons-bottom .btn-group,
+.agora .buttons-bottom>.btn-with-title { margin: 0 7px; text-align: center; position: relative; display: grid;
+    grid-template-columns: 1fr; grid-template-rows: 1fr; }
+.agora .buttons-bottom .btn-group { grid-template-columns: 1fr 0.65fr; }
+
+/* override default styles of .show class in case other themes and plugins are doing it */
+.agora .buttons-bottom .btn-group.show {display: grid !important;}
+
+
+.agora .btnIcon {
+  background: #6c757e;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 8px 12px;
+  text-align: center;
+  user-select: none;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+  max-width: 40px;
+  margin: 0 auto;
+  position: static;
+}
+.agora .btnIcon:hover {
+  background-color: #8795a3;
+}
+.agora .btnIcon:focus {
+
+}
+.agora .fas {
+    color: #efefef;
+}
+.agora-audience button .fas {
+  color: #0096E6;
+}
+.btn-group {
+    position: relative;
+}
+.btn-group>.btn-group:not(:last-child)>.btnIcon,
+.btn-group>.btnIcon:not(:last-child):not(.dropdown-toggle) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    padding-right: 6px;
+}
+.btn-group>.btnIcon:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.btn-group small.btn-title { grid-column: 1 / span 2; }
+.agora .buttons-bottom small {
+  color: #808080;
+}
+.agora .btnIcon.dropdown-toggle { padding: 8px; float: right; }
+.dropdown-toggle::after {
+    display: inline-block;
+    /* margin-left: .255em; */
+    vertical-align: .255em;
+    content: "";
+    border-top: .22em solid;
+    border-right: .22em solid transparent;
+    border-bottom: 0;
+    border-left: .22em solid transparent;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+.dropdown-menu[x-placement^=bottom],
+.dropdown-menu[x-placement^=left],
+.dropdown-menu[x-placement^=right],
+.dropdown-menu[x-placement^=top] {
+    right: auto;
+    bottom: auto;
+}
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    min-width: 10rem;
+    padding: .5rem 0;
+    margin: .125rem 0 0;
+    font-size: 1rem;
+    color: #212529;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: .25rem;
+    box-shadow: 2px 2px 10px -2px #7e7e7e;
+}
+.dropdown-item:first-child {
+    border-top-left-radius: calc(.25rem - 1px);
+    border-top-right-radius: calc(.25rem - 1px);
+}
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: .25rem 1.5rem;
+    clear: both;
+    font-weight: 400;
+    font-size: 16px;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+}
+
+.btn-separator {
+  display: inline-block;
+  border-left: 1px solid #555;
+  padding: 0;
+  margin: 0 15px;
+  height: 38px;
+  vertical-align: bottom;
+}
+
+.spinner-border {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    vertical-align: text-bottom;
+    border: .25em solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    -webkit-animation: spinner-border .75s linear infinite;
+    animation: spinner-border .75s linear infinite;
+}
+@keyframes spinner-border {
+  to { transform: rotate(360deg); }
+}
+
+/*
+ * Boostrap Modal Styles
+ */
+.agora .modal-open .modal {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.agora .modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    display: none;
+    width: 100%;
+    overflow: hidden;
+    outline: 0;
+    padding-top: 68px;
+}
+.agora .fade:not(.show) {
+    opacity: 0;
+}
+.agora .fade {
+    transition: opacity .15s linear;
+}
+.agora .modal-dialog {
+    position: relative;
+    width: auto;
+    margin: 0 auto;
+    pointer-events: none;
+}
+.agora .modal.show .modal-dialog {
+    -webkit-transform: none;
+    transform: none;
+}
+.agora .modal.fade .modal-dialog {
+  transition: -webkit-transform .3s ease-out;
+  transition: transform .3s ease-out;
+  transition: transform .3s ease-out,-webkit-transform .3s ease-out;
+  -webkit-transform: translate(0,-35px);
+  transform: translate(0,-35px);
+}
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 500px;
+    margin: 2.5rem auto 0;
+  }
+}
+.agora .modal-content {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0,0,0,.2);
+  border-radius: .3rem;
+  outline: 0;
+}
+.agora .modal-header {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding: 0 1rem 0;
+  border-bottom: 1px solid #e9ecef;
+  border-top-left-radius: .3rem;
+  border-top-right-radius: .3rem;
+}
+.agora .modal-body {
+  position: relative;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  padding: 1rem 1rem 0.25rem;
+}
+.agora .modal-footer {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  padding: 1rem;
+  border-top: 1px solid #e9ecef;
+  border-bottom-right-radius: .3rem;
+  border-bottom-left-radius: .3rem;
+}
+.agora .modal-footer>:not(:last-child) {
+    margin-right: .25rem;
+}
+.agora .modal .btn {
+  padding: .5rem .7rem;
+  cursor: pointer;
+}
+.agora .modal .btn.btn-primary {
+  background-color: #6c757e;
+  border: 1px solid #565b5f;
+  border-radius: 3px;
+}
+.agora .modal .btn.btn-primary:hover {
+  background-color: #878e96;
+  border-color: #868c90;
+}
+.agora .close {
+    float: right;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    opacity: .5;
+}
+.agora .close:hover {
+    color: #000;
+    text-decoration: none;
+    background: transparent;
+}
+.agora .close:not(:disabled):not(.disabled) { cursor: pointer; }
+.agora .close:not(:disabled):not(.disabled):focus,
+.agora .close:not(:disabled):not(.disabled):hover {
+    opacity: .75;
+}
+.agora button.close {
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+.modal-header .close {
+  padding: 0.5rem;
+  margin: .05rem 0 0;
+}
+.modal-title .fas { color: #8b8b8b; }
+.modal-backdrop.show { opacity: .5; }
+.modal-backdrop { display: none }
+.modal .img-permissions {
+  margin: auto;
+  display: block;
+  min-height: 100px;
+  max-height: 280px;
+  margin-bottom: 10px;
+  box-shadow: 2px 2px 8px 0px #6c6c6c;
+}
+
+/*
+ * Bootstrap Toast Notifications
+ */
+.toast {
+    -ms-flex-preferred-size: 350px;
+    flex-basis: 350px;
+    max-width: 350px;
+    font-size: .875rem;
+    background-color: rgba(255,255,255,.85);
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.1);
+    box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,.1);
+    opacity: 0;
+    border-radius: .25rem;
+}
+
+.agora .toast {
+  position: absolute;
+  top: 88px;
+  left: 7px;
+}
+
+.toast:not(:last-child) { margin-bottom: 0.75rem; }
+
+.toast.showing { opacity: 1; }
+.toast.show { display: block; opacity: 1; }
+.toast.hide { display: none; }
+.toast-header {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: .25rem .75rem;
+    color: #6c757d;
+    background-color: rgba(255,255,255,.85);
+    background-clip: padding-box;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+    border-top-left-radius: calc(.25rem - 1px);
+    border-top-right-radius: calc(.25rem - 1px);
+}
+.toast-body { padding: .75rem; }
+.agora .mr-auto, .agora .mx-auto { margin-right: auto!important; }
+.agora .ml-2, .agora .mx-2 { margin-left: .5rem!important; }
+.agora .mb-1, .agora .my-1 { margin-bottom: .25rem!important; }
+
+/*
+ * Bootstrap Form Styles
+ */
+.form-group {
+    margin-bottom: 1rem;
+}
+.form-control {
+    display: block;
+    width: 100%;
+    height: calc(1.75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+/*
+ * Cloud Recording Controls
+ */
+.agora .start-rec .inner-icon {
+  background-color: #fff;
+  border-radius: 50%;
+  height: 15px;
+  width: 15px;
+  min-width: 16px;
+  display: inline-block;
+}
+
+.agora .stop-rec .inner-icon {
+  border-radius: 0;
+  width: 15px;
+  height: 15px;
+  background-color: #fff;
+  display: inline-block;
+}
+
+.agora .load-rec .inner-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  vertical-align: text-bottom;
+  border: .2em solid #da4964;
+  border-right-color: transparent;
+  border-radius: 50%;
+  -webkit-animation: spinner-border .75s linear infinite;
+  animation: spinner-border .75s linear infinite;
+}
+
+
+/*
+ * Audience Page styles
+ */
+.agora.agora-audience .overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.agora.agora-audience .overlay button {
+  display: block;
+  color: #0096e6;
+  background: #fff;
+  padding: 12px 22px;
+  transition: background ease 1s, border 1s ease;
+}
+.agora.agora-audience .overlay button:hover {
+  background: #ededed;
+  border-bottom-color: #999;
+  border-right-color: #999;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+  text-decoration: underline;
+}
+
+.agora.agora-audience .overlay img {
+  height: auto;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.agora.agora-audience .overlay button i {
+  padding: 0 10px;
+}
+
+#watch-live-closed {
+  margin: 100px auto;
+}
+
+/*
+ * Communication Chat
+ */
+.agora .fabs {
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: 1031;
+}
+
+.agora .fabs .chat {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: none;
+  opacity: 0;
+}
+.agora #chat-alert {
+  position: absolute;
+  opacity: 0;
+}
+
+.only-mobile { display: none !important; }
+
+/*
+ * Responsive Media Queries
+ */
+@media screen and (max-width: 1023px){
+  .agora .screen-users-10-12 .user{
+    width: 22%;
+  }
+}
+@media screen and (max-width:768px) {
+  .agora { font-size: 13px; }
+  .agora .screen { padding: 5px 0; }
+  .agora .btn-separator { display: none }
+  .agora.agora-communication .only-desktop { display: none !important; }
+  .agora.agora-communication .only-mobile { display: block !important; }
+
+  .agora .screen-users-2 .user {
+    width: 46.5%;
+  }
+  .agora .screen-users-4 .user{
+    width: 46%;
+  }
+  .agora .screen-users-10-12 .user{
+    width: 32%;
+  }
+}
+@media screen and (max-width: 480px){
+  .agora .buttons-botton { font-size: 25px; }
+  .agora .screen-users { margin: 0; }
+  .agora .screen-users .user { padding: 0.1em; }
+  .agora .screen-users-1 .user { height: 70vh; }
+  .agora .screen-users-3 .user,
+  .agora .screen-users-4 .user { width: 50%; height: 32vh; }
+  .agora .screen-users-3 .user:last-child{ width: 100%; }
+  .agora .screen-users-2 .user{
+    width: 100%;
+    height: 32vh;
+  }
+  .agora .screen-users-5-6 .user { height: 22vh; }
+  .agora .screen-users-7-9 .user { width: 32%; height: 21vh; }
+
+  .agora-fullscreen .agora-container { height: 100vh; }
+  .agora.agora-fullscreen .screen { padding: 0 5px; }
+  .agora-fullscreen .screen-users-1 .user{ height: 78vh; }
+  .agora-fullscreen .screen-users-2 .user{ height: 40vh; }
+  .agora-fullscreen .screen-users-3 .user,
+  .agora-fullscreen .screen-users-4 .user { height: 38vh; }
+  .agora-fullscreen .screen-users-5-6 .user { width: 50%; height: 26vh; }
+  .agora-fullscreen .screen-users-7-9 .user { width: 33%; height: 26vh; }
+  .agora-fullscreen .screen-users-10-12 .user { width: 25%; height: 26vh; }
+}
+@media screen and (max-width: 320px) {
+  .agora .buttons-botton{
+    font-size: 18px;
+  }
+}
+@media screen and (max-height: 480px) {
+  .agora .icon-cog{
+    font-size: 16px;
+  }
+  .agora .buttons-botton{
+    font-size: 18px;
+  }
+  .agora .icon-enlarge{
+    font-size: 16px;
+    margin-right: 1.5em;
+  }
+  .agora .buttons-botton{
+    font-size: 20px;
+  }
+}

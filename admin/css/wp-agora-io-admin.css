@@ -127,7 +127,7 @@
 }
 
 .agoraio .tab-content {
-  /* min-width: 70%; */
+  width: 100%;
   overflow: hidden;
 }
 .agoraio .tab-content > .tab-pane {
@@ -145,15 +145,130 @@
 .agoraio .agora-settings-actions {
   margin-top: 0;
 }
+.agoraio .agora-loader { position: relative; }
 .agoraio .agora-settings-actions span.agora-loader img {
     position: relative;
     top: 10px;
     display: inline;
 }
 
+.agoraio .add-more-users-controls .agora-loader img {
+  position: absolute;
+  top: -10px;
+}
+
+.agoraio #broadcast-users-list {
+  width: 100%; min-height: 20px;
+  border: 1px solid #666;
+  border-radius: 6px;
+  padding: 7px 12px;
+  margin-bottom: 15px;
+}
+.agoraio .helper-text {
+  color: #999;
+}
+.agoraio .add-more-users-controls {
+  display: none;
+}
+.agoraio .chip {
+  display: inline-block;
+  padding: 0 25px;
+  height: 30px;
+  font-size: 14px;
+  line-height: 30px;
+  border-radius: 25px;
+  background-color: #ececec;
+  margin-bottom: 8px;
+}
+
+.agoraio .chip img {
+  float: left;
+  margin: -2px 10px 0 -25px;
+  height: 34px;
+  width: 34px;
+  border-radius: 50%;
+}
+
+.agoraio .closebtn {
+  padding-left: 10px;
+  color: #888;
+  font-weight: bold;
+  float: right;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.agoraio .closebtn:hover {
+  color: #000;
+}
+
 /** =========  FORMS  ========= ***/
 .agoraio .large-dropdown {
   min-width: 180px;
+}
+
+.agoraio .switch {
+  position: relative;
+  display: inline-block;
+  width: 45px;
+  height: 20px;
+}
+
+.agoraio .switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.agoraio .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.agoraio .slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.agoraio .switch input:checked + .slider {
+  background-color: #2196F3;
+}
+
+.agoraio .switch input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+.agoraio .switch input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+.agoraio #chat-status-text {
+  text-transform: capitalize;
+  margin-left: 5px;
+}
+
+/* Rounded sliders */
+.agoraio .slider.round {
+  border-radius: 34px;
+}
+
+.agoraio .slider.round:before {
+  border-radius: 50%;
 }
 
 

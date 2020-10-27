@@ -1,11 +1,14 @@
 window.AGORA_BROADCAST_UI = {
-// UI buttons
+  // UI buttons
   enableUiControls: function () {
 
     jQuery("#mic-btn").prop("disabled", false);
     jQuery("#video-btn").prop("disabled", false);
     jQuery("#exit-btn").prop("disabled", false);
     jQuery("#add-rtmp-btn").prop("disabled", false);
+    jQuery("#cloud-recording-btn").prop("disabled", false);
+
+    jQuery('#fullscreen-expand').click(window.AGORA_UTILS.toggleFullscreen);
 
     jQuery("#mic-btn").click(function(){
       window.AGORA_BROADCAST_UI.toggleMic();
@@ -24,53 +27,24 @@ window.AGORA_BROADCAST_UI = {
       window.AGORA_BROADCAST_CLIENT.agoraLeaveChannel(); 
     });
 
-    jQuery("#start-RTMP-broadcast").click(function(){
-      var formValid = document.getElementById('rtmp-config').checkValidity();
-      var errorEl = jQuery('#rtmp-error-msg');
-      if (!formValid) {
-        errorEl.show();
-        return;
-      } else {
-        errorEl.hide();
-      }
-
-      window.AGORA_BROADCAST_CLIENT.startLiveTranscoding();
-      jQuery('#addRtmpConfigModal').modal('toggle');
-      // jQuery('#input_rtmp_url').val('');
-    });
-
-    jQuery("#add-external-stream").click(function(){
-      var formValid = document.getElementById('external-inject-config').checkValidity();
-      var errorEl = jQuery('#external-url-error');
-      if (!formValid) {
-        errorEl.show();
-        return;
-      } else {
-        errorEl.hide();
-      }
-      // 
-      window.AGORA_BROADCAST_CLIENT.addExternalSource();
-      jQuery('#add-external-source-modal').modal('toggle');
-    });
-
-    jQuery("#screen-share-btn").click(function(){
+    jQuery("#screen-share-btn").click(function() {
       window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn(); // set screen share button icon
-      var loaderIcon = jQuery(this).find('.spinner-border');
-      var closeIcon = jQuery('#screen-share-icon');
+      const loaderIcon = jQuery(this).find('.spinner-border');
+      const closeIcon = jQuery('#screen-share-icon');
       loaderIcon.show();
       closeIcon.hide();
 
-      var toggleLoader = function(err, next) {
+      const toggleLoader = function(err, next) {
         loaderIcon.hide();
         closeIcon.show();
+        jQuery("#screen-share-btn").prop("disabled", false);
+
         if (err) {
-          window.screenShareActive = false;
           window.AGORA_SCREENSHARE_UTILS.toggleScreenShareBtn();
         }
-        jQuery("#screen-share-btn").prop("disabled", false);
       }
 
-      jQuery("#screen-share-btn").prop("disabled", true); // disable the button on click
+      jQuery(this).prop("disabled", true); // disable the button on click
       if(window.screenShareActive){
         window.AGORA_SCREENSHARE_UTILS.stopScreenShare(toggleLoader);
       } else {
@@ -78,30 +52,100 @@ window.AGORA_BROADCAST_UI = {
       }
     });
 
-    // keyboard listeners 
-    jQuery(document).keypress(function(e) {
-      // ignore keyboard events when the modals are open
-      if ((jQuery("#addRtmpUrlModal").data('bs.modal') || {})._isShown ||
-          (jQuery("#addRtmpConfigModal").data('bs.modal') || {})._isShown){
+    jQuery("#start-RTMP-broadcast").click(function(){
+
+      const thisBtn = jQuery(this);
+      const loaderIcon = jQuery('#rtmp-loading-icon');
+      const configIcon = jQuery('#rtmp-config-icon');
+
+      if (thisBtn.hasClass('btn-danger')) {
+        thisBtn.toggleClass('btn-danger');
+        window.agoraClient.stopLiveStreaming( window.externalBroadcastUrl );
+        return false;
+      } else if (thisBtn.hasClass('load-rec')) {
+        return false;
+      } else {
+        thisBtn.toggleClass('load-rec');
+        configIcon.hide()
+        loaderIcon.show()
+      }
+      
+      if (window.defaultConfigRTMP['rtmpServerURL'] && window.defaultConfigRTMP['rtmpServerURL'].length>1) {
+        window.AGORA_BROADCAST_CLIENT.startLiveTranscoding();
+        // next step: function setupLiveStreamListeners on agora-broadcast-client.js
+      }
+      // jQuery('#addRtmpConfigModal').modal('toggle');
+    });
+
+    jQuery("#add-external-stream").click(function() {
+      const formValid = document.getElementById('external-inject-config').checkValidity();
+      const errorEl = jQuery('#external-url-error');
+      const errorLong = jQuery('#external-url-too-long');
+      errorEl.hide();
+      errorLong.hide();
+
+      if (!formValid) {
+        errorEl.show();
         return;
       }
 
-      switch (e.key) {
-        case "m":
-          console.log("quick toggle the mic");
-          window.AGORA_BROADCAST_UI.toggleMic();
-          break;
-        case "v":
-          console.log("quick toggle the video");
-          window.AGORA_BROADCAST_UI.toggleVideo();
-          break; 
-        case "q":
-          console.log("so sad to see you quit the channel");
-          window.AGORA_BROADCAST_CLIENT.agoraLeaveChannel(); 
-          break;   
-        default:  // do nothing
+      const externalUrl = jQuery('#input_external_url').val();
+      if (externalUrl.length>255) {
+        errorLong.show();
+        return;
       }
+
+
+      const thisBtn = jQuery('#add-rtmp-btn');
+      const loaderIcon = jQuery('#add-rtmp-loading-icon');
+      const captureIcon = jQuery('#add-rtmp-icon');
+
+      if (thisBtn.hasClass('load-rec')) {
+        return false;
+      } else {
+        thisBtn.toggleClass('load-rec');
+        captureIcon.hide()
+        loaderIcon.show()
+      }
+
+      // 
+      window.AGORA_BROADCAST_CLIENT.addExternalSource();
+      jQuery('#add-external-source-modal').modal('toggle');
     });
+
+
+    jQuery("#stop-rtmp-btn").click(function() {
+      window.agoraClient.removeInjectStreamUrl( window.injectedStreamURL );
+    })
+
+
+  },
+
+  toggleCaptureStreamBtn: function(err, status) {
+    const thisBtn = jQuery('#add-rtmp-btn');
+    const cancelInjectStreamBtn = jQuery('#stop-rtmp-btn')
+    const loaderIcon = jQuery('#add-rtmp-loading-icon');
+    const captureIcon = jQuery('#add-rtmp-icon');
+
+    const labelStart = thisBtn.parent().find('#label-inject-start');
+    const labelStop = thisBtn.parent().find('#label-inject-stop');
+
+    if (status==='started') {
+      thisBtn.toggleClass('load-rec');
+      thisBtn.hide();
+      cancelInjectStreamBtn.show();
+      loaderIcon.hide();
+      captureIcon.show();
+
+      labelStart.hide();
+      labelStop.show();
+    } else if (status==='stopped') {
+      thisBtn.show();
+      cancelInjectStreamBtn.hide();
+
+      labelStop.hide();
+      labelStart.show();
+    }
   },
 
   toggleMic: function () {
@@ -110,22 +154,26 @@ window.AGORA_BROADCAST_UI = {
     jQuery("#mic-icon").toggleClass('fa-microphone').toggleClass('fa-microphone-slash'); // toggle the mic icon
     if (jQuery("#mic-icon").hasClass('fa-microphone')) {
       window.localStreams.camera.stream.unmuteAudio(); // enable the local mic
+      window.AGORA_UTILS.toggleVisibility("#mute-overlay", false); // hide the muted mic icon
     } else {
       window.localStreams.camera.stream.muteAudio(); // mute the local mic
+      window.AGORA_UTILS.toggleVisibility("#mute-overlay", true); // show the muted mic icon
     }
   },
 
   toggleVideo: function () {
-    window.AGORA_UTILS.toggleBtn(jQuery("#video-btn")); // toggle button colors
-    window.AGORA_UTILS.toggleBtn(jQuery("#cam-dropdown"));
-    if (jQuery("#video-icon").hasClass('fa-video')) {
-      window.localStreams.camera.stream.muteVideo(); // enable the local video
-      // console.log("muteVideo");
-    } else {
-      window.localStreams.camera.stream.unmuteVideo(); // disable the local video
-      // console.log("unMuteVideo");
+    if (window.localStreams.camera.stream) {
+      window.AGORA_UTILS.toggleBtn(jQuery("#video-btn")); // toggle button colors
+      window.AGORA_UTILS.toggleBtn(jQuery("#cam-dropdown"));
+      if (jQuery("#video-icon").hasClass('fa-video')) {
+        window.localStreams.camera.stream.muteVideo(); // enable the local video
+        // console.log("muteVideo");
+      } else {
+        window.localStreams.camera.stream.unmuteVideo(); // disable the local video
+        // console.log("unMuteVideo");
+      }
+      jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
     }
-    jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
   },
 
   toggleRecording: function () {
@@ -138,7 +186,9 @@ window.AGORA_BROADCAST_UI = {
       window.loadingRecord = true;
       btn.removeClass('start-rec').addClass('load-rec').attr('title', 'Stop Recording');
       console.log("Starting rec...");
-      window.AGORA_BROADCAST_UI.startVideoRecording(function(err, res) {
+      window.AGORA_CLOUD_RECORDING.startVideoRecording(function(err, res) {
+        if (err) { window.AGORA_UTILS.showErrorMessage(err); }
+
         if (res) {
           btn.removeClass('load-rec').addClass('stop-rec');
         } else {
@@ -148,15 +198,17 @@ window.AGORA_BROADCAST_UI = {
       });
     } else {
       console.log("Stoping rec...");
-      window.AGORA_BROADCAST_UI.stopVideoRecording(function(err, res) {
+      window.AGORA_CLOUD_RECORDING.stopVideoRecording(function(err, res) {
         if (err) {
-          console.error(err);
+          // console.error(err);
+          window.AGORA_UTILS.showErrorMessage(err);
         } else {
           if(!res.errors) {
             console.log(res);
             btn.removeClass('stop-rec').addClass('start-rec').attr('title', 'Start Recording');
           } else {
             console.error(res.errors);
+            window.AGORA_UTILS.showErrorMessage(res.errors);
           }
         }
       })
@@ -165,12 +217,12 @@ window.AGORA_BROADCAST_UI = {
 
   calculateVideoScreenSize: function () {
     var container = jQuery('#full-screen-video');
-    console.log('Video SIZE:', container.outerWidth());
     var size = window.AGORA_BROADCAST_UI.getSizeFromVideoProfile();
 
     // https://math.stackexchange.com/a/180805
     var newHeight = container.outerWidth() * size.height / size.width;
     container.outerHeight(newHeight);
+    console.log('Video SIZE:', newHeight);
   },
 
   getSizeFromVideoProfile: function () {
@@ -189,79 +241,6 @@ window.AGORA_BROADCAST_UI = {
       case '1080p_3':
       case '1080p_5': return { width: 1920, height: 1080 };
     }
-  },
-
-  startVideoRecording: function (cb) {
-    var params = {
-      action: 'cloud_record', // wp ajax action
-      sdk_action: 'start-recording',
-      cid: window.channelId,
-      cname: window.channelName,
-      uid: window.userID,
-      token: window.agoraToken
-    };
-    window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
-      // var startRecordURL = agoraAPI + window.agoraAppId + '/cloud_recording/resourceid/' + res.resourceId + '/mode/mix/start';
-      console.log(res);
-      if (res && res.sid) {
-        window.resourceId = res.resourceId;
-        window.recordingId = res.sid;
-        window.uid = res.uid;
-
-        setTimeout(function() {
-          // window.resourceId = null;
-        }, 1000*60*5); // Agora DOCS: The resource ID is valid for five minutes.
-        cb(null, res);
-      } else {
-        cb(res, null);
-      }
-    }).fail(function(err) {
-      if (err.responseJSON) {
-        console.error('API Error:', err.responseJSON.errors);
-      }
-      cb(err, null);
-    })
-  },
-
-
-  stopVideoRecording: function (cb) {
-    var params = {
-      action: 'cloud_record', // wp ajax action
-      sdk_action: 'stop-recording',
-      cid: window.channelId,
-      cname: window.channelName,
-      uid: window.uid,
-      resourceId: window.resourceId,
-      recordingId: window.recordingId
-    };
-    window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
-      // var startRecordURL = agoraAPI + window.agoraAppId + '/cloud_recording/resourceid/' + res.resourceId + '/mode/mix/start';
-      console.log('Stop:', res);
-      window.recording = res.serverResponse;
-      cb(null, res);
-
-    }).fail(function(err) {
-      console.error('API Error:', err.responseJSON.errors);
-      cb(err, null);
-    })
-  },
-
-
-  queryVideoRecording: function () {
-    var params = {
-      action: 'cloud_record', // wp ajax action
-      sdk_action: 'query-recording',
-      cid: window.channelId,
-      cname: window.channelName,
-      uid: window.uid,
-      resourceId: window.resourceId,
-      recordingId: window.recordingId
-    };
-    window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
-      console.log('Query:', res);
-
-    }).fail(function(err) {
-      console.error('API Error:',err);
-    })
   }
+  
 }
