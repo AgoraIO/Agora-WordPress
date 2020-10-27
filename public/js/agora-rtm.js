@@ -119,6 +119,7 @@ window.AGORA_RTM_UTILS = {
 				window.rtmClient.logout().then(() => {
 					console.log('Agora RTM disconnected!')
 					window.AGORA_RTM_UTILS.connectionState = AgoraRTM.ConnectionState.DISCONNECTED;
+					jQuery('#count-users').html('');
 				}).catch(err => {
 					console.error('Failing logout RTM Client', err.message)
 				})
@@ -172,6 +173,7 @@ function updateUsersCount() {
 		jQuery('#count-users').html(members.length);
 	}).catch(err => {
 		console.error('Members count error.', err);
+		jQuery('#count-users').html('*');
 	})
 }
 
