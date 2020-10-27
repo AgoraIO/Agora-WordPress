@@ -153,3 +153,16 @@ Updated to resolves issues with saving Agora Settings. Release resolves issues:
 ### Version 1.5.2 ###
 Updated to resolves issues with saving Agora Settings created by previous hotfix. Release resolves issues:
 - [52](https://github.com/AgoraIO/Agora-Word-Press/issues/52) 
+
+### Version 1.6.2 ###
+Updated to resolves issues with screenshare and stream inject. Release resolves issues:
+- [42](https://github.com/AgoraIO/Agora-WordPress/issues/42) 
+
+### Version 2.0.0 ###
+Updated with a new UI, improved screen sharing, multi-host broadcasts, real-time chat, and other features/improvements.
+- [47](https://github.com/AgoraIO/Agora-WordPress/issues/47) 
+- [62](https://github.com/AgoraIO/Agora-WordPress/issues/62) 
+- [63](https://github.com/AgoraIO/Agora-WordPress/issues/63) 
+- [65](https://github.com/AgoraIO/Agora-WordPress/issues/65) 
+- [66](https://github.com/AgoraIO/Agora-WordPress/issues/66) 
+- [71](https://github.com/AgoraIO/Agora-WordPress/issues/71) 

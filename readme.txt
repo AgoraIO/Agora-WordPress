@@ -123,6 +123,19 @@ Version 1.5.2
 Updated to resolves issues with saving Agora Settings created by previous hotfix. Release resolves issues:
 - [52](https://github.com/AgoraIO/Agora-Word-Press/issues/52) 
 
+Version 1.6.2
+Updated to resolves issues with screenshare and stream inject. Release resolves issues:
+- [42](https://github.com/AgoraIO/Agora-WordPress/issues/42) 
+
+Version 2.0.0
+Updated with a new UI, improved screen sharing, multi-host broadcasts, real-time chat, and other features/improvements.
+- [47](https://github.com/AgoraIO/Agora-WordPress/issues/47) 
+- [62](https://github.com/AgoraIO/Agora-WordPress/issues/62) 
+- [63](https://github.com/AgoraIO/Agora-WordPress/issues/63) 
+- [65](https://github.com/AgoraIO/Agora-WordPress/issues/65) 
+- [66](https://github.com/AgoraIO/Agora-WordPress/issues/66) 
+- [71](https://github.com/AgoraIO/Agora-WordPress/issues/71) 
+
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
@@ -150,5 +163,5 @@ Updated to resolves issues with saving Agora Settings created by previous hotfix
   Browsers require a secure connection (HTTPS) for accessing a device's microphone and camera. When testing locally, localhost is a whitelisted URL but once you deploy to production you will need to have a secure connection for the plugin to function properly.
 
 == Upgrade Notice ==
-Version 1.5.2 updates to resolve issues with saving Settings.
+[Major Update] Version 2.0.0 updates UI, multi-host, chat, and more.
 ...
