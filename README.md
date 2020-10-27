@@ -1,5 +1,5 @@
 # Agora Video for WordPress #  
-**Contributors:** jalamprea, digitallysavvy  
+**Contributors:** [jalamprea](https://github.com/jalamprea), [digitallysavvy](https://github.com/digitallysavvy)
 **Tags:** live streaming, video streaming, video call, video conference  
 **Requires at least:** 5.0.0   
 **Tested up to:** 5.5.1   
@@ -28,7 +28,7 @@ Agora is a leading video, voice and live interactive streaming platform, helping
 With over 200+ data centers globally, the Agora’s Software-Defined Real-time Network (SD-RTN™) is trusted and  widely used by the world’s biggest brands and provides ease of scaling for up to 1 million peak concurrent users (PCU) in a single session with unmatched quality of experience.  
 Agora  fully supports a range of development environments, making it easy to deliver deep integration of high-quality, extreme low-latency video calling across all platforms and channels.
 
-Get started for free! The first 10,000 minutes each month are free, including free starter support through Slack. Agora offer a simple and affordable pricing model including volume discounts. See pricing details: [https://www.agora.io/pricing](https://www.agora.io/pricing)
+Get started for free! The first 10,000 minutes each month are free, including free starter support through Slack. Agora offer a simple and affordable pricing model including volume discounts. 
 
 - Terms of Service: [https://www.agora.io/en/terms-of-service](https://www.agora.io/en/terms-of-service)
 - Privacy Policy: [https://www.agora.io/en/privacy-policy](https://www.agora.io/en/privacy-policy)
@@ -68,6 +68,9 @@ Agora’s flexible APIs enable deep integration of high quality, low latency –
 
 ## Changelog ##
 [Wiki - FAQ](https://github.com/AgoraIO/Agora-WordPress/wiki/Change-Log): a list of updates made in each version.
+
+## Pricing ##
+See Agora website for pricing details: [https://www.agora.io/pricing](https://www.agora.io/pricing)
 
 # Screen Shots
 ![Channels List](/assets/screenshot-1.png?raw=true "Channels List")
