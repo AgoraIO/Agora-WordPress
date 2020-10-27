@@ -2,7 +2,7 @@
 **Contributors:** jalamprea, digitallysavvy  
 **Tags:** live streaming, video streaming, video call, video conference  
 **Requires at least:** 5.0.0   
-**Tested up to:** 5.4   
+**Tested up to:** 5.5.1   
 **Requires PHP:** 7.1   
 **Stable tag:** 2.0.0.beta4   
 **License:** CC BY-ND 4.0   
