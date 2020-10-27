@@ -193,13 +193,16 @@
 	function showUserNotify(msgData, type) {
 		const blocksMsg = msgData.split(TOKEN_SEP);
 		const uid  = blocksMsg[0];
-		const user = blocksMsg[1];
+		const user = (blocksMsg[1] == 'undefined') ? 'anonymous user' : blocksMsg[1];
 
 		const joinMsgEl = document.querySelector('#chat_notify_user_'+type);
 
 		let joinMsg =  user + ' ' + joinMsgEl.value;
 		if (type==='welcome') {
-			joinMsg = joinMsgEl.value + ' ' + user;
+			// joinMsg = joinMsgEl.value + ' ' + user;
+			joinMsg = user + ' joined the channel';
+		} else if (type==='leave') {
+			joinMsg = user + ' left the channel';
 		}
 
 		chatMsgWindow.append(
