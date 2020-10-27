@@ -101,6 +101,7 @@ window.AGORA_COMMUNICATION_UI = {
   toggleMic: function (localStream) {
     // console.log(localStream)
     window.AGORA_UTILS.toggleBtn(jQuery("#mic-btn")); // toggle button colors
+    window.AGORA_UTILS.toggleBtn(jQuery("#mic-dropdown"));
     jQuery("#mic-icon").toggleClass('fa-microphone', localStream.userMuteAudio).toggleClass('fa-microphone-slash', !localStream.userMuteAudio); // toggle the mic icon
 
     if (!localStream.userMuteAudio) {
@@ -114,6 +115,7 @@ window.AGORA_COMMUNICATION_UI = {
 
   toggleVideo: function (localStream) {
     window.AGORA_UTILS.toggleBtn(jQuery("#video-btn")); // toggle button colors
+      window.AGORA_UTILS.toggleBtn(jQuery("#cam-dropdown"));
     jQuery("#video-icon").toggleClass('fa-video', localStream.userMuteVideo).toggleClass('fa-video-slash', !localStream.userMuteVideo); // toggle the video icon
 
     if (!localStream.userMuteVideo) {
