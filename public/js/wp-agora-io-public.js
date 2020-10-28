@@ -402,7 +402,7 @@ window.AGORA_UTILS = {
     }
     document.getElementById(textId).classList.remove('hidden')
 
-    imgSrc = window.agora_base_url.replace('public/', 'assets/permissions/') + browser + '.jpg'
+    imgSrc = window.agora_base_url.replace('public/', 'imgs/permissions/') + browser + '.jpg'
     img.setAttribute('src', imgSrc)
 
     jQuery('#permissions-notification-modal').modal('toggle')
