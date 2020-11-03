@@ -178,7 +178,9 @@ class WP_Agora_Public {
 		wp_enqueue_script( 'bootstrap_popper', $bootstrap_popper_js, array('jquery'), null );
 		wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
 
-		wp_enqueue_script( $this->plugin_name.'-screen', plugin_dir_url( __FILE__ ) . 'js/screen-share.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name.'-screen', plugin_dir_url( __FILE__ ) . 'js/screen-share.js', array( 'jquery' ), $this->version, true );
+
+		wp_enqueue_script( 'AgoraRTM-setup', plugin_dir_url( __FILE__ ).'js/agora-rtm.js', array('AgoraRTM'), $this->version, true );
 
 		$scriptUI = $type==='broadcast' ? 'js/broadcast-ui.js' : 'js/communication-ui.js';
 		wp_enqueue_script( $this->plugin_name.'-ui', plugin_dir_url( __FILE__ ) . $scriptUI, array( 'jquery' ), $this->version, false );
