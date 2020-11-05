@@ -52,6 +52,7 @@ $current_user       = wp_get_current_user();
       // set log level:
       // -- .DEBUG for dev 
       // -- .NONE for prod
+      AgoraRTC.Logger.enableLogUpload();
       AgoraRTC.Logger.setLogLevel(AgoraRTC.Logger.ERROR);
       // TODO: set DEBUG or NOE according to the current host (localhost or not)
 

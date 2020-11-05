@@ -43,6 +43,7 @@ $current_path       = plugins_url('wp-agora-io') . '/public';
     window.agoraMode = 'communication';
 
     window.addEventListener('load', function() {
+      AgoraRTC.Logger.enableLogUpload();
       AgoraRTC.Logger.setLogLevel(AgoraRTC.Logger.ERROR);
 
       window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel(window.agoraAppId, window.channelName);

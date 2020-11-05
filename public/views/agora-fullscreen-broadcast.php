@@ -49,13 +49,14 @@ $current_path       = plugins_url('wp-agora-io') . '/public';
     window.agoraMode = 'broadcast';
 
     
-    window.addEventListener('load', function() {      
+    window.addEventListener('load', function() {
       
       window.mainStreamId = null; // reference to main stream
 
       // set log level:
       // -- .DEBUG for dev 
       // -- .NONE for prod
+      AgoraRTC.Logger.enableLogUpload();
       AgoraRTC.Logger.setLogLevel(AgoraRTC.Logger.ERROR);
       
 
