@@ -70,6 +70,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
     // set log level:
     // -- .DEBUG for dev 
     // -- .NONE for prod
+    AgoraRTC.Logger.enableLogUpload();
     window.agoraLogLevel = window.location.href.indexOf('local')>0 ? AgoraRTC.Logger.ERROR : AgoraRTC.Logger.ERROR;
     AgoraRTC.Logger.setLogLevel(window.agoraLogLevel);
     // window.AGORA_BROADCAST_UI.calculateVideoScreenSize();

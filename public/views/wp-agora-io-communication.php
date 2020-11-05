@@ -32,6 +32,7 @@ $current_user       = wp_get_current_user();
 
     window.addEventListener('load', function() {
       // window.agoraLogLevel = window.location.href.indexOf('localhost')>=0 ?  : AgoraRTC.Logger.NONE;
+      AgoraRTC.Logger.enableLogUpload();
       AgoraRTC.Logger.setLogLevel(AgoraRTC.Logger.ERROR);
       window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel(window.agoraAppId, window.channelName);
     });
