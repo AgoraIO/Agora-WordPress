@@ -101,7 +101,7 @@ class WP_Agora_PageTemplate {
 
       wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-3.2.1.100.js', array('jquery'), null );
       wp_enqueue_script( 'AgoraRTM', plugin_dir_url( __FILE__ ).'js/agora/agora-rtm-sdk-1.2.2.js', array('jquery'), null );
-      
+
       $bootstrap_css = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.css';
       $bootstrap_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.min.js';
       $bootstrap_popper_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/popper.min.js';
@@ -117,7 +117,8 @@ class WP_Agora_PageTemplate {
         return $template;
       }
 
-      wp_enqueue_script( 'agora-screen-share', plugin_dir_url( __FILE__ ) . 'js/screen-share.js', array( 'jquery' ), $this->agora->version, false );
+      wp_enqueue_script( 'agora-screen-share', plugin_dir_url( __FILE__ ) . 'js/screen-share.js', array( 'jquery' ), $this->agora->version, true );
+      wp_enqueue_script( 'AgoraRTM-setup', plugin_dir_url( __FILE__ ).'js/agora-rtm.js', array('AgoraRTM'), $this->agora->version, true );
 
       $file = plugin_dir_path(__FILE__) . 'views/' . get_post_meta($post->ID, '_wp_page_template', true);
 
