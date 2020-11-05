@@ -4,7 +4,7 @@ Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
 Tested up to: 5.5.1
 Requires PHP: 7.1
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -142,8 +142,11 @@ Updated with a new UI, improved screen sharing, multi-host broadcasts, real-time
 - [71](https://github.com/AgoraIO/Agora-WordPress/issues/71) 
 
 Version 2.0.1
-[Patch] fixes a broken links for prompt messages.
+[Patch] fixes a broken image links in the prompt messages when user denies camera/mic permissions.
 
+Version 2.0.2
+Resolves an issue with certain frameworks not enquing the RTM SDK correctly. 
+- [82](https://github.com/AgoraIO/Agora-WordPress/pull/82)
 
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
@@ -172,5 +175,5 @@ Version 2.0.1
   Browsers require a secure connection (HTTPS) for accessing a device's microphone and camera. When testing locally, localhost is a whitelisted URL but once you deploy to production you will need to have a secure connection for the plugin to function properly.
 
 == Upgrade Notice ==
-[Major Update] Version 2.0.1 updates UI, multi-host, chat, and more.
+[Major Update] Version 2.0.2 updates UI, multi-host, chat, and more.
 ...

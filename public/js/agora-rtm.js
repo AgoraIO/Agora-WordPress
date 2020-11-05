@@ -133,7 +133,7 @@ window.AGORA_RTM_UTILS = {
 
 	sendChannelMessage: function(msg, cb) {
 		if (window.AGORA_RTM_UTILS.connectionState===AgoraRTM.ConnectionState.CONNECTED) {
-			window.rtmChannel.sendMessage(msg).then(() => {
+			window.rtmChannel.sendMessage(msg, {enableHistoricalMessaging: false}).then(() => {
 	          if (typeof cb === 'function') { cb() }
 	        }).catch(error => {
 	          // console.error('RTM Error', error)
