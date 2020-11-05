@@ -4,7 +4,7 @@ Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
 Tested up to: 5.5.1
 Requires PHP: 7.1
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -147,6 +147,9 @@ Version 2.0.1
 Version 2.0.2
 Resolves an issue with certain frameworks not enquing the RTM SDK correctly. 
 - [82](https://github.com/AgoraIO/Agora-WordPress/pull/82)
+
+Version 2.0.3
+Resolves an issue with certain frameworks not enquing the RTM SDK correctly in full screen template. 
 
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
