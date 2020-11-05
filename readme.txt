@@ -178,5 +178,5 @@ Resolves an issue with certain frameworks not enquing the RTM SDK correctly in f
   Browsers require a secure connection (HTTPS) for accessing a device's microphone and camera. When testing locally, localhost is a whitelisted URL but once you deploy to production you will need to have a secure connection for the plugin to function properly.
 
 == Upgrade Notice ==
-[Major Update] Version 2.0.2 updates UI, multi-host, chat, and more.
+[Major Update] Version 2.0.3 updates UI, multi-host, chat, and more.
 ...
