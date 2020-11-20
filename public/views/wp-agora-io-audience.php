@@ -67,16 +67,16 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
     window.agoraMode = 'audience';
     window.remoteStreams = {};
 
-    // set log level:
-    // -- .DEBUG for dev 
-    // -- .NONE for prod
-    AgoraRTC.Logger.enableLogUpload();
-    window.agoraLogLevel = window.location.href.indexOf('local')>0 ? AgoraRTC.Logger.ERROR : AgoraRTC.Logger.ERROR;
-    AgoraRTC.Logger.setLogLevel(window.agoraLogLevel);
-    // window.AGORA_BROADCAST_UI.calculateVideoScreenSize();
 
 
     window.addEventListener('load', function() {
+      // set log level:
+      // -- .DEBUG for dev 
+      // -- .NONE for prod
+      AgoraRTC.Logger.enableLogUpload();
+      window.agoraLogLevel = window.location.href.indexOf('local')>0 ? AgoraRTC.Logger.ERROR : AgoraRTC.Logger.ERROR;
+      AgoraRTC.Logger.setLogLevel(window.agoraLogLevel);
+      
       // create client, vp8 to work across mobile devices
       window.agoraClient = AgoraRTC.createClient({mode: 'live', codec: 'vp8'});
 
