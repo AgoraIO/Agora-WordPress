@@ -4,7 +4,7 @@ Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
 Tested up to: 5.5.1
 Requires PHP: 7.1
-Stable tag: 2.0.3
+Stable tag: 2.0.4
 Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -151,6 +151,9 @@ Resolves an issue with certain frameworks not enquing the RTM SDK correctly.
 Version 2.0.3
 Resolves an issue with certain frameworks not enquing the RTM SDK correctly in full screen template. 
 
+Version 2.0.4
+Resolves an issue with certain frameworks not enquing the RTC SDK correctly in audience client. 
+
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
@@ -178,5 +181,5 @@ Resolves an issue with certain frameworks not enquing the RTM SDK correctly in f
   Browsers require a secure connection (HTTPS) for accessing a device's microphone and camera. When testing locally, localhost is a whitelisted URL but once you deploy to production you will need to have a secure connection for the plugin to function properly.
 
 == Upgrade Notice ==
-[Major Update] Version 2.0.3 updates UI, multi-host, chat, and more.
+[Minor Update] Version 2.0.4 patch fixes issue with RTC in audience mode.
 ...
