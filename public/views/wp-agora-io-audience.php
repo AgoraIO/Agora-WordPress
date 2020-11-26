@@ -41,12 +41,13 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
           </div>
           <div id="watch-live-closed" class="overlay user" style="display: none">
             <div id="overlay-container">
-              <button id="watch-live--btn" type="button" class="room-title">
+              <div id="finished-btn" class="room-title">
                 <?php if($buttonIcon) { ?>
                   <i id="watch-live-icon" class="fas fa-broadcast-tower"></i>
                 <?php } ?>
-                <span>The Live Stream has finished</span>
-              </button>
+                <span id="txt-finished" style="display:none"><?php _e('The Live Stream has finished', 'agoraio'); ?></span>
+                <span id="txt-waiting"><?php _e('Waiting for broadcast connection...', 'agoraio'); ?></span>
+              </div>
             </div>
           </div>
 
@@ -66,7 +67,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
     window.agoraCurrentRole = 'audience';
     window.agoraMode = 'audience';
     window.remoteStreams = {};
-
+    var WAIT_FOR_RECONNECT_TIMEOUT = 15000; // 10 Seconds!
 
 
     window.addEventListener('load', function() {
@@ -96,8 +97,15 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
         jQuery(".remote-stream-container").hide();
         jQuery("#full-screen-video").hide();
         jQuery("#watch-live-closed").show();
-        agoraLeaveChannel();
+
+        function waitUntilClose() {
+          jQuery('#txt-waiting').hide();
+          jQuery('#txt-finished').show();
+
+          agoraLeaveChannel();
+        }
         exitBtn.hide();
+        window.waitingClose = setTimeout(waitUntilClose, WAIT_FOR_RECONNECT_TIMEOUT)
       }
       
       // Due to broswer restrictions on auto-playing video, 
@@ -126,6 +134,10 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
         const stream = evt.stream;
         const streamId = stream.getId();
         window.remoteStreams[streamId] = stream;
+        if (window.waitingClose) {
+          clearTimeout(window.waitingClose)
+          window.waitingClose = null;
+        }
 
         AgoraRTC.Logger.info('New stream added: ' + streamId);
         AgoraRTC.Logger.info('Subscribing to remote stream:' + streamId);
@@ -196,6 +208,9 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
           delete window.remoteStreams[streamId]; // remove stream from list
           const remoteContainerID = '#' + streamId + '_container';
           jQuery(remoteContainerID).empty().remove();
+
+          const usersCount = Object.keys(window.remoteStreams).length;
+          window.AGORA_UTILS.updateUsersCounter(usersCount);
         }
 
         if (window.screenshareClients[streamId]) {
@@ -218,9 +233,6 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
             finishVideoScreen();
           }
         }
-
-        const usersCount = Object.keys(window.remoteStreams).length;
-        window.AGORA_UTILS.updateUsersCounter(usersCount);
       });
 
 
