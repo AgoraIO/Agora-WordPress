@@ -187,14 +187,15 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
           return false;
         }
 
-        // debugger;
         const streamId = evt.stream.getId(); // the the stream id
         evt.stream.isPlaying() && evt.stream.stop(); // stop the stream
   
         if(window.remoteStreams[streamId] !== undefined) {
-          window.remoteStreams[streamId].isPlaying() && window.remoteStreams[streamId].stop(); // stop playing the feed
+          window.remoteStreams[streamId].isPlaying() && window.remoteStreams[streamId].stop(); //stop playing the feed
+
           delete window.remoteStreams[streamId]; // remove stream from list
           const remoteContainerID = '#' + streamId + '_container';
+          jQuery(remoteContainerID).empty().remove();
         }
 
         if (window.screenshareClients[streamId]) {
@@ -217,6 +218,9 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
             finishVideoScreen();
           }
         }
+
+        const usersCount = Object.keys(window.remoteStreams).length;
+        window.AGORA_UTILS.updateUsersCounter(usersCount);
       });
 
 

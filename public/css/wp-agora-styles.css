@@ -706,6 +706,7 @@
   position: absolute;
   z-index: 1031;
 }
+.agora .fabs .fas { cursor: pointer; }
 
 .agora .fabs .chat {
   position: absolute;
