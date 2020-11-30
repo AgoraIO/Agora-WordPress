@@ -4,7 +4,7 @@ Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
 Tested up to: 5.5.1
 Requires PHP: 7.1
-Stable tag: 2.0.4
+Stable tag: 2.0.5
 Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -152,7 +152,10 @@ Version 2.0.3
 Resolves an issue with certain frameworks not enquing the RTM SDK correctly in full screen template. 
 
 Version 2.0.4
-Resolves an issue with certain frameworks not enquing the RTC SDK correctly in audience client. 
+Resolves an issue with certain frameworks not enquing the RTC SDK correctly in audience client.
+
+Version 2.0.5
+Add a waiting time before total disconnect on Audience views and wait for broadcaster reconnection.
 
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 

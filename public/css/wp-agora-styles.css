@@ -206,6 +206,7 @@
 
 .agora.agora-audience .screen-users-1 .user {
   height: 65vh;
+  background-color: transparent;
 }
 
 /* screeen with 2 users */
@@ -695,6 +696,7 @@
 
 #watch-live-closed {
   margin: 100px auto;
+  background-color: transparent;
 }
 
 /*
@@ -706,6 +708,7 @@
   position: absolute;
   z-index: 1031;
 }
+.agora .fabs .fas { cursor: pointer; }
 
 .agora .fabs .chat {
   position: absolute;
