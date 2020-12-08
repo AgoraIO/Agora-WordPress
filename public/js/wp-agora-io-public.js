@@ -387,7 +387,23 @@ window.AGORA_UTILS = {
       )
     );
 
-    remoteStream.play('agora_remote_' + streamId);
+    remoteStream.play('agora_remote_' + streamId, function(err){
+      if (err && err.status !== "aborted"){
+        console.log('Remote stream:' + streamId + ' failed to autoplay. Playing muted. Tap <video> container to enable audio.' );
+        remoteStream.stop();
+        window.AGORA_UTILS.toggleVisibility('#' + streamId + '_mute', true);
+        remoteStream.play('agora_remote_' + streamId, { muted: true });
+        // The playback fails. Guide the user to resume the playback by clicking.            
+        document.getElementById(streamId + '_container').onclick = playWithAudio; 
+        function playWithAudio() {
+          console.log('Attempting to play remote stream:' + streamId + ' with audio after user interaction' );
+          remoteStream.stop();
+          window.AGORA_UTILS.toggleVisibility('#' + streamId + '_mute', false);
+          remoteStream.play('agora_remote_' + streamId, { muted: false });
+          document.getElementById(streamId + '_container').removeEventListener('click', playWithAudio)
+        }     
+      }
+    });
   },
 
 
