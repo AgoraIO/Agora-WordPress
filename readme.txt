@@ -4,7 +4,7 @@ Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
 Tested up to: 5.5.1
 Requires PHP: 7.1
-Stable tag: 2.0.5
+Stable tag: 2.0.6
 Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -157,6 +157,9 @@ Resolves an issue with certain frameworks not enquing the RTC SDK correctly in a
 Version 2.0.5
 Add a waiting time before total disconnect on Audience views and wait for broadcaster reconnection.
 
+Version 2.0.6
+Adds a patch for autoplay policy issues. When remote user joins, if browser autoplay policy blocks video with audio playback, the video will play without audio and the mute icon will appear. The user will need to click each remote video to enable the audio. The requirement for clicking each stream is to support Safari which has the strictest autoplay policy.
+
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
@@ -184,5 +187,5 @@ Add a waiting time before total disconnect on Audience views and wait for broadc
   Browsers require a secure connection (HTTPS) for accessing a device's microphone and camera. When testing locally, localhost is a whitelisted URL but once you deploy to production you will need to have a secure connection for the plugin to function properly.
 
 == Upgrade Notice ==
-[Minor Update] Version 2.0.4 patch fixes issue with RTC in audience mode.
+[Minor Update] Version 2.0.6 patch fixes issue with browser autoplay policy.
 ...
