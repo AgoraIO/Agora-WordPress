@@ -4,7 +4,7 @@
 **Requires at least:** 5.0.0   
 **Tested up to:** 5.5.1   
 **Requires PHP:** 7.1   
-**Stable tag:** 2.0.5
+**Stable tag:** 2.0.6  
 **License:** CC BY-ND 4.0   
 **License URI:** https://creativecommons.org/licenses/by-nd/4.0  
 **GitHub:** https://github.com/AgoraIO/Agora-Word-Press  
