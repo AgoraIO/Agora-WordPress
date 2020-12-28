@@ -14,7 +14,7 @@ $current_path       = plugins_url('wp-agora-io') . '/public';
   <title>Agora.io Communication Video</title>
   <?php wp_head() ?>
 </head>
-<body <?php body_class(); ?> style="min-height: 100vh; min-height: -webkit-fill-available;">
+<body>
   <div id="agora-root" class="agora agora-fullscreen">
     <section class="agora-container">
       <?php require_once "parts/header.php" ?>
