@@ -207,6 +207,7 @@
 .agora.agora-audience .screen-users-1 .user {
   height: 65vh;
   background-color: transparent;
+  pointer-events: all;
 }
 
 /* screeen with 2 users */
