@@ -161,7 +161,7 @@ Version 2.0.6
 Adds a patch for autoplay policy issues. When remote user joins, if browser autoplay policy blocks video with audio playback, the video will play without audio and the mute icon will appear. The user will need to click each remote video to enable the audio. The requirement for clicking each stream is to support Safari which has the strictest autoplay policy.
 
 Version 2.0.7
-Resolves a issues with Screen Share (#95 , #96). Resolved an issue with black boxes (#91). Resolves CSS issue causing audience button to be hidden.
+Resolves issues with Screen Share (#95 , #96). Resolved an issue with black boxes (#91). Resolves CSS issue causing audience button to be hidden.
 - [91](https://github.com/AgoraIO/Agora-WordPress/issues/91) 
 - [95](https://github.com/AgoraIO/Agora-WordPress/issues/95) 
 - [96](https://github.com/AgoraIO/Agora-WordPress/issues/96) 
