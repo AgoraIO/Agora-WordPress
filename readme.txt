@@ -4,7 +4,7 @@ Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
 Tested up to: 5.6
 Requires PHP: 7.1
-Stable tag: 2.0.7
+Stable tag: 2.0.8
 Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -166,6 +166,9 @@ Resolves issues with Screen Share (#95 , #96). Resolved an issue with black boxe
 - [95](https://github.com/AgoraIO/Agora-WordPress/issues/95) 
 - [96](https://github.com/AgoraIO/Agora-WordPress/issues/96) 
 
+Version 2.0.8
+Resolves an issue in full screen templates with RTM not loading in the correct order. 
+
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
@@ -193,5 +196,5 @@ Resolves issues with Screen Share (#95 , #96). Resolved an issue with black boxe
   Browsers require a secure connection (HTTPS) for accessing a device's microphone and camera. When testing locally, localhost is a whitelisted URL but once you deploy to production you will need to have a secure connection for the plugin to function properly.
 
 == Upgrade Notice ==
-[Minor Update] Version 2.0.7 add compatibility for WP 5.6 and fixes Screen share issues.
+[Minor Update] Version 2.0.8 add compatibility for WP 5.6 and fixes screen share and full screen template issues.
 ...
