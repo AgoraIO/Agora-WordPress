@@ -2,9 +2,9 @@
 Contributors: jalejo08, hermesf
 Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
-Tested up to: 5.5.1
+Tested up to: 5.6
 Requires PHP: 7.1
-Stable tag: 2.0.6
+Stable tag: 2.0.7
 Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -160,6 +160,12 @@ Add a waiting time before total disconnect on Audience views and wait for broadc
 Version 2.0.6
 Adds a patch for autoplay policy issues. When remote user joins, if browser autoplay policy blocks video with audio playback, the video will play without audio and the mute icon will appear. The user will need to click each remote video to enable the audio. The requirement for clicking each stream is to support Safari which has the strictest autoplay policy.
 
+Version 2.0.7
+Resolves issues with Screen Share (#95 , #96). Resolved an issue with black boxes (#91). Resolves CSS issue causing audience button to be hidden.
+- [91](https://github.com/AgoraIO/Agora-WordPress/issues/91) 
+- [95](https://github.com/AgoraIO/Agora-WordPress/issues/95) 
+- [96](https://github.com/AgoraIO/Agora-WordPress/issues/96) 
+
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
@@ -187,5 +193,5 @@ Adds a patch for autoplay policy issues. When remote user joins, if browser auto
   Browsers require a secure connection (HTTPS) for accessing a device's microphone and camera. When testing locally, localhost is a whitelisted URL but once you deploy to production you will need to have a secure connection for the plugin to function properly.
 
 == Upgrade Notice ==
-[Minor Update] Version 2.0.6 patch fixes issue with browser autoplay policy.
+[Minor Update] Version 2.0.7 add compatibility for WP 5.6 and fixes Screen share issues.
 ...
