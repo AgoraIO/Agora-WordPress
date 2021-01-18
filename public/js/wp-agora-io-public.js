@@ -375,6 +375,10 @@ window.AGORA_UTILS = {
     // append the remote stream template to #remote-streams
     const streamsContainer = jQuery('#screen-users');
 
+    // avoid duplicate users in case there are errors removing old users and rejoining
+    const old = streamsContainer.find(`#${streamId}_container`)
+    if (old && old[0]) { old[0].remove() }
+
     streamsContainer.append(
       jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container'}).append(
         jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
