@@ -66,10 +66,7 @@ window.AGORA_SCREENSHARE_UTILS = {
 
         window.screenClient.on('stream-published', function (evt) {
           AgoraRTC.Logger.info("Publish screen stream successfully");
-          // localStreams.camera.stream.muteVideo(); // disable the local video stream (will send a mute signal)
-          // localStreams.camera.stream.stop(); // stop playing the local stream
           
-          // TODO: add logic to swap main video feed back from container
           // debugger;
           if (typeof mainStreamId !== 'undefined') {
             remoteStreams[mainStreamId].stop(); // stop the main video stream playback
@@ -78,14 +75,11 @@ window.AGORA_SCREENSHARE_UTILS = {
               window.AGORA_COMMUNICATION_CLIENT.addRemoteStreamView(remoteStreams[mainStreamId]); // send the main video stream to a container
             }
           }
-          // localStreams.screen.stream.play('full-screen-video'); // play the screen share as full-screen-video (vortext effect?)
-          // jQuery("#video-btn").prop("disabled",true); // disable the video button (as cameara video stream is disabled)
         });
         
         window.screenClient.on('stopScreenSharing', function (evt) {
           AgoraRTC.Logger.info("screen sharing stopped", err);
         });
-
 
         window.screenClient.publish(screenStream, function (err) {
           AgoraRTC.Logger.error("[ERROR] : publish screen stream error: " + err);
