@@ -195,6 +195,12 @@ Resolves an issue in full screen templates with RTM not loading in the correct o
 
   Browsers require a secure connection (HTTPS) for accessing a device's microphone and camera. When testing locally, localhost is a whitelisted URL but once you deploy to production you will need to have a secure connection for the plugin to function properly.
 
+#6. Why does the video look cropped? How can I set the video to not appear cropped?
+
+   *A:* When embedding a `<video>` element, the `object-fit` CSS property specifies how the `<video>` should be resized to fit its container. (details: [W3C - object-fit](https://www.w3schools.com/css/css3_object-fit.asp)). The Agora Video for WordPress plugin uses the default setting of `cover`, as set by the Agora Web SDK. To change this, you can use CSS. Within the WordPress Admin dashboard, click "Appearance" > "Customize" and then click "Additional CSS". Copy and paste the copy below into the "Additional CSS" input field and click the "Publish" button.  
+
+``.agora .screen-users video{ object-fit: contain !important;}
+
 == Upgrade Notice ==
 [Minor Update] Version 2.0.8 add compatibility for WP 5.6 and fixes screen share and full screen template issues.
 ...
