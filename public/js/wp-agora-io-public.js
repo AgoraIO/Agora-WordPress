@@ -209,11 +209,11 @@ window.AGORA_UTILS = {
       case 9:
         countClass = '7-9';
         break;
-      case 10:
-      case 11:
-      case 12:
-        countClass = '9-12';
-        break;
+    }
+
+    // default for 10 or more users:
+    if (count>9) {
+      countClass = '10-12'
     }
 
     // Update users class to keep layout organized
