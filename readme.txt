@@ -4,7 +4,7 @@ Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
 Tested up to: 5.6
 Requires PHP: 7.1
-Stable tag: 2.0.8
+Stable tag: 2.0.9
 Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -169,6 +169,9 @@ Resolves issues with Screen Share (#95 , #96). Resolved an issue with black boxe
 Version 2.0.8
 Resolves an issue in full screen templates with RTM not loading in the correct order. 
 
+Version 2.0.9
+resolves an issue with the UI for channels containing more than 9 streams.
+
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
@@ -202,5 +205,5 @@ Resolves an issue in full screen templates with RTM not loading in the correct o
 ``.agora .screen-users video{ object-fit: contain !important;}
 
 == Upgrade Notice ==
-[Minor Update] Version 2.0.8 add compatibility for WP 5.6 and fixes screen share and full screen template issues.
+[Minor Update] Version 2.0.9 resolves UI issue when scaling beyond 9 streams.
 ...
