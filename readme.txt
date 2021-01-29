@@ -170,7 +170,7 @@ Version 2.0.8
 Resolves an issue in full screen templates with RTM not loading in the correct order. 
 
 Version 2.0.9
-resolves an issue with the UI for channels containing more than 9 streams.
+Resolves an issue with the UI for channels containing more than 9 streams.
 
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
