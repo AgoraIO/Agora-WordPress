@@ -51,7 +51,7 @@ window.AGORA_SCREENSHARE_UTILS = {
       AgoraRTC.Logger.info("getScreen successful");
       window.localStreams.screen.stream = screenStream; // keep track of the screen stream
 
-      const successJoin = function(uid) {
+      const successJoin = function successJoin(uid) {
         console.log(' Full join', uid)
         window.localStreams.screen.id = uid;  // keep track of the uid of the screen stream.
         if (window.AGORA_RTM_UTILS) {
@@ -99,12 +99,12 @@ window.AGORA_SCREENSHARE_UTILS = {
         window.screenShareActive = true;
         cb(null, true);
       };
-      const failedJoin = function(err) {
+      const failedJoin = function failedJoin(err) {
         AgoraRTC.Logger.error("[ERROR] : join channel as screen-share failed", err);
         cb(err, null);
       };
 
-      window.AGORA_SCREENSHARE_UTILS.agora_generateAjaxToken(function(err, token) {
+      window.AGORA_UTILS.agora_generateAjaxToken(function resultToken(err, token) {
         if (err) {
           AgoraRTC.Logger.error("[TOKEN ERROR] : Get Token failed:", err);
           cb(err, null);
@@ -182,35 +182,5 @@ window.AGORA_SCREENSHARE_UTILS = {
     const videoEl = document.getElementById('agora_remote_' + streamId).querySelector('video');
     videoEl.style.objectFit = 'contain';
     videoEl.style.objectPosition = 'top';
-  },
-
-  agora_generateAjaxTokenRTM: function (cb, uid) {
-    window.AGORA_SCREENSHARE_UTILS.agora_generateAjaxToken(cb, uid, 'RTM')
-  },
-
-  agora_generateAjaxToken: function (cb, uid, type) {
-    const params = {
-      action: 'generate_token', // wp ajax action
-      cid: window.channelId,
-      uid: uid || 0, // needed to generate a new uid
-    };
-    if (type) {
-      params.type = type;
-    }
-    window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(data){
-      if (data && data.token) {
-        cb(null, data.token);
-      } else {
-        cb('Token not available', null);
-      }
-    }).fail(function(err){
-      console.error(err);
-      if(err && err.error) {
-        cb(err.error, null);
-      } else {
-        cb(err.toString(), null);
-      }
-    })
-    
   },
 }

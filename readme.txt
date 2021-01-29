@@ -4,7 +4,7 @@ Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
 Tested up to: 5.6
 Requires PHP: 7.1
-Stable tag: 2.0.7
+Stable tag: 2.0.9
 Donate link:
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -166,6 +166,12 @@ Resolves issues with Screen Share (#95 , #96). Resolved an issue with black boxe
 - [95](https://github.com/AgoraIO/Agora-WordPress/issues/95) 
 - [96](https://github.com/AgoraIO/Agora-WordPress/issues/96) 
 
+Version 2.0.8
+Resolves an issue in full screen templates with RTM not loading in the correct order. 
+
+Version 2.0.9
+Resolves an issue with the UI for channels containing more than 9 streams.
+
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
@@ -192,6 +198,12 @@ Resolves issues with Screen Share (#95 , #96). Resolved an issue with black boxe
 
   Browsers require a secure connection (HTTPS) for accessing a device's microphone and camera. When testing locally, localhost is a whitelisted URL but once you deploy to production you will need to have a secure connection for the plugin to function properly.
 
+#6. Why does the video look cropped? How can I set the video to not appear cropped?
+
+   *A:* When embedding a `<video>` element, the `object-fit` CSS property specifies how the `<video>` should be resized to fit its container. (details: [W3C - object-fit](https://www.w3schools.com/css/css3_object-fit.asp)). The Agora Video for WordPress plugin uses the default setting of `cover`, as set by the Agora Web SDK. To change this, you can use CSS. Within the WordPress Admin dashboard, click "Appearance" > "Customize" and then click "Additional CSS". Copy and paste the copy below into the "Additional CSS" input field and click the "Publish" button.  
+
+``.agora .screen-users video{ object-fit: contain !important;}
+
 == Upgrade Notice ==
-[Minor Update] Version 2.0.7 add compatibility for WP 5.6 and fixes Screen share issues.
+[Minor Update] Version 2.0.9 resolves UI issue when scaling beyond 9 streams.
 ...

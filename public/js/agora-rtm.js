@@ -99,7 +99,7 @@ window.AGORA_RTM_UTILS = {
 				});
 			};
 
-			window.AGORA_SCREENSHARE_UTILS.agora_generateAjaxTokenRTM(successToken, finalUID);
+			window.AGORA_UTILS.agora_generateAjaxTokenRTM(successToken, finalUID);
 		}
 		if (next) {
 			runJoin(next)

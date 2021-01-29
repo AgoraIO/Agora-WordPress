@@ -209,11 +209,11 @@ window.AGORA_UTILS = {
       case 9:
         countClass = '7-9';
         break;
-      case 10:
-      case 11:
-      case 12:
-        countClass = '9-12';
-        break;
+    }
+
+    // default for 10 or more users:
+    if (count>9) {
+      countClass = '10-12'
     }
 
     // Update users class to keep layout organized
@@ -458,7 +458,36 @@ window.AGORA_UTILS = {
       // }
 
       return "unknow"
+  },
+
+  agora_generateAjaxTokenRTM: function (cb, uid) {
+    window.AGORA_UTILS.agora_generateAjaxToken(cb, uid, 'RTM')
+  },
+
+  agora_generateAjaxToken: function (cb, uid, type) {
+    const params = {
+      action: 'generate_token', // wp ajax action
+      cid: window.channelId,
+      uid: uid || 0, // needed to generate a new uid
+    };
+    if (type) {
+      params.type = type;
     }
+    window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(data){
+      if (data && data.token) {
+        cb(null, data.token);
+      } else {
+        cb('Token not available', null);
+      }
+    }).fail(function(err){
+      console.error(err);
+      if(err && err.error) {
+        cb(err.error, null);
+      } else {
+        cb(err.toString(), null);
+      }
+    })
+  }
 }
 
 
