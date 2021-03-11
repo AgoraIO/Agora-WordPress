@@ -118,7 +118,7 @@
   </div>
 
   <div class="card">
-    <h2 class="title">RESTFul Customer Certificate</h2>
+    <h2 class="title">RESTFul Customer Secret</h2>
     <div class="infobox">
       agora.io
       <br />
@@ -130,11 +130,11 @@
     <div class="inside">
       <p>
         <?php
-        _e('You need to use your Customer Certificate to enable Cloud Recording', 'agoraio');
+        _e('You need to use your Customer Secret to enable Cloud Recording', 'agoraio');
         ?></p>
       <div class="flex app-setting" id="customerCertificate">
         <div class="col label">
-          RESTFul Customer Certificate
+          RESTFul Customer Secret
         </div>
         <div class="col value" data-masked="true">
           <?php
@@ -147,7 +147,7 @@
         </div>
       </div>
       <p>
-        <a href="#" class="button">Change Customer Certificate</a>
+        <a href="#" class="button">Change Customer Secret</a>
       </p>
     </div>
   </div>
@@ -165,7 +165,6 @@
         </div>
         <?php
         $value = isset($agora_options['agora-chat']) ? $agora_options['agora-chat'] : '';
-        // $value = "https://4045media-cloudrecordings.s3.amazonaws.com";
         $chatCheck = $value==='enabled' ? 'checked' : '';
         ?>
         <div class="col value" data-masked="true">
