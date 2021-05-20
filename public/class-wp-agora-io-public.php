@@ -230,6 +230,9 @@ class WP_Agora_Public {
 	}
 
 	public function enqueue_scripts() {
+		/* Include JS file to handle audio error on autoplay */
+		wp_enqueue_script( $this->plugin_name.'-agora-stream-audioErr', plugin_dir_url( __FILE__ ) . 'js/agora-stream-audioErr.js', array( 'jquery' ), $this->version, false );
+
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-agora-io-public.js', array( 'jquery' ), $this->version, false );
 
 		// add data before JS plugin
