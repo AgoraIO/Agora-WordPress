@@ -4,6 +4,85 @@
 
   <?php do_action( 'agoraio_admin_notices', 'agoraio-settings', agora_current_action() ); ?>
 
+
+  <div class="card">
+    <h2 class="title">Global Settings</h2>
+    <br class="clear" />
+    <div class="inside">
+      <div class="flex app-setting" id="globalSettings">
+        <div class="col label">
+        <table class="form-table">
+          <tr>
+            <th scope="row"><label for="unselectedVideoControlsButtonsColorUnselected"><?php _e('Video Controls Buttons Color Unselected', 'agoraio') ?></label></th>
+            <td>
+              <input
+                id="unselectedVideoControlsButtonsColorUnselected"
+                name="unselectedVideoControlsButtonsColorUnselected"
+                type="text"
+                class="agora-color-picker inputBoxGS"
+                value="<?php echo $agora_options['globalSettings']['unselectedVideoControlsButtonsColorUnselected'] ?>"
+                data-default-color="#1E73BE">
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><label for="selectedVideoControlsButtonsColorSelected"><?php _e('Video Controls Buttons Color Selected', 'agoraio') ?></label></th>
+            <td>
+              <input
+                id="selectedVideoControlsButtonsColorSelected"
+                name="selectedVideoControlsButtonsColorSelected"
+                type="text"
+                class="agora-color-picker inputBoxGS"
+                value="<?php echo $agora_options['globalSettings']['selectedVideoControlsButtonsColorSelected'] ?>"
+                data-default-color="#1E73BE">
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><label for="otherButtonsColor"><?php _e('Other Buttons Color', 'agoraio') ?></label></th>
+            <td>
+              <input
+                id="otherButtonsColor"
+                name="otherButtonsColor"
+                type="text"
+                class="agora-color-picker inputBoxGS"
+                value="<?php echo $agora_options['globalSettings']['otherButtonsColor'] ?>"
+                data-default-color="#ffffff">
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><label for="backgroundColorVideoMuted"><?php _e('Background Color - Video Muted', 'agoraio') ?></label></th>
+            <td>
+              <input
+                id="backgroundColorVideoMuted"
+                name="backgroundColorVideoMuted"
+                type="text"
+                class="agora-color-picker inputBoxGS"
+                value="<?php echo $agora_options['globalSettings']['backgroundColorVideoMuted'] ?>"
+                data-default-color="#ffffff">
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><label for="backgroundColorPanels"><?php _e('Background Color - Panels', 'agoraio') ?></label></th>
+            <td>
+              <input
+                id="backgroundColorPanels"
+                name="backgroundColorPanels"
+                type="text"
+                class="agora-color-picker inputBoxGS"
+                value="<?php echo $agora_options['globalSettings']['backgroundColorPanels'] ?>"
+                data-default-color="#ffffff">
+            </td>
+          </tr>
+        </table>
+        </div>
+        
+      </div>
+      <p>
+        <a href="#" class="button-primary" id="globalSettings-save" style="margin:0 10px">Save</a>
+      </p>
+      <span class="error error-messageglobalsettings"></span>
+    </div>
+  </div>
+
   <div class="card">
     <h2 class="title">App ID</h2>
     <div class="infobox">

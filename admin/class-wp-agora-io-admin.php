@@ -42,7 +42,12 @@ class WP_Agora_Admin {
 		unset($_POST['action']);
 		$keys = array_keys($_POST);
 		$key = $keys[0];
-		$value = sanitize_text_field( $_POST[$key] );
+		if($key != 'globalSettings'){
+			$value = sanitize_text_field( $_POST[$key] );
+		}else{
+			$value = $_POST[$key];
+		}
+		
 
 		$options = get_option($this->plugin_name);
 		$old_value = $options;

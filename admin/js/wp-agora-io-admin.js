@@ -10,12 +10,13 @@ var cloudRegions = {
 function updateSettingValue(settingName, newValue, callback) {
 	var data = { action: 'save-agora-setting' };
 	data[settingName] = newValue;
-
+	
 	var ajaxParams = {
 		type: 'POST',
 		url: ajaxurl, // from wp admin...
 		data
 	};
+	
 	jQuery.ajax(ajaxParams).then(function(data) {
 		callback && callback(null, data);
 	}).fail(function(error) {
@@ -252,7 +253,7 @@ function agoraChatChange() {
 
 	$( window ).load(function() {
 		$('.app-setting').each(applicationSettingsForm);
-
+		$('.agora-color-picker').wpColorPicker();
 		if ($('#agoraio-new-channel').length>0) {
 			activateAgoraTabs();
 			$('.agora-color-picker').wpColorPicker();
@@ -281,6 +282,34 @@ function agoraChatChange() {
 			$('#agora-chat-check').change(agoraChatChange);
 			agoraChatChange();
 		}
+
+		//Save new global settings - start
+		jQuery(document).on('click','#globalSettings-save',function(){
+			$('#globalSettings-save').prop('disabled', true);
+			const srcLoader = AGORA_ADMIN_URL + 'css/loader.svg';
+			const agoraLoader = jQuery('<span class="agora-loader" style="display:none"><img src="' + srcLoader + '" width="32" /></span>');
+			jQuery(this).parents('inside').append(agoraLoader);
+			agoraLoader.show();
+			var settingName = 'globalSettings';
+			var globalSettings = {};
+
+			jQuery('#globalSettings').find('.inputBoxGS').each(function(){
+				var name_setting = jQuery(this).attr('name');
+				var newValue = jQuery(this).val();
+				globalSettings[name_setting] = newValue;
+			});
+			updateSettingValue(settingName, globalSettings, function(err, res) {
+				if (!err && res.updated===true) {
+					agoraLoader.hide();
+					$('#globalSettings-save').prop('disabled', false);
+				} else {
+					// TODO: Improve error messages!
+					jQuery('.error-messageglobalsettings').text(err);
+				}
+			});
+
+		});
+		//Save new global settings - end
 	});
 
 
