@@ -802,3 +802,24 @@
 .activeSpeaker{
   border: 2px solid red;
 }
+
+
+#big-no-video-stream .no-video-overlay{
+	position: absolute;
+    z-index: 3;
+    width: calc(100% - 0.4em);
+    top: 40%;
+    color: #cccccc;
+    font-size: 2.5em;
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+}
+
+.agora.agora-audience #big-no-video-stream{
+	height: 65vh;
+}
+
+.agora #big-no-video-stream{
+	height: 50vh;
+}
