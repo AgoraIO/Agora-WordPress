@@ -7,6 +7,8 @@ var agoraClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'});
 // stream references (keep track of active streams) 
 window.remoteStreams = {}; // remote streams obj struct [id : stream] 
 
+window.allStreams = [];
+
 // keep track of streams
 window.localStreams = {
   uid: '',
@@ -142,6 +144,8 @@ function createCameraStream(uid, next) {
       
         window.AGORA_COMMUNICATION_UI.enableUiControls(localStream); // move after testing
         window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
+
+        window.allStreams.push(localStream);
 
         cb && cb(null)
       } catch(ex) {

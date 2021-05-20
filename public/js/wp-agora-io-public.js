@@ -375,6 +375,8 @@ window.AGORA_UTILS = {
     // append the remote stream template to #remote-streams
     const streamsContainer = jQuery('#screen-users');
 
+    window.allStreams.push(remoteStream);
+
     // avoid duplicate users in case there are errors removing old users and rejoining
     const old = streamsContainer.find(`#${streamId}_container`)
     if (old && old[0]) { old[0].remove() }
