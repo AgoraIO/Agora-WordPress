@@ -232,10 +232,12 @@ window.AGORA_UTILS = {
     // show mute icon whenever a remote has muted their mic
     window.agoraClient.on("mute-audio", function muteAudio(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', true);
+      handleGhostMode(evt.uid, 'remote');
     });
 
     window.agoraClient.on("unmute-audio", function unmuteAudio(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', false);
+      handleGhostMode(evt.uid, 'remote');
     });
 
     // show user icon whenever a remote has disabled their video
@@ -243,10 +245,12 @@ window.AGORA_UTILS = {
       const remoteId = evt.uid;
       // if the main user stops their video select a random user from the list
       window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
+      handleGhostMode(evt.uid, 'remote');
     });
 
     agoraClient.on("unmute-video", function unmuteVideo(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', false);
+      handleGhostMode(evt.uid, 'remote');
     });
 
     // remove the remote-container when a user leaves the channel
@@ -375,12 +379,19 @@ window.AGORA_UTILS = {
     // append the remote stream template to #remote-streams
     const streamsContainer = jQuery('#screen-users');
 
+    const right_users_div = jQuery('#screen-users .right-users');
+    if(right_users_div.length == 0){
+      jQuery('<div class="right-users user"></div>').insertAfter("#screen-users .left-user");
+    }
+
+    window.allStreams.push(remoteStream);
+
     // avoid duplicate users in case there are errors removing old users and rejoining
     const old = streamsContainer.find(`#${streamId}_container`)
     if (old && old[0]) { old[0].remove() }
 
-    streamsContainer.append(
-      jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container'}).append(
+    right_users_div.append(
+      jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container screen-user-main-div'}).append(
         jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
             jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
         ),
@@ -407,6 +418,9 @@ window.AGORA_UTILS = {
           document.getElementById(streamId + '_container').removeEventListener('click', playWithAudio)
         }     
       }
+
+      handleGhostMode(streamId, 'remote');
+
     });
   },
 
@@ -589,3 +603,139 @@ window.AGORA_CLOUD_RECORDING = {
     // })
   }
 }
+
+/* Handle Ghost Mode */
+window.isGhostModeEnabled = false;
+
+let local_stream_div_id = '#local-video';
+
+function noVideoStreamsDiv(){
+  return '<div id="big-no-video-stream" style="display:none"><div id="" class="no-video-overlay text-center"><i class="fas fa-user"></i></div></div>';
+}
+
+jQuery(document).ready(function(){
+
+  if(jQuery('body #agora-root #big-no-video-stream').length==0){
+    let noStreamDiv = noVideoStreamsDiv();
+    jQuery('body #screen-zone').append(noStreamDiv);
+  }
+});
+
+function showVisibleScreen(){
+  console.log("showvisstreams ")
+  let total_visible_streams = 0;
+  if(jQuery('body '+local_stream_div_id).is(":visible")){
+    total_visible_streams++;    
+    jQuery('body '+local_stream_div_id).css('display', 'inline-flex');
+  }
+  
+  jQuery('body .remote-stream-container').each(function(){
+  if(jQuery(this).is(":visible")){
+      total_visible_streams++;
+    jQuery(this).css('display', 'inline-flex');
+  }
+  });
+  if(total_visible_streams == 0){
+      jQuery("body #big-no-video-stream").show();
+  } else {
+      jQuery("body #big-no-video-stream").hide();
+  }
+}
+
+function getScreenUsersClass(){
+	let total_visible_streams = 0;
+
+    if(jQuery('body '+local_stream_div_id).is(":visible")){
+      total_visible_streams++;
+    }
+    
+	jQuery('body .remote-stream-container').each(function(){
+		if(jQuery(this).is(":visible")){
+			total_visible_streams++;
+		}
+	});
+	
+	let countClass = 'screen-users screen-users-'+total_visible_streams.toString();
+    if(total_visible_streams == 5 || total_visible_streams == 6) {
+		countClass = 'screen-users screen-users-5-6';
+	} 
+	if(total_visible_streams == 7 || total_visible_streams == 8 || total_visible_streams==9) {
+		countClass = 'screen-users screen-users-7-9';
+	}
+	
+	if(total_visible_streams == 10 || total_visible_streams == 11 || total_visible_streams==12) {
+		countClass = 'screen-users screen-users-9-12';
+	}
+	return countClass;
+}
+
+function handleGhostMode(uid, streamType='local'){
+  if(window.isGhostModeEnabled){
+    console.log("hnjiGhostMode",streamType)
+    let oldClass = jQuery("#screen-users").attr('class');
+    if(streamType == 'local'){
+      if((!window.localStreams.camera.stream.getAudioTrack() || !window.localStreams.camera.stream.getAudioTrack().enabled)
+      && (!window.localStreams.camera.stream.getVideoTrack() || !window.localStreams.camera.stream.getVideoTrack().enabled)
+      ){
+        jQuery("body "+local_stream_div_id).hide();
+      } else {
+        jQuery("body "+local_stream_div_id).show();
+      }
+      showVisibleScreen();
+    }
+    else if(streamType == 'remote'){
+      console.log("hlwRemoteStream", window.remoteStreams[uid])
+      if((!window.remoteStreams[uid].getAudioTrack() || !window.remoteStreams[uid].getAudioTrack().enabled)
+      && (!window.remoteStreams[uid].getVideoTrack() || !window.remoteStreams[uid].getVideoTrack().enabled)
+      ){
+        window.AGORA_UTILS.toggleVisibility('#' + uid + '_container', false);
+      } else {
+        window.AGORA_UTILS.toggleVisibility('#' + uid + '_container', true);
+      }
+      showVisibleScreen();
+    }
+    let newClass = getScreenUsersClass();
+    jQuery("#screen-users").removeClass(oldClass);
+    jQuery("#screen-users").addClass(newClass);
+  }
+}
+/* End Handle Ghost Mode */
+
+/* Handle Active Speaker */
+jQuery(document).ready(function(){
+  const THRESHOLD_AUDIO_LEVEL = 0.1;
+  setInterval(() => {
+
+    /* Active speaker condition will work when there are 2 or more than 2 streams */
+    if(window.allStreams.length>1){
+
+      /* Create array to manage the streams queue according to volume  */
+      let talkingStreamsQueue = [];
+
+      window.allStreams.forEach((item, key) => {
+        let obj = {};
+        if(item.getAudioLevel()>0){
+          let audioLevel = item.getAudioLevel().toFixed(3);
+          obj[item.getId()] = audioLevel;
+          talkingStreamsQueue.push({id: parseInt(item.getId()), volume: parseFloat(audioLevel)});
+        }
+      });
+
+      talkingStreamsQueue.sort((a, b) => b.volume - a.volume);
+
+      let activeSpeakerStreamId = 0;
+
+      if( talkingStreamsQueue.length>0 && talkingStreamsQueue[0].volume > THRESHOLD_AUDIO_LEVEL ) {
+        activeSpeakerStreamId = talkingStreamsQueue[0].id;
+      }
+
+      if(activeSpeakerStreamId == 0){
+        jQuery('.activeSpeaker').removeClass('activeSpeaker');
+      } else {
+        jQuery('body #' + activeSpeakerStreamId + '_container').addClass('activeSpeaker');
+      }
+    }
+    
+  }, 300);
+});
+/* End Handle Active Speaker */

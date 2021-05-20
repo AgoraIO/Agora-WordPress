@@ -12,10 +12,12 @@ window.AGORA_COMMUNICATION_UI = {
 
     jQuery("#mic-btn").click(function(){
       window.AGORA_COMMUNICATION_UI.toggleMic(localStream);
+      handleGhostMode(localStream.getId(), 'local');
     });
 
     jQuery("#video-btn").click(function(){
       window.AGORA_COMMUNICATION_UI.toggleVideo(localStream);
+      handleGhostMode(localStream.getId(), 'local');
     });
 
     jQuery("#cloud-recording-btn").click(function(){

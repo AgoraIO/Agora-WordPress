@@ -795,3 +795,46 @@
     font-size: 20px;
   }
 }
+
+/* Bigstep */
+
+/* Active Speaker */
+.activeSpeaker{
+  border: 2px solid red;
+}
+
+
+#big-no-video-stream .no-video-overlay{
+	position: absolute;
+    z-index: 3;
+    width: calc(100% - 0.4em);
+    top: 40%;
+    color: #cccccc;
+    font-size: 2.5em;
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+}
+
+.agora.agora-audience #big-no-video-stream{
+	height: 65vh;
+}
+
+.agora #big-no-video-stream{
+	height: 50vh;
+}
+
+/* Work on Grid and Speaker view */
+.screen-user-main-div{
+  width:100%;
+  height:100%;
+}
+
+.speaker-view .left-user{
+  width:50% !important;
+  height: 100vh !important;
+}
+.speaker-view .right-users{
+  width: 50% !important;
+  height: 100vh !important;
+}
