@@ -413,6 +413,9 @@ window.AGORA_UTILS = {
           document.getElementById(streamId + '_container').removeEventListener('click', playWithAudio)
         }     
       }
+
+      handleGhostMode(streamId, 'remote');
+
     });
   },
 
@@ -596,8 +599,6 @@ window.AGORA_CLOUD_RECORDING = {
   }
 }
 
-
-
 /* Handle Ghost Mode */
 window.isGhostModeEnabled = false;
 
@@ -726,7 +727,7 @@ jQuery(document).ready(function(){
       if(activeSpeakerStreamId == 0){
         jQuery('.activeSpeaker').removeClass('activeSpeaker');
       } else {
-        jQUery('body #' + uid + '_container').addClass('activeSpeaker');
+        jQuery('body #' + activeSpeakerStreamId + '_container').addClass('activeSpeaker');
       }
     }
     
