@@ -379,14 +379,19 @@ window.AGORA_UTILS = {
     // append the remote stream template to #remote-streams
     const streamsContainer = jQuery('#screen-users');
 
+    const right_users_div = jQuery('#screen-users .right-users');
+    if(right_users_div.length == 0){
+      jQuery('<div class="right-users user"></div>').insertAfter("#screen-users .left-user");
+    }
+
     window.allStreams.push(remoteStream);
 
     // avoid duplicate users in case there are errors removing old users and rejoining
     const old = streamsContainer.find(`#${streamId}_container`)
     if (old && old[0]) { old[0].remove() }
 
-    streamsContainer.append(
-      jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container'}).append(
+    right_users_div.append(
+      jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container screen-user-main-div'}).append(
         jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
             jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
         ),
