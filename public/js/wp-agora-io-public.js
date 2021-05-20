@@ -591,3 +591,42 @@ window.AGORA_CLOUD_RECORDING = {
     // })
   }
 }
+
+
+/* Function for Active Speaker */
+jQuery(document).ready(function(){
+  const THRESHOLD_AUDIO_LEVEL = 0.1;
+  setInterval(() => {
+
+    /* Active speaker condition will work when there are 2 or more than 2 streams */
+    if(window.allStreams.length>1){
+
+      /* Create array to manage the streams queue according to volume  */
+      let talkingStreamsQueue = [];
+
+      window.allStreams.forEach((item, key) => {
+        let obj = {};
+        if(item.getAudioLevel()>0){
+          let audioLevel = item.getAudioLevel().toFixed(3);
+          obj[item.getId()] = audioLevel;
+          talkingStreamsQueue.push({id: parseInt(item.getId()), volume: parseFloat(audioLevel)});
+        }
+      });
+
+      talkingStreamsQueue.sort((a, b) => b.volume - a.volume);
+
+      let activeSpeakerStreamId = 0;
+
+      if( talkingStreamsQueue.length>0 && talkingStreamsQueue[0].volume > THRESHOLD_AUDIO_LEVEL ) {
+        activeSpeakerStreamId = talkingStreamsQueue[0].id;
+      }
+
+      if(activeSpeakerStreamId == 0){
+        jQuery('.activeSpeaker').removeClass('activeSpeaker');
+      } else {
+        jQUery('body #' + uid + '_container').addClass('activeSpeaker');
+      }
+    }
+    
+  }, 300);
+});

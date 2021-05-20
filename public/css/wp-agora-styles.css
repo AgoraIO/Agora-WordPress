@@ -795,3 +795,10 @@
     font-size: 20px;
   }
 }
+
+/* Bigstep */
+
+/* Active Speaker */
+.activeSpeaker{
+  border: 2px solid red;
+}
