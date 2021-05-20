@@ -2,7 +2,7 @@
 // $channelSettings is defined on the parent contianer of this file
 $recordingSettings = $channelSettings['recording'];
 ?>
-<footer class="agora-footer">
+<footer class="agora-footer panel-background-color">
 	<div class="buttons-bottom">
 		
 		<div id="audio-controls" class=" text-center btn-group">

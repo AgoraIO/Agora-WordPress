@@ -103,6 +103,11 @@ function getMicDevices() {
 }
 
 
+window.videoControlsColorsUnselected = 'red';
+window.videoControlsColorsSelected = 'blue';
+window.otherButtonsColors = 'green';
+window.panelsBackgroundColor = 'black';
+
 window.AGORA_UTILS = {
 
   getMicDevices: getMicDevices,
@@ -164,6 +169,24 @@ window.AGORA_UTILS = {
   },
 
   toggleBtn: function (btn){
+    // if(!jQuery(btn).hasClass('btn-dark') && !jQuery(btn).hasClass('btn-danger')){
+    //   jQuery(btn).css('background-color', window.videoControlsColorsSelected);
+    //   // jQuery(btn).hover(function(){
+    //   //   jQuery(this).css('background-color', window.videoControlsColorsSelected);
+    //   // });
+    //   // jQuery(btn).mouseleave(function(){
+    //   //   jQuery(this).css('background-color', window.videoControlsColorsUnselected);
+    //   // });
+    // } else {
+    //   jQuery(btn).css('background-color', window.videoControlsColorsUnselected);
+    // }
+
+    if(jQuery(btn).hasClass('btn-dark') || jQuery(btn).hasClass('btn-danger')){
+      jQuery(btn).css('background-color', window.videoControlsColorsUnselected);
+    } else {
+      jQuery(btn).css('background-color', window.videoControlsColorsSelected);
+    }
+
     btn.toggleClass('btn-dark').toggleClass('btn-danger');
   },
 
@@ -739,3 +762,9 @@ jQuery(document).ready(function(){
   }, 300);
 });
 /* End Handle Active Speaker */
+
+jQuery(document).ready(function(){
+  jQuery('.btnIcon:not(.other-buttons)').css('background-color', window.videoControlsColorsUnselected);
+  jQuery('.panel-background-color').css('background-color', window.panelsBackgroundColor);
+  jQuery('.other-buttons').css({'border': 'none', 'background-color': window.otherButtonsColors});
+});
