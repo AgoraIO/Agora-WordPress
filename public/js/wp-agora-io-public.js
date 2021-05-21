@@ -103,10 +103,11 @@ function getMicDevices() {
 }
 
 
-window.unselectedVideoControlsButtonsColor = 'red';
-window.selectedVideoControlsButtonsColor = 'blue';
+window.unselectedVideoControlsButtonsColor = '';
+window.selectedVideoControlsButtonsColor = '';
 window.otherButtonsColor = '';
 window.panelsBackgroundColor = '';
+window.videoMutedBackgroundColor = '';
 
 window.AGORA_UTILS = {
 
@@ -781,6 +782,9 @@ jQuery(document).ready(function(){
       if(typeof global_colors.unselectedVideoControlsButtonsColor!='undefined' && global_colors.unselectedVideoControlsButtonsColor!=""){
         window.unselectedVideoControlsButtonsColor = global_colors.unselectedVideoControlsButtonsColor;
         jQuery('.btnIcon:not(.other-buttons)').css('background-color', window.unselectedVideoControlsButtonsColor);
+      }
+      if(typeof global_colors.backgroundColorVideoMuted!='undefined' && global_colors.backgroundColorVideoMuted!=""){
+        window.videoMutedBackgroundColor = global_colors.backgroundColorVideoMuted;
       }
     }
   }).fail(function(err) {
