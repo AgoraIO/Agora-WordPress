@@ -170,17 +170,6 @@ window.AGORA_UTILS = {
   },
 
   toggleBtn: function (btn){
-    // if(!jQuery(btn).hasClass('btn-dark') && !jQuery(btn).hasClass('btn-danger')){
-    //   jQuery(btn).css('background-color', window.selectedVideoControlsButtonsColor);
-    //   // jQuery(btn).hover(function(){
-    //   //   jQuery(this).css('background-color', window.selectedVideoControlsButtonsColor);
-    //   // });
-    //   // jQuery(btn).mouseleave(function(){
-    //   //   jQuery(this).css('background-color', window.unselectedVideoControlsButtonsColor);
-    //   // });
-    // } else {
-    //   jQuery(btn).css('background-color', window.unselectedVideoControlsButtonsColor);
-    // }
 
     if(window.unselectedVideoControlsButtonsColor!="" && jQuery(btn).hasClass('btn-dark') || jQuery(btn).hasClass('btn-danger')){
       jQuery(btn).css('background-color', window.unselectedVideoControlsButtonsColor);
@@ -645,7 +634,6 @@ window.AGORA_CLOUD_RECORDING = {
 }
 
 /* Handle Ghost Mode */
-window.isGhostModeEnabled = false;
 
 let local_stream_div_id = '#local-video';
 

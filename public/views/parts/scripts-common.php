@@ -6,7 +6,8 @@
   window.screenVideoProfile = '<?php echo $instance['screenprofile'] ?>';
   window.agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
   window.channelName = '<?php echo $channel->title() ?>'; // set channel name
-  window.channelId = '<?php echo $channel->id() ?>'; // set channel name
+  window.channelId = '<?php echo $channel->id() ?>'; // set channel id
+  window.isGhostModeEnabled = '<?php echo $channel->ghostmode() ?>'; // set channel name
   window.userID = parseInt(`${<?php echo $current_user->ID; ?>}`, 10);
   <?php if ($current_user->ID > 0) : ?>
   window.wp_username = '<?php echo $current_user->data->display_name; ?>';
