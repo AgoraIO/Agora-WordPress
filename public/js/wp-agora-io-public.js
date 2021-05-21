@@ -634,7 +634,6 @@ window.AGORA_CLOUD_RECORDING = {
 }
 
 /* Handle Ghost Mode */
-window.isGhostModeEnabled = false;
 
 let local_stream_div_id = '#local-video';
 
