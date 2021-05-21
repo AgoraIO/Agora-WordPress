@@ -4,8 +4,8 @@ function addAudioErrorGesture(streamID){
 
 function resumeStream(e, streamID){
     e.stopPropagation();
-    let index = window.allStreams.findIndex(x => x.getId() ===streamID);
-    window.allStreams[index].resume().then(() => {
+    let index = Object.keys(window.allStreams).find(key => window.allStreams[key].stream.getId() === streamID);
+    window.allStreams[index].stream.resume().then(() => {
         console.log("clickable");
         jQuery("body #clickable_"+streamID).remove();
     }).catch(console.warn);

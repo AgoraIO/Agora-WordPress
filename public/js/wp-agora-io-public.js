@@ -447,13 +447,11 @@ window.AGORA_UTILS = {
       //   }     
       // }
 
-      //if ((err && err.status !== "aborted") || (err && err.audio && err.audio.status !== "aborted")){
-        console.log('body #' + streamId + '_no-video Remote stream: ' + streamId + ' failed to autoplay. Playing muted. Tap <video> container to enable audio.' );
-        
+      if ((err && err.status !== "aborted") || (err && err.audio && err.audio.status !== "aborted")){
         jQuery('body #' + streamId + '_container').prepend(
           addAudioErrorGesture(streamId)
         )
-      //}
+      }
 
       handleGhostMode(streamId, 'remote');
 
