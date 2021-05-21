@@ -149,6 +149,7 @@ function agora_render_setting_row($id, $title, $settings, $prefix, $inputType="n
 
       <div id="postbox-container-3" class="postbox-container">
         <?php do_action( 'agoraio_channel_form_recording', $post ); ?>
+        <?php do_action( 'agoraio_channel_form_chat_support', $post ); ?>
 
         <p class="submit"><?php agoraio_admin_save_button( $post_id ); ?></p>
       </div>
@@ -364,6 +365,36 @@ function render_agoraio_channel_form_appearance($channel) {
           data-default-color="#ffffff">
       </td>
     </tr>
+  </table>
+  <?php
+}
+
+// Metabox content for Chat support tab
+function render_agoraio_channel_form_chat_support($channel) {
+  $props = $channel->get_properties();
+  $appearance = $props['appearance'];
+  ?>
+  <table class="form-table">
+    
+    <tr>
+      <th scope="row"><label for="activeButtonColor"><?php _e('Agora Chat for logged in users', 'agoraio') ?></label></th>
+      <td>
+      <?php
+        $value = '';
+        $chatCheck = $value==='enabled' ? 'checked' : '';
+        ?>
+        <div class="col value" data-masked="true">
+          <label class="switch">
+            <input type="checkbox" <?php echo $chatCheck ?> id="agora-chat-check-loggedin" value="chat-enabled-loggedin">
+            <span class="slider round"></span>
+          </label>
+          <span id="chat-status-text-loggedin"
+           data-enabled="<?php _e('enabled', 'agoraio'); ?>"
+           data-disabled="<?php _e('disabled', 'agoraio') ?>"></span>
+        </div>
+      </td>
+    </tr>
+  
   </table>
   <?php
 }

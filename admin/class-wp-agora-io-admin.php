@@ -42,7 +42,7 @@ class WP_Agora_Admin {
 		unset($_POST['action']);
 		$keys = array_keys($_POST);
 		$key = $keys[0];
-		if($key != 'globalSettings'){
+		if($key != 'globalColors'){
 			$value = sanitize_text_field( $_POST[$key] );
 		}else{
 			$value = $_POST[$key];
@@ -160,9 +160,19 @@ class WP_Agora_Admin {
     	'agora_channel_recording'
     );
 
+    // Chat metabox
+    add_meta_box(
+    	'agora-form-chat',
+    	__('Chat support for logged in users', 'agoraio'),
+    	'render_agoraio_channel_form_chat_support',
+    	null,
+    	'agora_chat_support'
+    );
+
 		add_action( 'agoraio_channel_form_settings', array($this, 'handle_channel_form_metabox_settings'), 10, 1 );
 		add_action( 'agoraio_channel_form_appearance', array($this, 'handle_channel_form_metabox_appearance'), 10, 1 );
 		add_action( 'agoraio_channel_form_recording', array($this, 'handle_channel_form_metabox_recording'), 10, 1 );
+		add_action( 'agoraio_channel_form_chat_support', array($this, 'handle_channel_form_chat_support'), 10, 1 );
 	}
 
 	public function include_agora_new_channel_page() {
@@ -189,7 +199,7 @@ class WP_Agora_Admin {
 	// http://fieldmanager.org/docs/misc/adding-fields-after-the-title/
 	// https://metabox.io/how-to-create-custom-meta-boxes-custom-fields-in-wordpress/
 	public function handle_channel_form_metabox_settings($channel) {
-		global $wp_meta_boxes;
+	global $wp_meta_boxes;
 
 		do_meta_boxes( get_current_screen(), 'agora_channel_settings', $channel );
 		unset( $wp_meta_boxes['post']['agora_channel_settings'] );
@@ -209,8 +219,16 @@ class WP_Agora_Admin {
 		unset( $wp_meta_boxes['post']['agora_channel_recording'] );
 	}
 
+	public function handle_channel_form_chat_support($channel) {
+		global $wp_meta_boxes;
+
+		do_meta_boxes( get_current_screen(), 'agora_chat_support', $channel );
+		unset( $wp_meta_boxes['post']['agora_chat_support'] );
+	}
+
 	public function include_agora_settings_page() {
 		$agora_options = get_option($this->plugin_name);
+		//echo '<pre>';print_r($agora_options); echo '</pre>';die;
 		include_once('views/agora-admin-settings.php');
 	}
 

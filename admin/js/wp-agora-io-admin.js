@@ -248,6 +248,18 @@ function agoraChatChange() {
 	})
 }
 
+function agoraChatChangeLoggedin() {
+	const enabled = document.querySelector('#agora-chat-check-loggedin').checked;
+	const box = document.querySelector('#chat-status-text-loggedin');
+	const statusText = box.dataset[enabled ? 'enabled' : 'disabled'];
+	box.innerText = statusText;
+
+	updateSettingValue('agora-chat-loggedin', statusText, function(err, res) {
+		if (!res || !res.updated) {
+			// TODO: Show error?
+		}
+	})
+}
 (function( $ ) {
 	'use strict';
 
@@ -283,28 +295,32 @@ function agoraChatChange() {
 			agoraChatChange();
 		}
 
+		if (document.querySelector('#agora-chat-check-loggedin')) {
+			$('#agora-chat-check-loggedin').change(agoraChatChangeLoggedin);
+			agoraChatChangeLoggedin();
+		}
 		//Save new global settings - start
-		jQuery(document).on('click','#globalSettings-save',function(){
-			$('#globalSettings-save').prop('disabled', true);
+		jQuery(document).on('click','#globalColors-save',function(){
+			$('#globalColors-save').prop('disabled', true);
 			const srcLoader = AGORA_ADMIN_URL + 'css/loader.svg';
 			const agoraLoader = jQuery('<span class="agora-loader" style="display:none"><img src="' + srcLoader + '" width="32" /></span>');
 			jQuery(this).parents('inside').append(agoraLoader);
 			agoraLoader.show();
-			var settingName = 'globalSettings';
-			var globalSettings = {};
+			var settingName = 'globalColors';
+			var globalColors = {};
 
-			jQuery('#globalSettings').find('.inputBoxGS').each(function(){
+			jQuery('#globalColors').find('.inputBoxGS').each(function(){
 				var name_setting = jQuery(this).attr('name');
 				var newValue = jQuery(this).val();
-				globalSettings[name_setting] = newValue;
+				globalColors[name_setting] = newValue;
 			});
-			updateSettingValue(settingName, globalSettings, function(err, res) {
+			updateSettingValue(settingName, globalColors, function(err, res) {
 				if (!err && res.updated===true) {
 					agoraLoader.hide();
-					$('#globalSettings-save').prop('disabled', false);
+					$('#globalColors-save').prop('disabled', false);
 				} else {
 					// TODO: Improve error messages!
-					jQuery('.error-messageglobalsettings').text(err);
+					jQuery('.error-messageglobalColors').text(err);
 				}
 			});
 

@@ -49,9 +49,9 @@ class WP_Agora_Public {
 	    add_action( 'wp_ajax_get_user_avatar', $userAvatarAjax );
 	    add_action( 'wp_ajax_nopriv_get_user_avatar', $userAvatarAjax );
 
-	    $globalSettingsAjax = array($this, 'getGlobalSettings');
-	    add_action( 'wp_ajax_get_global_settings', $globalSettingsAjax );
-	    add_action( 'wp_ajax_nopriv_get_global_settings', $globalSettingsAjax );
+	    $globalColorsAjax = array($this, 'getglobalColors');
+	    add_action( 'wp_ajax_get_global_colors', $globalColorsAjax );
+	    add_action( 'wp_ajax_nopriv_get_global_colors', $globalColorsAjax );
 
 	    // Page Template loader for FullScreen
 	    require_once plugin_dir_path(dirname( __FILE__ )) . 'public/class-wp-agora-page-template.php';
@@ -61,11 +61,11 @@ class WP_Agora_Public {
 	    require_once(__DIR__.'/../includes/token-server/RtmTokenBuilder.php');
 	}
 
-	public function getGlobalSettings() {
+	public function getglobalColors() {
 		$agora_options = get_option($this->plugin_name);
 
 		header('Content-Type: application/json');
-		echo json_encode(array( "global_settings" => $agora_options ));
+		echo json_encode(array( "global_colors" => $agora_options ));
 
 		wp_die();
 	}
