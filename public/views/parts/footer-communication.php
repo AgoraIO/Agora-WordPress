@@ -72,14 +72,18 @@ if (array_key_exists("chat_support_loggedin", $channelSettings) && $channelSetti
         <?php //if (isset($agora->settings['agora-chat']) && $agora->settings['agora-chat']==='enabled') : ?>
             <?php //$enableChat = true; ?>
         <?php 
-            if (isset($agora->settings['agora-chat-loggedin']) && $agora->settings['agora-chat-loggedin']==='enabled'){  
+            if (isset($agora->settings['agora-chat']) && $agora->settings['agora-chat']==='enabled'){  
                 $enableChat = true;
             } 
-            if(is_user_logged_in()){ //if user is logged in then we will check channel specific condition.
+            if(is_user_logged_in()){
+                if (isset($agora->settings['agora-chat-loggedin']) && $agora->settings['agora-chat-loggedin']==='enabled'){  
+                    $enableChat = true;
+                } 
                 if($chat_support_loggedin == 0){
-                     $enableChat = false;
+                   $enableChat = false;
                 }
-            } 
+            }
+            if($enableChat===true){
         ?>
 		<div class="btn-separator"></div>
         <div class="btn-with-title">
@@ -89,7 +93,7 @@ if (array_key_exists("chat_support_loggedin", $channelSettings) && $channelSetti
             </button>
             <small class="btn-title"><?php _e('Chat', 'agoraio') ?></small>
         </div>
-        <?php endif; ?>
+        <?php } ?>
 
         <div class="btn-with-title">
             <button id="exit-btn-footer" class="btnIcon btn-danger only-mobile" type="button">
