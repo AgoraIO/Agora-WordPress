@@ -49,12 +49,25 @@ class WP_Agora_Public {
 	    add_action( 'wp_ajax_get_user_avatar', $userAvatarAjax );
 	    add_action( 'wp_ajax_nopriv_get_user_avatar', $userAvatarAjax );
 
+	    $globalSettingsAjax = array($this, 'getGlobalSettings');
+	    add_action( 'wp_ajax_get_global_settings', $globalSettingsAjax );
+	    add_action( 'wp_ajax_nopriv_get_global_settings', $globalSettingsAjax );
+
 	    // Page Template loader for FullScreen
 	    require_once plugin_dir_path(dirname( __FILE__ )) . 'public/class-wp-agora-page-template.php';
 	    new WP_Agora_PageTemplate($this);
 
 	    require_once(__DIR__.'/../includes/token-server/RtcTokenBuilder.php');
 	    require_once(__DIR__.'/../includes/token-server/RtmTokenBuilder.php');
+	}
+
+	public function getGlobalSettings() {
+		$agora_options = get_option($this->plugin_name);
+
+		header('Content-Type: application/json');
+		echo json_encode(array( "global_settings" => $agora_options ));
+
+		wp_die();
 	}
 
 	public function getUserAvatar() {
