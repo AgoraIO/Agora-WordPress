@@ -103,10 +103,10 @@ function getMicDevices() {
 }
 
 
-window.videoControlsColorsUnselected = 'red';
-window.videoControlsColorsSelected = 'blue';
-window.otherButtonsColors = 'green';
-window.panelsBackgroundColor = 'black';
+window.unselectedVideoControlsButtonsColor = 'red';
+window.selectedVideoControlsButtonsColor = 'blue';
+window.otherButtonsColor = '';
+window.panelsBackgroundColor = '';
 
 window.AGORA_UTILS = {
 
@@ -170,21 +170,21 @@ window.AGORA_UTILS = {
 
   toggleBtn: function (btn){
     // if(!jQuery(btn).hasClass('btn-dark') && !jQuery(btn).hasClass('btn-danger')){
-    //   jQuery(btn).css('background-color', window.videoControlsColorsSelected);
+    //   jQuery(btn).css('background-color', window.selectedVideoControlsButtonsColor);
     //   // jQuery(btn).hover(function(){
-    //   //   jQuery(this).css('background-color', window.videoControlsColorsSelected);
+    //   //   jQuery(this).css('background-color', window.selectedVideoControlsButtonsColor);
     //   // });
     //   // jQuery(btn).mouseleave(function(){
-    //   //   jQuery(this).css('background-color', window.videoControlsColorsUnselected);
+    //   //   jQuery(this).css('background-color', window.unselectedVideoControlsButtonsColor);
     //   // });
     // } else {
-    //   jQuery(btn).css('background-color', window.videoControlsColorsUnselected);
+    //   jQuery(btn).css('background-color', window.unselectedVideoControlsButtonsColor);
     // }
 
-    if(jQuery(btn).hasClass('btn-dark') || jQuery(btn).hasClass('btn-danger')){
-      jQuery(btn).css('background-color', window.videoControlsColorsUnselected);
-    } else {
-      jQuery(btn).css('background-color', window.videoControlsColorsSelected);
+    if(window.unselectedVideoControlsButtonsColor!="" && jQuery(btn).hasClass('btn-dark') || jQuery(btn).hasClass('btn-danger')){
+      jQuery(btn).css('background-color', window.unselectedVideoControlsButtonsColor);
+    } else if(window.selectedVideoControlsButtonsColor!="") {
+      jQuery(btn).css('background-color', window.selectedVideoControlsButtonsColor);
     }
 
     btn.toggleClass('btn-dark').toggleClass('btn-danger');
@@ -764,7 +764,38 @@ jQuery(document).ready(function(){
 /* End Handle Active Speaker */
 
 jQuery(document).ready(function(){
-  jQuery('.btnIcon:not(.other-buttons)').css('background-color', window.videoControlsColorsUnselected);
-  jQuery('.panel-background-color').css('background-color', window.panelsBackgroundColor);
-  jQuery('.other-buttons').css({'border': 'none', 'background-color': window.otherButtonsColors});
+
+  const params = {action: 'get_global_colors'};
+
+  window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
+    console.log('Query:', res);
+    if(typeof res.global_colors!='undefined' && res.global_colors!=null){
+      console.log("glalSettings", res.global_settings)
+      const global_colors = res.global_colors;
+      if(typeof global_colors.backgroundColorPanels!='undefined' && global_colors.backgroundColorPanels!=""){
+        window.panelsBackgroundColor = global_colors.backgroundColorPanels; 
+        jQuery('.panel-background-color').css('background-color', window.panelsBackgroundColor);
+      }
+      if(typeof global_colors.otherButtonsColor!='undefined' && global_colors.otherButtonsColor!=""){
+        window.otherButtonsColor = global_colors.otherButtonsColor;
+        jQuery('.other-buttons').css({'border': 'none', 'background-color': window.otherButtonsColor});
+      }
+      if(typeof global_colors.selectedVideoControlsButtonsColor!='undefined' && global_colors.selectedVideoControlsButtonsColor!=""){
+        window.selectedVideoControlsButtonsColor = global_colors.selectedVideoControlsButtonsColor;
+      }
+      if(typeof global_colors.unselectedVideoControlsButtonsColor!='undefined' && global_colors.unselectedVideoControlsButtonsColor!=""){
+        window.unselectedVideoControlsButtonsColor = global_colors.unselectedVideoControlsButtonsColor;
+        jQuery('.btnIcon:not(.other-buttons)').css('background-color', window.unselectedVideoControlsButtonsColor);
+      }
+    }
+  }).fail(function(err) {
+    console.error('API Error:',err);
+  })
+  // jQuery('.btnIcon:not(.other-buttons)').css('background-color', window.unselectedVideoControlsButtonsColor);
+  // jQuery('.panel-background-color').css('background-color', window.panelsBackgroundColor);
+  // jQuery('.other-buttons').css({'border': 'none', 'background-color': window.otherButtonsColor});
+
+  // jQuery('.btnIcon:not(.other-buttons)').css('background-color', window.unselectedVideoControlsButtonsColor);
+  // jQuery('.panel-background-color').css('background-color', window.panelsBackgroundColor);
+  // jQuery('.other-buttons').css({'border': 'none', 'background-color': window.otherButtonsColor});
 });
