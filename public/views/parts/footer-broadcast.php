@@ -68,7 +68,7 @@ if (array_key_exists("chat_support_loggedin", $channelSettings) && $channelSetti
                 } 
 
                 if($chat_support_loggedin == 0){
-                   // $enableChat = false;
+                   $enableChat = false;
                 }
             }
             
