@@ -47,7 +47,8 @@ class WP_Agora_Channel {
     'region' => 0,
     'bucket' => '',
     'accessKey' => '',
-    'secretKey' => ''
+    'secretKey' => '',
+    'chat-support-loggdin' => '',
   );
 
   // private channel attrs
@@ -214,7 +215,7 @@ class WP_Agora_Channel {
         'post_title' => sanitize_text_field($args['post_title']),
       ) );
     }
-
+    echo '<pre>';print_r($args); echo '</pre>';die;
     $videoSettings = array();
     array_map(function($key) use ($args, &$videoSettings) {
       $videoSettings[$key] = sanitize_text_field($args[$key]);

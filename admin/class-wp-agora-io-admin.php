@@ -42,7 +42,7 @@ class WP_Agora_Admin {
 		unset($_POST['action']);
 		$keys = array_keys($_POST);
 		$key = $keys[0];
-		if($key != 'globalColors'){
+		if($key != 'global_colors'){
 			$value = sanitize_text_field( $_POST[$key] );
 		}else{
 			$value = $_POST[$key];
@@ -228,6 +228,7 @@ class WP_Agora_Admin {
 
 	public function include_agora_settings_page() {
 		$agora_options = get_option($this->plugin_name);
+		echo '<pre>';print_r($agora_options); echo '</pre>';
 		include_once('views/agora-admin-settings.php');
 	}
 

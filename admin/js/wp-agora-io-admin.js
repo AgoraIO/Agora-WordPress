@@ -306,7 +306,7 @@ function agoraChatChangeLoggedin() {
 			const agoraLoader = jQuery('<span class="agora-loader" style="display:none"><img src="' + srcLoader + '" width="32" /></span>');
 			jQuery(this).parents('inside').append(agoraLoader);
 			agoraLoader.show();
-			var settingName = 'globalColors';
+			var settingName = 'global_colors';
 			var globalColors = {};
 
 			jQuery('#globalColors').find('.inputBoxGS').each(function(){
