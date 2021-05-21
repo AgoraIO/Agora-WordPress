@@ -48,7 +48,6 @@ class WP_Agora_Channel {
     'bucket' => '',
     'accessKey' => '',
     'secretKey' => '',
-    'chat-support-loggdin' => '',
   );
 
   // private channel attrs
@@ -172,13 +171,17 @@ class WP_Agora_Channel {
       $recordingSettings = get_post_meta( $this->id, 'channel_recording_settings', true );
       $channelType = get_post_meta( $this->id, 'channel_type', true );
       $channelUserHost = get_post_meta( $this->id, 'channel_user_host', true );
+      $ChatSupportloggedin = get_post_meta( $this->id, 'chat_support_loggedin', true );
+      $GhostMode = get_post_meta( $this->id, 'ghost_mode', true );
 
       $this->properties = array(
         'type' => $channelType,
         'host' => $channelUserHost,
         'settings' => $videoSettings,
         'appearance' => $appearanceSettings,
-        'recording' => $recordingSettings
+        'recording' => $recordingSettings,
+        'chat_support_loggedin' => $ChatSupportloggedin,
+        'ghost_mode' => $GhostMode,
       );
       
       // $this->upgrade();
@@ -194,7 +197,9 @@ class WP_Agora_Channel {
       'host' => array(),
       'settings' => array_merge(self::$defaultVideoSettings),
       'appearance' => array_merge(self::$defaultAppearanceSettings),
-      'recording' => array_merge(self::$defaultRecordingSettings)
+      'recording' => array_merge(self::$defaultRecordingSettings),
+      'chat_support_loggedin' => '',
+      'ghost_mode' => '',
     ) );
     $properties = (array) apply_filters( 'agoraio_channel_properties', $properties, $this );
     return $properties;
@@ -215,7 +220,7 @@ class WP_Agora_Channel {
         'post_title' => sanitize_text_field($args['post_title']),
       ) );
     }
-    echo '<pre>';print_r($args); echo '</pre>';die;
+    
     $videoSettings = array();
     array_map(function($key) use ($args, &$videoSettings) {
       $videoSettings[$key] = sanitize_text_field($args[$key]);
@@ -244,6 +249,8 @@ class WP_Agora_Channel {
     update_post_meta($post_id, 'channel_video_settings', $videoSettings);
     update_post_meta($post_id, 'channel_appearance_settings', $appearanceSettings);
     update_post_meta($post_id, 'channel_recording_settings', $recordingSettings);
+    update_post_meta($post_id, 'chat_support_loggedin', sanitize_key($args['chat_support_loggedin']));
+    update_post_meta($post_id, 'ghost_mode', sanitize_key($args['ghost_mode']));
     update_post_meta($post_id, 'channel_type', sanitize_key($args['type']));
 
     if (isset($args['host'])) {
