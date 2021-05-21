@@ -416,7 +416,6 @@ window.AGORA_UTILS = {
       console.log("setattStreamsVariable")
       window.allStreams = [];
     }
-    //window.allStreams.push(remoteStream);
 
     /* Set the remote stream details alongwith user avtar */
     window.AGORA_UTILS.agora_getUserAvatar(remoteStream.getId(), function getUserAvatar(avatarData) {
@@ -752,15 +751,6 @@ jQuery(document).ready(function(){
 
       /* Create array to manage the streams queue according to volume  */
       let talkingStreamsQueue = [];
-
-      // window.allStreams.forEach((item, key) => {
-      //   let obj = {};
-      //   if(item.stream.getAudioLevel()>0){
-      //     let audioLevel = item.stream.getAudioLevel().toFixed(3);
-      //     obj[item.stream.getId()] = audioLevel;
-      //     talkingStreamsQueue.push({id: parseInt(item.stream.getId()), volume: parseFloat(audioLevel)});
-      //   }
-      // });
 
       Object.keys(window.allStreams).forEach(function(key) { 
         let stream = window.allStreams[key].stream;
