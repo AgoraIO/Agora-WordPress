@@ -801,7 +801,7 @@ function handleMutedVideoBackgroundColor(streamId=0, type='local'){
     if(type=='local') {
       jQuery("body #no-local-video").css('background-color', window.videoMutedBackgroundColor);
     } else {
-      jQuery("body #"+streamId+"no-video").css('background-color', window.videoMutedBackgroundColor);
+      jQuery('body #' + streamId + '_no-video').css('background-color', window.videoMutedBackgroundColor)
     }
   }
 }
