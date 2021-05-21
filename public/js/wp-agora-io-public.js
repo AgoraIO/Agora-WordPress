@@ -194,7 +194,7 @@ window.AGORA_UTILS = {
   toggleVisibility: function (elementID, visible) {
     const el = document.getElementById(elementID.replace('#', ''));
     if (el) {
-      el.style.display = visible ? "block" : "none";
+      el.style.display = visible ? "flex" : "none";
     }
   },
 
@@ -266,12 +266,18 @@ window.AGORA_UTILS = {
     });
 
     // show user icon whenever a remote has disabled their video
-    window.agoraClient.on("mute-video", function muteVideo(evt) {
+    window.agoraClient.on("mute-video", async function muteVideo(evt) {
       const remoteId = evt.uid;
+
       // if the main user stops their video select a random user from the list
-      window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
-      handleMutedVideoBackgroundColor(evt.uid, 'remote');
       handleGhostMode(evt.uid, 'remote');
+      handleMutedVideoBackgroundColor(evt.uid, 'remote');
+
+      let userAvatar = window.allStreams[remoteId].userDetails.avtar;
+      if(userAvatar!=''){
+        jQuery('body #'+ remoteId + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
+      }
+      window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
     });
 
     agoraClient.on("unmute-video", function unmuteVideo(evt) {
@@ -405,7 +411,20 @@ window.AGORA_UTILS = {
     // append the remote stream template to #remote-streams
     const streamsContainer = jQuery('#screen-users');
 
-    window.allStreams.push(remoteStream);
+    /* In case if Audience in broadcast channel*/
+    if(typeof window.allStreams=='undefined'){
+      console.log("setattStreamsVariable")
+      window.allStreams = [];
+    }
+
+    /* Set the remote stream details alongwith user avtar */
+    window.AGORA_UTILS.agora_getUserAvatar(remoteStream.getId(), function getUserAvatar(avatarData) {
+      let userAvatar = '';
+      if (avatarData && avatarData.user && avatarData.avatar) {
+        userAvatar = avatarData.avatar
+      }
+      window.allStreams[remoteStream.getId()] = {stream: remoteStream, userDetails: {avtar: userAvatar}};
+    });
 
     // avoid duplicate users in case there are errors removing old users and rejoining
     const old = streamsContainer.find(`#${streamId}_container`)
@@ -728,18 +747,19 @@ jQuery(document).ready(function(){
   setInterval(() => {
 
     /* Active speaker condition will work when there are 2 or more than 2 streams */
-    if(window.allStreams.length>1){
+    if(typeof window.allStreams!='undefined' && Object.keys(window.allStreams).length>1){
 
       /* Create array to manage the streams queue according to volume  */
       let talkingStreamsQueue = [];
 
-      window.allStreams.forEach((item, key) => {
+      Object.keys(window.allStreams).forEach(function(key) { 
+        let stream = window.allStreams[key].stream;
         let obj = {};
-        if(item.getAudioLevel()>0){
-          let audioLevel = item.getAudioLevel().toFixed(3);
-          obj[item.getId()] = audioLevel;
-          talkingStreamsQueue.push({id: parseInt(item.getId()), volume: parseFloat(audioLevel)});
-        }
+        if(stream.getAudioLevel()>0){
+          let audioLevel = stream.getAudioLevel().toFixed(3);
+          obj[stream.getId()] = audioLevel;
+          talkingStreamsQueue.push({id: parseInt(stream.getId()), volume: parseFloat(audioLevel)});
+        }   
       });
 
       talkingStreamsQueue.sort((a, b) => b.volume - a.volume);
@@ -753,7 +773,11 @@ jQuery(document).ready(function(){
       if(activeSpeakerStreamId == 0){
         jQuery('.activeSpeaker').removeClass('activeSpeaker');
       } else {
-        jQuery('body #' + activeSpeakerStreamId + '_container').addClass('activeSpeaker');
+        if(activeSpeakerStreamId == window.localStreams.camera.stream.getId()){
+          jQuery('body #local-video').addClass('activeSpeaker');
+        } else {
+          jQuery('body #' + activeSpeakerStreamId + '_container').addClass('activeSpeaker');
+        }
       }
     }
     
@@ -801,7 +825,7 @@ function handleMutedVideoBackgroundColor(streamId=0, type='local'){
     if(type=='local') {
       jQuery("body #no-local-video").css('background-color', window.videoMutedBackgroundColor);
     } else {
-      jQuery("body #"+streamId+"no-video").css('background-color', window.videoMutedBackgroundColor);
+      jQuery('body #' + streamId + '_no-video').css('background-color', window.videoMutedBackgroundColor)
     }
   }
 }

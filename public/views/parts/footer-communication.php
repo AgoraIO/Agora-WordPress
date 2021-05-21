@@ -33,13 +33,24 @@ $recordingSettings = $channelSettings['recording'];
 
         <div class="btn-separator"></div>
 
-        <div class="btn-with-title only-desktop">
+        <div class="btn-with-title only-desktop ">
     		<button id="screen-share-btn" type="button" class="btnIcon" title="<?php _e('Screen Share', 'agoraio'); ?>">
               <i id="screen-share-icon" class="fas fa-desktop"></i>
               <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none"></span>
             </button>
             <small class="btn-title"><?php _e('Share', 'agoraio') ?></small>
         </div>
+
+        <div class="btn-separator"></div>
+
+        <div class="btn-with-title toggle-switch ">
+    		<button id="viewstoggle" type="button" class="btnIcon" title="">
+               <i id="viewsIcon" i class="fas fa-th-large"></i>
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none"></span>
+            </button>
+            <small class="btn-title"><?php _e('view') ?></small>
+        </div>
+
 
         <?php if(is_array($recordingSettings) && 
             !empty($recordingSettings['bucket']) &&

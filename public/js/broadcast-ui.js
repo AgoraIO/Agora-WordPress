@@ -1,6 +1,6 @@
 window.AGORA_BROADCAST_UI = {
   // UI buttons
-  enableUiControls: function () {
+  enableUiControls: function (localStream) {
 
     jQuery("#mic-btn").prop("disabled", false);
     jQuery("#video-btn").prop("disabled", false);
@@ -169,9 +169,11 @@ window.AGORA_BROADCAST_UI = {
       window.AGORA_UTILS.toggleBtn(jQuery("#cam-dropdown"));
       if (jQuery("#video-icon").hasClass('fa-video')) {
         window.localStreams.camera.stream.muteVideo(); // enable the local video
+        window.AGORA_UTILS.toggleVisibility("#no-local-video", true); // show the user icon when video is disabled
         // console.log("muteVideo");
       } else {
         window.localStreams.camera.stream.unmuteVideo(); // disable the local video
+        window.AGORA_UTILS.toggleVisibility("#no-local-video", false); // hide the user icon when video is enabled
         // console.log("unMuteVideo");
       }
       jQuery("#video-icon").toggleClass('fa-video').toggleClass('fa-video-slash'); // toggle the video icon
