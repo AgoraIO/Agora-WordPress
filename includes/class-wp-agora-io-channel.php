@@ -315,7 +315,7 @@ class WP_Agora_Channel {
 
 
   public function ghostmode() {
-    return $this->properties['ghost_mode'];
+    return (int)$this->properties['ghost_mode'];
   }
 
   public function type() {
