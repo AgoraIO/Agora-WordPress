@@ -823,18 +823,3 @@
 .agora #big-no-video-stream{
 	height: 50vh;
 }
-
-/* Work on Grid and Speaker view */
-.screen-user-main-div{
-  width:100%;
-  height:100%;
-}
-
-.speaker-view .left-user{
-  width:50% !important;
-  height: 100vh !important;
-}
-.speaker-view .right-users{
-  width: 50% !important;
-  height: 100vh !important;
-}
