@@ -696,11 +696,13 @@ function getScreenUsersClass(){
 	return countClass;
 }
 
-function handleGhostMode(uid, streamType='local'){
+function handleGhostMode(uid, streamType='local', channelType='communication'){
   if(window.isGhostModeEnabled){
-    console.log("hnjiGhostMode",streamType)
     let oldClass = jQuery("#screen-users").attr('class');
     if(streamType == 'local'){
+      if(channelType == 'broadcast'){
+        local_stream_div_id = "#full-screen-video";
+      }
       if((!window.localStreams.camera.stream.getAudioTrack() || !window.localStreams.camera.stream.getAudioTrack().enabled)
       && (!window.localStreams.camera.stream.getVideoTrack() || !window.localStreams.camera.stream.getVideoTrack().enabled)
       ){
