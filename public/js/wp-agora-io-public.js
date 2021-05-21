@@ -103,10 +103,11 @@ function getMicDevices() {
 }
 
 
-window.videoControlsColorsUnselected = 'red';
-window.videoControlsColorsSelected = 'blue';
-window.otherButtonsColors = 'green';
-window.panelsBackgroundColor = 'black';
+window.unselectedVideoControlsButtonsColor = '';
+window.selectedVideoControlsButtonsColor = '';
+window.otherButtonsColor = '';
+window.panelsBackgroundColor = '';
+window.videoMutedBackgroundColor = '';
 
 window.AGORA_UTILS = {
 
@@ -170,21 +171,21 @@ window.AGORA_UTILS = {
 
   toggleBtn: function (btn){
     // if(!jQuery(btn).hasClass('btn-dark') && !jQuery(btn).hasClass('btn-danger')){
-    //   jQuery(btn).css('background-color', window.videoControlsColorsSelected);
+    //   jQuery(btn).css('background-color', window.selectedVideoControlsButtonsColor);
     //   // jQuery(btn).hover(function(){
-    //   //   jQuery(this).css('background-color', window.videoControlsColorsSelected);
+    //   //   jQuery(this).css('background-color', window.selectedVideoControlsButtonsColor);
     //   // });
     //   // jQuery(btn).mouseleave(function(){
-    //   //   jQuery(this).css('background-color', window.videoControlsColorsUnselected);
+    //   //   jQuery(this).css('background-color', window.unselectedVideoControlsButtonsColor);
     //   // });
     // } else {
-    //   jQuery(btn).css('background-color', window.videoControlsColorsUnselected);
+    //   jQuery(btn).css('background-color', window.unselectedVideoControlsButtonsColor);
     // }
 
-    if(jQuery(btn).hasClass('btn-dark') || jQuery(btn).hasClass('btn-danger')){
-      jQuery(btn).css('background-color', window.videoControlsColorsUnselected);
-    } else {
-      jQuery(btn).css('background-color', window.videoControlsColorsSelected);
+    if(window.unselectedVideoControlsButtonsColor!="" && jQuery(btn).hasClass('btn-dark') || jQuery(btn).hasClass('btn-danger')){
+      jQuery(btn).css('background-color', window.unselectedVideoControlsButtonsColor);
+    } else if(window.selectedVideoControlsButtonsColor!="") {
+      jQuery(btn).css('background-color', window.selectedVideoControlsButtonsColor);
     }
 
     btn.toggleClass('btn-dark').toggleClass('btn-danger');
@@ -255,6 +256,7 @@ window.AGORA_UTILS = {
     // show mute icon whenever a remote has muted their mic
     window.agoraClient.on("mute-audio", function muteAudio(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', true);
+      handleMutedVideoBackgroundColor(evt.uid, 'remote');
       handleGhostMode(evt.uid, 'remote');
     });
 
@@ -268,6 +270,7 @@ window.AGORA_UTILS = {
       const remoteId = evt.uid;
       // if the main user stops their video select a random user from the list
       window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
+      handleMutedVideoBackgroundColor(evt.uid, 'remote');
       handleGhostMode(evt.uid, 'remote');
     });
 
@@ -402,19 +405,14 @@ window.AGORA_UTILS = {
     // append the remote stream template to #remote-streams
     const streamsContainer = jQuery('#screen-users');
 
-    const right_users_div = jQuery('#screen-users .right-users');
-    if(right_users_div.length == 0){
-      jQuery('<div class="right-users user"></div>').insertAfter("#screen-users .left-user");
-    }
-
     window.allStreams.push(remoteStream);
 
     // avoid duplicate users in case there are errors removing old users and rejoining
     const old = streamsContainer.find(`#${streamId}_container`)
     if (old && old[0]) { old[0].remove() }
 
-    right_users_div.append(
-      jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container screen-user-main-div'}).append(
+    streamsContainer.append(
+      jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container'}).append(
         jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
             jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
         ),
@@ -763,8 +761,47 @@ jQuery(document).ready(function(){
 });
 /* End Handle Active Speaker */
 
+/* Function to set Global colors from admin settings */
 jQuery(document).ready(function(){
-  jQuery('.btnIcon:not(.other-buttons)').css('background-color', window.videoControlsColorsUnselected);
-  jQuery('.panel-background-color').css('background-color', window.panelsBackgroundColor);
-  jQuery('.other-buttons').css({'border': 'none', 'background-color': window.otherButtonsColors});
+
+  const params = {action: 'get_global_colors'};
+
+  window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
+    console.log('Query:', res);
+    if(typeof res.global_colors!='undefined' && res.global_colors!=null){
+      console.log("glalSettings", res.global_settings)
+      const global_colors = res.global_colors;
+      if(typeof global_colors.backgroundColorPanels!='undefined' && global_colors.backgroundColorPanels!=""){
+        window.panelsBackgroundColor = global_colors.backgroundColorPanels; 
+        jQuery('.panel-background-color').css('background-color', window.panelsBackgroundColor);
+      }
+      if(typeof global_colors.otherButtonsColor!='undefined' && global_colors.otherButtonsColor!=""){
+        window.otherButtonsColor = global_colors.otherButtonsColor;
+        jQuery('.other-buttons').css({'border': 'none', 'background-color': window.otherButtonsColor});
+      }
+      if(typeof global_colors.selectedVideoControlsButtonsColor!='undefined' && global_colors.selectedVideoControlsButtonsColor!=""){
+        window.selectedVideoControlsButtonsColor = global_colors.selectedVideoControlsButtonsColor;
+      }
+      if(typeof global_colors.unselectedVideoControlsButtonsColor!='undefined' && global_colors.unselectedVideoControlsButtonsColor!=""){
+        window.unselectedVideoControlsButtonsColor = global_colors.unselectedVideoControlsButtonsColor;
+        jQuery('.btnIcon:not(.other-buttons)').css('background-color', window.unselectedVideoControlsButtonsColor);
+      }
+      if(typeof global_colors.backgroundColorVideoMuted!='undefined' && global_colors.backgroundColorVideoMuted!=""){
+        window.videoMutedBackgroundColor = global_colors.backgroundColorVideoMuted;
+      }
+    }
+  }).fail(function(err) {
+    console.error('API Error:',err);
+  })
 });
+
+/* Function to handle background color for Muted Video */
+function handleMutedVideoBackgroundColor(streamId=0, type='local'){
+  if(window.videoMutedBackgroundColor!=""){
+    if(type=='local') {
+      jQuery("body #no-local-video").css('background-color', window.videoMutedBackgroundColor);
+    } else {
+      jQuery("body #"+streamId+"no-video").css('background-color', window.videoMutedBackgroundColor);
+    }
+  }
+}

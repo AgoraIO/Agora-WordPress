@@ -14,10 +14,10 @@ window.AGORA_SCREENSHARE_UTILS = {
 
   toggleScreenShareBtn: function () {
 
-    if(jQuery('#screen-share-btn').hasClass('btn-danger')){
-      jQuery('#screen-share-btn').css('background-color', window.videoControlsColorsUnselected);
-    } else {
-      jQuery('#screen-share-btn').css('background-color', window.videoControlsColorsSelected);
+    if(window.unselectedVideoControlsButtonsColor!="" && jQuery('#screen-share-btn').hasClass('btn-danger')){
+      jQuery('#screen-share-btn').css('background-color', window.unselectedVideoControlsButtonsColor);
+    } else if(window.selectedVideoControlsButtonsColor!="") {
+      jQuery('#screen-share-btn').css('background-color', window.selectedVideoControlsButtonsColor);
     }
 
     jQuery('#screen-share-btn').toggleClass('btn-danger');

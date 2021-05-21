@@ -122,6 +122,7 @@ window.AGORA_COMMUNICATION_UI = {
 
     if (!localStream.userMuteVideo) {
       localStream.muteVideo(); // disable the local video
+      handleMutedVideoBackgroundColor(localStream.getId(), 'local');
       window.AGORA_UTILS.toggleVisibility("#no-local-video", true); // show the user icon when video is disabled
     } else {
       localStream.unmuteVideo(); // enable the local video
