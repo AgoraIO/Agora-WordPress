@@ -245,7 +245,6 @@ window.AGORA_UTILS = {
     // show mute icon whenever a remote has muted their mic
     window.agoraClient.on("mute-audio", function muteAudio(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', true);
-      handleMutedVideoBackgroundColor(evt.uid, 'remote');
       handleGhostMode(evt.uid, 'remote');
     });
 
