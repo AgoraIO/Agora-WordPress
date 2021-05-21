@@ -65,7 +65,7 @@ class WP_Agora_Public {
 		$agora_options = get_option($this->plugin_name);
 
 		header('Content-Type: application/json');
-		echo json_encode(array( "global_colors" => $agora_options ));
+		echo json_encode(array( "global_colors" => $agora_options['global_colors'] ));
 
 		wp_die();
 	}

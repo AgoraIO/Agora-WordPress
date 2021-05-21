@@ -228,7 +228,6 @@ class WP_Agora_Admin {
 
 	public function include_agora_settings_page() {
 		$agora_options = get_option($this->plugin_name);
-		//echo '<pre>';print_r($agora_options); echo '</pre>';die;
 		include_once('views/agora-admin-settings.php');
 	}
 
