@@ -208,7 +208,7 @@ class WP_Agora_Channel {
       'settings' => array_merge(self::$defaultVideoSettings),
       'appearance' => array_merge(self::$defaultAppearanceSettings),
       'recording' => array_merge(self::$defaultRecordingSettings),
-      'chat_support_loggedin' => '',
+      'chat_support_loggedin' => 0,
       'ghost_mode' => 0,
     ) );
     $properties = (array) apply_filters( 'agoraio_channel_properties', $properties, $this );
