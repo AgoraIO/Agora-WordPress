@@ -405,6 +405,11 @@ window.AGORA_UTILS = {
     // append the remote stream template to #remote-streams
     const streamsContainer = jQuery('#screen-users');
 
+    /* In case if Audience in broadcast channel*/
+    if(typeof window.allStreams=='undefined'){
+      console.log("setattStreamsVariable")
+      window.allStreams = [];
+    }
     window.allStreams.push(remoteStream);
 
     // avoid duplicate users in case there are errors removing old users and rejoining
@@ -728,7 +733,7 @@ jQuery(document).ready(function(){
   setInterval(() => {
 
     /* Active speaker condition will work when there are 2 or more than 2 streams */
-    if(window.allStreams.length>1){
+    if(typeof window.allStreams!='undefined' && window.allStreams.length>1){
 
       /* Create array to manage the streams queue according to volume  */
       let talkingStreamsQueue = [];
