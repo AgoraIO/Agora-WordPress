@@ -145,7 +145,17 @@ function createCameraStream(uid, next) {
         window.AGORA_COMMUNICATION_UI.enableUiControls(localStream); // move after testing
         window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
 
-        window.allStreams.push(localStream);
+        //window.allStreams.push(localStream);
+        window.AGORA_UTILS.agora_getUserAvatar(localStream.getId(), function getUserAvatar(avatarData) {
+          let userAvatar = '';
+          if (avatarData && avatarData.user && avatarData.avatar) {
+            userAvatar = avatarData.avatar
+          }
+          if(userAvatar!=''){
+            jQuery('body #no-local-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
+          }
+          window.allStreams[localStream.getId()] = {stream: localStream, userDetails: {avtar: userAvatar}};
+        });
 
         cb && cb(null)
       } catch(ex) {

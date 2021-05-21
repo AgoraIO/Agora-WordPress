@@ -270,19 +270,14 @@ window.AGORA_UTILS = {
       const remoteId = evt.uid;
 
       // if the main user stops their video select a random user from the list
-      window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
       handleGhostMode(evt.uid, 'remote');
       handleMutedVideoBackgroundColor(evt.uid, 'remote');
 
-      window.AGORA_UTILS.agora_getUserAvatar(remoteId, function getUserAvatar(avatarData) {
-        let userAvatar = '';
-        if (avatarData && avatarData.user && avatarData.avatar) {
-          userAvatar = avatarData.avatar
-        }
-        if(userAvatar!=''){
-          jQuery('body #'+ remoteId + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
-        }
-      });
+      let userAvatar = window.allStreams[remoteId].userDetails.avtar;
+      if(userAvatar!=''){
+        jQuery('body #'+ remoteId + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
+      }
+      window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
     });
 
     agoraClient.on("unmute-video", function unmuteVideo(evt) {
@@ -421,7 +416,16 @@ window.AGORA_UTILS = {
       console.log("setattStreamsVariable")
       window.allStreams = [];
     }
-    window.allStreams.push(remoteStream);
+    //window.allStreams.push(remoteStream);
+
+    /* Set the remote stream details alongwith user avtar */
+    window.AGORA_UTILS.agora_getUserAvatar(remoteStream.getId(), function getUserAvatar(avatarData) {
+      let userAvatar = '';
+      if (avatarData && avatarData.user && avatarData.avatar) {
+        userAvatar = avatarData.avatar
+      }
+      window.allStreams[remoteStream.getId()] = {stream: remoteStream, userDetails: {avtar: userAvatar}};
+    });
 
     // avoid duplicate users in case there are errors removing old users and rejoining
     const old = streamsContainer.find(`#${streamId}_container`)
@@ -744,18 +748,28 @@ jQuery(document).ready(function(){
   setInterval(() => {
 
     /* Active speaker condition will work when there are 2 or more than 2 streams */
-    if(typeof window.allStreams!='undefined' && window.allStreams.length>1){
+    if(typeof window.allStreams!='undefined' && Object.keys(window.allStreams).length>1){
 
       /* Create array to manage the streams queue according to volume  */
       let talkingStreamsQueue = [];
 
-      window.allStreams.forEach((item, key) => {
+      // window.allStreams.forEach((item, key) => {
+      //   let obj = {};
+      //   if(item.stream.getAudioLevel()>0){
+      //     let audioLevel = item.stream.getAudioLevel().toFixed(3);
+      //     obj[item.stream.getId()] = audioLevel;
+      //     talkingStreamsQueue.push({id: parseInt(item.stream.getId()), volume: parseFloat(audioLevel)});
+      //   }
+      // });
+
+      Object.keys(window.allStreams).forEach(function(key) { 
+        let stream = window.allStreams[key].stream;
         let obj = {};
-        if(item.getAudioLevel()>0){
-          let audioLevel = item.getAudioLevel().toFixed(3);
-          obj[item.getId()] = audioLevel;
-          talkingStreamsQueue.push({id: parseInt(item.getId()), volume: parseFloat(audioLevel)});
-        }
+        if(stream.getAudioLevel()>0){
+          let audioLevel = stream.getAudioLevel().toFixed(3);
+          obj[stream.getId()] = audioLevel;
+          talkingStreamsQueue.push({id: parseInt(stream.getId()), volume: parseFloat(audioLevel)});
+        }   
       });
 
       talkingStreamsQueue.sort((a, b) => b.volume - a.volume);
@@ -769,7 +783,11 @@ jQuery(document).ready(function(){
       if(activeSpeakerStreamId == 0){
         jQuery('.activeSpeaker').removeClass('activeSpeaker');
       } else {
-        jQuery('body #' + activeSpeakerStreamId + '_container').addClass('activeSpeaker');
+        if(activeSpeakerStreamId == window.localStreams.camera.stream.getId()){
+          jQuery('body #local-video').addClass('activeSpeaker');
+        } else {
+          jQuery('body #' + activeSpeakerStreamId + '_container').addClass('activeSpeaker');
+        }
       }
     }
     
