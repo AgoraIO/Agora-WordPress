@@ -75,9 +75,11 @@ if (array_key_exists("chat_support_loggedin", $channelSettings) && $channelSetti
             if (isset($agora->settings['agora-chat-loggedin']) && $agora->settings['agora-chat-loggedin']==='enabled'){  
                 $enableChat = true;
             } 
-            if($chat_support_loggedin == 0){
-                $enableChat = false;
-            }
+            if(is_user_logged_in()){ //if user is logged in then we will check channel specific condition.
+                if($chat_support_loggedin == 0){
+                     $enableChat = false;
+                }
+            } 
         ?>
 		<div class="btn-separator"></div>
         <div class="btn-with-title">
