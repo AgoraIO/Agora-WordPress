@@ -1,6 +1,10 @@
 <?php
 // $channelSettings is defined on the parent contianer of this file
 $recordingSettings = $channelSettings['recording'];
+$chat_support_loggedin = 0;
+if (array_key_exists("chat_support_loggedin", $channelSettings) && $channelSettings['chat_support_loggedin'] == 1) {
+    $chat_support_loggedin = 1;
+}
 ?>
 <footer class="agora-footer panel-background-color">
 	<div class="buttons-bottom">
@@ -65,8 +69,16 @@ $recordingSettings = $channelSettings['recording'];
         <?php endif; ?>
 
         <?php $enableChat = false; ?>
-        <?php if (isset($agora->settings['agora-chat']) && $agora->settings['agora-chat']==='enabled') : ?>
-            <?php $enableChat = true; ?>
+        <?php //if (isset($agora->settings['agora-chat']) && $agora->settings['agora-chat']==='enabled') : ?>
+            <?php //$enableChat = true; ?>
+        <?php 
+            if (isset($agora->settings['agora-chat-loggedin']) && $agora->settings['agora-chat-loggedin']==='enabled'){  
+                $enableChat = true;
+            } 
+            if($chat_support_loggedin == 0){
+                $enableChat = false;
+            }
+        ?>
 		<div class="btn-separator"></div>
         <div class="btn-with-title">
             <button id="chat-btn" class="btnIcon open-chat" title="<?php _e('Open Chat', 'agoraio'); ?>" type="button">
