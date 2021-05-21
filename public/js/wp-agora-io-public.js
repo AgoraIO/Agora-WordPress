@@ -256,6 +256,7 @@ window.AGORA_UTILS = {
     // show mute icon whenever a remote has muted their mic
     window.agoraClient.on("mute-audio", function muteAudio(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', true);
+      handleMutedVideoBackgroundColor(evt.uid, 'remote');
       handleGhostMode(evt.uid, 'remote');
     });
 
@@ -269,6 +270,7 @@ window.AGORA_UTILS = {
       const remoteId = evt.uid;
       // if the main user stops their video select a random user from the list
       window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
+      handleMutedVideoBackgroundColor(evt.uid, 'remote');
       handleGhostMode(evt.uid, 'remote');
     });
 
@@ -759,6 +761,7 @@ jQuery(document).ready(function(){
 });
 /* End Handle Active Speaker */
 
+/* Function to set Global colors from admin settings */
 jQuery(document).ready(function(){
 
   const params = {action: 'get_global_colors'};
@@ -790,11 +793,15 @@ jQuery(document).ready(function(){
   }).fail(function(err) {
     console.error('API Error:',err);
   })
-  // jQuery('.btnIcon:not(.other-buttons)').css('background-color', window.unselectedVideoControlsButtonsColor);
-  // jQuery('.panel-background-color').css('background-color', window.panelsBackgroundColor);
-  // jQuery('.other-buttons').css({'border': 'none', 'background-color': window.otherButtonsColor});
-
-  // jQuery('.btnIcon:not(.other-buttons)').css('background-color', window.unselectedVideoControlsButtonsColor);
-  // jQuery('.panel-background-color').css('background-color', window.panelsBackgroundColor);
-  // jQuery('.other-buttons').css({'border': 'none', 'background-color': window.otherButtonsColor});
 });
+
+/* Function to handle background color for Muted Video */
+function handleMutedVideoBackgroundColor(streamId=0, type='local'){
+  if(window.videoMutedBackgroundColor!=""){
+    if(type=='local') {
+      jQuery("body #no-local-video").css('background-color', window.videoMutedBackgroundColor);
+    } else {
+      jQuery("body #"+streamId+"no-video").css('background-color', window.videoMutedBackgroundColor);
+    }
+  }
+}
