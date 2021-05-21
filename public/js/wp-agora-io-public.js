@@ -741,6 +741,8 @@ jQuery(document).ready(function(){
   const THRESHOLD_AUDIO_LEVEL = 0.1;
   setInterval(() => {
 
+    window.allStreams = Object.fromEntries(Object.entries(window.allStreams).filter(([_, v]) => v != null));
+
     /* Active speaker condition will work when there are 2 or more than 2 streams */
     if(typeof window.allStreams!='undefined' && Object.keys(window.allStreams).length>1){
 
