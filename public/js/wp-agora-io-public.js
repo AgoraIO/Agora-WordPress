@@ -194,7 +194,7 @@ window.AGORA_UTILS = {
   toggleVisibility: function (elementID, visible) {
     const el = document.getElementById(elementID.replace('#', ''));
     if (el) {
-      el.style.display = visible ? "block" : "none";
+      el.style.display = visible ? "flex" : "none";
     }
   },
 
