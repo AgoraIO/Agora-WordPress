@@ -829,5 +829,5 @@
   /*----------------need--to -add display-flex-in  inline-css-----------------*/
   
   /****************mike*mute*overlay*end******************/
-  .user .mute-overlay {  position: absolute;  z-index: 2;  top: 22px;  left: calc(50% - 14px);  font-size: 1.5em;  padding: 2px 0 0 2px;  display: none;  left: 20px;}
+  .user .mute-overlay {  position: absolute;  z-index: 2;    left: calc(50% - 14px);  font-size: 1.5em;  padding: 2px 0 0 2px;  display: none; }
   /****************video*mute*overlay*end******************/
