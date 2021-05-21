@@ -150,6 +150,7 @@ function agora_render_setting_row($id, $title, $settings, $prefix, $inputType="n
       <div id="postbox-container-3" class="postbox-container">
         <?php do_action( 'agoraio_channel_form_recording', $post ); ?>
         <?php do_action( 'agoraio_channel_form_chat_support', $post ); ?>
+        <?php do_action( 'agoraio_channel_form_ghost_mode', $post ); ?>
 
         <p class="submit"><?php agoraio_admin_save_button( $post_id ); ?></p>
       </div>
@@ -372,29 +373,39 @@ function render_agoraio_channel_form_appearance($channel) {
 // Metabox content for Chat support tab
 function render_agoraio_channel_form_chat_support($channel) {
   $props = $channel->get_properties();
-  $appearance = $props['appearance'];
+  $ChatSupportloggedin = $props['chat_support_loggedin'];
   ?>
   <table class="form-table">
-    
-    <tr>
-      <th scope="row"><label for="activeButtonColor"><?php _e('Agora Chat for logged in users', 'agoraio') ?></label></th>
-      <td>
-      <?php
-        $value = '';
-        $chatCheck = $value==='enabled' ? 'checked' : '';
-        ?>
-        <div class="col value" data-masked="true">
-          <label class="switch">
-            <input type="checkbox" <?php echo $chatCheck ?> id="agora-chat-check-loggedin" value="chat-enabled-loggedin">
-            <span class="slider round"></span>
-          </label>
-          <span id="chat-status-text-loggedin"
-           data-enabled="<?php _e('enabled', 'agoraio'); ?>"
-           data-disabled="<?php _e('disabled', 'agoraio') ?>"></span>
-        </div>
-      </td>
-    </tr>
-  
+  <?php agora_render_setting_row_select(
+      'chat_support_loggedin',
+      __('Enable', 'agoraio'),
+      array(
+        '' => __('Select', 'agoraio'),
+        1 => __('Yes', 'agoraio'),
+        0 => __('No', 'agoraio')
+      ), $ChatSupportloggedin, '');
+   ?>
+     
+  </table>
+  <?php
+}
+
+// Metabox content for Ghost Mode tab
+function render_agoraio_channel_form_ghost_mode($channel) {
+  $props = $channel->get_properties(); 
+  $GhostMode = $props['ghost_mode'];
+  ?>
+  <table class="form-table">
+  <?php agora_render_setting_row_select(
+      'ghost_mode',
+      __('Enable', 'agoraio'),
+      array(
+        '' => __('Select', 'agoraio'),
+        1 => __('Yes', 'agoraio'),
+        0 => __('No', 'agoraio')
+      ), $GhostMode, '');
+   ?>
+     
   </table>
   <?php
 }

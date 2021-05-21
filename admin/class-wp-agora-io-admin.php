@@ -48,7 +48,6 @@ class WP_Agora_Admin {
 			$value = $_POST[$key];
 		}
 		
-
 		$options = get_option($this->plugin_name);
 		$old_value = $options;
 
@@ -57,16 +56,19 @@ class WP_Agora_Admin {
 		}
 		$options[$key] = $value;
 
-		$r = false;
-		if (!$old_value) {
-			$r = add_option( $this->plugin_name, $options);
+		$r = false; 
+		if (!$old_value) { 
+			//echo '<pre>';print_r($this->plugin_name); echo '</pre>';die;
+			$r = update_option( $this->plugin_name, $options);
+			
 		} else {
 			// $r = update_option($this->plugin_name, $options);
 			$serialized_value = maybe_serialize( $options );
-			$update_args = array(
-	      'option_value' => $serialized_value,
-	    );
-	    $r = $wpdb->update(
+				$update_args = array(
+			'option_value' => $serialized_value,
+			);
+			
+	    	$r = $wpdb->update(
 					$wpdb->options,
 					$update_args,
 					array( 'option_name' => $this->plugin_name ) );
@@ -169,10 +171,20 @@ class WP_Agora_Admin {
     	'agora_chat_support'
     );
 
+    // Ghost Mode metabox
+    add_meta_box(
+    	'agora-ghost-mode',
+    	__('Ghost Mode', 'agoraio'),
+    	'render_agoraio_channel_form_ghost_mode',
+    	null,
+    	'agora_ghost_mode'
+    );
+
 		add_action( 'agoraio_channel_form_settings', array($this, 'handle_channel_form_metabox_settings'), 10, 1 );
 		add_action( 'agoraio_channel_form_appearance', array($this, 'handle_channel_form_metabox_appearance'), 10, 1 );
 		add_action( 'agoraio_channel_form_recording', array($this, 'handle_channel_form_metabox_recording'), 10, 1 );
 		add_action( 'agoraio_channel_form_chat_support', array($this, 'handle_channel_form_chat_support'), 10, 1 );
+		add_action( 'agoraio_channel_form_ghost_mode', array($this, 'handle_channel_form_ghost_mode'), 10, 1 );
 	}
 
 	public function include_agora_new_channel_page() {
@@ -226,9 +238,15 @@ class WP_Agora_Admin {
 		unset( $wp_meta_boxes['post']['agora_chat_support'] );
 	}
 
+	public function handle_channel_form_ghost_mode($channel) {
+		global $wp_meta_boxes;
+
+		do_meta_boxes( get_current_screen(), 'agora_ghost_mode', $channel );
+		unset( $wp_meta_boxes['post']['agora_ghost_mode'] );
+	}
+
 	public function include_agora_settings_page() {
 		$agora_options = get_option($this->plugin_name);
-		echo '<pre>';print_r($agora_options); echo '</pre>';
 		include_once('views/agora-admin-settings.php');
 	}
 

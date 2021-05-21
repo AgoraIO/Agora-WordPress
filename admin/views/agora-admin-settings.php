@@ -20,7 +20,7 @@
                 name="unselectedVideoControlsButtonsColor"
                 type="text"
                 class="agora-color-picker inputBoxGS"
-                value="<?php echo $agora_options['globalColors']['unselectedVideoControlsButtonsColor'] ?>"
+                value="<?php echo $agora_options['global_colors']['unselectedVideoControlsButtonsColor'] ?>"
                 data-default-color="#1E73BE">
             </td>
           </tr>
@@ -32,7 +32,7 @@
                 name="selectedVideoControlsButtonsColor"
                 type="text"
                 class="agora-color-picker inputBoxGS"
-                value="<?php echo $agora_options['globalColors']['selectedVideoControlsButtonsColor'] ?>"
+                value="<?php echo $agora_options['global_colors']['selectedVideoControlsButtonsColor'] ?>"
                 data-default-color="#1E73BE">
             </td>
           </tr>
@@ -44,7 +44,7 @@
                 name="otherButtonsColor"
                 type="text"
                 class="agora-color-picker inputBoxGS"
-                value="<?php echo $agora_options['globalColors']['otherButtonsColor'] ?>"
+                value="<?php echo $agora_options['global_colors']['otherButtonsColor'] ?>"
                 data-default-color="#ffffff">
             </td>
           </tr>
@@ -56,7 +56,7 @@
                 name="backgroundColorVideoMuted"
                 type="text"
                 class="agora-color-picker inputBoxGS"
-                value="<?php echo $agora_options['globalColors']['backgroundColorVideoMuted'] ?>"
+                value="<?php echo $agora_options['global_colors']['backgroundColorVideoMuted'] ?>"
                 data-default-color="#ffffff">
             </td>
           </tr>
@@ -68,7 +68,7 @@
                 name="backgroundColorPanels"
                 type="text"
                 class="agora-color-picker inputBoxGS"
-                value="<?php echo $agora_options['globalColors']['backgroundColorPanels'] ?>"
+                value="<?php echo $agora_options['global_colors']['backgroundColorPanels'] ?>"
                 data-default-color="#ffffff">
             </td>
           </tr>
