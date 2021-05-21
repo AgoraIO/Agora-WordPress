@@ -266,12 +266,23 @@ window.AGORA_UTILS = {
     });
 
     // show user icon whenever a remote has disabled their video
-    window.agoraClient.on("mute-video", function muteVideo(evt) {
+    window.agoraClient.on("mute-video", async function muteVideo(evt) {
       const remoteId = evt.uid;
+
       // if the main user stops their video select a random user from the list
       window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
-      handleMutedVideoBackgroundColor(evt.uid, 'remote');
       handleGhostMode(evt.uid, 'remote');
+      handleMutedVideoBackgroundColor(evt.uid, 'remote');
+
+      window.AGORA_UTILS.agora_getUserAvatar(remoteId, function getUserAvatar(avatarData) {
+        let userAvatar = '';
+        if (avatarData && avatarData.user && avatarData.avatar) {
+          userAvatar = avatarData.avatar
+        }
+        if(userAvatar!=''){
+          jQuery('body #'+ remoteId + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
+        }
+      });
     });
 
     agoraClient.on("unmute-video", function unmuteVideo(evt) {
