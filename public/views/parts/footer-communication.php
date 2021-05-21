@@ -80,6 +80,7 @@ if (array_key_exists("chat_support_loggedin", $channelSettings) && $channelSetti
                      $enableChat = false;
                 }
             } 
+            if($enableChat===true){
         ?>
 		<div class="btn-separator"></div>
         <div class="btn-with-title">
@@ -89,7 +90,7 @@ if (array_key_exists("chat_support_loggedin", $channelSettings) && $channelSetti
             </button>
             <small class="btn-title"><?php _e('Chat', 'agoraio') ?></small>
         </div>
-        <?php endif; ?>
+        <?php } ?>
 
         <div class="btn-with-title">
             <button id="exit-btn-footer" class="btnIcon btn-danger only-mobile" type="button">
