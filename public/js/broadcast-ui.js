@@ -1,6 +1,6 @@
 window.AGORA_BROADCAST_UI = {
   // UI buttons
-  enableUiControls: function () {
+  enableUiControls: function (localStream) {
 
     jQuery("#mic-btn").prop("disabled", false);
     jQuery("#video-btn").prop("disabled", false);
