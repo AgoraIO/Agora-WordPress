@@ -800,8 +800,14 @@
 
 /* Active Speaker */
 .activeSpeaker{
-  border: 2px solid red;
+  animation: myVoice 3s infinite;
+  border:1px solid red;
 }
+@keyframes myVoice {
+  from {border-color: #fff;}
+  to {border-color: #ff0000;}
+}
+
 
 
 #big-no-video-stream .no-video-overlay{
