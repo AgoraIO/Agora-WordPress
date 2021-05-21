@@ -171,8 +171,18 @@ class WP_Agora_Channel {
       $recordingSettings = get_post_meta( $this->id, 'channel_recording_settings', true );
       $channelType = get_post_meta( $this->id, 'channel_type', true );
       $channelUserHost = get_post_meta( $this->id, 'channel_user_host', true );
-      $ChatSupportloggedin = get_post_meta( $this->id, 'chat_support_loggedin', true );
-      $GhostMode = get_post_meta( $this->id, 'ghost_mode', true );
+      
+      if(get_post_meta( $this->id, 'ghost_mode', true )){
+        $GhostMode = get_post_meta( $this->id, 'ghost_mode', true );
+      }else{
+        $GhostMode = 0;
+      }
+      if(get_post_meta( $this->id, 'chat_support_loggedin', true )){
+        $ChatSupportloggedin = get_post_meta( $this->id, 'chat_support_loggedin', true );
+      }else{
+        $ChatSupportloggedin = 0;
+      }
+      
 
       $this->properties = array(
         'type' => $channelType,
@@ -199,7 +209,7 @@ class WP_Agora_Channel {
       'appearance' => array_merge(self::$defaultAppearanceSettings),
       'recording' => array_merge(self::$defaultRecordingSettings),
       'chat_support_loggedin' => '',
-      'ghost_mode' => '',
+      'ghost_mode' => 0,
     ) );
     $properties = (array) apply_filters( 'agoraio_channel_properties', $properties, $this );
     return $properties;
@@ -301,6 +311,11 @@ class WP_Agora_Channel {
 
   public function title() {
     return $this->title;
+  }
+
+
+  public function ghostmode() {
+    return $this->properties['ghost_mode'];
   }
 
   public function type() {
