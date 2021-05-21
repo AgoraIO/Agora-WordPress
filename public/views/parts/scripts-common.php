@@ -7,7 +7,7 @@
   window.agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
   window.channelName = '<?php echo $channel->title() ?>'; // set channel name
   window.channelId = '<?php echo $channel->id() ?>'; // set channel id
-  window.isGhostModeEnabled = '<?php echo $channel->ghostmode() ?>'; // set channel name
+  window.isGhostModeEnabled = '<?php echo $channel->ghostmode() ?>'; // set channel ghost mode
   if(window.isGhostModeEnabled == "0"){
     window.isGhostModeEnabled = false;
   }else{
