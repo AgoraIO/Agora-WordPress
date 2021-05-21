@@ -247,6 +247,11 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
 
       // show user icon whenever a remote has disabled their video
       window.agoraClient.on("mute-video", function (evt) {
+        handleMutedVideoBackgroundColor(evt.uid, 'remote');
+        let userAvatar = window.allStreams[evt.uid].userDetails.avtar;
+        if(userAvatar!=''){
+          jQuery('body #'+ evt.uid + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
+        }
         window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', true);
       });
 
