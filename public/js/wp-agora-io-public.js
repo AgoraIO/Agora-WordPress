@@ -398,7 +398,7 @@ window.AGORA_UTILS = {
     console.log('Adding remote to main view:', streamId);
     // append the remote stream template to #remote-streams
 
-    /* In case of speaker view */
+    /* Incase of speaker view */
     if(jQuery('#screen-users').length==0){
       jQuery('body #screen-zone').append('<div id="screen-users"></div>');
     }
@@ -419,8 +419,6 @@ window.AGORA_UTILS = {
       }
       window.allStreams[remoteStream.getId()] = {stream: remoteStream, userDetails: {avtar: userAvatar}};
     });
-
-    streamsContainer.append('hlwhnji');
 
     // avoid duplicate users in case there are errors removing old users and rejoining
     const old = streamsContainer.find(`#${streamId}_container`)
