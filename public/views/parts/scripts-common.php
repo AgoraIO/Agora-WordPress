@@ -13,6 +13,15 @@
   }else{
     window.isGhostModeEnabled = true;
   }
+
+  window.isSpeakerView = '<?php echo $channel->channellayout() ?>';
+
+  if(window.isSpeakerView == 'speaker'){
+    window.isSpeakerView = true;
+  } else {
+    window.isSpeakerView = false;
+  }
+  
   window.userID = parseInt(`${<?php echo $current_user->ID; ?>}`, 10);
   <?php if ($current_user->ID > 0) : ?>
   window.wp_username = '<?php echo $current_user->data->display_name; ?>';
