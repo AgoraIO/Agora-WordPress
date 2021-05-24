@@ -898,3 +898,8 @@
     }
   }
     /****************active*speaker*end****************/
+      /*-----------------------click-to-unmute----------------------------------*/
+    .user  .resume-userclick {  position: absolute; z-index: 99;  display: inline-block;   background-color: #00000047;  padding: .5rem .8rem;
+      border-radius: 25px;  left: 3%;   color: #fff;   top: 4%;  font-size: .7rem;
+  }
+     /*-----------------------click-to-unmute-ends---------------------------------*/
