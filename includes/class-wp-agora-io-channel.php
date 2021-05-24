@@ -328,7 +328,7 @@ class WP_Agora_Channel {
   }
 
   public function channellayout() {
-    return (int)$this->properties['channel_layout'];
+    return $this->properties['channel_layout'];
   }
 
   public function type() {
