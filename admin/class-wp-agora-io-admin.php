@@ -165,14 +165,14 @@ class WP_Agora_Admin {
     // Chat metabox
     add_meta_box(
     	'agora-form-chat',
-    	__('Chat support for logged in users', 'agoraio'),
+    	__('Settings', 'agoraio'),
     	'render_agoraio_channel_form_chat_support',
     	null,
     	'agora_chat_support'
     );
 
     // Ghost Mode metabox
-    add_meta_box(
+    /*add_meta_box(
     	'agora-ghost-mode',
     	__('Ghost Mode', 'agoraio'),
     	'render_agoraio_channel_form_ghost_mode',
@@ -180,11 +180,21 @@ class WP_Agora_Admin {
     	'agora_ghost_mode'
     );
 
+    // Layout metabox
+    add_meta_box(
+    	'agora-layout',
+    	__('Layout', 'agoraio'),
+    	'render_agoraio_channel_form_layout',
+    	null,
+    	'agora_layout'
+    );*/
+
 		add_action( 'agoraio_channel_form_settings', array($this, 'handle_channel_form_metabox_settings'), 10, 1 );
 		add_action( 'agoraio_channel_form_appearance', array($this, 'handle_channel_form_metabox_appearance'), 10, 1 );
 		add_action( 'agoraio_channel_form_recording', array($this, 'handle_channel_form_metabox_recording'), 10, 1 );
 		add_action( 'agoraio_channel_form_chat_support', array($this, 'handle_channel_form_chat_support'), 10, 1 );
-		add_action( 'agoraio_channel_form_ghost_mode', array($this, 'handle_channel_form_ghost_mode'), 10, 1 );
+		//add_action( 'agoraio_channel_form_ghost_mode', array($this, 'handle_channel_form_ghost_mode'), 10, 1 );
+		//add_action( 'agoraio_channel_form_layout', array($this, 'handle_channel_form_layout'), 10, 1 );
 	}
 
 	public function include_agora_new_channel_page() {
@@ -238,12 +248,19 @@ class WP_Agora_Admin {
 		unset( $wp_meta_boxes['post']['agora_chat_support'] );
 	}
 
-	public function handle_channel_form_ghost_mode($channel) {
+	/*public function handle_channel_form_ghost_mode($channel) {
 		global $wp_meta_boxes;
 
 		do_meta_boxes( get_current_screen(), 'agora_ghost_mode', $channel );
 		unset( $wp_meta_boxes['post']['agora_ghost_mode'] );
 	}
+
+	public function handle_channel_form_layout($channel) {
+		global $wp_meta_boxes;
+
+		do_meta_boxes( get_current_screen(), 'agora_layout', $channel );
+		unset( $wp_meta_boxes['post']['agora_layout'] );
+	}*/
 
 	public function include_agora_settings_page() {
 		$agora_options = get_option($this->plugin_name);
