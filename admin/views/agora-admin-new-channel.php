@@ -404,47 +404,55 @@ function render_agoraio_channel_form_chat_support($channel) {
         'speaker' => __('Speaker View', 'agoraio')
       ), $props, '');
    ?>
-  </table>
-  <?php
-}
-
-// Metabox content for Ghost Mode tab
-function render_agoraio_channel_form_ghost_mode($channel) {
-  $props = $channel->get_properties(); 
-  $GhostMode = $props['ghost_mode'];
-  ?>
-  <table class="form-table">
-  <?php agora_render_setting_row_select(
-      'ghost_mode',
-      __('Enable', 'agoraio'),
+    <?php agora_render_setting_row_select(
+      'mute_all_users',
+      __('Mute all users?', 'agoraio'),
       array(
         '' => __('Select', 'agoraio'),
         1 => __('Yes', 'agoraio'),
         0 => __('No', 'agoraio')
       ), $props, '');
    ?>
-     
-  </table>
-  <?php
-}
-
-// Metabox content for Layout tab
-function render_agoraio_channel_form_layout($channel) {
-  $props = $channel->get_properties(); 
-  $channelLayout = $props['channel_layout'];
-  ?>
-  <table class="form-table">
-  <?php agora_render_setting_row_select(
-      'channel_layout',
-      __('Layout', 'agoraio'),
+    <?php agora_render_setting_row_select(
+      'chat_history',
+      __('Chat History?', 'agoraio'),
       array(
         '' => __('Select', 'agoraio'),
-        'grid' => __('Grid View', 'agoraio'),
-        'speaker' => __('Speaker View', 'agoraio')
+        1 => __('Yes', 'agoraio'),
+        0 => __('No', 'agoraio')
       ), $props, '');
    ?>
-     
+    <?php agora_render_setting_row_select(
+      'pre_call_video',
+      __('Pre-call/video test?', 'agoraio'),
+      array(
+        '' => __('Select', 'agoraio'),
+        1 => __('Yes', 'agoraio'),
+        0 => __('No', 'agoraio')
+      ), $props, '');
+   ?>
   </table>
+  
+  <script>
+    window.addEventListener('load', function() {
+      var channel_type_load = '<?php echo $props['type'] ?>';
+      if(channel_type_load == 'communication'){
+        jQuery('#pre_call_video').parents('tr').css('display','block');
+      }else{
+        jQuery('#pre_call_video').parents('tr').css('display','none');
+      }
+      function ShowHideFields(){
+        var channel_type = jQuery(this).val();
+        if(channel_type == 'communication'){
+          jQuery('#pre_call_video').parents('tr').css('display','block');
+        }else{
+          jQuery('#pre_call_video').parents('tr').css('display','none');
+        }
+      }
+      jQuery('#type').change(ShowHideFields);
+      jQuery('#type').change();
+    });
+  </script>
   <?php
 }
 
