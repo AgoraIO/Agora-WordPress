@@ -188,6 +188,21 @@ class WP_Agora_Channel {
       }else{
         $ChatSupportloggedin = 0;
       }
+      if(get_post_meta( $this->id, 'mute_all_users', true )){
+        $MuteAllUsers = get_post_meta( $this->id, 'mute_all_users', true );
+      }else{
+        $MuteAllUsers = 0;
+      }
+      if(get_post_meta( $this->id, 'chat_history', true )){
+        $ChatHistory = get_post_meta( $this->id, 'chat_history', true );
+      }else{
+        $ChatHistory = 0;
+      }
+      if(get_post_meta( $this->id, 'pre_call_video', true )){
+        $PreCallVideo = get_post_meta( $this->id, 'pre_call_video', true );
+      }else{
+        $PreCallVideo = 0;
+      }
       
 
       $this->properties = array(
@@ -199,6 +214,9 @@ class WP_Agora_Channel {
         'chat_support_loggedin' => $ChatSupportloggedin,
         'ghost_mode' => $GhostMode,
         'channel_layout' => $channelLayout,
+        'mute_all_users' => $MuteAllUsers,
+        'chat_history' => $ChatHistory,
+        'pre_call_video' => $PreCallVideo,
       );
       
       // $this->upgrade();
@@ -218,6 +236,9 @@ class WP_Agora_Channel {
       'chat_support_loggedin' => 0,
       'ghost_mode' => 0,
       'channel_layout' => 'grid',
+      'mute_all_users' => 0,
+      'chat_history' => 0,
+      'pre_call_video' => 0,
     ) );
     $properties = (array) apply_filters( 'agoraio_channel_properties', $properties, $this );
     return $properties;
@@ -271,6 +292,9 @@ class WP_Agora_Channel {
     update_post_meta($post_id, 'ghost_mode', sanitize_key($args['ghost_mode']));
     update_post_meta($post_id, 'channel_layout', sanitize_key($args['channel_layout']));
     update_post_meta($post_id, 'channel_type', sanitize_key($args['type']));
+    update_post_meta($post_id, 'mute_all_users', sanitize_key($args['mute_all_users']));
+    update_post_meta($post_id, 'chat_history', sanitize_key($args['chat_history']));
+    update_post_meta($post_id, 'pre_call_video', sanitize_key($args['pre_call_video']));
 
     if (isset($args['host'])) {
       if (is_array($args['host'])) {
@@ -325,6 +349,18 @@ class WP_Agora_Channel {
 
   public function ghostmode() {
     return (int)$this->properties['ghost_mode'];
+  }
+
+  public function mute_all_users() {
+    return (int)$this->properties['mute_all_users'];
+  }
+
+  public function chat_history() {
+    return (int)$this->properties['chat_history'];
+  }
+
+  public function pre_call_video() {
+    return (int)$this->properties['pre_call_video'];
   }
 
   public function channellayout() {
