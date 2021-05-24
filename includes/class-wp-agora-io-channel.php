@@ -181,7 +181,7 @@ class WP_Agora_Channel {
       if(get_post_meta( $this->id, 'channel_layout', true )){
         $channelLayout = get_post_meta( $this->id, 'channel_layout', true );
       }else{
-        $channelLayout = 'speaker';
+        $channelLayout = 'grid';
       }
       if(get_post_meta( $this->id, 'chat_support_loggedin', true )){
         $ChatSupportloggedin = get_post_meta( $this->id, 'chat_support_loggedin', true );
@@ -217,7 +217,7 @@ class WP_Agora_Channel {
       'recording' => array_merge(self::$defaultRecordingSettings),
       'chat_support_loggedin' => 0,
       'ghost_mode' => 0,
-      'channel_layout' => 'speaker',
+      'channel_layout' => 'grid',
     ) );
     $properties = (array) apply_filters( 'agoraio_channel_properties', $properties, $this );
     return $properties;
