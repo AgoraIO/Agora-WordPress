@@ -261,12 +261,12 @@
   </div>
 
   <div class="card">
-    <h2 class="title">Chat Support for logged in users</h2>
+    <h2 class="title">More Settings</h2>
     
     <br class="clear" />
 
     <div class="inside">
-      <p><?php _e('Global setting to enable or disable internal Agora Chat for logged in users.', 'agoraio'); ?></p>
+      <p><?php _e('Global settings.', 'agoraio'); ?></p>
       <div class="flex" id="agora-chat-loggedin">
         <div class="col label">
           Agora Chat for logged in users
@@ -284,6 +284,54 @@
           <span id="chat-status-text-loggedin"
            data-enabled="<?php _e('enabled', 'agoraio'); ?>"
            data-disabled="<?php _e('disabled', 'agoraio') ?>"></span>
+        </div>
+      </div>
+      
+      <div class="flex" id="agora-chat-position">
+        <div class="col label">
+          Position of Chat
+        </div>
+        <?php
+        $chatpositionvalue = isset($agora_options['agora-chat-position']) ? $agora_options['agora-chat-position'] : '';
+        
+        $options_array = array('Overlaid','Left','Right');
+        ?>
+        <div class="col value">
+          <select name="chat_position" id="agora-chat-position" class="NewSettingField">
+             <option value="">Select</option>
+            <?php foreach($options_array as $option){ 
+              $selected_not = '';
+              if($option == $chatpositionvalue){
+                $selected_not = 'selected="selected"';
+              }
+              ?>
+              <option <?php echo $selected_not; ?> value="<?php echo $option; ?>"><?php echo $option; ?></option>
+            <?php } ?>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex" id="agora-chat-position">
+        <div class="col label">
+        Position of Speakers
+        </div>
+        <?php
+        $speakerpositionvalue = isset($agora_options['agora-speaker-position']) ? $agora_options['agora-speaker-position'] : '';
+        
+        $options_array = array('Top','Bottom','Left','Right');
+        ?>
+        <div class="col value">
+          <select name="speaker_position" id="agora-speaker-position" class="NewSettingField">
+             <option value="">Select</option>
+            <?php foreach($options_array as $option){ 
+              $selected_not = '';
+              if($option == $speakerpositionvalue){
+                $selected_not = 'selected="selected"';
+              }
+              ?>
+              <option <?php echo $selected_not; ?> value="<?php echo $option; ?>"><?php echo $option; ?></option>
+            <?php } ?>
+          </select>
         </div>
       </div>
     </div>
