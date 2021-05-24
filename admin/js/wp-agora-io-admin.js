@@ -299,7 +299,7 @@ function agoraChatChangeLoggedin() {
 			$('#agora-chat-check-loggedin').change(agoraChatChangeLoggedin);
 			agoraChatChangeLoggedin();
 		}
-		//Save new global settings - start
+		//Save new global color settings - start
 		jQuery(document).on('click','#globalColors-save',function(){
 			$('#globalColors-save').prop('disabled', true);
 			const srcLoader = AGORA_ADMIN_URL + 'css/loader.svg';
@@ -325,7 +325,25 @@ function agoraChatChangeLoggedin() {
 			});
 
 		});
-		//Save new global settings - end
+		//Save new global color settings - end
+
+
+		//Save new global color settings - start
+		jQuery(document).on('change','.NewSettingField',function(){
+			var settingName = jQuery(this).attr('id');
+			var newValue = jQuery(this).val();
+
+			updateSettingValue(settingName, newValue, function(err, res) {
+				if (!err && res.updated===true) {
+					
+				} else {
+					// TODO: Improve error messages!
+					jQuery('.error-messageglobalColors').text(err);
+				}
+			});
+
+		});
+		//Save new global color settings - end
 	});
 
 

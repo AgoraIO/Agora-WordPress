@@ -53,6 +53,11 @@ class WP_Agora_Public {
 	    add_action( 'wp_ajax_get_global_colors', $globalColorsAjax );
 	    add_action( 'wp_ajax_nopriv_get_global_colors', $globalColorsAjax );
 
+		/* Ajax to handle Chat File Upload */
+		$uploadChatFileAjax = array($this, 'uploadChatFile');
+	    add_action( 'wp_ajax_upload_chat_file', $uploadChatFileAjax );
+	    add_action( 'wp_ajax_nopriv_upload_chat_file', $uploadChatFileAjax );
+
 	    // Page Template loader for FullScreen
 	    require_once plugin_dir_path(dirname( __FILE__ )) . 'public/class-wp-agora-page-template.php';
 	    new WP_Agora_PageTemplate($this);
@@ -68,6 +73,47 @@ class WP_Agora_Public {
 		echo json_encode(array( "global_colors" => $agora_options['global_colors'] ));
 
 		wp_die();
+	}
+
+	public function uploadChatFile(){
+		$response = array(
+			'fileURL' => '',
+			'status' => 'err'
+		);
+		//$upload = 'err'; 
+		if(!empty($_FILES['file'])){ 
+
+			$channel_id = $_POST['channel_id'];
+
+			$targetDirURL = plugin_dir_url( dirname( __FILE__ ) ).'/uploads/'.$channel_id.'/';
+			
+			// File upload configuration 
+			$targetDirPath = plugin_dir_path( dirname( __FILE__ ) ).'/uploads/'.$channel_id.'/';
+			if (!file_exists($targetDirPath)) {
+				mkdir($targetDirPath);
+			}			
+			
+			$file = $_FILES['file']['name'];
+
+			/* Create unique name of file */
+			$fileName = pathinfo($file, PATHINFO_FILENAME);
+			$ext = pathinfo($file, PATHINFO_EXTENSION);
+			$newFileName = $fileName.'-'.uniqid().'.'.$ext;
+
+			$targetFilePath = $targetDirPath.$newFileName; 
+			
+			// Upload file to the server 
+			if(move_uploaded_file($_FILES['file']['tmp_name'], $targetFilePath)){ 
+				//$upload = 'ok'; 
+				$response = array(
+					'fileURL' => $targetDirURL.$newFileName,
+					'status' => 'ok'
+				);
+			}
+		} 
+		//echo $upload;
+		echo json_encode($response);
+   		exit();
 	}
 
 	public function getUserAvatar() {
