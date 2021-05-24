@@ -903,3 +903,13 @@
       border-radius: 25px;  left: 3%;   color: #fff;   top: 4%;  font-size: .7rem;
   }
      /*-----------------------click-to-unmute-ends---------------------------------*/
+
+     .post-thumbnail, .entry-content .wp-audio-shortcode, .entry-content >
+      *:not(.alignwide):not(.alignfull):not(.alignleft):not(.alignright):not(.wp-block-separator):not(.woocommerce), 
+      *[class*=inner-container] > *:not(.entry-content):not(.alignwide):not(.alignfull):not(.alignleft)
+      :not(.alignright):not(.wp-block-separator):not(.woocommerce), .default-max-width{max-width: 1200px!important;}
+
+      .speaker-view {  display: flex!important;    justify-content: space-between;   height: 80vh!important; }
+      .speaker-view .main-screen {   width: 85%;    background-color: #51b6e9;    }
+      .speaker-view .screen-users{width: 15%; overflow-y: auto;}
+     .speaker-view .screen-users .user{width: 100%;}
