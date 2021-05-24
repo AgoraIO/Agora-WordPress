@@ -177,6 +177,12 @@ class WP_Agora_Channel {
       }else{
         $GhostMode = 0;
       }
+      
+      if(get_post_meta( $this->id, 'channel_layout', true )){
+        $channelLayout = get_post_meta( $this->id, 'channel_layout', true );
+      }else{
+        $channelLayout = 'speaker';
+      }
       if(get_post_meta( $this->id, 'chat_support_loggedin', true )){
         $ChatSupportloggedin = get_post_meta( $this->id, 'chat_support_loggedin', true );
       }else{
@@ -192,6 +198,7 @@ class WP_Agora_Channel {
         'recording' => $recordingSettings,
         'chat_support_loggedin' => $ChatSupportloggedin,
         'ghost_mode' => $GhostMode,
+        'channel_layout' => $channelLayout,
       );
       
       // $this->upgrade();
@@ -210,6 +217,7 @@ class WP_Agora_Channel {
       'recording' => array_merge(self::$defaultRecordingSettings),
       'chat_support_loggedin' => 0,
       'ghost_mode' => 0,
+      'channel_layout' => 'speaker',
     ) );
     $properties = (array) apply_filters( 'agoraio_channel_properties', $properties, $this );
     return $properties;
@@ -255,12 +263,13 @@ class WP_Agora_Channel {
       $recordingSettings[$key] = sanitize_text_field($args[$key]);
       return $recordingSettings[$key];
     }, array_keys(self::$defaultRecordingSettings));
-
+    
     update_post_meta($post_id, 'channel_video_settings', $videoSettings);
     update_post_meta($post_id, 'channel_appearance_settings', $appearanceSettings);
     update_post_meta($post_id, 'channel_recording_settings', $recordingSettings);
     update_post_meta($post_id, 'chat_support_loggedin', sanitize_key($args['chat_support_loggedin']));
     update_post_meta($post_id, 'ghost_mode', sanitize_key($args['ghost_mode']));
+    update_post_meta($post_id, 'channel_layout', sanitize_key($args['channel_layout']));
     update_post_meta($post_id, 'channel_type', sanitize_key($args['type']));
 
     if (isset($args['host'])) {
@@ -316,6 +325,10 @@ class WP_Agora_Channel {
 
   public function ghostmode() {
     return (int)$this->properties['ghost_mode'];
+  }
+
+  public function channellayout() {
+    return (int)$this->properties['channel_layout'];
   }
 
   public function type() {

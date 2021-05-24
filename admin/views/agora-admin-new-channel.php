@@ -150,7 +150,8 @@ function agora_render_setting_row($id, $title, $settings, $prefix, $inputType="n
       <div id="postbox-container-3" class="postbox-container">
         <?php do_action( 'agoraio_channel_form_recording', $post ); ?>
         <?php do_action( 'agoraio_channel_form_chat_support', $post ); ?>
-        <?php do_action( 'agoraio_channel_form_ghost_mode', $post ); ?>
+        <?php //do_action( 'agoraio_channel_form_ghost_mode', $post ); ?>
+        <?php //do_action( 'agoraio_channel_form_layout', $post ); ?>
 
         <p class="submit"><?php agoraio_admin_save_button( $post_id ); ?></p>
       </div>
@@ -378,14 +379,31 @@ function render_agoraio_channel_form_chat_support($channel) {
   <table class="form-table">
   <?php agora_render_setting_row_select(
       'chat_support_loggedin',
-      __('Enable', 'agoraio'),
+      __('Chat Support Enable?', 'agoraio'),
       array(
         '' => __('Select', 'agoraio'),
         1 => __('Yes', 'agoraio'),
         0 => __('No', 'agoraio')
-      ), $ChatSupportloggedin, '');
+      ), $props, '');
    ?>
-     
+  <?php agora_render_setting_row_select(
+      'ghost_mode',
+      __('Ghost Mode', 'agoraio'),
+      array(
+        '' => __('Select', 'agoraio'),
+        1 => __('Yes', 'agoraio'),
+        0 => __('No', 'agoraio')
+      ), $props, '');
+   ?>
+     <?php agora_render_setting_row_select(
+      'channel_layout',
+      __('Layout', 'agoraio'),
+      array(
+        '' => __('Select', 'agoraio'),
+        'grid' => __('Grid View', 'agoraio'),
+        'speaker' => __('Speaker View', 'agoraio')
+      ), $props, '');
+   ?>
   </table>
   <?php
 }
@@ -403,7 +421,27 @@ function render_agoraio_channel_form_ghost_mode($channel) {
         '' => __('Select', 'agoraio'),
         1 => __('Yes', 'agoraio'),
         0 => __('No', 'agoraio')
-      ), $GhostMode, '');
+      ), $props, '');
+   ?>
+     
+  </table>
+  <?php
+}
+
+// Metabox content for Layout tab
+function render_agoraio_channel_form_layout($channel) {
+  $props = $channel->get_properties(); 
+  $channelLayout = $props['channel_layout'];
+  ?>
+  <table class="form-table">
+  <?php agora_render_setting_row_select(
+      'channel_layout',
+      __('Layout', 'agoraio'),
+      array(
+        '' => __('Select', 'agoraio'),
+        'grid' => __('Grid View', 'agoraio'),
+        'speaker' => __('Speaker View', 'agoraio')
+      ), $props, '');
    ?>
      
   </table>
