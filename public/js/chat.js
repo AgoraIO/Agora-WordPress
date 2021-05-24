@@ -190,6 +190,118 @@
 		return `${hour}:${now.getMinutes()} ${suffix}`;
 	}
 
+	/* Handle File */
+	var files = []; var processingFiles = [];
+
+	/* Append File Name as message on select */
+	jQuery("input[type='file']").change(function(){
+
+		let fileName = jQuery(this).val().split(/(\\|\/)/g).pop();
+
+		var file = jQuery(document).find('input[type="file"]');
+		var individual_file = file[0].files[0];
+
+		let obj = {name: fileName, data: individual_file};
+		files.push(obj);
+
+		let index = files.length-1;		
+		appendTmpFileBeforeSend(index);
+    });
+
+	function appendTmpFileBeforeSend(index){
+		let fileName = files[index].name;
+		jQuery('body .agora .chat_converse').append("<div class='tmp_fileMsg' id='tmp_fileMsg-"+index+"'><div class='fileName'>"+fileName+"</div><div class='action'><a class='remove' rel='"+index+"'>Remove</a></div></div>");
+		jQuery(document).find('input[type="file"]').val('');
+	}
+
+	function addLocalFileMsg(index, fileName) {
+		const msgLine = $('<div/>', {class: 'chat-msg-line local'});
+
+		const user = window.wp_username;
+		if (user !== lastUserChat) {
+			lastUserChat = user;
+			const msgTime = getMessageTime();
+			const labelTxt = `${user} <time>${msgTime}</time>`;
+			msgLine.append($('<label>', {class:'chat_username'}).append(labelTxt))
+		}
+
+		msgLine.append(
+			$('<span/>', {'class': 'chat_msg_item chat_msg_item_local_user'}).append(fileName+'<div class="progress"><div class="progress-bar-'+index+'" style="height:24px;background:red"></div></div>')
+		);
+		chatMsgWindow.append(msgLine);
+		// scroll to bottom
+		scrollToBottm();
+	}
+
+	function uploadFile(index){
+
+		console.log("hlwUploadfiles", processingFiles)
+		
+		let fileData = processingFiles[index].data;
+		let fileName = processingFiles[index].name;
+
+		var fd = new FormData();
+		fd.append("file", fileData);
+		fd.append("channel_id", window.channelId);
+		fd.append('action', 'upload_chat_file');  
+
+		jQuery.ajax({
+			xhr: function() {
+				var xhr = new window.XMLHttpRequest();
+				xhr.upload.addEventListener("progress", function(evt) {
+					if (evt.lengthComputable) {
+						var percentComplete = ((evt.loaded / evt.total) * 100);
+						jQuery(".progress-bar-"+index).width(percentComplete + '%');
+						//jQuery(".progress-bar-"+index).html(percentComplete+'%');
+					}
+				}, false);
+				return xhr;
+			},
+			type: 'POST',
+			url: ajax_url,
+			data: fd,
+			contentType: false,
+			cache: false,
+			processData:false,
+			beforeSend: function(){
+				jQuery("body #tmp_fileMsg-"+index).remove();
+				addLocalFileMsg(index, fileName);
+				jQuery(".progress-bar-"+index).width('0%');
+				//jQuery('#uploadStatus').html('<img src="images/loading.gif"/>');
+			},
+			error:function(){
+				jQuery('#uploadStatus').html('<p style="color:#EA4335;">File upload failed, please try again.</p>');
+			},
+			success: function(resp){
+				let response = JSON.parse(resp);
+				if(response.status == 'ok'){
+					//alert("uploaded");
+					//console.log("fileUploadResponse", response.fileURL);
+					const data = 'CHAT-FILE' + TOKEN_SEP + window.userID + TOKEN_SEP+ window.wp_username+TOKEN_SEP+fileName+TOKEN_SEP+response.fileURL;
+					window.AGORA_RTM_UTILS.sendChatMessage(data, function() {
+						//alert("msgSent");
+					});
+
+					//alert("<?php echo plugin_dir_path( dirname( __FILE__ ) ); ?>")
+					//alert("uploaded");
+					// $('#uploadForm')[0].reset();
+					// $('#uploadStatus').html('<p style="color:#28A74B;">File has uploaded successfully!</p>');
+				} else if(response.status == 'err'){
+					//$('#uploadStatus').html('<p style="color:#EA4335;">Please select a valid file to upload.</p>');
+				}
+			}
+		});
+	}
+
+	jQuery("body").on("click", ".tmp_fileMsg .remove", function(){
+		const index = jQuery(this).attr('rel');
+		files.splice(index, 1);
+		jQuery("body #tmp_fileMsg-"+index).remove();
+		console.log("hlwNwFilesArray", files)
+	});
+
+	/* End Handle File */
+
 	function showUserNotify(msgData, type) {
 		const blocksMsg = msgData.split(TOKEN_SEP);
 		const uid  = blocksMsg[0];
@@ -212,12 +324,23 @@
 	}
 
 	function addRemoteMsg(uidRTM, data) {
-		const blocksMsg = data.split(TOKEN_SEP);
+		console.log("hlwData", data)
+		let blocksMsg = data.split(TOKEN_SEP);
+		console.log("hlwblocksMsg", blocksMsg)
+		let msg  = blocksMsg[2];
+		let uid  = blocksMsg[0];
+		let user = blocksMsg[1];
 
-		const uid  = blocksMsg[0];
-		const user = blocksMsg[1];
-		const msg  = blocksMsg[2];
+		let msgLink = '';
 
+		if(blocksMsg[0] == 'CHAT-FILE'){
+			console.log("hnjifile");
+			uid  = blocksMsg[1];
+			user = blocksMsg[2];
+			msg  = blocksMsg[3];
+			msgLink = blocksMsg[4];
+		} 
+		
 		const msgLine = $('<div/>', {class: 'chat-msg-line remote uid' + uid});
 			
 		if (user !== lastUserChat) {
@@ -229,6 +352,11 @@
 
 		const avatarElement = $('<div/>', {'class': 'chat_avatar'});
 		loadUserAvatar(uid, avatarElement[0]);
+
+		if(msgLink!=''){
+			msg = `<a href='${msgLink}' target='_blank'>${msg}</a>`;
+		}
+
 		msgLine.append(
 			$('<div/>', {'class': 'chat_msg_item chat_msg_item_remote_user'})
 			.append(avatarElement)
@@ -254,6 +382,14 @@
 			textarea.value = ""; // after the message is sent clear the text area.
 			resizeTextArea();
 		});
+	  } 
+	  
+	  if(files.length>0){
+		files.forEach(function (item, index) {
+			processingFiles[index] = item;
+			uploadFile(index);
+		});	
+		files = [];
 	  }
 	}
 
@@ -286,7 +422,13 @@
 	window.addEventListener('agora.rtmMessageFromChannel', function(evt){
 		// console.log('rtmMessageFromChannel', evt.detail);
 		if (evt.detail && evt.detail.text) {
-			if (evt.detail.text.indexOf(`CHAT${TOKEN_SEP}`)===0) {
+			console.log("hnjiIndex", evt.detail.text.indexOf(`CHAT-FILE${TOKEN_SEP}`))
+			if(evt.detail.text.indexOf(`CHAT-FILE${TOKEN_SEP}`)==0){
+				const msgData = evt.detail.text;
+				console.log("hlwAddRemotemsgData", msgData)
+				window.AGORA_RTM_UTILS.addRemoteMsg(evt.detail.senderId, msgData)
+			}
+			else if (evt.detail.text.indexOf(`CHAT${TOKEN_SEP}`)===0) {
 				const msgData = evt.detail.text.substring(6);
 				window.AGORA_RTM_UTILS.addRemoteMsg(evt.detail.senderId, msgData)
 			} else if (evt.detail.text.indexOf(`CHAT-JOIN${TOKEN_SEP}`)===0) {

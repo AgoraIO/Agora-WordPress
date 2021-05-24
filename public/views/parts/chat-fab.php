@@ -16,6 +16,12 @@
 		<div class="fab_field user">
 			<textarea id="chatSend" name="chat_message" placeholder="Send a message" class="chat_field chat_message"></textarea>
 			<a id="fab_send" class="fab"><i class="fas fa-paper-plane"></i></a>
+			<div class="chat-file-upload">
+				<label for="fileInput">
+					<i class="fa fa-paperclip" aria-hidden="true"></i>
+				</label>
+				<input type="file" name="file" id="fileInput">
+			</div>	
 		</div>
 		<div class="fab_field non-user">
 			<label id="label_chat_name" for="chart_name"><?php _e('Please, enter your name to join chat', 'agoraio'); ?></label>
