@@ -919,16 +919,10 @@
     /****************active*speaker*end****************/
       /*-----------------------click-to-unmute----------------------------------*/
     .user  .resume-userclick {  position: absolute; z-index: 99;  display: inline-block;   background-color: #00000047;  padding: .5rem .8rem;
-      border-radius: 25px;  left: 3%;   color: #fff;   top: 4%;  font-size: .7rem;
-  }
+      border-radius: 25px;  left: 3%;   color: #fff;   top: 4%;  font-size: .7rem;border: .4px solid #ffffff2e;  }
      /*-----------------------click-to-unmute-ends---------------------------------*/
-
-     .post-thumbnail, .entry-content .wp-audio-shortcode, .entry-content >
-      *:not(.alignwide):not(.alignfull):not(.alignleft):not(.alignright):not(.wp-block-separator):not(.woocommerce), 
-      *[class*=inner-container] > *:not(.entry-content):not(.alignwide):not(.alignfull):not(.alignleft)
-      :not(.alignright):not(.wp-block-separator):not(.woocommerce), .default-max-width{max-width: 1200px!important;}
-
-      .speaker-view {  display: flex!important;    justify-content: space-between;   height: 80vh!important; }
-      .speaker-view .main-screen {   width: 85%;    background-color: #51b6e9;    }
-      .speaker-view .screen-users{width: 15%; overflow-y: auto;}
-     .speaker-view .screen-users .user{width: 100%;}
+      .speaker-view {  display: flex!important;    justify-content: space-between;    }
+      .speaker-view .main-screen {   width: 80%;   }
+      .speaker-view .screen-users{width: 20%; overflow-y: auto; flex-direction: row; max-height: 50vh!important;}
+      .speaker-view .screen-users .user{width: 100%;max-height: 200px!important;}
+      .speaker-view .main-screen .user {display: block!important;height: 100%;}
