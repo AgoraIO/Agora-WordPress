@@ -918,7 +918,7 @@
   }
     /****************active*speaker*end****************/
       /*-----------------------click-to-unmute----------------------------------*/
-    .user  .resume-userclick {  position: absolute; z-index: 99;  display: inline-block;   background-color: #00000047;  padding: .5rem .8rem;
+    .user  .resume-userclick {  position: absolute; z-index: 1;  display: inline-block;   background-color: #00000047;  padding: .5rem .8rem;
       border-radius: 25px;  left: 3%;   color: #fff;   top: 4%;  font-size: .7rem;border: .4px solid #ffffff2e;  }
      /*-----------------------click-to-unmute-ends---------------------------------*/
       .speaker-view {  display: flex!important;    justify-content: space-between;    }
@@ -926,3 +926,12 @@
       .speaker-view .screen-users{width: 20%; overflow-y: auto; flex-direction: row; max-height: 50vh!important;}
       .speaker-view .screen-users .user{width: 100%;max-height: 200px!important;}
       .speaker-view .main-screen .user {display: block!important;height: 100%;}
+       /*-----------------------chat----------------------------------*/
+       .chat .fab_field.user {  display: flex!important;  align-items: center;    }
+       .chat .fab_field.user .chat_field{line-height: 9px!important;}
+       .chat .fab_field.user { padding: 0 0.5rem 0 .5rem!important;}
+       .chat  .tmp_fileMsg {padding: .5rem;  background-color: #f8f8f8; margin-left: .5rem!important;}
+       .chat  .tmp_fileMsg .action a {    padding: .1rem .3rem;    background-color: #ff0000;     display: inline-block;     margin-top: .2rem;      color: #fff!important;
+        border-radius: 2rem; font-size: .7rem;   }
+       .agora .chat-msg-line.local label {       font-size: 1rem; margin-left: .5rem!important;}
+       /*-----------------------chat-end---------------------------------*/
