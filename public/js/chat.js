@@ -210,7 +210,7 @@
 
 	function appendTmpFileBeforeSend(index){
 		let fileName = files[index].name;
-		jQuery('body .agora .chat_converse').append("<div class='tmp_fileMsg' id='tmp_fileMsg-"+index+"'><div class='fileName'>"+fileName+"</div><div class='action'><a class='remove' rel='"+index+"'>Remove</a></div></div>");
+		jQuery('body .agora .chat_converse').append("<div class='tmp_fileMsg' id='tmp_fileMsg-"+index+"'><div class='fileName'>"+fileName+"</div><div class='action'><a class='remove' rel='"+index+"'>X</a></div></div>");
 		jQuery(document).find('input[type="file"]').val('');
 	}
 
