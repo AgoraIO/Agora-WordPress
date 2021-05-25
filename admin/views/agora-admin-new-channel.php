@@ -415,7 +415,7 @@ function render_agoraio_channel_form_chat_support($channel) {
    ?>
     <?php agora_render_setting_row_select(
       'chat_history',
-      __('Chat History?', 'agoraio'),
+      __('Enable Chat History?', 'agoraio'),
       array(
         '' => __('Select', 'agoraio'),
         1 => __('Yes', 'agoraio'),
