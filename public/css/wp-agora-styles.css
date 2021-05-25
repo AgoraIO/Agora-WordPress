@@ -929,6 +929,6 @@
       :not(.alignright):not(.wp-block-separator):not(.woocommerce), .default-max-width{max-width: 1200px!important;}
 
       .speaker-view {  display: flex!important;    justify-content: space-between;   height: 80vh!important; }
-      .speaker-view .main-screen {   width: 85%;    background-color: #51b6e9;    }
+      .speaker-view .main-screen {   width: 100%; }
       .speaker-view .screen-users{width: 15%; overflow-y: auto;}
      .speaker-view .screen-users .user{width: 100%;}

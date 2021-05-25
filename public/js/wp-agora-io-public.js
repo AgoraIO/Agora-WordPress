@@ -238,6 +238,17 @@ window.AGORA_UTILS = {
     delete window.remoteStreams[streamId]; // remove stream from list
     const remoteContainerID = '#' + streamId + '_container';
     jQuery(remoteContainerID).empty().remove();
+
+    delete window.allStreams[streamId]; // remove stream from list
+
+    window.allStreams = Object.fromEntries(Object.entries(window.allStreams).filter(([_, v]) => v != null));
+   
+    if(typeof window.allStreams!='undefined' && Object.keys(window.allStreams).length>1){
+      jQuery('.speaker-view .main-screen').css('width', '85%');
+    } else {
+      jQuery('.speaker-view .main-screen').css('width', '100%');
+      jQuery('.speaker-view #screen-users').remove();
+    }
   },
 
   setupAgoraListeners: function() {
@@ -402,6 +413,7 @@ window.AGORA_UTILS = {
     if(jQuery('#screen-users').length==0){
       jQuery('body #screen-zone').append('<div id="screen-users"></div>');
     }
+    jQuery('.speaker-view .main-screen').css('width', '85%');
 
     const streamsContainer = jQuery('#screen-users');
 
