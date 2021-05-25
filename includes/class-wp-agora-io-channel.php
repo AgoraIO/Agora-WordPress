@@ -350,7 +350,9 @@ class WP_Agora_Channel {
   public function ghostmode() {
     return (int)$this->properties['ghost_mode'];
   }
-
+  public function channellayout() {
+    return $this->properties['channel_layout'];
+  }
   public function mute_all_users() {
     return (int)$this->properties['mute_all_users'];
   }
@@ -363,9 +365,7 @@ class WP_Agora_Channel {
     return (int)$this->properties['pre_call_video'];
   }
 
-  public function channellayout() {
-    return $this->properties['channel_layout'];
-  }
+  
 
   public function type() {
     return ucfirst( $this->properties['type'] );
