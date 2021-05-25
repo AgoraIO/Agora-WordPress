@@ -849,7 +849,7 @@
 /* End files in chat */
 
 /****************video*mute*overlay*******************/
-.user .no-video-overlay { position: absolute; z-index: 3; width: calc(100% - 0.2em); top: 0; color: #cccccc; font-size: 2.5em;  margin: 0 auto;
+  .user .no-video-overlay { position: absolute; z-index: 1; width: calc(100%); top: 0; color: #cccccc; font-size: 2.5em;  margin: 0 auto;
   text-align: center;  align-items: center;  justify-content: center;  background-color: #607d8b;  height: 100%;}
   /*----------------need--to -add display-flex-in  inline-css-----------------*/
   
@@ -921,17 +921,19 @@
     .user  .resume-userclick {  position: absolute; z-index: 1;  display: inline-block;   background-color: #00000047;  padding: .5rem .8rem;
       border-radius: 25px;  left: 3%;   color: #fff;   top: 4%;  font-size: .7rem;border: .4px solid #ffffff2e;  }
      /*-----------------------click-to-unmute-ends---------------------------------*/
-      .speaker-view {  display: flex!important;    justify-content: space-between;    }
-      .speaker-view .main-screen {   width: 80%;   }
+      .speaker-view {  display: flex!important;    justify-content: space-between;  height: 40vh!important;  }
+      .speaker-view .main-screen {   width: 80%!important;}
       .speaker-view .screen-users{width: 20%; overflow-y: auto; flex-direction: row; max-height: 50vh!important;}
       .speaker-view .screen-users .user{width: 100%;max-height: 200px!important;}
-      .speaker-view .main-screen .user {display: block!important;height: 100%;}
+      .speaker-view .main-screen .user {display: block!important;height: 100%; position: relative;}
        /*-----------------------chat----------------------------------*/
        .chat .fab_field.user {  display: flex!important;  align-items: center;    }
        .chat .fab_field.user .chat_field{line-height: 9px!important;}
        .chat .fab_field.user { padding: 0 0.5rem 0 .5rem!important;}
-       .chat  .tmp_fileMsg {padding: .5rem;  background-color: #f8f8f8; margin-left: .5rem!important;}
-       .chat  .tmp_fileMsg .action a {    padding: .1rem .3rem;    background-color: #ff0000;     display: inline-block;     margin-top: .2rem;      color: #fff!important;
-        border-radius: 2rem; font-size: .7rem;   }
+       .chat .tmp_fileMsg { position: relative; padding: .5rem; background-color: #f8f8f8;  margin: .2rem;   margin-left: .5rem!important;    display: inline-block;       }
+       .chat  .tmp_fileMsg .action a {    padding: .1rem .3rem;    background-color: #ff0000; width: 21px;justify-content: center;align-items: center;    display: inline-flex;     margin-top: .2rem;      color: #fff!important;
+        border-radius: 2rem; font-size: .6rem;   }
        .agora .chat-msg-line.local label {       font-size: 1rem; margin-left: .5rem!important;}
+       .chat .tmp_fileMsg .action {  position: absolute; right: -7px; top: -14px; }
+       .agora .chat .chat-msg-line label{font-size: 1rem!important;}
        /*-----------------------chat-end---------------------------------*/
