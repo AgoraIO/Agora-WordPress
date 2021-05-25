@@ -275,17 +275,10 @@
 			success: function(resp){
 				let response = JSON.parse(resp);
 				if(response.status == 'ok'){
-					//alert("uploaded");
-					//console.log("fileUploadResponse", response.fileURL);
-					const data = 'CHAT-FILE' + TOKEN_SEP + window.userID + TOKEN_SEP+ window.wp_username+TOKEN_SEP+fileName+TOKEN_SEP+response.fileURL;
+					const data = 'CHAT-FILE' + TOKEN_SEP + window.userID + TOKEN_SEP+ window.wp_username + TOKEN_SEP + fileName + TOKEN_SEP + response.fileURL;
 					window.AGORA_RTM_UTILS.sendChatMessage(data, function() {
-						//alert("msgSent");
+						saveChat('file', '<a href="'+response.fileURL+'">'+fileName+'</a>');
 					});
-
-					//alert("<?php echo plugin_dir_path( dirname( __FILE__ ) ); ?>")
-					//alert("uploaded");
-					// $('#uploadForm')[0].reset();
-					// $('#uploadStatus').html('<p style="color:#28A74B;">File has uploaded successfully!</p>');
 				} else if(response.status == 'err'){
 					//$('#uploadStatus').html('<p style="color:#EA4335;">Please select a valid file to upload.</p>');
 				}
@@ -297,10 +290,27 @@
 		const index = jQuery(this).attr('rel');
 		files.splice(index, 1);
 		jQuery("body #tmp_fileMsg-"+index).remove();
-		console.log("hlwNwFilesArray", files)
 	});
 
 	/* End Handle File */
+
+	/* Handle Chat History */
+
+	function saveChat(type, msg){
+		if(window.chat_history_enabled){
+			var params = {
+				action: 'save_chat', // wp ajax action
+				channel_id: window.channelId,
+				uid: window.userID,
+				uname: window.wp_username,
+				type: type,
+				msg: msg,
+				time: new Date().getTime()
+			};
+			window.AGORA_UTILS.agoraApiRequest(ajax_url, params);
+		}
+	}
+	/* End Handle Chat History */
 
 	function showUserNotify(msgData, type) {
 		const blocksMsg = msgData.split(TOKEN_SEP);
@@ -324,9 +334,7 @@
 	}
 
 	function addRemoteMsg(uidRTM, data) {
-		console.log("hlwData", data)
 		let blocksMsg = data.split(TOKEN_SEP);
-		console.log("hlwblocksMsg", blocksMsg)
 		let msg  = blocksMsg[2];
 		let uid  = blocksMsg[0];
 		let user = blocksMsg[1];
@@ -334,7 +342,6 @@
 		let msgLink = '';
 
 		if(blocksMsg[0] == 'CHAT-FILE'){
-			console.log("hnjifile");
 			uid  = blocksMsg[1];
 			user = blocksMsg[2];
 			msg  = blocksMsg[3];
@@ -391,6 +398,9 @@
 		});	
 		files = [];
 	  }
+	  if(msg!=""){
+		saveChat('text', msg);
+	  }
 	}
 
 	const loadedAvatars = {};
@@ -420,12 +430,9 @@
 	window.AGORA_RTM_UTILS.addRemoteMsg = addRemoteMsg;
 
 	window.addEventListener('agora.rtmMessageFromChannel', function(evt){
-		// console.log('rtmMessageFromChannel', evt.detail);
 		if (evt.detail && evt.detail.text) {
-			console.log("hnjiIndex", evt.detail.text.indexOf(`CHAT-FILE${TOKEN_SEP}`))
 			if(evt.detail.text.indexOf(`CHAT-FILE${TOKEN_SEP}`)==0){
 				const msgData = evt.detail.text;
-				console.log("hlwAddRemotemsgData", msgData)
 				window.AGORA_RTM_UTILS.addRemoteMsg(evt.detail.senderId, msgData)
 			}
 			else if (evt.detail.text.indexOf(`CHAT${TOKEN_SEP}`)===0) {

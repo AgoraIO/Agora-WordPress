@@ -21,6 +21,15 @@
   } else {
     window.isSpeakerView = false;
   }
+
+  window.mute_all_users_audio_video = '<?php echo $channel->mute_all_users() ?>';
+  if(window.mute_all_users_audio_video == "0"){
+    window.mute_all_users_audio_video = false;
+  } else {
+    window.mute_all_users_audio_video = true;
+  }
+
+  window.chat_history_enabled = '<?php echo $channel->chat_history() ?>';
   
   window.userID = parseInt(`${<?php echo $current_user->ID; ?>}`, 10);
   <?php if ($current_user->ID > 0) : ?>

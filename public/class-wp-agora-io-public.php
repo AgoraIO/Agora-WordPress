@@ -58,6 +58,16 @@ class WP_Agora_Public {
 	    add_action( 'wp_ajax_upload_chat_file', $uploadChatFileAjax );
 	    add_action( 'wp_ajax_nopriv_upload_chat_file', $uploadChatFileAjax );
 
+		/* Ajax to handle Chat History if it is enabled */
+		$saveChatAjax = array($this, 'saveChat');
+	    add_action( 'wp_ajax_save_chat', $saveChatAjax );
+	    add_action( 'wp_ajax_nopriv_save_chat', $saveChatAjax );
+
+		/* Ajax to handle get Chat History if it was saved */
+		$getChatsAjax = array($this, 'getChatsFromHistory');
+	    add_action( 'wp_ajax_get_previous_chats', $getChatsAjax );
+	    add_action( 'wp_ajax_nopriv_get_previous_chats', $getChatsAjax );
+
 	    // Page Template loader for FullScreen
 	    require_once plugin_dir_path(dirname( __FILE__ )) . 'public/class-wp-agora-page-template.php';
 	    new WP_Agora_PageTemplate($this);
@@ -72,6 +82,47 @@ class WP_Agora_Public {
 		header('Content-Type: application/json');
 		echo json_encode(array( "global_colors" => $agora_options['global_colors'] ));
 
+		wp_die();
+	}
+
+	/* Function to get chats from the databse */
+	public function getChatsFromHistory($channel_id){
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'agora_io_chats';
+
+		$getChatsQuery = "SELECT * from $table_name where channel_id = '$channel_id'";
+		return $wpdb->get_results($getChatsQuery);
+	}
+
+	/* Function to save chat in the database if chat is enabled */
+	public function saveChat(){
+		global $wpdb;
+
+		$channel_id = $_POST['channel_id'];
+		$user_id = $_POST['uid'];
+		$username = $_POST['uname'];
+		$type = $_POST['type'];
+		$message = $_POST['msg'];
+		$time = $_POST['time'];
+		$created_on = date("Y-m-d H:i:s");
+
+		$table_name = $wpdb->prefix . 'agora_io_chats';
+
+		/* Create Chat History table if it doesn't exit */
+		$chat_history_table_sql = "CREATE TABLE IF NOT EXISTS $table_name ( 
+			id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+			channel_id INT(255),
+			user_id INT NOT NULL DEFAULT 0,
+			username VARCHAR(255),
+			type VARCHAR(255) DEFAULT 'text',
+			time VARCHAR (255),
+			message TEXT,
+			created_on DATETIME
+			)";
+		$wpdb->query($chat_history_table_sql );
+
+		$saveChat_query = "INSERT INTO $table_name ( user_id, username, channel_id, type, message, time, created_on) VALUES ('$user_id', '$username', '$channel_id', '$type', '$message', '$time' ,'$created_on')";
+		$wpdb->query($saveChat_query);
 		wp_die();
 	}
 

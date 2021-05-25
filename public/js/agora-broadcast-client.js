@@ -134,6 +134,16 @@ async function createCameraStream(uid, deviceIds) {
 
     window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
 
+    /* Mute Audios and Videos Based on Mute All Users Settings */
+    if(window.mute_all_users_audio_video){
+      if(localStream.getVideoTrack() && localStream.getVideoTrack().enabled){
+        jQuery("#video-btn").trigger('click');
+      }
+      if(localStream.getAudioTrack() && localStream.getAudioTrack().enabled){
+        jQuery("#mic-btn").trigger('click');
+      }
+    }
+
     window.AGORA_UTILS.agora_getUserAvatar(localStream.getId(), function getUserAvatar(avatarData) {
       let userAvatar = '';
       if (avatarData && avatarData.user && avatarData.avatar) {
