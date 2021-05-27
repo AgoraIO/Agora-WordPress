@@ -336,8 +336,37 @@
       </div>
     </div>
   </div>
+<div class="card ">
+<h2 class="title">Chat Settings</h2>
+    <br class="clear">
+<section class="dragable-chat-main">
+
+        <div class="left-side-main">
+              <div class="draggabble-box">
+              </div>
+        </div>
+        <div class="center-main">
+          <div class="overlay-main">            
+          </div>
+        </div>
+        <div class="right-side-main"></div>
+  </section>
+</div>
+
+<div class="card ">
+    <h2 class="title">Speaker view Settings</h2>
+       <br class="clear">
+    <section class="dragable-speaker-main ">
+            <div class="main-view current"> </div>
+            <div class="multiple-speaker-views"> </div>
+
+    </section>
+</div>
+
+
 
   <script type="text/javascript">
     window.AGORA_ADMIN_URL = '<?php echo plugin_dir_url(__DIR__ . '/../index.php'); ?>';
   </script>
+
 </div>

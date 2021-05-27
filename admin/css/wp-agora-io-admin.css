@@ -270,9 +270,24 @@
 .agoraio .slider.round:before {
   border-radius: 50%;
 }
-
+                                 
 
 /** ========= Admin Table ========== **/
 #agoraio-list-table .column-shortcode {
   width: 400px;
 }
+
+/*-----------------draggable settings----------------------------------*/
+.dragable-chat-main,.dragable-speaker-main {  display: flex;  height: auto;  min-height: 321px;background-color: #f6f6f6;}
+.left-side-main,.right-side-main,.center-main,.overlay-main{border: 1px solid #c8c8c8;padding: 2%;}
+.left-side-main {  width: 20%;    display: block;  height: auto;}
+.right-side-main { width: 20%;   display: block;  height: auto;}
+.center-main{width: 60%;position: relative;border-left: 0;  border-right: 0;}
+.overlay-main { position: absolute; display: block; width: 44%;    height: 69%;  right: 7%;  bottom: 6%;box-shadow: 3px 2px 2px #00000030;}
+.draggabble-box {  height: auto;  background: rgb(197, 230, 252);   height: 100%;}
+.dragable-speaker-main {background-color: #f6f6f6;}
+.main-view {  width: 80%; }
+.multiple-speaker-views {  width: 20%;  }
+.dragable-speaker-main .current{border: 1px dashed #000!important;background: #c5e6fc;}
+.main-view,.multiple-speaker-views{border: 1px solid #c8c8c8;}
+/*-----------------draggabl settings end----------------------------------*/
