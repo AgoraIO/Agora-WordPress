@@ -288,6 +288,6 @@
 .dragable-speaker-main {background-color: #f6f6f6;}
 .main-view {  width: 80%; }
 .multiple-speaker-views {  width: 20%;  }
-.current{border: 1px dashed #000!important;background: #c5e6fc;}
+.dragable-speaker-main .current{border: 1px dashed #000!important;background: #c5e6fc;}
 .main-view,.multiple-speaker-views{border: 1px solid #c8c8c8;}
 /*-----------------draggabl settings end----------------------------------*/
