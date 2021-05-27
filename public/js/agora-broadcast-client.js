@@ -80,6 +80,9 @@ async function detectWebcam() {
 
 // video streams for channel
 async function createCameraStream(uid, deviceIds) {
+
+  window.channel_type = 'broadcast';
+
   AgoraRTC.Logger.info('Creating stream with sources: ' + JSON.stringify(deviceIds));
   const hasVideo = await detectWebcam()
   const localStream = AgoraRTC.createStream({

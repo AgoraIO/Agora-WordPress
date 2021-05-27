@@ -304,11 +304,63 @@
 				uid: window.userID,
 				uname: window.wp_username,
 				type: type,
-				msg: msg,
-				time: new Date().getTime()
+				msg: msg
 			};
 			window.AGORA_UTILS.agoraApiRequest(ajax_url, params);
 		}
+	}
+
+	function getPreviousChats(){
+
+		let month = new Date().getMonth()+1;
+		let todayDate = new Date().getFullYear()+'-'+month+'-'+new Date().getDate();
+		console.log("hnjitodayDate",todayDate)
+		var params = {
+			action: 'get_previous_chats', // wp ajax action
+			channel_id: window.channelId,
+			timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+			username: window.wp_username,
+			todayDate: todayDate 
+		};
+
+		window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(data) {
+			let chatData = JSON.parse(data);
+			console.log("previosChatsData", chatData.length)
+			if(chatData.length>0){
+				chatData.forEach(function (chat, index) {
+					let avatarElement = '';
+					let chat_msg_line_class = 'remote uid'+chat.user_id;
+					let chat_msg_item_class = 'chat_msg_item_remote_user';
+					if(chat.isLocalMessage){
+						chat_msg_line_class = 'local';
+						chat_msg_item_class = 'chat_msg_item_local_user';
+					} else {
+						avatarElement = $('<div/>', {'class': 'chat_avatar'});
+						loadUserAvatar(chat.user_id, avatarElement[0]);
+					}
+
+					const msgLine = $('<div/>', {class: 'chat-msg-line ' + chat_msg_line_class});
+			
+					if(typeof chatData[index-1]=='undefined' || chatData[index].username!=chatData[index-1].username) {
+						const labelTxt = `${chat.username} <time>${chat.time}</time>`;
+						msgLine.append($('<label>', {class:'chat_username'}).append(labelTxt))
+					}
+
+					msgLine.append(
+						$('<div/>', {'class': 'chat_msg_item '+chat_msg_item_class})
+						.append(avatarElement)
+						.append( $('<span/>').append(chat.message) )
+					)
+
+					chatMsgWindow.append(msgLine);
+					
+
+
+				});				  
+			}
+		}).fail(function(err) {
+			console.error('Avatar not available:', err);
+		});
 	}
 	/* End Handle Chat History */
 
@@ -323,6 +375,7 @@
 		if (type==='welcome') {
 			// joinMsg = joinMsgEl.value + ' ' + user;
 			joinMsg = user + ' joined the channel';
+			getPreviousChats();
 		} else if (type==='leave') {
 			joinMsg = user + ' left the channel';
 		}

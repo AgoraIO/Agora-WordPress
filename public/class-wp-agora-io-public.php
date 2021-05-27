@@ -86,12 +86,34 @@ class WP_Agora_Public {
 	}
 
 	/* Function to get chats from the databse */
-	public function getChatsFromHistory($channel_id){
+	public function getChatsFromHistory(){
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'agora_io_chats';
 
+		$channel_id = $_POST['channel_id'];
+		$timezone = $_POST['timezone'];
+		$username = $_POST['username'];
+		$todayDate = $_POST['todayDate'];
+
 		$getChatsQuery = "SELECT * from $table_name where channel_id = '$channel_id'";
-		return $wpdb->get_results($getChatsQuery);
+		$results = $wpdb->get_results($getChatsQuery);
+		if(!empty($results)){	
+			foreach($results as $result){
+				$dateInLocalTimezone = strtotime($this->convertToTimezone(date("Y-m-d H:i:s", $result->time), $timezone));
+				$result->time = date("Y-m-d h:i a", $dateInLocalTimezone);
+
+				/* If message date is equal to today's date the, return only time */
+				if(strtotime($todayDate) == strtotime(date("Y-m-d", $dateInLocalTimezone))){
+					$result->time = date("h:i a", $dateInLocalTimezone);
+				}
+				$result->isLocalMessage = false;
+				if((is_user_logged_in() && $chat->user_id == get_current_user_id()) || ($username==$result->username)){
+					$result->isLocalMessage = true;
+				}
+			}
+		}
+		echo json_encode($results);
+		wp_die();
 	}
 
 	/* Function to save chat in the database if chat is enabled */
@@ -103,7 +125,7 @@ class WP_Agora_Public {
 		$username = $_POST['uname'];
 		$type = $_POST['type'];
 		$message = $_POST['msg'];
-		$time = $_POST['time'];
+		$time = strtotime(date("Y-m-d H:i:s"));
 		$created_on = date("Y-m-d H:i:s");
 
 		$table_name = $wpdb->prefix . 'agora_io_chats';
@@ -165,6 +187,14 @@ class WP_Agora_Public {
 		//echo $upload;
 		echo json_encode($response);
    		exit();
+	}
+
+	public function convertToTimezone($date, $currentTimezoneName){
+		$timezone_name = date_default_timezone_get();		
+		$date = new DateTime($date, new DateTimeZone($timezone_name));		
+		$date->setTimezone(new DateTimeZone($currentTimezoneName));
+		$date->format('Y-m-d H:i:s') . "\n";
+		return $date->format('Y-m-d H:i:s') . "\n";		
 	}
 
 	public function getUserAvatar() {

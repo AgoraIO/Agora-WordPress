@@ -271,8 +271,10 @@ window.AGORA_UTILS = {
       // if the main user stops their video select a random user from the list
       handleGhostMode(evt.uid, 'remote');
       handleMutedVideoBackgroundColor(evt.uid, 'remote');
-
-      let userAvatar = window.allStreams[remoteId].userDetails.avtar;
+      let userAvatar = '';
+      if(window.allStreams[remoteId]){
+        userAvatar = window.allStreams[remoteId].userDetails.avtar;
+      }
       if(userAvatar!=''){
         jQuery('body #'+ remoteId + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
       }
@@ -437,33 +439,20 @@ window.AGORA_UTILS = {
     if (old && old[0]) { old[0].remove() }
 
     streamsContainer.append(
-      jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container'}).append(
-        jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
-            jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
-        ),
-        jQuery('<div/>', {'id': streamId + '_no-video', 'class': 'no-video-overlay text-center'}).append(
-          jQuery('<i/>', {'class': 'fas fa-user'})
-        ),
-        jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
+      jQuery('<div/>', {'class': 'remote-stream-main-container'}).append(
+        jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container', 'rel': streamId}).append(
+          jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
+              jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
+          ),
+          jQuery('<div/>', {'id': streamId + '_no-video', 'class': 'no-video-overlay text-center'}).append(
+            jQuery('<i/>', {'class': 'fas fa-user'})
+          ),
+          jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
+        )
       )
     );
 
     remoteStream.play('agora_remote_' + streamId, function(err){
-      // if (err && err.status !== "aborted"){
-      //   console.log('Remote stream:' + streamId + ' failed to autoplay. Playing muted. Tap <video> container to enable audio.' );
-      //   remoteStream.stop();
-      //   window.AGORA_UTILS.toggleVisibility('#' + streamId + '_mute', true);
-      //   remoteStream.play('agora_remote_' + streamId, { muted: true });
-      //   // The playback fails. Guide the user to resume the playback by clicking.            
-      //   document.getElementById(streamId + '_container').onclick = playWithAudio; 
-      //   function playWithAudio() {
-      //     console.log('Attempting to play remote stream:' + streamId + ' with audio after user interaction' );
-      //     remoteStream.stop();
-      //     window.AGORA_UTILS.toggleVisibility('#' + streamId + '_mute', false);
-      //     remoteStream.play('agora_remote_' + streamId, { muted: false });
-      //     document.getElementById(streamId + '_container').removeEventListener('click', playWithAudio)
-      //   }     
-      // }
 
       if ((err && err.status !== "aborted") || (err && err.audio && err.audio.status !== "aborted")){
         jQuery('body #' + streamId + '_container').prepend(
@@ -738,8 +727,8 @@ function handleGhostMode(uid, streamType='local', channelType='communication'){
     }
     else if(streamType == 'remote'){
       console.log("hlwRemoteStream", window.remoteStreams[uid])
-      if((!window.remoteStreams[uid].getAudioTrack() || !window.remoteStreams[uid].getAudioTrack().enabled)
-      && (!window.remoteStreams[uid].getVideoTrack() || !window.remoteStreams[uid].getVideoTrack().enabled)
+      if((window.remoteStreams[uid] && (!window.remoteStreams[uid].getAudioTrack() || !window.remoteStreams[uid].getAudioTrack().enabled))
+      && (window.remoteStreams[uid] && (!window.remoteStreams[uid].getVideoTrack() || !window.remoteStreams[uid].getVideoTrack().enabled))
       ){
         window.AGORA_UTILS.toggleVisibility('#' + uid + '_container', false);
       } else {
@@ -832,6 +821,106 @@ jQuery(document).ready(function(){
   }).fail(function(err) {
     console.error('API Error:',err);
   })
+
+  if(window.isSpeakerView){
+    /* Handle Pin/Unpin - To pin stream into main view, need to stop the stream and then, start again */
+    jQuery("body").on("click", ".remote-stream-main-container", function(){
+      let currMainStream = jQuery('.main-screen #main-screen-stream-section').html();
+      let currStreamDiv = jQuery(this).find('div:first-child');
+
+      let isMainStreamLocal = false; isRightStreamLocal = false;
+
+      /* Handle Main Stream - Stop */
+      let mainStreamId = jQuery('.main-screen #main-screen-stream-section div:first-child').attr('id');
+      if(mainStreamId == 'local-video' || mainStreamId == 'full-screen-video'){
+        isMainStreamLocal = true;
+      }
+
+      if(isMainStreamLocal){ /* If main stream is of local video */
+        window.localStreams.camera.stream.stop();
+      } else {
+        window.remoteStreams[jQuery('.main-screen #main-screen-stream-section').find('.remote-stream-container').attr('rel')].stop();
+      }
+      /* End Handle Main Stream */
+      
+      /* Handle Right Stream - stop */
+      let rightStreamId = jQuery(currStreamDiv).attr('id');
+      if(rightStreamId == 'local-video'){
+        isRightStreamLocal = true;
+      }
+
+      if(isRightStreamLocal){ /* If right side stream is of local video */
+        window.localStreams.camera.stream.stop();
+      } else {
+        window.remoteStreams[jQuery(this).find('.remote-stream-container').attr('rel')].stop();
+      }
+      /* End Handle Right Stream */
+
+
+      /* Exchange streams positions */
+      jQuery('.main-screen #main-screen-stream-section').html(currStreamDiv);
+      jQuery(this).html(currMainStream);
+      /* End Exchange streams positions */
+
+
+      /* Handle Main Stream - play */
+      isMainStreamLocal = false;
+      mainStreamId = jQuery('.main-screen #main-screen-stream-section div:first-child').attr('id');
+      if(mainStreamId == 'local-video' || mainStreamId == 'full-screen-video'){
+        isMainStreamLocal = true;
+      }
+
+      if(isMainStreamLocal) { /* If main stream is of local video */
+        jQuery('.main-screen #main-screen-stream-section #player_'+window.localStreams.camera.stream.getId()).remove();
+        window.localStreams.camera.stream.play(mainStreamId);
+      } else {
+        let streamId = jQuery('.main-screen #main-screen-stream-section').find('.remote-stream-container').attr('rel');
+        jQuery('.main-screen #main-screen-stream-section #player_'+streamId).remove();
+        let remoteStream = window.remoteStreams[streamId];
+        
+        remoteStream.play('agora_remote_' + streamId, function(err){
+          if ((err && err.status !== "aborted") || (err && err.audio && err.audio.status !== "aborted")){
+            jQuery('body #' + streamId + '_container').prepend(
+              addAudioErrorGesture(streamId)
+            )
+          }  
+          handleGhostMode(streamId, 'remote');
+        });
+      }
+      /* End Handle Main Stream */
+
+
+      /* Handle Right Stream - play */
+      isRightStreamLocal = false;
+      rightStreamId = jQuery('.remote-stream-main-container div:first').attr('id');
+      if(rightStreamId == 'local-video' || rightStreamId == 'full-screen-video'){ /* If right side stream is of local video */
+        isRightStreamLocal = true;
+      }
+
+      if(isRightStreamLocal) {
+        jQuery('.remote-stream-main-container #player_'+window.localStreams.camera.stream.getId()).remove();
+        window.localStreams.camera.stream.play(rightStreamId);
+      } else {
+        let streamId = jQuery('.remote-stream-main-container').find('.remote-stream-container').attr('rel');
+        jQuery('.remote-stream-main-container #player_'+streamId).remove();
+        let remoteStream = window.remoteStreams[streamId];
+        
+        remoteStream.play('agora_remote_' + streamId, function(err){
+          if ((err && err.status !== "aborted") || (err && err.audio && err.audio.status !== "aborted")){
+            jQuery('body #' + streamId + '_container').prepend(
+              addAudioErrorGesture(streamId)
+            )
+          }  
+          handleGhostMode(streamId, 'remote');
+        });
+      }
+      /* End Handle Right Stream */
+
+    });
+
+    /* End Handle Pin/Unpin */
+  }
+
 });
 
 /* Function to handle background color for Muted Video */

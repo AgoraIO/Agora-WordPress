@@ -97,6 +97,9 @@ async function isVideoAvailable() {
 
 // video streams for channel
 function createCameraStream(uid, next) {
+
+  window.channel_type = 'communication';
+
   async function runCameraStream(cb) {
     const hasVideo = await isVideoAvailable()
     const localStream = AgoraRTC.createStream({

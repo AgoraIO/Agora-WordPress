@@ -922,7 +922,7 @@
       border-radius: 25px;  left: 3%;   color: #fff;   top: 4%;  font-size: .7rem;border: .4px solid #ffffff2e;  }
      /*-----------------------click-to-unmute-ends---------------------------------*/
       .speaker-view {  display: flex!important;    justify-content: space-between;  height: 40vh!important;  }
-      .speaker-view .main-screen {   width: 80%!important;}
+      .speaker-view .main-screen {   width: 100%;}
       .speaker-view .screen-users{width: 20%; overflow-y: auto; flex-direction: row; max-height: 50vh!important;}
       .speaker-view .screen-users .user{width: 100%;max-height: 200px!important;}
       .speaker-view .main-screen .user {display: block!important;height: 100%; position: relative;}
@@ -937,3 +937,14 @@
        .chat .tmp_fileMsg .action {  position: absolute; right: -7px; top: -14px; }
        .agora .chat .chat-msg-line label{font-size: 1rem!important;}
        /*-----------------------chat-end---------------------------------*/
+
+
+/* */
+#main-screen-stream-section{
+  height:100%;
+}       
+
+.remote-stream-main-container{
+  width:100%;
+  height: 100%;
+}
