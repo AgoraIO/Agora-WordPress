@@ -375,6 +375,8 @@ class WP_Agora_Public {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-agora-io-public.js', array( 'jquery' ), $this->version, false );
 
+		wp_enqueue_script( $this->plugin_name.'-agora-deviceTest-js', plugin_dir_url( __FILE__ ) . 'js/wp-agora-io-device-test.js', array( 'jquery' ), $this->version, false );
+
 		// add data before JS plugin
 		// useful to load dynamic settings and env vars
 		add_action( 'wp_footer', array($this, 'createPublicJSvars'), 1);

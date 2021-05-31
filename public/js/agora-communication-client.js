@@ -140,23 +140,28 @@ function createCameraStream(uid, next) {
       AgoraRTC.Logger.info("getUserMedia successfully");
       try {
         localStream.play('local-video'); // play the given stream within the local-video div
-        // publish local stream
-        agoraClient.publish(localStream, function (err) {
-          AgoraRTC.Logger.error("[ERROR] : publish local stream error: " + err);
-        });
+
+        if(!window.pre_call_device_test_enabled){
+          publishLocalStream(localStream, 'communication');
+        } 
+
+        // // publish local stream
+        // agoraClient.publish(localStream, function (err) {
+        //   AgoraRTC.Logger.error("[ERROR] : publish local stream error: " + err);
+        // });
       
-        window.AGORA_COMMUNICATION_UI.enableUiControls(localStream); // move after testing
+        // window.AGORA_COMMUNICATION_UI.enableUiControls(localStream); // move after testing
         window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
 
-        /* Mute Audios and Videos Based on Mute All Users Settings */
-        if(window.mute_all_users_audio_video){
-          if(localStream.getVideoTrack() && localStream.getVideoTrack().enabled){
-            jQuery("#video-btn").trigger('click');
-          }
-          if(localStream.getAudioTrack() && localStream.getAudioTrack().enabled){
-            jQuery("#mic-btn").trigger('click');
-          }
-        }
+        // /* Mute Audios and Videos Based on Mute All Users Settings */
+        // if(window.mute_all_users_audio_video){
+        //   if(localStream.getVideoTrack() && localStream.getVideoTrack().enabled){
+        //     jQuery("#video-btn").trigger('click');
+        //   }
+        //   if(localStream.getAudioTrack() && localStream.getAudioTrack().enabled){
+        //     jQuery("#mic-btn").trigger('click');
+        //   }
+        // }
 
         window.AGORA_UTILS.agora_getUserAvatar(localStream.getId(), function getUserAvatar(avatarData) {
           let userAvatar = '';

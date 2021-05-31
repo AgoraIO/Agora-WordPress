@@ -131,21 +131,25 @@ async function createCameraStream(uid, deviceIds) {
       jQuery("#exit-btn").prop("disabled", false);
     }
     
-    window.agoraClient.publish(localStream, function (err) {
-      err && AgoraRTC.Logger.error('[ERROR] : publish local stream error: ' + err);
-    });
+    // window.agoraClient.publish(localStream, function (err) {
+    //   err && AgoraRTC.Logger.error('[ERROR] : publish local stream error: ' + err);
+    // });
+
+    if(!window.pre_call_device_test_enabled){
+      publishLocalStream(localStream, 'broadcast');
+    }
 
     window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
 
     /* Mute Audios and Videos Based on Mute All Users Settings */
-    if(window.mute_all_users_audio_video){
-      if(localStream.getVideoTrack() && localStream.getVideoTrack().enabled){
-        jQuery("#video-btn").trigger('click');
-      }
-      if(localStream.getAudioTrack() && localStream.getAudioTrack().enabled){
-        jQuery("#mic-btn").trigger('click');
-      }
-    }
+    // if(window.mute_all_users_audio_video){
+    //   if(localStream.getVideoTrack() && localStream.getVideoTrack().enabled){
+    //     jQuery("#video-btn").trigger('click');
+    //   }
+    //   if(localStream.getAudioTrack() && localStream.getAudioTrack().enabled){
+    //     jQuery("#mic-btn").trigger('click');
+    //   }
+    // }
 
     window.AGORA_UTILS.agora_getUserAvatar(localStream.getId(), function getUserAvatar(avatarData) {
       let userAvatar = '';

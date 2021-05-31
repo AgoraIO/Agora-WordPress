@@ -22,6 +22,12 @@
     window.isSpeakerView = false;
   }
 
+  window.pre_call_device_test_enabled = 1;
+
+  if(sessionStorage.getItem("deviceTested")=="Yes"){
+    window.pre_call_device_test_enabled = 0;
+  }
+
   window.mute_all_users_audio_video = '<?php echo $channel->mute_all_users() ?>';
   if(window.mute_all_users_audio_video == "0"){
     window.mute_all_users_audio_video = false;

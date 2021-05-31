@@ -181,7 +181,7 @@
   padding: 0;
 }
 .agora .screen.sharescreen .screen-users .user {
-  width: calc(100px * 1.5);
+  width: calc(100px * 1.5) !important;
   height: 100px;
 }
 .agora .screen.sharescreen .screen-users {
@@ -197,7 +197,7 @@
 
 /* screen with 1 user */
 .agora .screen-users-1 .user {
-  width: 100%;
+  width: 100% !important;
   height: 50vh;
 }
 .agora-fullscreen .screen-users-1 .user {
@@ -212,18 +212,18 @@
 
 /* screeen with 2 users */
 .agora .screen-users-2 .user {
-  width: 49%;
+  width: 49% !important;
   height: 45vh;
 }
 .agora-fullscreen .screen-users-2 .user {
-  width: 50%;
+  width: 50% !important;
   height: 69.5vh;
 }
 
 /* screen with 3-4 users */
 .agora .screen-users-3 .user,
 .agora .screen-users-4 .user{
-  width: 50%;
+  width: 50% !important;
   height: 30vh;
 }
 .agora-fullscreen .screen-users-3 .user,
@@ -233,7 +233,7 @@
 
 /* screen with 5 y 6 users */
 .agora .screen-users-5-6 .user{
-  width: 33%;
+  width: 33% !important;
   height: 25vh;
 }
 .agora-fullscreen .screen-users-5-6 .user{
@@ -242,7 +242,7 @@
 
 /* screen with 7 y 8 users */
 .agora .screen-users-7-9 .user{
-  width: 33%;
+  width: 33% !important;
   height: 20vh;
 }
 .agora-fullscreen .screen-users-7-9 .user{
@@ -251,7 +251,7 @@
 
 /* pantalla 10, 11 y 12*/
 .agora .screen-users-10-12 .user{
-  width: 24.5%;
+  width: 24.5% !important;
   height: 17vh;
 }
 .agora-fullscreen .screen-users-10-12 .user{
@@ -264,7 +264,8 @@
 
 .agora-footer {
   background: var(--agora-background);
-  display: flex;
+  /* display: flex; */
+  display: none;
   justify-content: center;
   align-items: center;
   z-index: 2;
@@ -730,7 +731,7 @@
  */
 @media screen and (max-width: 1023px){
   .agora .screen-users-10-12 .user{
-    width: 22%;
+    width: 22% !important;
   }
 }
 @media screen and (max-width:768px) {
@@ -741,13 +742,13 @@
   .agora.agora-communication .only-mobile { display: block !important; }
 
   .agora .screen-users-2 .user {
-    width: 46.5%;
+    width: 46.5% !important;
   }
   .agora .screen-users-4 .user{
-    width: 46%;
+    width: 46% !important;
   }
   .agora .screen-users-10-12 .user{
-    width: 32%;
+    width: 32% !important;
   }
 }
 @media screen and (max-width: 480px){
@@ -756,14 +757,14 @@
   .agora .screen-users .user { padding: 0.1em; }
   .agora .screen-users-1 .user { height: 70vh; }
   .agora .screen-users-3 .user,
-  .agora .screen-users-4 .user { width: 50%; height: 32vh; }
-  .agora .screen-users-3 .user:last-child{ width: 100%; }
+  .agora .screen-users-4 .user { width: 50% !important; height: 32vh; }
+  .agora .screen-users-3 .user:last-child{ width: 100% !important; }
   .agora .screen-users-2 .user{
-    width: 100%;
+    width: 100% !important;
     height: 32vh;
   }
   .agora .screen-users-5-6 .user { height: 22vh; }
-  .agora .screen-users-7-9 .user { width: 32%; height: 21vh; }
+  .agora .screen-users-7-9 .user { width: 32% !important; height: 21vh; }
 
   .agora-fullscreen .agora-container { height: 100vh; }
   .agora.agora-fullscreen .screen { padding: 0 5px; }
@@ -771,9 +772,9 @@
   .agora-fullscreen .screen-users-2 .user{ height: 40vh; }
   .agora-fullscreen .screen-users-3 .user,
   .agora-fullscreen .screen-users-4 .user { height: 38vh; }
-  .agora-fullscreen .screen-users-5-6 .user { width: 50%; height: 26vh; }
-  .agora-fullscreen .screen-users-7-9 .user { width: 33%; height: 26vh; }
-  .agora-fullscreen .screen-users-10-12 .user { width: 25%; height: 26vh; }
+  .agora-fullscreen .screen-users-5-6 .user { width: 50% !important; height: 26vh; }
+  .agora-fullscreen .screen-users-7-9 .user { width: 33% !important; height: 26vh; }
+  .agora-fullscreen .screen-users-10-12 .user { width: 25% !important; height: 26vh; }
 }
 @media screen and (max-width: 320px) {
   .agora .buttons-botton{
@@ -844,6 +845,11 @@
 
 .chat-file-upload input[type="file"] {
   display: none !important;
+}
+
+.chat-file-progress-bar{
+  background-color: #005aab;
+  height: 24px;
 }
 
 /* End files in chat */
@@ -949,7 +955,8 @@
   height: 100%;
 }
 
-.chat-file-progress-bar{
-  background-color: #005aab;
-  height: 24px;
+/* Test Device */
+#test-device-section{
+  text-align: center;
+  color:#FFFFFF;
 }

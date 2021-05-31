@@ -63,6 +63,9 @@ function getCameraDevices() {
   AgoraRTC.Logger.info("Checking for Camera window.devices.....")
   window.agoraClient.getCameras (function(cameras) {
     window.devices.cameras = cameras; // store cameras array
+
+    let camOpts = '';
+
     cameras.forEach(function(camera, i){
       var name = camera.label.split('(')[0];
       var optionId = 'camera_' + i;
@@ -70,19 +73,37 @@ function getCameraDevices() {
       if(i === 0 && window.localStreams.camera.camId === ''){
         window.localStreams.camera.camId = deviceId;
       }
+      camOpts+='<option value="'+optionId+'">' + name + '</option>';
       jQuery('#camera-list').append('<a class="dropdown-item" id="' + optionId + '">' + name + '</a>');
     });
+
+    jQuery('#test-device-camera-list select#test-device-camera-options').append(camOpts);
+
+
     jQuery('#camera-list a').click(function(event) {
-      var index = event.target.id.split('_')[1];
-      changeStreamSource (index, "video");
+      changeCameraDevice(event.target.id)
     });
+
+    jQuery('#test-device-camera-list select').on('change', function() {
+      changeCameraDevice(jQuery(this).val())
+    });
+    
+
   });
+}
+
+function changeCameraDevice(target_id){
+  var index = target_id.split('_')[1];
+  changeStreamSource (index, "video");
 }
 
 function getMicDevices() {
   AgoraRTC.Logger.info("Checking for Mic window.devices.....")
   window.agoraClient.getRecordingDevices(function(mics) {
     window.devices.mics = mics; // store mics array
+
+    let micOpts = '';
+
     mics.forEach(function(mic, i){
       var name = mic.label.split('(')[0];
       var optionId = 'mic_' + i;
@@ -93,13 +114,26 @@ function getMicDevices() {
       if(name.split('Default - ')[1] != undefined) {
         name = '[Default Device]' // rename the default mic - only appears on Chrome & Opera
       }
+      micOpts+='<option value="'+optionId+'">' + name + '</option>';
       jQuery('#mic-list').append('<a class="dropdown-item" id="' + optionId + '">' + name + '</a>');
-    }); 
-    jQuery('#mic-list a').click(function(event) {
-      var index = event.target.id.split('_')[1];
-      changeStreamSource (index, "audio");
     });
+        
+    jQuery('#test-device-mic-list select#test-device-mic-options').append(micOpts);
+    
+    jQuery('#mic-list a').click(function(event) {
+      changeMicDevice(event.target.id);
+    });
+
+    jQuery('body select#test-device-mic-options').on('change', function() {
+      changeMicDevice(jQuery(this).val())
+    });
+
   });
+}
+
+function changeMicDevice(target_id){
+  var index = target_id.split('_')[1];
+  changeStreamSource (index, "audio");
 }
 
 
