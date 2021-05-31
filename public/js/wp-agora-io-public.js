@@ -437,9 +437,22 @@ window.AGORA_UTILS = {
     // avoid duplicate users in case there are errors removing old users and rejoining
     const old = streamsContainer.find(`#${streamId}_container`)
     if (old && old[0]) { old[0].remove() }
-
-    streamsContainer.append(
-      jQuery('<div/>', {'class': 'remote-stream-main-container'}).append(
+    if(window.isSpeakerView){
+      streamsContainer.append(
+        jQuery('<div/>', {'class': 'remote-stream-main-container'}).append(
+          jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container', 'rel': streamId}).append(
+            jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
+                jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
+            ),
+            jQuery('<div/>', {'id': streamId + '_no-video', 'class': 'no-video-overlay text-center'}).append(
+              jQuery('<i/>', {'class': 'fas fa-user'})
+            ),
+            jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
+          )
+        )
+      );
+    } else {
+      streamsContainer.append(
         jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container', 'rel': streamId}).append(
           jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
               jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
@@ -449,8 +462,8 @@ window.AGORA_UTILS = {
           ),
           jQuery('<div/>', {'id': 'agora_remote_' + streamId, 'class': 'remote-video'})
         )
-      )
-    );
+      );
+    }
 
     remoteStream.play('agora_remote_' + streamId, function(err){
 
@@ -748,7 +761,9 @@ jQuery(document).ready(function(){
   const THRESHOLD_AUDIO_LEVEL = 0.1;
   setInterval(() => {
 
-    window.allStreams = Object.fromEntries(Object.entries(window.allStreams).filter(([_, v]) => v != null));
+    if(typeof window.allStreams!='undefined'){
+      window.allStreams = Object.fromEntries(Object.entries(window.allStreams).filter(([_, v]) => v != null));
+    }
 
     /* Active speaker condition will work when there are 2 or more than 2 streams */
     if(typeof window.allStreams!='undefined' && Object.keys(window.allStreams).length>1){
