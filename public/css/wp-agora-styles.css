@@ -948,3 +948,8 @@
   width:100%;
   height: 100%;
 }
+
+.chat-file-progress-bar{
+  background-color: #005aab;
+  height: 24px;
+}

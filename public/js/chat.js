@@ -226,7 +226,7 @@
 		}
 
 		msgLine.append(
-			$('<span/>', {'class': 'chat_msg_item chat_msg_item_local_user'}).append(fileName+'<div class="progress"><div class="progress-bar-'+index+'" style="height:24px;background:red"></div></div>')
+			$('<span/>', {'class': 'chat_msg_item chat_msg_item_local_user'}).append(fileName+'<div class="progress"><div class="chat-file-progress-bar progress-bar-'+index+'"></div></div>')
 		);
 		chatMsgWindow.append(msgLine);
 		// scroll to bottom
@@ -278,8 +278,10 @@
 					const data = 'CHAT-FILE' + TOKEN_SEP + window.userID + TOKEN_SEP+ window.wp_username + TOKEN_SEP + fileName + TOKEN_SEP + response.fileURL;
 					window.AGORA_RTM_UTILS.sendChatMessage(data, function() {
 						saveChat('file', '<a href="'+response.fileURL+'">'+fileName+'</a>');
+						jQuery(".progress-bar-"+index).css('background-color', '#228b22');
 					});
 				} else if(response.status == 'err'){
+					jQuery(".progress-bar-"+index).css('background-color', '#8E020C');
 					//$('#uploadStatus').html('<p style="color:#EA4335;">Please select a valid file to upload.</p>');
 				}
 			}
