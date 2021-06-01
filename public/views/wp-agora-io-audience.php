@@ -46,7 +46,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
                   <i id="watch-live-icon" class="fas fa-broadcast-tower"></i>
                 <?php } ?>
                 <span id="txt-finished" style="display:none"><?php _e('The Live Stream has finished', 'agoraio'); ?></span>
-                <span id="txt-waiting"><?php _e('Waiting for broadcast connection...', 'agoraio'); ?></span>
+                <span id="txt-waiting"><?php if($channel->type() == 'Communication'){ _e('Waiting for communication connection...', 'agoraio'); } else { _e('Waiting for broadcast connection...', 'agoraio'); }; ?></span>
               </div>
             </div>
           </div>
@@ -239,14 +239,17 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
       // show mute icon whenever a remote has muted their mic
       window.agoraClient.on("mute-audio", function (evt) {
         window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', true);
+        handleGhostMode(evt.uid, 'remote');
       });
 
       window.agoraClient.on("unmute-audio", function (evt) {
         window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', false);
+        handleGhostMode(evt.uid, 'remote');
       });
 
       // show user icon whenever a remote has disabled their video
       window.agoraClient.on("mute-video", function (evt) {
+        handleGhostMode(evt.uid, 'remote');
         handleMutedVideoBackgroundColor(evt.uid, 'remote');
         let userAvatar = window.allStreams[evt.uid].userDetails.avtar;
         if(userAvatar!=''){
@@ -257,6 +260,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
 
       window.agoraClient.on("unmute-video", function (evt) {
         window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', false);
+        handleGhostMode(evt.uid, 'remote');
       });
 
       // ingested live stream 
