@@ -22,9 +22,9 @@
     window.isSpeakerView = false;
   }
 
-  window.pre_call_device_test_enabled = 1;
+  window.pre_call_device_test_enabled = parseInt('<?php echo $channel->pre_call_video() ?>');
 
-  if(sessionStorage.getItem("deviceTested")=="Yes"){
+  if(sessionStorage.getItem("deviceTested")=="Yes" || window.pre_call_device_test_enabled == "0"){
     window.pre_call_device_test_enabled = 0;
   }
 

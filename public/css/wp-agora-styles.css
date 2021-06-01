@@ -197,7 +197,7 @@
 
 /* screen with 1 user */
 .agora .screen-users-1 .user {
-  width: 100% !important;
+  width: 100%;
   height: 50vh;
 }
 .agora-fullscreen .screen-users-1 .user {
@@ -960,3 +960,22 @@
   text-align: center;
   color:#FFFFFF;
 }
+
+#test-device-progressBar {
+  width: 100%;
+  height: 8px;
+  background-color: #666666;
+  display: inline-block;
+}
+
+#test-device-myVolume {
+   width: 0%;
+   height: 100%;
+   background-color: #B4BB6B; 
+   display:block;
+ }
+
+.test-device-volumeScaleHolder {
+     padding:0;
+     margin: 3px 0;
+ }
