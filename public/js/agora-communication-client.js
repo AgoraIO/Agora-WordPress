@@ -142,7 +142,7 @@ function createCameraStream(uid, next) {
         localStream.play('local-video'); // play the given stream within the local-video div
 
         if(!window.pre_call_device_test_enabled){
-          publishLocalStream(localStream, 'communication');
+          publishLocalStream(localStream);
         } 
 
         // // publish local stream

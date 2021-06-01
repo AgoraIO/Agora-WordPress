@@ -961,6 +961,10 @@
   color:#FFFFFF;
 }
 
+.test-device-volume-indicator{
+  display: none;
+}
+
 #test-device-progressBar {
   width: 100%;
   height: 8px;

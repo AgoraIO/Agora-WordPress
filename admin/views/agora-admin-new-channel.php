@@ -434,24 +434,24 @@ function render_agoraio_channel_form_chat_support($channel) {
   </table>
   
   <script>
-    window.addEventListener('load', function() {
-      var channel_type_load = '<?php echo $props['type'] ?>';
-      if(channel_type_load == 'communication'){
-        jQuery('#pre_call_video').parents('tr').css('display','block');
-      }else{
-        jQuery('#pre_call_video').parents('tr').css('display','none');
-      }
-      function ShowHideFields(){
-        var channel_type = jQuery(this).val();
-        if(channel_type == 'communication'){
-          jQuery('#pre_call_video').parents('tr').css('display','block');
-        }else{
-          jQuery('#pre_call_video').parents('tr').css('display','none');
-        }
-      }
-      jQuery('#type').change(ShowHideFields);
-      jQuery('#type').change();
-    });
+    // window.addEventListener('load', function() {
+    //   var channel_type_load = '<?php echo $props['type'] ?>';
+    //   if(channel_type_load == 'communication'){
+    //     jQuery('#pre_call_video').parents('tr').css('display','block');
+    //   }else{
+    //     jQuery('#pre_call_video').parents('tr').css('display','none');
+    //   }
+    //   function ShowHideFields(){
+    //     var channel_type = jQuery(this).val();
+    //     if(channel_type == 'communication'){
+    //       jQuery('#pre_call_video').parents('tr').css('display','block');
+    //     }else{
+    //       jQuery('#pre_call_video').parents('tr').css('display','none');
+    //     }
+    //   }
+    //   jQuery('#type').change(ShowHideFields);
+    //   jQuery('#type').change();
+    // });
   </script>
   <?php
 }

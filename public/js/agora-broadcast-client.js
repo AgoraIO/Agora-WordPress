@@ -136,7 +136,7 @@ async function createCameraStream(uid, deviceIds) {
     // });
 
     if(!window.pre_call_device_test_enabled){
-      publishLocalStream(localStream, 'broadcast');
+      publishLocalStream(localStream);
     }
 
     window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
