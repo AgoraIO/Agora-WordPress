@@ -27,11 +27,11 @@ jQuery(document).ready(function(){
                 //jQuery('body #test-device-section .test-device-volume-indicator').find('input').attr('value', volume*100)
                 jQuery('body #test-device-myVolume').css('width', volume+'%')
 
-                // if(sessionStorage.getItem("deviceTested")=="Yes"){
-                //     clearInterval(currStreamInterval);
-                // }
+                if(sessionStorage.getItem("deviceTested")=="Yes"){
+                    clearInterval(currStreamInterval);
+                }
             }
-        }, 1000);
+        }, 200);
     }
 });
 
