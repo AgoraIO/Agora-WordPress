@@ -14,6 +14,8 @@
     window.isGhostModeEnabled = true;
   }
 
+  window.isPublished = false;
+
   window.isSpeakerView = '<?php echo $channel->channellayout() ?>';
 
   if(window.isSpeakerView == 'speaker'){
@@ -22,10 +24,13 @@
     window.isSpeakerView = false;
   }
 
+  window.max_users_limit = 1;
+
   window.pre_call_device_test_enabled = parseInt('<?php echo $channel->pre_call_video() ?>');
 
   if(sessionStorage.getItem("deviceTested")=="Yes" || window.pre_call_device_test_enabled == "0"){
     window.pre_call_device_test_enabled = 0;
+    window.isPublished = true;
   }
 
   window.mute_all_users_audio_video = '<?php echo $channel->mute_all_users() ?>';

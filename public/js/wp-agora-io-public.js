@@ -440,7 +440,8 @@ window.AGORA_UTILS = {
   },
 
   // REMOTE STREAMS UI
-  addRemoteStreamView: function(remoteStream) {
+  addRemoteStreamView: function(remoteStream, cond='') {
+    if(!window.isPublished && window.agoraMode!="audience") return; 
     const streamId = remoteStream.getId();
     console.log('Adding remote to main view:', streamId);
     // append the remote stream template to #remote-streams
@@ -502,12 +503,34 @@ window.AGORA_UTILS = {
     remoteStream.play('agora_remote_' + streamId, function(err){
 
       if ((err && err.status !== "aborted") || (err && err.audio && err.audio.status !== "aborted")){
+        console.log("hnjiErrorDuringPlay")
         jQuery('body #' + streamId + '_container').prepend(
           addAudioErrorGesture(streamId)
         )
       }
 
       handleGhostMode(streamId, 'remote');
+
+      if(cond=='playAfterPublish'){
+
+        let remoteId = remoteStream.getId();
+
+        if((!remoteStream.getAudioTrack() || !remoteStream.getAudioTrack().enabled)){
+          window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_mute', true);
+        }
+
+        if((!remoteStream.getVideoTrack() || !remoteStream.getVideoTrack().enabled)){
+          handleMutedVideoBackgroundColor(remoteId, 'remote');
+          let userAvatar = '';
+          if(window.allStreams[remoteId]){
+          userAvatar = window.allStreams[remoteId].userDetails.avtar;
+          }
+          if(userAvatar!=''){
+          jQuery('body #'+ remoteId + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
+          }
+          window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
+        }
+      }
 
     });
   },

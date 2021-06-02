@@ -14,9 +14,13 @@ jQuery(document).ready(function(){
         let camera_devices_div = "Camera <br><div id='test-device-camera-list'><select id='test-device-camera-options'></select></div>";
         let testMicButton = "<button onClick='startMicrophoneTesting()'>Start</button>";
         let mic_devices_div = "Microphone <br /><div id='test-device-mic-list'><select id='test-device-mic-options'></select><div id='test_microphone_div'>"+testMicButton+"</div></div>";
-        let action_button_div = "<div class='action-buttons'><button onclick='publishLocalStream(window.localStreams.camera.stream)'>Click to Join</button></div>";
+        let action_button_div = "<div class='action-buttons'><button class='start_stream_publish'>Click to Join</button></div>";
         jQuery("body #screen-users").append("<div id='test-device-section'> "+camera_devices_div+mic_devices_div+" <div class='test-device-volume-indicator'>"+volume_indicator_div+"</div> "+action_button_div+" </div>");
     }
+
+    jQuery('body').on('click', '.start_stream_publish', function(){
+        publishLocalStream(window.localStreams.camera.stream, 'playRemoteStream');
+    });
 });
 
 /* Show Audio Level on device test - Microphone */
@@ -47,7 +51,7 @@ function stopMicrophoneTesting(){
     }
 }
 
-function publishLocalStream (localStream){
+function publishLocalStream (localStream, cond=''){
 
     /* set Value in session storage to handle state on refresh */
     sessionStorage.setItem("deviceTested", "Yes");
@@ -70,6 +74,8 @@ function publishLocalStream (localStream){
 
     window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
 
+    window.isPublished = true;
+
     /* Mute Audios and Videos Based on Mute All Users Settings */
     if(window.mute_all_users_audio_video){
         if(localStream.getVideoTrack() && localStream.getVideoTrack().enabled){
@@ -78,5 +84,21 @@ function publishLocalStream (localStream){
         if(localStream.getAudioTrack() && localStream.getAudioTrack().enabled){
             jQuery("#mic-btn").trigger('click');
         }
+    }
+    if(cond=='playRemoteStream'){
+        console.log("playRemoteStreams")
+        let obj = window.remoteStreams;
+
+        console.log("hlwObj", obj)
+
+        jQuery.each( obj, function( key, value ) {
+            window.AGORA_UTILS.addRemoteStreamView(value, 'playAfterPublish');
+        });
+
+        // console.log("typeof window.remoteStreams", typeof window.remoteStreams)
+        // Object.keys(window.remoteStreams).forEach(function(key) {
+        //     console.log("hlwhnji")
+        //     console.log(key, window.remoteStreams[key]);
+        // });
     }
 }
