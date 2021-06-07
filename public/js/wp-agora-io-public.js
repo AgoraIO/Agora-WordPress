@@ -29,7 +29,7 @@
 
 
 
-function changeStreamSource (deviceIndex, deviceType) {
+function changeStreamSource (deviceIndex, deviceType, stream='') {
   AgoraRTC.Logger.info('Switching stream sources for: ' + deviceType);
   var deviceId;
   var existingStream = false;
@@ -42,12 +42,20 @@ function changeStreamSource (deviceIndex, deviceType) {
     deviceId = window.devices.mics[deviceIndex].deviceId;
   }
 
-  window.localStreams.camera.stream.switchDevice(deviceType, deviceId, function(){
+  let switchDeviceStream = window.localStreams.camera.stream;
+
+  if(stream == 'tmpStream'){
+    switchDeviceStream = window.localStreams.tmpCameraStream;
+  }
+
+  switchDeviceStream.switchDevice(deviceType, deviceId, function(){
     AgoraRTC.Logger.info('successfully switched to new device with id: ' + JSON.stringify(deviceId));
     // set the active device ids
     if(deviceType === "audio") {
+      sessionStorage.setItem("microphoneId", deviceId)
       window.localStreams.camera.micId = deviceId;
     } else if (deviceType === "video") {
+      sessionStorage.setItem("cameraId", deviceId)
       window.localStreams.camera.camId = deviceId;
     } else {
       AgoraRTC.Logger.warning("unable to determine deviceType: " + deviceType);
@@ -85,16 +93,16 @@ function getCameraDevices() {
     });
 
     jQuery('#test-device-camera-list select').on('change', function() {
-      changeCameraDevice(jQuery(this).val())
+      changeCameraDevice(jQuery(this).val(), 'tmpStream')
     });
     
 
   });
 }
 
-function changeCameraDevice(target_id){
+function changeCameraDevice(target_id, stream=''){
   var index = target_id.split('_')[1];
-  changeStreamSource (index, "video");
+  changeStreamSource (index, "video", stream);
 }
 
 function getMicDevices() {
@@ -125,15 +133,15 @@ function getMicDevices() {
     });
 
     jQuery('body select#test-device-mic-options').on('change', function() {
-      changeMicDevice(jQuery(this).val())
+      changeMicDevice(jQuery(this).val(), "tmpStream")
     });
 
   });
 }
 
-function changeMicDevice(target_id){
+function changeMicDevice(target_id, stream=''){
   var index = target_id.split('_')[1];
-  changeStreamSource (index, "audio");
+  changeStreamSource (index, "audio", stream);
 }
 
 
@@ -308,6 +316,8 @@ window.AGORA_UTILS = {
     window.agoraClient.on("mute-video", async function muteVideo(evt) {
       const remoteId = evt.uid;
 
+      window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
+
       console.log("remoteVideoMuted")
       console.log("callMuteVideoGhostCheck")
 
@@ -325,7 +335,6 @@ window.AGORA_UTILS = {
       if(userAvatar!=''){
         jQuery('body #'+ remoteId + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
       }
-      window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
     });
 
     agoraClient.on("unmute-video", function unmuteVideo(evt) {

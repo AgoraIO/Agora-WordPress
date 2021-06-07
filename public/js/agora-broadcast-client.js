@@ -164,12 +164,24 @@ async function createCameraStream(uid, deviceIds) {
 
   AgoraRTC.Logger.info('Creating stream with sources: ' + JSON.stringify(deviceIds));
   const hasVideo = await detectWebcam()
-  const localStream = AgoraRTC.createStream({
+
+  let streamSpec = {
     streamID: uid,
     audio: true,
     video: hasVideo,
     screen: false
-  });
+  };
+
+  if(sessionStorage.getItem("microphoneId")!=null){
+    streamSpec.microphoneId = sessionStorage.getItem("microphoneId");
+  }
+
+  if(sessionStorage.getItem("cameraId")!=null){
+    streamSpec.cameraId = sessionStorage.getItem("cameraId");
+  }
+
+  const localStream = AgoraRTC.createStream(streamSpec);
+
   localStream.setVideoProfile(window.cameraVideoProfile);
 
   // The user has granted access to the camera and mic.

@@ -49,7 +49,7 @@ function initClientAndJoinChannel(agoraAppId, channelName) {
         console.error(err);
 
         // TODO: Show Global error!
-        //window.AGORA_RTM_UTILS.leaveChannel();
+        window.AGORA_RTM_UTILS.leaveChannel();
       }
     }); // join channel upon successfull init
   }, function (err) {
@@ -67,7 +67,7 @@ async function agoraJoinChannel(channelName, cb) {
     await createTmpCameraStream(userId);
   } else{
     window.AGORA_UTILS.setupAgoraListeners();
-
+    
     var token = window.AGORA_TOKEN_UTILS.agoraGenerateToken();
     agoraClient.join(token, channelName, userId, async function(uid) {
       AgoraRTC.Logger.info("User " + uid + " join channel successfully");
@@ -195,12 +195,25 @@ function createCameraStream(uid, next) {
 
   async function runCameraStream(cb) {
     const hasVideo = await isVideoAvailable()
-    const localStream = AgoraRTC.createStream({
+    let streamSpec = {
       streamID: uid,
       audio: true,
       video: hasVideo,
       screen: false
-    });
+    };
+
+    if(sessionStorage.getItem("microphoneId")!=null){
+      streamSpec.microphoneId = sessionStorage.getItem("microphoneId");
+    }
+
+    if(sessionStorage.getItem("cameraId")!=null){
+      streamSpec.cameraId = sessionStorage.getItem("cameraId");
+    }
+
+    console.log("hlwstreamSpec", streamSpec)
+
+    const localStream = AgoraRTC.createStream(streamSpec);
+
     localStream.setVideoProfile(window.cameraVideoProfile);
     localStream.on("accessAllowed", function() {
       if(window.devices.cameras.length === 0 && window.devices.mics.length === 0) {
