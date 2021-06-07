@@ -566,9 +566,9 @@ window.AGORA_UTILS = {
           addAudioErrorGesture(streamId)
         )
       }
-      console.log("streamPlayGhostCheck", streamId)
-      console.log("streamPlayGhostCheck", remoteStream.getAudioTrack().enabled)
-      handleGhostMode(streamId, 'remote');
+      // console.log("streamPlayGhostCheck", streamId)
+      // console.log("streamPlayGhostCheck", remoteStream.getAudioTrack().enabled)
+      // handleGhostMode(streamId, 'remote');
     });
   },
 
