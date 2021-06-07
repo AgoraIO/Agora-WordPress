@@ -133,7 +133,17 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
       window.agoraClient.on('stream-added', function addStream(evt) {
         const stream = evt.stream;
         const streamId = stream.getId();
-        window.remoteStreams[streamId] = stream;
+        window.remoteStreams[streamId] = {stream: stream};
+
+        /* Set the remote stream details alongwith user avtar */
+        window.AGORA_UTILS.agora_getUserAvatar(streamId, function getUserAvatar(avatarData) {
+          let userAvatar = '';
+          if (avatarData && avatarData.user && avatarData.avatar) {
+            userAvatar = avatarData.avatar
+          }
+          window.remoteStreams[streamId].userDetails = {avtar: userAvatar};
+        });
+
         if (window.waitingClose) {
           clearTimeout(window.waitingClose)
           window.waitingClose = null;
@@ -203,7 +213,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
         evt.stream.isPlaying() && evt.stream.stop(); // stop the stream
   
         if(window.remoteStreams[streamId] !== undefined) {
-          window.remoteStreams[streamId].isPlaying() && window.remoteStreams[streamId].stop(); //stop playing the feed
+          window.remoteStreams[streamId].stream.isPlaying() && window.remoteStreams[streamId].stream.stop(); //stop playing the feed
 
           delete window.remoteStreams[streamId]; // remove stream from list
           const remoteContainerID = '#' + streamId + '_container';
@@ -251,7 +261,10 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
       window.agoraClient.on("mute-video", function (evt) {
         handleGhostMode(evt.uid, 'remote');
         handleMutedVideoBackgroundColor(evt.uid, 'remote');
-        let userAvatar = window.allStreams[evt.uid].userDetails.avtar;
+        let userAvatar = '';
+        if(window.remoteStreams[evt.uid].userDetails){
+          userAvatar = window.remoteStreams[evt.uid].userDetails.avtar;
+        }
         if(userAvatar!=''){
           jQuery('body #'+ evt.uid + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
         }

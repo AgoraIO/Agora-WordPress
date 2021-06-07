@@ -10,15 +10,14 @@ const AGORA_RADIX_HEX = 16;
 // stream references (keep track of active streams) 
 window.remoteStreams = {}; // remote streams obj struct [id : stream] 
 
-window.allStreams = [];
-
 // keep track of streams
 window.localStreams = {
   uid: '',
   camera: {
     camId: '',
     micId: '',
-    stream: {}
+    stream: {},
+    userDetails: {}
   },
   screen: {
     id: "",
@@ -149,7 +148,7 @@ async function createCameraStream(uid, deviceIds) {
       if(userAvatar!=''){
         jQuery('body #no-local-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
       }
-      window.allStreams[localStream.getId()] = {stream: localStream, userDetails: {avtar: userAvatar}};
+      window.localStreams.camera.userDetails = {avtar: userAvatar};
     });
 
     jQuery('#buttons-container').fadeIn();

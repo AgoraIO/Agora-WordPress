@@ -5,9 +5,7 @@
 var agoraClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'});
 
 // stream references (keep track of active streams) 
-window.remoteStreams = {}; // remote streams obj struct [id : stream] 
-
-window.allStreams = [];
+window.remoteStreams = {}; // remote streams obj struct [id : stream]
 
 // keep track of streams
 window.localStreams = {
@@ -15,7 +13,8 @@ window.localStreams = {
   camera: {
     camId: '',
     micId: '',
-    stream: {}
+    stream: {},
+    userDetails: {}
   },
   screen: {
     id: "",
@@ -161,7 +160,7 @@ function createCameraStream(uid, next) {
           if(userAvatar!=''){
             jQuery('body #no-local-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
           }
-          window.allStreams[localStream.getId()] = {stream: localStream, userDetails: {avtar: userAvatar}};
+          window.localStreams.camera.userDetails = {avtar: userAvatar};
         });
 
         cb && cb(null)
