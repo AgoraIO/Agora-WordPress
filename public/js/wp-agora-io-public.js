@@ -294,11 +294,13 @@ window.AGORA_UTILS = {
     // show mute icon whenever a remote has muted their mic
     window.agoraClient.on("mute-audio", function muteAudio(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', true);
+      console.log("callMuteAudioGhostCheck")
       handleGhostMode(evt.uid, 'remote');
     });
 
     window.agoraClient.on("unmute-audio", function unmuteAudio(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', false);
+      console.log("callUnMuteAudioGhostCheck")
       handleGhostMode(evt.uid, 'remote');
     });
 
@@ -306,12 +308,19 @@ window.AGORA_UTILS = {
     window.agoraClient.on("mute-video", async function muteVideo(evt) {
       const remoteId = evt.uid;
 
+      console.log("remoteVideoMuted")
+      console.log("callMuteVideoGhostCheck")
+
       // if the main user stops their video select a random user from the list
       handleGhostMode(evt.uid, 'remote');
       handleMutedVideoBackgroundColor(evt.uid, 'remote');
       let userAvatar = '';
-      if(window.remoteStreams[remoteId].userDetails){
-        userAvatar = window.remoteStreams[remoteId].userDetails.avtar;
+      if(window.remoteStreams[remoteId]){
+        console.log("hlwremoteStreams", window.remoteStreams[remoteId])
+        console.log("hlwuserAvtar", window.remoteStreams[remoteId].userDetails)
+        if(typeof window.remoteStreams[remoteId].userDetails!='undefined'){
+          userAvatar = window.remoteStreams[remoteId].userDetails.avtar;
+        }
       }
       if(userAvatar!=''){
         jQuery('body #'+ remoteId + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
@@ -321,6 +330,7 @@ window.AGORA_UTILS = {
 
     agoraClient.on("unmute-video", function unmuteVideo(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', false);
+      console.log("callUnMuteVideoGhostCheck")
       handleGhostMode(evt.uid, 'remote');
     });
 
@@ -369,15 +379,45 @@ window.AGORA_UTILS = {
     window.agoraClient.on('stream-added', function streamAdded(evt) {
       const stream = evt.stream;
       const streamId = stream.getId();
+      console.log('AgoraRTC.Logger.info("new stream added: " + streamId);', streamId)
       AgoraRTC.Logger.info("new stream added: " + streamId);
 
       // Check if the stream is the local screen
       if (streamId != window.localStreams.screen.id) {
-        AgoraRTC.Logger.info('subscribe to remote stream:' + streamId);
-        // Subscribe to the stream.
+
+        let remoteStream = stream;
+        let remoteId = streamId;
+        window.remoteStreams[remoteId] = { stream: remoteStream };
+
+        /* Set the remote stream details alongwith user avtar */
+        window.AGORA_UTILS.agora_getUserAvatar(remoteId, function getUserAvatar(avatarData) {
+          let userAvatar = '';
+          if (avatarData && avatarData.user && avatarData.avatar) {
+            userAvatar = avatarData.avatar
+          }
+          window.remoteStreams[remoteId].userDetails = {avtar: userAvatar};
+        });
+
+        const isInjectedStream = window.injectedStreamURL && window.injectedStreamURL!=="";
+        if (window.screenshareClients[remoteId] || isInjectedStream) {
+        
+        } else {
+          // show new stream on screen:
+          window.AGORA_UTILS.addRemoteStreamView(remoteStream);
+        }
+
+        // // Subscribe to the stream.
         agoraClient.subscribe(stream, function (err) {
           AgoraRTC.Logger.error("[ERROR] : subscribe stream failed", err);
+          window.AGORA_UTILS.deleteRemoteStream(stream.getId());
+          var streamId = evt.stream.getId(); // the the stream id
+          jQuery('#uid-'+streamId).remove();
+
+          if(window.remoteStreams[streamId] !== undefined) {
+            window.AGORA_UTILS.deleteRemoteStream(streamId);
+          }
         });
+
       } else {
         // show this stream on main screen
       }
@@ -386,19 +426,11 @@ window.AGORA_UTILS = {
     window.agoraClient.on('stream-subscribed', function streamSubscribed(evt) {
       var remoteStream = evt.stream;
       var remoteId = remoteStream.getId();
-      window.remoteStreams[remoteId] = { stream: remoteStream };
+      //window.remoteStreams[remoteId] = { stream: remoteStream };
       // console.log('Stream subscribed:', remoteId);
 
-      /* Set the remote stream details alongwith user avtar */
-      window.AGORA_UTILS.agora_getUserAvatar(remoteId, function getUserAvatar(avatarData) {
-        let userAvatar = '';
-        if (avatarData && avatarData.user && avatarData.avatar) {
-          userAvatar = avatarData.avatar
-        }
-        window.remoteStreams[remoteId].userDetails = {avtar: userAvatar};
-      });
-
-      AgoraRTC.Logger.info("Subscribe remote stream successfully: " + remoteId);
+      console.log("Subscribe remote stream successfully:")
+      AgoraRTC.Logger.info("Subscribe remote stream successfully: " + window.screenshareClients);
 
       const isInjectedStream = window.injectedStreamURL && window.injectedStreamURL!=="";
       if (window.screenshareClients[remoteId] || isInjectedStream) {
@@ -410,9 +442,6 @@ window.AGORA_UTILS = {
           window.AGORA_BROADCAST_UI.toggleCaptureStreamBtn(null, 'started');
         }
       } else {
-        // show new stream on screen:
-        window.AGORA_UTILS.addRemoteStreamView(remoteStream);
-
         // always add 1 due to the remote streams + local user
         const usersCount = Object.keys(window.remoteStreams).length + 1
         window.AGORA_UTILS.updateUsersCounter(usersCount);
@@ -421,6 +450,28 @@ window.AGORA_UTILS = {
       if (window.AGORA_CLOUD_RECORDING.isCloudRecording) {
         window.AGORA_CLOUD_RECORDING.updateLayout();
       }
+
+      // let remoteStream = stream;
+      //   let remoteId = streamId;
+      //   window.remoteStreams[remoteId] = { stream: remoteStream };
+
+      //   /* Set the remote stream details alongwith user avtar */
+      //   window.AGORA_UTILS.agora_getUserAvatar(remoteId, function getUserAvatar(avatarData) {
+      //     let userAvatar = '';
+      //     if (avatarData && avatarData.user && avatarData.avatar) {
+      //       userAvatar = avatarData.avatar
+      //     }
+      //     window.remoteStreams[remoteId].userDetails = {avtar: userAvatar};
+      //   });
+
+      //   const isInjectedStream = window.injectedStreamURL && window.injectedStreamURL!=="";
+      //   if (window.screenshareClients[remoteId] || isInjectedStream) {
+        
+      //   } else {
+      //     // show new stream on screen:
+      //     window.AGORA_UTILS.addRemoteStreamView(remoteStream);
+      //   }
+
     });
 
     // Listener for Agora RTM Events
@@ -455,10 +506,6 @@ window.AGORA_UTILS = {
   // REMOTE STREAMS UI
   addRemoteStreamView: function(remoteStream, cond='') {
 
-    /* If stream is not published(is in pre-call device test) and user is not an audience, don't add and play remote streams */
-    if(!window.isPublished && window.agoraMode!="audience") return; 
-
-    /* Play remote stream has published(not in pre-call device test) or user is audience */
     const streamId = remoteStream.getId();
     console.log('Adding remote to main view:', streamId);
     // append the remote stream template to #remote-streams
@@ -510,30 +557,9 @@ window.AGORA_UTILS = {
           addAudioErrorGesture(streamId)
         )
       }
-
+      console.log("streamPlayGhostCheck", streamId)
+      console.log("streamPlayGhostCheck", remoteStream.getAudioTrack().enabled)
       handleGhostMode(streamId, 'remote');
-
-      if(cond=='playAfterPublish'){
-
-        let remoteId = remoteStream.getId();
-
-        if((!remoteStream.getAudioTrack() || !remoteStream.getAudioTrack().enabled)){
-          window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_mute', true);
-        }
-
-        if((!remoteStream.getVideoTrack() || !remoteStream.getVideoTrack().enabled)){
-          handleMutedVideoBackgroundColor(remoteId, 'remote');
-          let userAvatar = '';
-          if(window.remoteStreams[remoteId].userDetails){
-            userAvatar = window.remoteStreams[remoteId].userDetails.avtar;
-          }
-          if(userAvatar!=''){
-          jQuery('body #'+ remoteId + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
-          }
-          window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
-        }
-      }
-
     });
   },
 
@@ -616,50 +642,28 @@ window.AGORA_UTILS = {
     })
   },
 
-  //Publish Local Stream
-  publishLocalStream (localStream, cond=''){
+  //Join and publish Local Stream
+  async joinVideoCall (localStream, cond=''){
 
-    /* set Value in session storage to handle state on refresh */
     sessionStorage.setItem("deviceTested", "Yes");
 
     jQuery("body #local-video").css('width', '100%');
     jQuery("body #full-screen-video").css('width', '100%');
 
+    window.localStreams.tmpCameraStream.stop();
+
     jQuery('body div#test-device-section').remove();
 
     jQuery('body .agora-footer').css('display', 'flex');
 
-    // publish local stream
-    window.agoraClient.publish(localStream, function (err) {
-        AgoraRTC.Logger.error("[ERROR] : publish local stream error: " + err);
-    });
+    console.log("hlwLocalStream")
 
-    if(window.agoraMode == 'communication'){
-        window.AGORA_COMMUNICATION_UI.enableUiControls(localStream); // move after testing
-    }
-
-    window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
-
-    window.isPublished = true;
-
-    /* Mute Audios and Videos Based on Mute All Users Settings */
-    if(window.mute_all_users_audio_video){
-        if(localStream.getVideoTrack() && localStream.getVideoTrack().enabled){
-            jQuery("#video-btn").trigger('click');
-        }
-        if(localStream.getAudioTrack() && localStream.getAudioTrack().enabled){
-            jQuery("#mic-btn").trigger('click');
-        }
-    }
-    if(cond=='playRemoteStream'){
-        console.log("playRemoteStreams")
-        let obj = window.remoteStreams;
-
-        console.log("hlwObj", obj)
-
-        jQuery.each( obj, function( key, value ) {
-            window.AGORA_UTILS.addRemoteStreamView(value.stream, 'playAfterPublish');
-        });
+    window.pre_call_device_test_enabled = 0;
+    sessionStorage.setItem("deviceTested", "Yes");
+    if(window.channel_type == 'communication'){
+      await window.AGORA_COMMUNICATION_CLIENT.agoraJoinChannel(window.channelName);
+    } else {
+      await window.AGORA_BROADCAST_CLIENT.agoraJoinChannel();
     }
   }
 }
@@ -845,12 +849,16 @@ function handleGhostMode(uid, streamType='local', channelType='communication'){
       showVisibleScreen();
     }
     else if(streamType == 'remote'){
-      console.log("hlwRemoteStream", window.remoteStreams[uid].stream)
+      //console.log("hlwRemoteStream", window.remoteStreams[uid].stream)
       if((window.remoteStreams[uid].stream && (!window.remoteStreams[uid].stream.getAudioTrack() || !window.remoteStreams[uid].stream.getAudioTrack().enabled))
       && (window.remoteStreams[uid].stream && (!window.remoteStreams[uid].stream.getVideoTrack() || !window.remoteStreams[uid].stream.getVideoTrack().enabled))
       ){
+        console.log("hlwHideGhost")
         window.AGORA_UTILS.toggleVisibility('#' + uid + '_container', false);
       } else {
+        console.log("audioTrackStaastu", window.remoteStreams[uid].stream.getAudioTrack().enabled)
+        console.log("audioTrackStaastu", window.remoteStreams[uid].stream.getVideoTrack().enabled)
+        console.log("hlwShowGhost", uid)
         window.AGORA_UTILS.toggleVisibility('#' + uid + '_container', true);
       }
       showVisibleScreen();

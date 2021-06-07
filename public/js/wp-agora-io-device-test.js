@@ -14,12 +14,12 @@ jQuery(document).ready(function(){
         let camera_devices_div = "Camera <br><div id='test-device-camera-list'><select id='test-device-camera-options'></select></div>";
         let testMicButton = "<button onClick='startMicrophoneTesting()'>Start</button>";
         let mic_devices_div = "Microphone <br /><div id='test-device-mic-list'><select id='test-device-mic-options'></select><div id='test_microphone_div'>"+testMicButton+"</div></div>";
-        let action_button_div = "<div class='action-buttons'><button class='start_stream_publish'>Click to Join</button></div>";
+        let action_button_div = "<div class='action-buttons'><button class='click_to_join'>Click to Join</button></div>";
         jQuery("body #screen-users").append("<div id='test-device-section'> "+camera_devices_div+mic_devices_div+" <div class='test-device-volume-indicator'>"+volume_indicator_div+"</div> "+action_button_div+" </div>");
     }
 
-    jQuery('body').on('click', '.start_stream_publish', function(){
-        window.AGORA_UTILS.publishLocalStream(window.localStreams.camera.stream, 'playRemoteStream');
+    jQuery('body').on('click', '.click_to_join', function(){
+        window.AGORA_UTILS.joinVideoCall(window.localStreams.camera.stream, 'playRemoteStream');
     });
 });
 

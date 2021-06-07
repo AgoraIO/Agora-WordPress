@@ -924,7 +924,7 @@
   }
     /****************active*speaker*end****************/
       /*-----------------------click-to-unmute----------------------------------*/
-    .user  .resume-userclick {  position: absolute; z-index: 1;  display: inline-block;   background-color: #00000047;  padding: .5rem .8rem;
+    .user  .resume-userclick {  position: absolute; z-index: 2;  display: inline-block;   background-color: #00000047;  padding: .5rem .8rem;
       border-radius: 25px;  left: 3%;   color: #fff;   top: 4%;  font-size: .7rem;border: .4px solid #ffffff2e;  }
      /*-----------------------click-to-unmute-ends---------------------------------*/
       .speaker-view {  display: flex!important;    justify-content: space-between;  height: 40vh!important;  }
