@@ -441,7 +441,11 @@ window.AGORA_UTILS = {
 
   // REMOTE STREAMS UI
   addRemoteStreamView: function(remoteStream, cond='') {
+
+    /* If stream is not published(is in pre-call device test) and user is not an audience, don't add and play remote streams */
     if(!window.isPublished && window.agoraMode!="audience") return; 
+
+    /* Play remote stream has published(not in pre-call device test) or user is audience */
     const streamId = remoteStream.getId();
     console.log('Adding remote to main view:', streamId);
     // append the remote stream template to #remote-streams
@@ -612,6 +616,53 @@ window.AGORA_UTILS = {
         cb(err.toString(), null);
       }
     })
+  },
+
+  //Publish Local Stream
+  publishLocalStream (localStream, cond=''){
+
+    /* set Value in session storage to handle state on refresh */
+    sessionStorage.setItem("deviceTested", "Yes");
+
+    jQuery("body #local-video").css('width', '100%');
+    jQuery("body #full-screen-video").css('width', '100%');
+
+    jQuery('body div#test-device-section').remove();
+
+    jQuery('body .agora-footer').css('display', 'flex');
+
+    // publish local stream
+    window.agoraClient.publish(localStream, function (err) {
+        AgoraRTC.Logger.error("[ERROR] : publish local stream error: " + err);
+    });
+
+    if(window.agoraMode == 'communication'){
+        window.AGORA_COMMUNICATION_UI.enableUiControls(localStream); // move after testing
+    }
+
+    window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
+
+    window.isPublished = true;
+
+    /* Mute Audios and Videos Based on Mute All Users Settings */
+    if(window.mute_all_users_audio_video){
+        if(localStream.getVideoTrack() && localStream.getVideoTrack().enabled){
+            jQuery("#video-btn").trigger('click');
+        }
+        if(localStream.getAudioTrack() && localStream.getAudioTrack().enabled){
+            jQuery("#mic-btn").trigger('click');
+        }
+    }
+    if(cond=='playRemoteStream'){
+        console.log("playRemoteStreams")
+        let obj = window.remoteStreams;
+
+        console.log("hlwObj", obj)
+
+        jQuery.each( obj, function( key, value ) {
+            window.AGORA_UTILS.addRemoteStreamView(value, 'playAfterPublish');
+        });
+    }
   }
 }
 
