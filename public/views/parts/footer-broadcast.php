@@ -43,6 +43,14 @@ if (array_key_exists("chat_support_loggedin", $channelSettings) && $channelSetti
             </button>
             <small class="btn-title"><?php _e('Share', 'agoraio') ?></small>
         </div>
+
+        <div class="raise-hand-requests">
+            <button>
+                <i class="fas fa-user"></i>
+                <span id="total-requests"></span>
+            </button>
+        </div>
+
         <?php if(is_array($recordingSettings) && 
             !empty($recordingSettings['bucket']) &&
             !empty($recordingSettings['accessKey'])) : ?>

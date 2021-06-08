@@ -60,6 +60,8 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
       require_once('parts/chat-fab.php');
     }  ?>
 
+    <?php require_once('parts/raise-hand.php'); ?>
+
   </section>
 
   <?php require_once "parts/scripts-common.php" ?>
@@ -297,6 +299,8 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
       
       window.agoraClient.join(token, window.channelName, window.userID, function(uid) {
           AgoraRTC.Logger.info('User ' + uid + ' join channel successfully');
+          console.log('User ' + uid + ' join channel successfully')
+          window.audienceUserId = uid;
           window.AGORA_RTM_UTILS.joinChannel(uid, function(err){
             if (err) {
               console.error(err)

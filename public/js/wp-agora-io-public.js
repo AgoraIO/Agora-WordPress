@@ -486,7 +486,26 @@ window.AGORA_UTILS = {
     // Listener for Agora RTM Events
     window.addEventListener('agora.rtmMessageFromChannel', function receiveRTMMessage(evt) {
       if (evt.detail && evt.detail.text) {
-        if (evt.detail.text.indexOf('USER_JOINED_WITHOUT_')===0) {
+
+        /* Handle Raise Hand Request */
+        if(evt.detail.text.indexOf('CANCEL-RAISE-HAND-')===0){
+          let senderId = evt.detail.senderId;
+          delete window.raiseHandRequests[senderId];
+          let totalRequests = Object.keys(window.raiseHandRequests).length;
+          if(totalRequests == 0){ totalRequests = '';  }
+          jQuery("body .raise-hand-requests #total-requests").html(totalRequests);
+        }
+        else if (evt.detail.text.indexOf('RAISE-HAND-')===0) {
+          let senderRTCId = evt.detail.text.split('RAISE-HAND-')[1];
+          let senderId = evt.detail.senderId;
+          window.raiseHandRequests[senderId] = {
+            'userId': senderRTCId,
+            'status' : 0
+          }
+          jQuery("body .raise-hand-requests #total-requests").html(Object.keys(window.raiseHandRequests).length);
+        }
+        /* End Handle Raise Hand Request */
+        else if (evt.detail.text.indexOf('USER_JOINED_WITHOUT_')===0) {
           const pos = evt.detail.text.indexOf('**') + 2;
           const uid = evt.detail.text.substring(pos)
 

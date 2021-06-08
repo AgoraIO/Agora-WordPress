@@ -16,6 +16,9 @@
 
   window.isSpeakerView = '<?php echo $channel->channellayout() ?>';
 
+  window.audienceUserId = 0;
+  window.raiseHandRequests = {};
+
   if(window.isSpeakerView == 'speaker'){
     window.isSpeakerView = true;
   } else {
