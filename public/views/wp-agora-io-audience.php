@@ -284,6 +284,27 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
         // evt.stream.play('full-screen-video');
         AgoraRTC.Logger.info(JSON.stringify(evt));
       }); 
+
+      // Listener for Agora RTM Events
+      window.addEventListener('agora.rtmMessageFromPeer', function receivePeerRTMMessage(evt) {
+        console.log("hlwPeerMsg Jai Shree Ram  Audeience")
+        if (evt.detail && evt.detail.text) {
+
+          /* Handle Raise Hand Request - Response */
+
+          /* If Raise hand Request is Rejected */
+          if(evt.detail.text.indexOf('RAISE-HAND-REJECTED')===0){
+            console.log("Raise hand Request Rejected")
+            alert("Your request is rejected");
+          } 
+
+          /* If Raise hand Request is Accepted */
+          else if(evt.detail.text.indexOf('RAISE-HAND-ACCEPTED')===0){
+            console.log("Raise hand Request Accepted")
+          }
+        }
+      })
+
     });
 
     // join a channel

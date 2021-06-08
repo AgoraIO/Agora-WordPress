@@ -528,7 +528,8 @@ window.AGORA_UTILS = {
           });
         }
       }
-    })
+    });
+
   },
 
   // REMOTE STREAMS UI
@@ -1059,8 +1060,6 @@ async function createTmpCameraStream(uid, hasVideo){
   });
   localStream.setVideoProfile(window.cameraVideoProfile);
 
-  console.log("hlwhnjitempstream")
-
   // The user has granted access to the camera and mic.
   localStream.on("accessAllowed", function() {
     if(window.devices.cameras.length === 0 && window.devices.mics.length === 0) {
@@ -1109,3 +1108,70 @@ async function createTmpCameraStream(uid, hasVideo){
     }
   });
 }
+
+/* Handle raise hand requests pop-up */
+
+/* Function to get the HTML content to be added in Raise Hand Requests Pop-up */
+function raiseHandRequestsContent(){
+  let html = "<div>";
+  let requests = window.raiseHandRequests;
+  if(Object.keys(window.raiseHandRequests).length == 0){
+    html+="<div class='request-row'>No request!!</div>";
+  } else{
+    Object.keys(requests).forEach(function(key) {
+      html+="<div class='request-row' id='request-row-"+key+"'><div class='user-details'>"+requests[key].userId+"</div><button class='accept-raise-hand' id='"+key+"'>Accept</button>"+"<button class='reject-raise-hand' id='"+key+"'>Reject</button>"+"</div>";
+    });
+  }
+  html+="</div>";
+  return html;
+}
+
+/* Function to change the HTML content after Raise hand Request is processed */
+function handleRequestContentAfterProcess(memberId){
+  delete window.raiseHandRequests[memberId];
+  jQuery("body #request-row-"+memberId).remove();
+  let totalRequests = Object.keys(window.raiseHandRequests).length;
+  if(totalRequests == 0){ totalRequests = '';  }
+  jQuery("body .raise-hand-requests #total-requests").html(totalRequests);
+}
+
+jQuery(document).ready(function(){
+  
+  jQuery("body").on("click", ".raise-hand-requests button", function(){
+    jQuery("body").find("#view-raise-hand-requests-modal #raise-hand-requests-list").html(raiseHandRequestsContent());
+    jQuery('#view-raise-hand-requests-modal').modal('toggle');
+  });
+
+  jQuery("body").on("click", ".reject-raise-hand", function(){
+    let memberId = jQuery(this).attr('id');
+    const msg = {
+      description: undefined,
+      messageType: 'TEXT',
+      rawMessage: undefined,
+      text: 'RAISE-HAND-REJECTED'
+    }
+    try{
+      window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
+      handleRequestContentAfterProcess(memberId);
+    } catch(e){
+
+    }
+  });
+  
+  jQuery("body").on("click", ".accept-raise-hand", function(){
+    let memberId = jQuery(this).attr('id');
+    const msg = {
+      description: undefined,
+      messageType: 'TEXT',
+      rawMessage: undefined,
+      text: 'RAISE-HAND-ACCEPTED'
+    }
+    try{
+      window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
+      handleRequestContentAfterProcess(memberId);
+    } catch(e){
+
+    }
+  });
+
+})

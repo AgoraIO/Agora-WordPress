@@ -12,11 +12,11 @@ window.AGORA_RTM_UTILS = {
 		});
 
 		// event listener for receiving a peer-to-peer message.
-		window.rtmClient.on('MessageFromPeer', (evt, peerId) => { 
+		window.rtmClient.on('MessageFromPeer', (evt, senderId) => { 
 			// console.log('Received RTM from peer:', evt)
 			const { text } = evt;
-			// text: text of the received message; peerId: User ID of the sender.
-			AgoraRTC.Logger.info('AgoraRTM peer msg from user ' + peerId + ' received: \n' + text);
+			// text: text of the received message; senderId: User ID of the sender.
+			AgoraRTC.Logger.info('AgoraRTM peer msg from user ' + senderId + ' received: \n' + text);
 			const processed = processRtmRequest(text);
 			if (!processed) {
 				const msgEvent = {detail:{senderId, text}};
