@@ -9,6 +9,7 @@
 	const chatAlert = document.querySelector('#chat-alert');
 	const chatRoot = $('.chat');
 	let lastUserChat = '';
+	let isUserJoinedChat = false;
 
 
 	if (window.userID > 0) {
@@ -112,6 +113,9 @@
 			document.querySelector('.fab_field.non-user').style.display='none'
 			document.querySelector('.fab_field.user').style.display='block'
 			chatMsgWindow.css('display', 'block')
+
+			isUserJoinedChat = true;
+
 			textarea.focus()
 		}
 
@@ -389,48 +393,50 @@
 	}
 
 	function addRemoteMsg(uidRTM, data) {
-		let blocksMsg = data.split(TOKEN_SEP);
-		let msg  = blocksMsg[2];
-		let uid  = blocksMsg[0];
-		let user = blocksMsg[1];
+		if(isUserJoinedChat){
+			let blocksMsg = data.split(TOKEN_SEP);
+			let msg  = blocksMsg[2];
+			let uid  = blocksMsg[0];
+			let user = blocksMsg[1];
 
-		let msgLink = '';
+			let msgLink = '';
 
-		if(blocksMsg[0] == 'CHAT-FILE'){
-			uid  = blocksMsg[1];
-			user = blocksMsg[2];
-			msg  = blocksMsg[3];
-			msgLink = blocksMsg[4];
-		} 
-		
-		const msgLine = $('<div/>', {class: 'chat-msg-line remote uid' + uid});
+			if(blocksMsg[0] == 'CHAT-FILE'){
+				uid  = blocksMsg[1];
+				user = blocksMsg[2];
+				msg  = blocksMsg[3];
+				msgLink = blocksMsg[4];
+			} 
 			
-		if (user !== lastUserChat) {
-			lastUserChat = user;
-			const msgTime = getMessageTime();
-			const labelTxt = `${user} <time>${msgTime}</time>`;
-			msgLine.append($('<label>', {class:'chat_username'}).append(labelTxt))
-		}
+			const msgLine = $('<div/>', {class: 'chat-msg-line remote uid' + uid});
+				
+			if (user !== lastUserChat) {
+				lastUserChat = user;
+				const msgTime = getMessageTime();
+				const labelTxt = `${user} <time>${msgTime}</time>`;
+				msgLine.append($('<label>', {class:'chat_username'}).append(labelTxt))
+			}
 
-		const avatarElement = $('<div/>', {'class': 'chat_avatar'});
-		loadUserAvatar(uid, avatarElement[0]);
+			const avatarElement = $('<div/>', {'class': 'chat_avatar'});
+			loadUserAvatar(uid, avatarElement[0]);
 
-		if(msgLink!=''){
-			msg = `<a href='${msgLink}' target='_blank'>${msg}</a>`;
-		}
+			if(msgLink!=''){
+				msg = `<a href='${msgLink}' target='_blank'>${msg}</a>`;
+			}
 
-		msgLine.append(
-			$('<div/>', {'class': 'chat_msg_item chat_msg_item_remote_user'})
-			.append(avatarElement)
-			.append( $('<span/>').append(msg) )
-		)
+			msgLine.append(
+				$('<div/>', {'class': 'chat_msg_item chat_msg_item_remote_user'})
+				.append(avatarElement)
+				.append( $('<span/>').append(msg) )
+			)
 
-		chatMsgWindow.append(msgLine);
-		
-		if (chatRoot.hasClass('is-visible')){
-			scrollToBottm();
-		} else if (chatAlert) {
-			chatAlert.style.opacity = 1;
+			chatMsgWindow.append(msgLine);
+			
+			if (chatRoot.hasClass('is-visible')){
+				scrollToBottm();
+			} else if (chatAlert) {
+				chatAlert.style.opacity = 1;
+			}
 		}
 	}
 
