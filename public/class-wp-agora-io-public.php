@@ -376,9 +376,12 @@ class WP_Agora_Public {
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-agora-io-public.js', array( 'jquery' ), $this->version, false );
 
 		/*Include JS file to handle pre-call device test if it was enabled */
-		$pre_call_test_enabled = WP_Agora_Channel::get_current()->pre_call_video();
-		if(isset($pre_call_test_enabled) && $pre_call_test_enabled){
-			wp_enqueue_script( $this->plugin_name.'-agora-deviceTest-js', plugin_dir_url( __FILE__ ) . 'js/wp-agora-io-device-test.js', array( 'jquery' ), $this->version, false );
+		$channelRef = WP_Agora_Channel::get_current();
+		if(isset($channelRef)){
+			$pre_call_test_enabled = $channelRef->pre_call_video();
+			if(isset($pre_call_test_enabled) && $pre_call_test_enabled){
+				wp_enqueue_script( $this->plugin_name.'-agora-deviceTest-js', plugin_dir_url( __FILE__ ) . 'js/wp-agora-io-device-test.js', array( 'jquery' ), $this->version, false );
+			}
 		}
 
 		// add data before JS plugin
