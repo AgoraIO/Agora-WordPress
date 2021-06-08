@@ -295,7 +295,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
           /* If Raise hand Request is Rejected */
           if(evt.detail.text.indexOf('RAISE-HAND-REJECTED')===0){
             console.log("Raise hand Request Rejected")
-            alert("Your request is rejected");
+            raiseHandRequestRejected();
           } 
 
           /* If Raise hand Request is Accepted */
@@ -306,6 +306,11 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
       })
 
     });
+
+    function raiseHandRequestRejected(){
+      alert("Your request is rejected");
+      jQuery("#cancelRaiseHand").attr("id", "raiseHand");
+    }
 
     // join a channel
     function agoraJoinChannel() {

@@ -1174,4 +1174,6 @@ jQuery(document).ready(function(){
     }
   });
 
-})
+});
+
+/* End Handle raise hand requests pop-up */
