@@ -2,10 +2,6 @@ var currStreamInterval = '';
 
 jQuery(document).ready(function(){
 
-    if(!window.pre_call_device_test_enabled || window.agoraMode=='audience'){
-        jQuery('body .agora-footer').css('display', 'flex');
-    }
-
     if(window.pre_call_device_test_enabled && window.agoraMode!='audience'){
         jQuery("body #local-video").css('width', '50%');
         jQuery("body #full-screen-video").css('width', '50%');

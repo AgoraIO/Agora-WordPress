@@ -882,6 +882,11 @@ function handleGhostMode(uid, streamType='local', channelType='communication'){
 /* Function to set Global colors from admin settings */
 jQuery(document).ready(function(){
 
+  /* Show Video Controls footer if no pre call device test is enabled */
+  if(!window.pre_call_device_test_enabled || window.agoraMode=='audience'){
+    jQuery('body .agora-footer').css('display', 'flex');
+  }
+
   const params = {action: 'get_global_colors'};
 
   window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {

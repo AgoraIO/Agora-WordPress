@@ -45,10 +45,10 @@ class WP_Agora_Admin {
 		if($key != 'global_colors'){
 			$value = sanitize_text_field( $_POST[$key] );
 		}else{
-			$value = $_POST[$key];
+			$value = sanitize_text_field($_POST[$key]);
 		}
 		
-		$options = get_option($this->plugin_name);
+		$options = sanitize_option($this->plugin_name, get_option($this->plugin_name));
 		$old_value = $options;
 
 		if (!$options) {

@@ -77,7 +77,7 @@ class WP_Agora_Public {
 	}
 
 	public function getglobalColors() {
-		$agora_options = get_option($this->plugin_name);
+		$agora_options = sanitize_option($this->plugin_name, get_option($this->plugin_name));
 
 		header('Content-Type: application/json');
 		echo json_encode(array( "global_colors" => $agora_options['global_colors'] ));
@@ -90,10 +90,10 @@ class WP_Agora_Public {
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'agora_io_chats';
 
-		$channel_id = $_POST['channel_id'];
-		$timezone = $_POST['timezone'];
-		$username = $_POST['username'];
-		$todayDate = $_POST['todayDate'];
+		$channel_id = sanitize_text_field($_POST['channel_id']);
+		$timezone = sanitize_text_field($_POST['timezone']);
+		$username = sanitize_text_field($_POST['username']);
+		$todayDate = sanitize_text_field($_POST['todayDate']);
 
 		$getChatsQuery = "SELECT * from $table_name where channel_id = '$channel_id'";
 		$results = $wpdb->get_results($getChatsQuery);
@@ -120,11 +120,11 @@ class WP_Agora_Public {
 	public function saveChat(){
 		global $wpdb;
 
-		$channel_id = $_POST['channel_id'];
-		$user_id = $_POST['uid'];
-		$username = $_POST['uname'];
-		$type = $_POST['type'];
-		$message = $_POST['msg'];
+		$channel_id = sanitize_text_field($_POST['channel_id']);
+		$user_id = sanitize_text_field($_POST['uid']);
+		$username = sanitize_text_field($_POST['uname']);
+		$type = sanitize_text_field($_POST['type']);
+		$message = sanitize_text_field($_POST['msg']);
 		$time = strtotime(date("Y-m-d H:i:s"));
 		$created_on = date("Y-m-d H:i:s");
 
@@ -156,7 +156,7 @@ class WP_Agora_Public {
 		//$upload = 'err'; 
 		if(!empty($_FILES['file'])){ 
 
-			$channel_id = $_POST['channel_id'];
+			$channel_id = sanitize_text_field($_POST['channel_id']);
 
 			$targetDirURL = plugin_dir_url( dirname( __FILE__ ) ).'/uploads/'.$channel_id.'/';
 			
@@ -166,7 +166,7 @@ class WP_Agora_Public {
 				mkdir($targetDirPath);
 			}			
 			
-			$file = $_FILES['file']['name'];
+			$file = sanitize_file_name($_FILES['file']['name']);
 
 			/* Create unique name of file */
 			$fileName = pathinfo($file, PATHINFO_FILENAME);
