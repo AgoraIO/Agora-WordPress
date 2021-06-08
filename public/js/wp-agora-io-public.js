@@ -1028,3 +1028,65 @@ function handleMutedVideoBackgroundColor(streamId=0, type='local'){
     }
   }
 }
+
+/* Function to create temp stream for pre-call device test */
+async function createTmpCameraStream(uid, hasVideo){
+
+  const localStream = AgoraRTC.createStream({
+    streamID: uid,
+    audio: true,
+    video: hasVideo,
+    screen: false
+  });
+  localStream.setVideoProfile(window.cameraVideoProfile);
+
+  console.log("hlwhnjitempstream")
+
+  // The user has granted access to the camera and mic.
+  localStream.on("accessAllowed", function() {
+    if(window.devices.cameras.length === 0 && window.devices.mics.length === 0) {
+      AgoraRTC.Logger.info('[DEBUG] : checking for cameras & mics');
+      window.AGORA_UTILS.getCameraDevices();
+      window.AGORA_UTILS.getMicDevices();
+    }
+    AgoraRTC.Logger.info("accessAllowed");
+    if(!hasVideo){
+      const msg = {
+        text: "USER_JOINED_WITHOUT_PERMISSIONS",
+        messageType:"TEXT"
+      }
+      console.log('sending message')
+      window.AGORA_RTM_UTILS.sendChannelMessage(msg, cb)
+    }
+  });
+  // The user has denied access to the camera and mic.
+  localStream.on("accessDenied", function() {
+    AgoraRTC.Logger.warning("accessDenied");
+  });
+
+  localStream.init(function() {
+    
+    AgoraRTC.Logger.info('getUserMedia successfully');
+    if(window.channel_type == 'broadcast'){
+      localStream.play('full-screen-video'); // play the local stream on the main div
+    } else{
+      localStream.play('local-video'); // play the local stream on the main div
+    }
+
+    window.localStreams.tmpCameraStream = localStream; // keep track of the camera stream for later
+
+    jQuery('#buttons-container').fadeIn();
+  }, function (err) {
+    AgoraRTC.Logger.error('[ERROR] : getUserMedia failed', err);
+
+    if (err.msg==='NotAllowedError') {
+      const msg = {
+        text: "USER_JOINED_WITHOUT_PERMISSIONS**"+uid,
+        messageType:"TEXT"
+      }
+      window.AGORA_RTM_UTILS.sendChannelMessage(msg)
+      window.AGORA_COMMUNICATION_UI.enableExit()
+      window.AGORA_UTILS.showPermissionsModal()
+    }
+  });
+}
