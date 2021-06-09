@@ -68,6 +68,10 @@ class WP_Agora_Public {
 	    add_action( 'wp_ajax_get_previous_chats', $getChatsAjax );
 	    add_action( 'wp_ajax_nopriv_get_previous_chats', $getChatsAjax );
 
+		$loadHostViewAjax = array($this, 'load_host_view');
+		add_action('wp_ajax_load_host_view', $loadHostViewAjax);
+		add_action('wp_ajax_nopriv_load_host_view', $loadHostViewAjax);
+
 	    // Page Template loader for FullScreen
 	    require_once plugin_dir_path(dirname( __FILE__ )) . 'public/class-wp-agora-page-template.php';
 	    new WP_Agora_PageTemplate($this);
@@ -82,6 +86,27 @@ class WP_Agora_Public {
 		header('Content-Type: application/json');
 		echo json_encode(array( "global_colors" => $agora_options['global_colors'] ));
 
+		wp_die();
+	}
+
+	public function load_host_view(){
+		ob_start();
+
+		$channel_id = sanitize_text_field($_POST['channel_id']);
+		$channel = WP_Agora_Channel::get_instance($channel_id);
+		$agora = $this;
+
+		$instance = $agora->getShortcodeAttrs('agora-broadcast', []);
+		$current_user = wp_get_current_user();
+		$agoraUserScript = plugin_dir_url( dirname( __FILE__ ) ).'public/js/agora-broadcast-client.js';
+		?>
+		<script>
+			jQuery('<script />', { type : 'text/javascript', src : "<?php echo $agoraUserScript; ?>"}).appendTo('body');
+			window.roleFromAudienceToHost = true;
+		</script>
+		<?php
+
+		include(__DIR__.'/views/wp-agora-io-broadcast.php');
 		wp_die();
 	}
 

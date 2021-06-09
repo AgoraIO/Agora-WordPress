@@ -33,18 +33,5 @@
 	</div>
 </div>
 <script type="text/javascript">
-	window.addEventListener('agora.rtm_init', function loadChatApp() {
-        const headTag = document.head || document.getElementsByTagName("head")[0];
-
-        const chatStyles = document.createElement("link");
-        chatStyles.rel = "stylesheet";
-        chatStyles.href = `${window.agora_base_url}css/chat-fab.css`;
-        headTag.appendChild(chatStyles);
-
-        const arleneLib = document.createElement("script")
-        arleneLib.type = "text/javascript";
-        arleneLib.src = `${window.agora_base_url}js/chat.js`;
-        arleneLib.async = true;
-        headTag.appendChild(arleneLib);
-    });
+	window.addEventListener('agora.rtm_init', loadChatApp);
 </script>

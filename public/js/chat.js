@@ -17,6 +17,7 @@
 		const dataJoin = 'CHAT-JOIN' + TOKEN_SEP + window.userID + TOKEN_SEP + window.wp_username;
 		window.AGORA_RTM_UTILS.sendChatMessage(dataJoin);
 		chatMsgWindow.css('display', 'block');
+		jQuery(".chat .fab_field.user").css('display', 'flex');
 
 		const localData = window.userID + TOKEN_SEP + window.wp_username;
 		showUserNotify(localData, 'welcome')
@@ -54,6 +55,7 @@
 			scrollToBottm();
 			if (window.wp_username) {
 				textarea.focus()
+				isUserJoinedChat = true;
 			} else {
 				chatNameInput.focus()
 			}
@@ -113,6 +115,7 @@
 			document.querySelector('.fab_field.non-user').style.display='none'
 			document.querySelector('.fab_field.user').style.display='block'
 			chatMsgWindow.css('display', 'block')
+			jQuery(".chat .fab_field.user").css('display', 'flex');
 
 			isUserJoinedChat = true;
 
@@ -359,8 +362,6 @@
 					)
 
 					chatMsgWindow.append(msgLine);
-					
-
 
 				});				  
 			}
@@ -392,8 +393,13 @@
 		);
 	}
 
+	window.AGORA_CHAT = {
+		showUserNotify: showUserNotify,
+		TOKEN_SEP: TOKEN_SEP
+	};
+
 	function addRemoteMsg(uidRTM, data) {
-		if(isUserJoinedChat){
+		//if((isUserJoinedChat && window.chat_history_enabled) || !(window.chat_history_enabled)){
 			let blocksMsg = data.split(TOKEN_SEP);
 			let msg  = blocksMsg[2];
 			let uid  = blocksMsg[0];
@@ -428,16 +434,17 @@
 				$('<div/>', {'class': 'chat_msg_item chat_msg_item_remote_user'})
 				.append(avatarElement)
 				.append( $('<span/>').append(msg) )
-			)
+			)	
 
 			chatMsgWindow.append(msgLine);
-			
-			if (chatRoot.hasClass('is-visible')){
-				scrollToBottm();
-			} else if (chatAlert) {
-				chatAlert.style.opacity = 1;
-			}
+		//}
+
+		if (chatRoot.hasClass('is-visible')){
+			scrollToBottm();
+		} else if (chatAlert) {
+			chatAlert.style.opacity = 1;
 		}
+		
 	}
 
 	function sendMessage() {
@@ -490,24 +497,7 @@
 	window.AGORA_RTM_UTILS.addLocalMsg = addLocalMsg;
 	window.AGORA_RTM_UTILS.addRemoteMsg = addRemoteMsg;
 
-	window.addEventListener('agora.rtmMessageFromChannel', function(evt){
-		if (evt.detail && evt.detail.text) {
-			if(evt.detail.text.indexOf(`CHAT-FILE${TOKEN_SEP}`)==0){
-				const msgData = evt.detail.text;
-				window.AGORA_RTM_UTILS.addRemoteMsg(evt.detail.senderId, msgData)
-			}
-			else if (evt.detail.text.indexOf(`CHAT${TOKEN_SEP}`)===0) {
-				const msgData = evt.detail.text.substring(6);
-				window.AGORA_RTM_UTILS.addRemoteMsg(evt.detail.senderId, msgData)
-			} else if (evt.detail.text.indexOf(`CHAT-JOIN${TOKEN_SEP}`)===0) {
-				const msgData = evt.detail.text.substring(11);
-				showUserNotify(msgData, 'join');
-			} else if (evt.detail.text.indexOf(`CHAT-LEAVE${TOKEN_SEP}`)===0) {
-				const msgData = evt.detail.text.substring(12);
-				showUserNotify(msgData, 'leave');
-			}
-		}
-	});
+	window.addEventListener('agora.rtmMessageFromChannel', receiveRTMMessage);
 
 	// Event listener when user leave the current channel, on agora-rtm.js
 	window.addEventListener('agora.leavingChannel', function leaveChat() {

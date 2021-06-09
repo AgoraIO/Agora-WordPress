@@ -157,6 +157,8 @@ async function createCameraStream(uid, deviceIds) {
     window.agoraClient.publish(localStream, function (err) {
       err && AgoraRTC.Logger.error('[ERROR] : publish local stream error: ' + err);
     });
+    
+    jQuery('body .agora-footer').css('display', 'flex');
 
     window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
     

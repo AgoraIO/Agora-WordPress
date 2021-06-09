@@ -286,7 +286,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
       }); 
 
       // Listener for Agora RTM Events
-      window.addEventListener('agora.rtmMessageFromPeer', function receivePeerRTMMessage(evt) {
+      window.addEventListener('agora.rtmMessageFromPeer', async function receivePeerRTMMessage(evt) {
         console.log("hlwPeerMsg Jai Shree Ram  Audeience")
         if (evt.detail && evt.detail.text) {
 
@@ -301,6 +301,13 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
           /* If Raise hand Request is Accepted */
           else if(evt.detail.text.indexOf('RAISE-HAND-ACCEPTED')===0){
             console.log("Raise hand Request Accepted")
+            // const fab_save_user_elm = document.getElementById('fab_save_user');
+            // console.log("hlwfab_save_userElement", fab_save_user_elm)
+            // fab_save_user_elm.removeEventListener('click',function(){
+            //   console.log("SavefabUser function has been removed")
+            // });
+            await agoraLeaveChannel();
+            joinAsHost();
           }
         }
       })
@@ -341,6 +348,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
       window.dispatchEvent(new CustomEvent("agora.leavingChannel"));
       window.agoraClient.leave(function() {
         AgoraRTC.Logger.info('client leaves channel');
+        console.log('client leaves channel');
         window.AGORA_RTM_UTILS.leaveChannel();
 
         window.dispatchEvent(new CustomEvent("agora.leavedChannel"));

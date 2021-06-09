@@ -933,7 +933,7 @@
       .speaker-view .screen-users .user{width: 100%;max-height: 200px!important;}
       .speaker-view .main-screen .user {display: block!important;height: 100%; position: relative;}
        /*-----------------------chat----------------------------------*/
-       .chat .fab_field.user {  display: flex!important;  align-items: center;    }
+       .chat .fab_field.user {  align-items: center;    }
        .chat .fab_field.user .chat_field{line-height: 9px!important;}
        .chat .fab_field.user { padding: 0 0.5rem 0 .5rem!important;}
        .chat .tmp_fileMsg { position: relative; padding: .5rem; background-color: #f8f8f8;  margin: .2rem;   margin-left: .5rem!important;    display: inline-block;       }
