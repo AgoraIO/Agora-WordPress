@@ -45,8 +45,7 @@ $current_user       = wp_get_current_user();
     window.agoraCurrentRole = 'host';
     window.agoraMode = 'broadcast';
 
-    window.addEventListener('load', function() {
-      
+    function handleOnLoad(){
       window.mainStreamId = null; // reference to main stream
 
       // set log level:
@@ -63,8 +62,16 @@ $current_user       = wp_get_current_user();
       }, function (err) {
         AgoraRTC.Logger.error('[ERROR] : AgoraRTC client init failed', err);
       });
+    }
 
-    });
+    if(typeof window.roleFromAudienceToHost!='undefined'){
+      handleOnLoad();
+    }
+    else{
+      window.addEventListener('load', function() {
+        handleOnLoad();
+      });
+    }
 
   </script>
   <style>

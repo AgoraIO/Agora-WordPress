@@ -484,51 +484,8 @@ window.AGORA_UTILS = {
     });
 
     // Listener for Agora RTM Events
-    window.addEventListener('agora.rtmMessageFromChannel', function receiveRTMMessage(evt) {
-      if (evt.detail && evt.detail.text) {
+    window.addEventListener('agora.rtmMessageFromChannel', receiveRTMMessage);
 
-        /* Handle Raise Hand Request */
-        if(evt.detail.text.indexOf('CANCEL-RAISE-HAND-')===0){
-          let senderId = evt.detail.senderId;
-          delete window.raiseHandRequests[senderId];
-          let totalRequests = Object.keys(window.raiseHandRequests).length;
-          if(totalRequests == 0){ totalRequests = '';  }
-          jQuery("body .raise-hand-requests #total-requests").html(totalRequests);
-        }
-        else if (evt.detail.text.indexOf('RAISE-HAND-')===0) {
-          let senderRTCId = evt.detail.text.split('RAISE-HAND-')[1];
-          let senderId = evt.detail.senderId;
-          window.raiseHandRequests[senderId] = {
-            'userId': senderRTCId,
-            'status' : 0
-          }
-          jQuery("body .raise-hand-requests #total-requests").html(Object.keys(window.raiseHandRequests).length);
-        }
-        /* End Handle Raise Hand Request */
-        else if (evt.detail.text.indexOf('USER_JOINED_WITHOUT_')===0) {
-          const pos = evt.detail.text.indexOf('**') + 2;
-          const uid = evt.detail.text.substring(pos)
-
-          const titleModal = "New user joined"
-          let contentModal = "A new guest user has joined without video";
-          
-
-          window.AGORA_UTILS.agora_getUserAvatar(uid, function getUserAvatar(avatarData) {
-            if (avatarData && avatarData.user) {
-              contentModal = contentModal.replace('A new guest user', avatarData.user.display_name)
-
-              // make sure the name is capitalized
-              contentModal = contentModal.charAt(0).toUpperCase() + contentModal.slice(1)
-            }
-
-            document.getElementById('agora-toast-title').innerText = titleModal
-            document.getElementById('agora-toast-body').innerText = contentModal
-
-            jQuery('.toast').toast('show')
-          });
-        }
-      }
-    })
   },
 
   // REMOTE STREAMS UI
@@ -683,8 +640,6 @@ window.AGORA_UTILS = {
     jQuery('body div#test-device-section').remove();
 
     jQuery('body .agora-footer').css('display', 'flex');
-
-    console.log("hlwLocalStream")
 
     window.pre_call_device_test_enabled = 0;
     sessionStorage.setItem("deviceTested", "Yes");
@@ -899,13 +854,8 @@ function handleGhostMode(uid, streamType='local', channelType='communication'){
 /* End Handle Ghost Mode */
 
 /* Function to set Global colors from admin settings */
-jQuery(document).ready(function(){
 
-  /* Show Video Controls footer if no pre call device test is enabled */
-  if(!window.pre_call_device_test_enabled || window.agoraMode=='audience'){
-    jQuery('body .agora-footer').css('display', 'flex');
-  }
-
+function apply_global_colors(){
   const params = {action: 'get_global_colors'};
 
   window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
@@ -935,6 +885,16 @@ jQuery(document).ready(function(){
   }).fail(function(err) {
     console.error('API Error:',err);
   })
+}
+
+jQuery(document).ready(function(){
+
+  /* Show Video Controls footer if no pre call device test is enabled */
+  if(!window.pre_call_device_test_enabled || window.agoraMode=='audience'){
+    jQuery('body .agora-footer').css('display', 'flex');
+  }
+
+  apply_global_colors();
 
   if(window.isSpeakerView){
     /* Handle Pin/Unpin - To pin stream into main view, need to stop the stream and then, start again */
@@ -1048,8 +1008,33 @@ function handleMutedVideoBackgroundColor(streamId=0, type='local'){
   }
 }
 
+function reload(scriptList) {
+  scriptList.forEach(x=>{
+      loadJs(x.src,x.id);
+  })
+}
+
+// reload js to render the effect       
+function loadJs(file,id)
+{
+  jQuery("#"+id).remove();
+  jQuery("<script >"+"</script>").attr({id:id,src:file,type:'text/javascript'}).appendTo(jQuery('body'));
+}
+
+function handleHostJS(){
+  /* When a audience user is becoming a host through raise hand, reload the JS */
+  if(typeof window.roleFromAudienceToHost!='undefined'){
+    var scriptList=[
+      {src:jQuery("script#wp-agora-io-agora-deviceTest-js-js").attr('src'),id:"wp-agora-io-agora-deviceTest-js-js"},
+      {src:jQuery("script#wp-agora-io-agora-stream-audioErr-js").attr('src'),id:"wp-agora-io-agora-stream-audioErr-js"},
+    ];
+    reload(scriptList) ; 
+  }
+}
+
 /* Function to create temp stream for pre-call device test */
 async function createTmpCameraStream(uid, hasVideo){
+  await handleHostJS();
 
   const localStream = AgoraRTC.createStream({
     streamID: uid,
@@ -1058,8 +1043,6 @@ async function createTmpCameraStream(uid, hasVideo){
     screen: false
   });
   localStream.setVideoProfile(window.cameraVideoProfile);
-
-  console.log("hlwhnjitempstream")
 
   // The user has granted access to the camera and mic.
   localStream.on("accessAllowed", function() {
@@ -1109,3 +1092,191 @@ async function createTmpCameraStream(uid, hasVideo){
     }
   });
 }
+
+/* Handle raise hand requests pop-up */
+
+/* Function to get the HTML content to be added in Raise Hand Requests Pop-up */
+function raiseHandRequestsContent(){
+  let html = "<div>";
+  let requests = window.raiseHandRequests;
+  if(Object.keys(window.raiseHandRequests).length == 0){
+    html+="<div class='request-row'>No request!!</div>";
+  } else{
+    Object.keys(requests).forEach(function(key) {
+      html+="<div class='request-row' id='request-row-"+key+"'><div class='user-details'>"+requests[key].userId+"</div><button class='accept-raise-hand' id='"+key+"'>Accept</button>"+"<button class='reject-raise-hand' id='"+key+"'>Reject</button>"+"</div>";
+    });
+  }
+  html+="</div>";
+  return html;
+}
+
+/* Function to change the HTML content after Raise hand Request is processed */
+function handleRequestContentAfterProcess(memberId){
+  delete window.raiseHandRequests[memberId];
+  jQuery("body #request-row-"+memberId).remove();
+  let totalRequests = Object.keys(window.raiseHandRequests).length;
+  if(totalRequests == 0){ totalRequests = '';  }
+  jQuery("body .raise-hand-requests #total-requests").html(totalRequests);
+}
+
+jQuery(document).ready(function(){
+  
+  jQuery("body").on("click", ".raise-hand-requests button", function(){
+    jQuery("body").find("#view-raise-hand-requests-modal #raise-hand-requests-list").html(raiseHandRequestsContent());
+    jQuery('#view-raise-hand-requests-modal').modal('toggle');
+  });
+
+  jQuery("body").on("click", ".reject-raise-hand", function(){
+    let memberId = jQuery(this).attr('id');
+    const msg = {
+      description: undefined,
+      messageType: 'TEXT',
+      rawMessage: undefined,
+      text: 'RAISE-HAND-REJECTED'
+    }
+    try{
+      window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
+      handleRequestContentAfterProcess(memberId);
+    } catch(e){
+
+    }
+  });
+  
+  jQuery("body").on("click", ".accept-raise-hand", function(){
+    let memberId = jQuery(this).attr('id');
+    const msg = {
+      description: undefined,
+      messageType: 'TEXT',
+      rawMessage: undefined,
+      text: 'RAISE-HAND-ACCEPTED'
+    }
+    try{
+      window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
+      handleRequestContentAfterProcess(memberId);
+    } catch(e){
+
+    }
+  });
+
+});
+
+/* End Handle raise hand requests pop-up */
+
+
+/* Handle - change User Role - From Raise hand in Broadcast mode */
+function joinAsHost(){
+  var params = {
+    action: 'load_host_view', // wp ajax action
+    channel_id: window.channelId
+  };
+
+  /* Remove Previous RTM Event Listeners when joining from audience to host */
+  window.removeEventListener('agora.rtm_init', loadChatApp);
+  window.removeEventListener('agora.rtmMessageFromChannel', receiveRTMMessage);
+
+  /* Remove Previous Files of audience */
+  if(jQuery("script#wp-agora-io-chat-js").length>0){
+    jQuery("script#wp-agora-io-chat-js").remove();
+  }
+
+  if(jQuery("script#wp-agora-raise-hand-js").length>0){
+    jQuery("script#wp-agora-raise-hand-js").remove();
+  }
+
+  jQuery("link#wp-agora-io-chat-fab-css").remove();
+
+  window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
+    console.log("afterAjaxSuccess")
+
+    let mainElm = jQuery('#agora-root').parent();
+    jQuery('#agora-root').remove();
+    mainElm.html(res);
+    apply_global_colors();
+
+  }).fail(function(err) {
+    console.error('API Error:', err.responseJSON ? err.responseJSON.errors : err);
+  })
+}
+/* End Handle - change User Role - From Raise hand or user limit in Communication Mode */
+
+/* Function that will be run on rtm init event listener */
+function loadChatApp() {
+    const headTag = document.head || document.getElementsByTagName("head")[0];
+
+    const chatStyles = document.createElement("link");
+    chatStyles.rel = "stylesheet";
+    chatStyles.href = `${window.agora_base_url}css/chat-fab.css`;
+    chatStyles.setAttribute('id', 'wp-agora-io-chat-fab-css');
+    headTag.appendChild(chatStyles);
+
+    const arleneLib = document.createElement("script")
+    arleneLib.type = "text/javascript";
+    arleneLib.src = `${window.agora_base_url}js/chat.js`;
+    arleneLib.setAttribute('id', 'wp-agora-io-chat-js');
+    arleneLib.async = true;
+    headTag.appendChild(arleneLib);
+  }
+
+  /* End Function that will be run on rtm init event listener */
+
+  /* Function that will be run on rtm channel message event listener */
+  function receiveRTMMessage(evt) {
+
+    if (evt.detail && evt.detail.text) {
+
+      /* Handle Raise Hand Request */
+      if(evt.detail.text.indexOf('CANCEL-RAISE-HAND-')===0){
+        let senderId = evt.detail.senderId;
+        delete window.raiseHandRequests[senderId];
+        let totalRequests = Object.keys(window.raiseHandRequests).length;
+        if(totalRequests == 0){ totalRequests = '';  }
+        jQuery("body .raise-hand-requests #total-requests").html(totalRequests);
+      }
+      else if (evt.detail.text.indexOf('RAISE-HAND-')===0) {
+        let senderRTCId = evt.detail.text.split('RAISE-HAND-')[1];
+        let senderId = evt.detail.senderId;
+        window.raiseHandRequests[senderId] = {
+          'userId': senderRTCId,
+          'status' : 0
+        }
+        jQuery("body .raise-hand-requests #total-requests").html(Object.keys(window.raiseHandRequests).length);
+      }
+      /* End Handle Raise Hand Request */
+      else if (evt.detail.text.indexOf('USER_JOINED_WITHOUT_')===0) {
+        const pos = evt.detail.text.indexOf('**') + 2;
+        const uid = evt.detail.text.substring(pos)
+
+        const titleModal = "New user joined"
+        let contentModal = "A new guest user has joined without video";
+        
+
+        window.AGORA_UTILS.agora_getUserAvatar(uid, function getUserAvatar(avatarData) {
+          if (avatarData && avatarData.user) {
+            contentModal = contentModal.replace('A new guest user', avatarData.user.display_name)
+
+            // make sure the name is capitalized
+            contentModal = contentModal.charAt(0).toUpperCase() + contentModal.slice(1)
+          }
+
+          document.getElementById('agora-toast-title').innerText = titleModal
+          document.getElementById('agora-toast-body').innerText = contentModal
+
+          jQuery('.toast').toast('show')
+        });
+      } else if(evt.detail.text.indexOf(`CHAT-FILE${window.AGORA_CHAT.TOKEN_SEP}`)==0){
+				const msgData = evt.detail.text;
+				window.AGORA_RTM_UTILS.addRemoteMsg(evt.detail.senderId, msgData)
+			}
+			else if (evt.detail.text.indexOf(`CHAT${window.AGORA_CHAT.TOKEN_SEP}`)===0) {
+				const msgData = evt.detail.text.substring(6);
+				window.AGORA_RTM_UTILS.addRemoteMsg(evt.detail.senderId, msgData)
+			} else if (evt.detail.text.indexOf(`CHAT-JOIN${window.AGORA_CHAT.TOKEN_SEP}`)===0) {
+				const msgData = evt.detail.text.substring(11);
+				window.AGORA_CHAT.showUserNotify(msgData, 'join');
+			} else if (evt.detail.text.indexOf(`CHAT-LEAVE${window.AGORA_CHAT.TOKEN_SEP}`)===0) {
+				const msgData = evt.detail.text.substring(12);
+				window.AGORA_CHAT.showUserNotify(msgData, 'leave');
+			}
+    }
+}
+/* End Function that will be run on rtm channel message event listener */

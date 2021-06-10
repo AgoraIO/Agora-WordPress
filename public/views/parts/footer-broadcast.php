@@ -51,6 +51,8 @@ if (array_key_exists("chat_support_loggedin", $channelSettings) && $channelSetti
             </button>
         </div>
 
+        <?php require_once('modal-raise-hand-requests.php'); ?>
+
         <?php if(is_array($recordingSettings) && 
             !empty($recordingSettings['bucket']) &&
             !empty($recordingSettings['accessKey'])) : ?>
