@@ -885,7 +885,7 @@ button#exit-btn{ font-size: 16px;}
   /*----------------need--to -add display-flex-in  inline-css-----------------*/
   
   /****************mike*mute*overlay*end******************/
-  .user .mute-overlay {  position: absolute;  z-index: 2;    left: calc(50% - 14px);  font-size: 1.5em;  padding: 2px 0 0 2px;  display: none; }
+  .user .mute-overlay {  position: absolute;  z-index: 3;    left: calc(50% - 14px);  font-size: 1.5em;  padding: 2px 0 0 2px;  display: none; }
   
   /****************active*speaker*****************/
   .user-speraker,

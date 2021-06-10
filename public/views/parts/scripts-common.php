@@ -29,6 +29,10 @@
 
   window.pre_call_device_test_enabled = parseInt('<?php echo $channel->pre_call_video() ?>');
 
+  window.adminUser = JSON.parse('<?php echo $channel->is_admin_user(); ?>');
+  window.isAdminUser = window.adminUser.status;
+  window.canMuteUnmuteForcefully = window.adminUser.can_mute_unmute_forecefully;
+
   if(sessionStorage.getItem("deviceTested")=="Yes" || window.pre_call_device_test_enabled == "0"){
     window.pre_call_device_test_enabled = 0;
   }
