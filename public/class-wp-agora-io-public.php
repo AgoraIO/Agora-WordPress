@@ -49,12 +49,177 @@ class WP_Agora_Public {
 	    add_action( 'wp_ajax_get_user_avatar', $userAvatarAjax );
 	    add_action( 'wp_ajax_nopriv_get_user_avatar', $userAvatarAjax );
 
+	    $globalColorsAjax = array($this, 'getglobalColors');
+	    add_action( 'wp_ajax_get_global_colors', $globalColorsAjax );
+	    add_action( 'wp_ajax_nopriv_get_global_colors', $globalColorsAjax );
+
+		/* Ajax to handle Chat File Upload */
+		$uploadChatFileAjax = array($this, 'uploadChatFile');
+	    add_action( 'wp_ajax_upload_chat_file', $uploadChatFileAjax );
+	    add_action( 'wp_ajax_nopriv_upload_chat_file', $uploadChatFileAjax );
+
+		/* Ajax to handle Chat History if it is enabled */
+		$saveChatAjax = array($this, 'saveChat');
+	    add_action( 'wp_ajax_save_chat', $saveChatAjax );
+	    add_action( 'wp_ajax_nopriv_save_chat', $saveChatAjax );
+
+		/* Ajax to handle get Chat History if it was saved */
+		$getChatsAjax = array($this, 'getChatsFromHistory');
+	    add_action( 'wp_ajax_get_previous_chats', $getChatsAjax );
+	    add_action( 'wp_ajax_nopriv_get_previous_chats', $getChatsAjax );
+
+		$loadHostViewAjax = array($this, 'load_host_view');
+		add_action('wp_ajax_load_host_view', $loadHostViewAjax);
+		add_action('wp_ajax_nopriv_load_host_view', $loadHostViewAjax);
+
 	    // Page Template loader for FullScreen
 	    require_once plugin_dir_path(dirname( __FILE__ )) . 'public/class-wp-agora-page-template.php';
 	    new WP_Agora_PageTemplate($this);
 
 	    require_once(__DIR__.'/../includes/token-server/RtcTokenBuilder.php');
 	    require_once(__DIR__.'/../includes/token-server/RtmTokenBuilder.php');
+	}
+
+	public function getglobalColors() {
+		$agora_options = sanitize_option($this->plugin_name, get_option($this->plugin_name));
+
+		header('Content-Type: application/json');
+		echo json_encode(array( "global_colors" => $agora_options['global_colors'] ));
+
+		wp_die();
+	}
+
+	public function load_host_view(){
+		ob_start();
+
+		$channel_id = sanitize_text_field($_POST['channel_id']);
+		$channel = WP_Agora_Channel::get_instance($channel_id);
+		$agora = $this;
+
+		$instance = $agora->getShortcodeAttrs('agora-broadcast', []);
+		$current_user = wp_get_current_user();
+		$agoraUserScript = plugin_dir_url( dirname( __FILE__ ) ).'public/js/agora-broadcast-client.js';
+		?>
+		<script>
+			jQuery('<script />', { type : 'text/javascript', src : "<?php echo $agoraUserScript; ?>"}).appendTo('body');
+			window.roleFromAudienceToHost = true;
+		</script>
+		<?php
+
+		include(__DIR__.'/views/wp-agora-io-broadcast.php');
+		wp_die();
+	}
+
+	/* Function to get chats from the databse */
+	public function getChatsFromHistory(){
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'agora_io_chats';
+
+		$channel_id = sanitize_text_field($_POST['channel_id']);
+		$timezone = sanitize_text_field($_POST['timezone']);
+		$username = sanitize_text_field($_POST['username']);
+		$todayDate = sanitize_text_field($_POST['todayDate']);
+
+		$getChatsQuery = "SELECT * from $table_name where channel_id = '$channel_id'";
+		$results = $wpdb->get_results($getChatsQuery);
+		if(!empty($results)){	
+			foreach($results as $result){
+				$dateInLocalTimezone = strtotime($this->convertToTimezone(date("Y-m-d H:i:s", $result->time), $timezone));
+				$result->time = date("Y-m-d h:i a", $dateInLocalTimezone);
+
+				/* If message date is equal to today's date the, return only time */
+				if(strtotime($todayDate) == strtotime(date("Y-m-d", $dateInLocalTimezone))){
+					$result->time = date("h:i a", $dateInLocalTimezone);
+				}
+				$result->isLocalMessage = false;
+				if((is_user_logged_in() && $chat->user_id == get_current_user_id()) || ($username==$result->username)){
+					$result->isLocalMessage = true;
+				}
+			}
+		}
+		echo json_encode($results);
+		wp_die();
+	}
+
+	/* Function to save chat in the database if chat is enabled */
+	public function saveChat(){
+		global $wpdb;
+
+		$channel_id = sanitize_text_field($_POST['channel_id']);
+		$user_id = sanitize_text_field($_POST['uid']);
+		$username = sanitize_text_field($_POST['uname']);
+		$type = sanitize_text_field($_POST['type']);
+		$message = sanitize_text_field($_POST['msg']);
+		$time = strtotime(date("Y-m-d H:i:s"));
+		$created_on = date("Y-m-d H:i:s");
+
+		$table_name = $wpdb->prefix . 'agora_io_chats';
+
+		/* Create Chat History table if it doesn't exit */
+		$chat_history_table_sql = "CREATE TABLE IF NOT EXISTS $table_name ( 
+			id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+			channel_id INT(255),
+			user_id INT NOT NULL DEFAULT 0,
+			username VARCHAR(255),
+			type VARCHAR(255) DEFAULT 'text',
+			time VARCHAR (255),
+			message TEXT,
+			created_on DATETIME
+			)";
+		$wpdb->query($chat_history_table_sql );
+
+		$saveChat_query = "INSERT INTO $table_name ( user_id, username, channel_id, type, message, time, created_on) VALUES ('$user_id', '$username', '$channel_id', '$type', '$message', '$time' ,'$created_on')";
+		$wpdb->query($saveChat_query);
+		wp_die();
+	}
+
+	public function uploadChatFile(){
+		$response = array(
+			'fileURL' => '',
+			'status' => 'err'
+		);
+		//$upload = 'err'; 
+		if(!empty($_FILES['file'])){ 
+
+			$channel_id = sanitize_text_field($_POST['channel_id']);
+
+			$targetDirURL = plugin_dir_url( dirname( __FILE__ ) ).'/uploads/'.$channel_id.'/';
+			
+			// File upload configuration 
+			$targetDirPath = plugin_dir_path( dirname( __FILE__ ) ).'/uploads/'.$channel_id.'/';
+			if (!file_exists($targetDirPath)) {
+				mkdir($targetDirPath);
+			}			
+			
+			$file = sanitize_file_name($_FILES['file']['name']);
+
+			/* Create unique name of file */
+			$fileName = pathinfo($file, PATHINFO_FILENAME);
+			$ext = pathinfo($file, PATHINFO_EXTENSION);
+			$newFileName = $fileName.'-'.uniqid().'.'.$ext;
+
+			$targetFilePath = $targetDirPath.$newFileName; 
+			
+			// Upload file to the server 
+			if(move_uploaded_file($_FILES['file']['tmp_name'], $targetFilePath)){ 
+				//$upload = 'ok'; 
+				$response = array(
+					'fileURL' => $targetDirURL.$newFileName,
+					'status' => 'ok'
+				);
+			}
+		} 
+		//echo $upload;
+		echo json_encode($response);
+   		exit();
+	}
+
+	public function convertToTimezone($date, $currentTimezoneName){
+		$timezone_name = date_default_timezone_get();		
+		$date = new DateTime($date, new DateTimeZone($timezone_name));		
+		$date->setTimezone(new DateTimeZone($currentTimezoneName));
+		$date->format('Y-m-d H:i:s') . "\n";
+		return $date->format('Y-m-d H:i:s') . "\n";		
 	}
 
 	public function getUserAvatar() {
@@ -171,7 +336,8 @@ class WP_Agora_Public {
 	  	$fontawesome = plugin_dir_url( __FILE__ ) . 'css/fontawesome/css/all.min.css';
 
 
-		wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-3.2.1.100.js', array('jquery'), null );
+		//wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-3.2.1.100.js', array('jquery'), null );
+		wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-3.5.2.js', array('jquery'), null );
 		wp_enqueue_script( 'AgoraRTM', plugin_dir_url( __FILE__ ).'js/agora/agora-rtm-sdk-1.2.2.js', array('jquery'), null );
 		
 		wp_enqueue_style( 'fontawesome', $fontawesome, array('bootstrap'), null, 'all' );
@@ -229,7 +395,19 @@ class WP_Agora_Public {
 	}
 
 	public function enqueue_scripts() {
+		/* Include JS file to handle audio error on autoplay */
+		wp_enqueue_script( $this->plugin_name.'-agora-stream-audioErr', plugin_dir_url( __FILE__ ) . 'js/agora-stream-audioErr.js', array( 'jquery' ), $this->version, false );
+
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-agora-io-public.js', array( 'jquery' ), $this->version, false );
+
+		/*Include JS file to handle pre-call device test if it was enabled */
+		$channelRef = WP_Agora_Channel::get_current();
+		if(isset($channelRef)){
+			$pre_call_test_enabled = $channelRef->pre_call_video();
+			if(isset($pre_call_test_enabled) && $pre_call_test_enabled){
+				wp_enqueue_script( $this->plugin_name.'-agora-deviceTest-js', plugin_dir_url( __FILE__ ) . 'js/wp-agora-io-device-test.js', array( 'jquery' ), $this->version, false );
+			}
+		}
 
 		// add data before JS plugin
 		// useful to load dynamic settings and env vars

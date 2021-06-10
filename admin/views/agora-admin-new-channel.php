@@ -149,6 +149,9 @@ function agora_render_setting_row($id, $title, $settings, $prefix, $inputType="n
 
       <div id="postbox-container-3" class="postbox-container">
         <?php do_action( 'agoraio_channel_form_recording', $post ); ?>
+        <?php do_action( 'agoraio_channel_form_chat_support', $post ); ?>
+        <?php //do_action( 'agoraio_channel_form_ghost_mode', $post ); ?>
+        <?php //do_action( 'agoraio_channel_form_layout', $post ); ?>
 
         <p class="submit"><?php agoraio_admin_save_button( $post_id ); ?></p>
       </div>
@@ -364,6 +367,70 @@ function render_agoraio_channel_form_appearance($channel) {
           data-default-color="#ffffff">
       </td>
     </tr>
+  </table>
+  <?php
+}
+
+// Metabox content for Chat support tab
+function render_agoraio_channel_form_chat_support($channel) {
+  $props = $channel->get_properties();
+  $ChatSupportloggedin = $props['chat_support_loggedin'];
+  ?>
+  <table class="form-table">
+  <?php agora_render_setting_row_select(
+      'chat_support_loggedin',
+      __('Chat Support Enable?', 'agoraio'),
+      array(
+        '' => __('Select', 'agoraio'),
+        1 => __('Yes', 'agoraio'),
+        0 => __('No', 'agoraio')
+      ), $props, '');
+   ?>
+  <?php agora_render_setting_row_select(
+      'ghost_mode',
+      __('Ghost Mode', 'agoraio'),
+      array(
+        '' => __('Select', 'agoraio'),
+        1 => __('Yes', 'agoraio'),
+        0 => __('No', 'agoraio')
+      ), $props, '');
+   ?>
+     <?php agora_render_setting_row_select(
+      'channel_layout',
+      __('Layout', 'agoraio'),
+      array(
+        '' => __('Select', 'agoraio'),
+        'grid' => __('Grid View', 'agoraio'),
+        'speaker' => __('Speaker View', 'agoraio')
+      ), $props, '');
+   ?>
+    <?php agora_render_setting_row_select(
+      'mute_all_users',
+      __('Mute all users?', 'agoraio'),
+      array(
+        '' => __('Select', 'agoraio'),
+        1 => __('Yes', 'agoraio'),
+        0 => __('No', 'agoraio')
+      ), $props, '');
+   ?>
+    <?php agora_render_setting_row_select(
+      'chat_history',
+      __('Enable Chat History?', 'agoraio'),
+      array(
+        '' => __('Select', 'agoraio'),
+        1 => __('Yes', 'agoraio'),
+        0 => __('No', 'agoraio')
+      ), $props, '');
+   ?>
+    <?php agora_render_setting_row_select(
+      'pre_call_video',
+      __('Pre-call/video test?', 'agoraio'),
+      array(
+        '' => __('Select', 'agoraio'),
+        1 => __('Yes', 'agoraio'),
+        0 => __('No', 'agoraio')
+      ), $props, '');
+   ?>
   </table>
   <?php
 }

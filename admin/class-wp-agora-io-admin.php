@@ -42,9 +42,13 @@ class WP_Agora_Admin {
 		unset($_POST['action']);
 		$keys = array_keys($_POST);
 		$key = $keys[0];
-		$value = sanitize_text_field( $_POST[$key] );
-
-		$options = get_option($this->plugin_name);
+		if($key != 'global_colors'){
+			$value = sanitize_text_field( $_POST[$key] );
+		}else{
+			$value = sanitize_text_field($_POST[$key]);
+		}
+		
+		$options = sanitize_option($this->plugin_name, get_option($this->plugin_name));
 		$old_value = $options;
 
 		if (!$options) {
@@ -52,16 +56,19 @@ class WP_Agora_Admin {
 		}
 		$options[$key] = $value;
 
-		$r = false;
-		if (!$old_value) {
-			$r = add_option( $this->plugin_name, $options);
+		$r = false; 
+		if (!$old_value) { 
+			//echo '<pre>';print_r($this->plugin_name); echo '</pre>';die;
+			$r = update_option( $this->plugin_name, $options);
+			
 		} else {
 			// $r = update_option($this->plugin_name, $options);
 			$serialized_value = maybe_serialize( $options );
-			$update_args = array(
-	      'option_value' => $serialized_value,
-	    );
-	    $r = $wpdb->update(
+				$update_args = array(
+			'option_value' => $serialized_value,
+			);
+			
+	    	$r = $wpdb->update(
 					$wpdb->options,
 					$update_args,
 					array( 'option_name' => $this->plugin_name ) );
@@ -155,9 +162,39 @@ class WP_Agora_Admin {
     	'agora_channel_recording'
     );
 
+    // Chat metabox
+    add_meta_box(
+    	'agora-form-chat',
+    	__('Settings', 'agoraio'),
+    	'render_agoraio_channel_form_chat_support',
+    	null,
+    	'agora_chat_support'
+    );
+
+    // Ghost Mode metabox
+    /*add_meta_box(
+    	'agora-ghost-mode',
+    	__('Ghost Mode', 'agoraio'),
+    	'render_agoraio_channel_form_ghost_mode',
+    	null,
+    	'agora_ghost_mode'
+    );
+
+    // Layout metabox
+    add_meta_box(
+    	'agora-layout',
+    	__('Layout', 'agoraio'),
+    	'render_agoraio_channel_form_layout',
+    	null,
+    	'agora_layout'
+    );*/
+
 		add_action( 'agoraio_channel_form_settings', array($this, 'handle_channel_form_metabox_settings'), 10, 1 );
 		add_action( 'agoraio_channel_form_appearance', array($this, 'handle_channel_form_metabox_appearance'), 10, 1 );
 		add_action( 'agoraio_channel_form_recording', array($this, 'handle_channel_form_metabox_recording'), 10, 1 );
+		add_action( 'agoraio_channel_form_chat_support', array($this, 'handle_channel_form_chat_support'), 10, 1 );
+		//add_action( 'agoraio_channel_form_ghost_mode', array($this, 'handle_channel_form_ghost_mode'), 10, 1 );
+		//add_action( 'agoraio_channel_form_layout', array($this, 'handle_channel_form_layout'), 10, 1 );
 	}
 
 	public function include_agora_new_channel_page() {
@@ -184,7 +221,7 @@ class WP_Agora_Admin {
 	// http://fieldmanager.org/docs/misc/adding-fields-after-the-title/
 	// https://metabox.io/how-to-create-custom-meta-boxes-custom-fields-in-wordpress/
 	public function handle_channel_form_metabox_settings($channel) {
-		global $wp_meta_boxes;
+	global $wp_meta_boxes;
 
 		do_meta_boxes( get_current_screen(), 'agora_channel_settings', $channel );
 		unset( $wp_meta_boxes['post']['agora_channel_settings'] );
@@ -203,6 +240,27 @@ class WP_Agora_Admin {
 		do_meta_boxes( get_current_screen(), 'agora_channel_recording', $channel );
 		unset( $wp_meta_boxes['post']['agora_channel_recording'] );
 	}
+
+	public function handle_channel_form_chat_support($channel) {
+		global $wp_meta_boxes;
+
+		do_meta_boxes( get_current_screen(), 'agora_chat_support', $channel );
+		unset( $wp_meta_boxes['post']['agora_chat_support'] );
+	}
+
+	/*public function handle_channel_form_ghost_mode($channel) {
+		global $wp_meta_boxes;
+
+		do_meta_boxes( get_current_screen(), 'agora_ghost_mode', $channel );
+		unset( $wp_meta_boxes['post']['agora_ghost_mode'] );
+	}
+
+	public function handle_channel_form_layout($channel) {
+		global $wp_meta_boxes;
+
+		do_meta_boxes( get_current_screen(), 'agora_layout', $channel );
+		unset( $wp_meta_boxes['post']['agora_layout'] );
+	}*/
 
 	public function include_agora_settings_page() {
 		$agora_options = get_option($this->plugin_name);

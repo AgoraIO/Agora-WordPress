@@ -12,10 +12,12 @@ window.AGORA_COMMUNICATION_UI = {
 
     jQuery("#mic-btn").click(function(){
       window.AGORA_COMMUNICATION_UI.toggleMic(localStream);
+      handleGhostMode(localStream.getId(), 'local');
     });
 
     jQuery("#video-btn").click(function(){
       window.AGORA_COMMUNICATION_UI.toggleVideo(localStream);
+      handleGhostMode(localStream.getId(), 'local');
     });
 
     jQuery("#cloud-recording-btn").click(function(){
@@ -120,6 +122,7 @@ window.AGORA_COMMUNICATION_UI = {
 
     if (!localStream.userMuteVideo) {
       localStream.muteVideo(); // disable the local video
+      handleMutedVideoBackgroundColor(localStream.getId(), 'local');
       window.AGORA_UTILS.toggleVisibility("#no-local-video", true); // show the user icon when video is disabled
     } else {
       localStream.unmuteVideo(); // enable the local video

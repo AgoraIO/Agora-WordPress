@@ -4,6 +4,85 @@
 
   <?php do_action( 'agoraio_admin_notices', 'agoraio-settings', agora_current_action() ); ?>
 
+
+  <div class="card">
+    <h2 class="title">Global Settings</h2>
+    <br class="clear" />
+    <div class="inside">
+      <div class="flex app-setting" id="globalColors">
+        <div class="col label">
+        <table class="form-table">
+          <tr>
+            <th scope="row"><label for="unselectedVideoControlsButtonsColor"><?php _e('Video Controls Buttons Color Unselected', 'agoraio') ?></label></th>
+            <td>
+              <input
+                id="unselectedVideoControlsButtonsColor"
+                name="unselectedVideoControlsButtonsColor"
+                type="text"
+                class="agora-color-picker inputBoxGS"
+                value="<?php echo $agora_options['global_colors']['unselectedVideoControlsButtonsColor'] ?>"
+                data-default-color="#1E73BE">
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><label for="selectedVideoControlsButtonsColor"><?php _e('Video Controls Buttons Color Selected', 'agoraio') ?></label></th>
+            <td>
+              <input
+                id="selectedVideoControlsButtonsColor"
+                name="selectedVideoControlsButtonsColor"
+                type="text"
+                class="agora-color-picker inputBoxGS"
+                value="<?php echo $agora_options['global_colors']['selectedVideoControlsButtonsColor'] ?>"
+                data-default-color="#1E73BE">
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><label for="otherButtonsColor"><?php _e('Other Buttons Color', 'agoraio') ?></label></th>
+            <td>
+              <input
+                id="otherButtonsColor"
+                name="otherButtonsColor"
+                type="text"
+                class="agora-color-picker inputBoxGS"
+                value="<?php echo $agora_options['global_colors']['otherButtonsColor'] ?>"
+                data-default-color="#ffffff">
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><label for="backgroundColorVideoMuted"><?php _e('Background Color - Video Muted', 'agoraio') ?></label></th>
+            <td>
+              <input
+                id="backgroundColorVideoMuted"
+                name="backgroundColorVideoMuted"
+                type="text"
+                class="agora-color-picker inputBoxGS"
+                value="<?php echo $agora_options['global_colors']['backgroundColorVideoMuted'] ?>"
+                data-default-color="#ffffff">
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><label for="backgroundColorPanels"><?php _e('Background Color - Panels', 'agoraio') ?></label></th>
+            <td>
+              <input
+                id="backgroundColorPanels"
+                name="backgroundColorPanels"
+                type="text"
+                class="agora-color-picker inputBoxGS"
+                value="<?php echo $agora_options['global_colors']['backgroundColorPanels'] ?>"
+                data-default-color="#ffffff">
+            </td>
+          </tr>
+        </table>
+        </div>
+        
+      </div>
+      <p>
+        <a href="#" class="button-primary" id="globalColors-save" style="margin:0 10px">Save</a>
+      </p>
+      <span class="error error-messageglobalColors"></span>
+    </div>
+  </div>
+
   <div class="card">
     <h2 class="title">App ID</h2>
     <div class="infobox">
@@ -181,7 +260,113 @@
     </div>
   </div>
 
+  <div class="card">
+    <h2 class="title">More Settings</h2>
+    
+    <br class="clear" />
+
+    <div class="inside">
+      <p><?php _e('Global settings.', 'agoraio'); ?></p>
+      <div class="flex" id="agora-chat-loggedin">
+        <div class="col label">
+          Agora Chat for logged in users
+        </div>
+        <?php
+        $value = isset($agora_options['agora-chat-loggedin']) ? $agora_options['agora-chat-loggedin'] : '';
+        // $value = "https://4045media-cloudrecordings.s3.amazonaws.com";
+        $chatCheck = $value==='enabled' ? 'checked' : '';
+        ?>
+        <div class="col value" data-masked="true">
+          <label class="switch">
+            <input type="checkbox" <?php echo $chatCheck ?> id="agora-chat-check-loggedin" value="chat-enabled-loggedin">
+            <span class="slider round"></span>
+          </label>
+          <span id="chat-status-text-loggedin"
+           data-enabled="<?php _e('enabled', 'agoraio'); ?>"
+           data-disabled="<?php _e('disabled', 'agoraio') ?>"></span>
+        </div>
+      </div>
+      
+      <div class="flex" id="agora-chat-position">
+        <div class="col label">
+          Position of Chat
+        </div>
+        <?php
+        $chatpositionvalue = isset($agora_options['agora-chat-position']) ? $agora_options['agora-chat-position'] : '';
+        
+        $options_array = array('Overlaid','Left','Right');
+        ?>
+        <div class="col value">
+          <select name="chat_position" id="agora-chat-position" class="NewSettingField">
+             <option value="">Select</option>
+            <?php foreach($options_array as $option){ 
+              $selected_not = '';
+              if($option == $chatpositionvalue){
+                $selected_not = 'selected="selected"';
+              }
+              ?>
+              <option <?php echo $selected_not; ?> value="<?php echo $option; ?>"><?php echo $option; ?></option>
+            <?php } ?>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex" id="agora-chat-position">
+        <div class="col label">
+        Position of Speakers
+        </div>
+        <?php
+        $speakerpositionvalue = isset($agora_options['agora-speaker-position']) ? $agora_options['agora-speaker-position'] : '';
+        
+        $options_array = array('Top','Bottom','Left','Right');
+        ?>
+        <div class="col value">
+          <select name="speaker_position" id="agora-speaker-position" class="NewSettingField">
+             <option value="">Select</option>
+            <?php foreach($options_array as $option){ 
+              $selected_not = '';
+              if($option == $speakerpositionvalue){
+                $selected_not = 'selected="selected"';
+              }
+              ?>
+              <option <?php echo $selected_not; ?> value="<?php echo $option; ?>"><?php echo $option; ?></option>
+            <?php } ?>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="card ">
+<h2 class="title">Chat Settings</h2>
+    <br class="clear">
+<section class="dragable-chat-main">
+
+        <div class="left-side-main">
+              <div class="draggabble-box">
+              </div>
+        </div>
+        <div class="center-main">
+          <div class="overlay-main">            
+          </div>
+        </div>
+        <div class="right-side-main"></div>
+  </section>
+</div>
+
+<div class="card ">
+    <h2 class="title">Speaker view Settings</h2>
+       <br class="clear">
+    <section class="dragable-speaker-main ">
+            <div class="main-view current"> </div>
+            <div class="multiple-speaker-views"> </div>
+
+    </section>
+</div>
+
+
+
   <script type="text/javascript">
     window.AGORA_ADMIN_URL = '<?php echo plugin_dir_url(__DIR__ . '/../index.php'); ?>';
   </script>
+
 </div>

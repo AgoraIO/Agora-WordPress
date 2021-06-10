@@ -6,7 +6,42 @@
   window.screenVideoProfile = '<?php echo $instance['screenprofile'] ?>';
   window.agoraAppId = '<?php echo $agora->settings['appId'] ?>'; // set app id
   window.channelName = '<?php echo $channel->title() ?>'; // set channel name
-  window.channelId = '<?php echo $channel->id() ?>'; // set channel name
+  window.channelId = '<?php echo $channel->id() ?>'; // set channel id
+  window.isGhostModeEnabled = '<?php echo $channel->ghostmode() ?>'; // set channel name
+  if(window.isGhostModeEnabled == "0"){
+    window.isGhostModeEnabled = false;
+  }else{
+    window.isGhostModeEnabled = true;
+  }
+
+  window.isSpeakerView = '<?php echo $channel->channellayout() ?>';
+
+  window.audienceUserId = 0;
+  window.raiseHandRequests = {};
+
+  if(window.isSpeakerView == 'speaker'){
+    window.isSpeakerView = true;
+  } else {
+    window.isSpeakerView = false;
+  }
+
+  window.max_users_limit = 1;
+
+  window.pre_call_device_test_enabled = parseInt('<?php echo $channel->pre_call_video() ?>');
+
+  if(sessionStorage.getItem("deviceTested")=="Yes" || window.pre_call_device_test_enabled == "0"){
+    window.pre_call_device_test_enabled = 0;
+  }
+
+  window.mute_all_users_audio_video = '<?php echo $channel->mute_all_users() ?>';
+  if(window.mute_all_users_audio_video == "0"){
+    window.mute_all_users_audio_video = false;
+  } else {
+    window.mute_all_users_audio_video = true;
+  }
+
+  window.chat_history_enabled = '<?php echo $channel->chat_history() ?>';
+  
   window.userID = parseInt(`${<?php echo $current_user->ID; ?>}`, 10);
   <?php if ($current_user->ID > 0) : ?>
   window.wp_username = '<?php echo $current_user->data->display_name; ?>';

@@ -10,12 +10,13 @@ var cloudRegions = {
 function updateSettingValue(settingName, newValue, callback) {
 	var data = { action: 'save-agora-setting' };
 	data[settingName] = newValue;
-
+	
 	var ajaxParams = {
 		type: 'POST',
 		url: ajaxurl, // from wp admin...
 		data
 	};
+	
 	jQuery.ajax(ajaxParams).then(function(data) {
 		callback && callback(null, data);
 	}).fail(function(error) {
@@ -247,12 +248,24 @@ function agoraChatChange() {
 	})
 }
 
+function agoraChatChangeLoggedin() {
+	const enabled = document.querySelector('#agora-chat-check-loggedin').checked;
+	const box = document.querySelector('#chat-status-text-loggedin');
+	const statusText = box.dataset[enabled ? 'enabled' : 'disabled'];
+	box.innerText = statusText;
+
+	updateSettingValue('agora-chat-loggedin', statusText, function(err, res) {
+		if (!res || !res.updated) {
+			// TODO: Show error?
+		}
+	})
+}
 (function( $ ) {
 	'use strict';
 
 	$( window ).load(function() {
 		$('.app-setting').each(applicationSettingsForm);
-
+		$('.agora-color-picker').wpColorPicker();
 		if ($('#agoraio-new-channel').length>0) {
 			activateAgoraTabs();
 			$('.agora-color-picker').wpColorPicker();
@@ -281,6 +294,56 @@ function agoraChatChange() {
 			$('#agora-chat-check').change(agoraChatChange);
 			agoraChatChange();
 		}
+
+		if (document.querySelector('#agora-chat-check-loggedin')) {
+			$('#agora-chat-check-loggedin').change(agoraChatChangeLoggedin);
+			agoraChatChangeLoggedin();
+		}
+		//Save new global color settings - start
+		jQuery(document).on('click','#globalColors-save',function(){
+			$('#globalColors-save').prop('disabled', true);
+			const srcLoader = AGORA_ADMIN_URL + 'css/loader.svg';
+			const agoraLoader = jQuery('<span class="agora-loader" style="display:none"><img src="' + srcLoader + '" width="32" /></span>');
+			jQuery(this).parents('inside').append(agoraLoader);
+			agoraLoader.show();
+			var settingName = 'global_colors';
+			var globalColors = {};
+
+			jQuery('#globalColors').find('.inputBoxGS').each(function(){
+				var name_setting = jQuery(this).attr('name');
+				var newValue = jQuery(this).val();
+				globalColors[name_setting] = newValue;
+			});
+			updateSettingValue(settingName, globalColors, function(err, res) {
+				if (!err && res.updated===true) {
+					agoraLoader.hide();
+					$('#globalColors-save').prop('disabled', false);
+				} else {
+					// TODO: Improve error messages!
+					jQuery('.error-messageglobalColors').text(err);
+				}
+			});
+
+		});
+		//Save new global color settings - end
+
+
+		//Save new global color settings - start
+		jQuery(document).on('change','.NewSettingField',function(){
+			var settingName = jQuery(this).attr('id');
+			var newValue = jQuery(this).val();
+
+			updateSettingValue(settingName, newValue, function(err, res) {
+				if (!err && res.updated===true) {
+					
+				} else {
+					// TODO: Improve error messages!
+					jQuery('.error-messageglobalColors').text(err);
+				}
+			});
+
+		});
+		//Save new global color settings - end
 	});
 
 

@@ -5,7 +5,7 @@
 var agoraClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'});
 
 // stream references (keep track of active streams) 
-window.remoteStreams = {}; // remote streams obj struct [id : stream] 
+window.remoteStreams = {}; // remote streams obj struct [id : stream]
 
 // keep track of streams
 window.localStreams = {
@@ -13,8 +13,10 @@ window.localStreams = {
   camera: {
     camId: '',
     micId: '',
-    stream: {}
+    stream: {},
+    userDetails: {}
   },
+  tmpCameraStream: {},
   screen: {
     id: "",
     stream: {}
@@ -57,31 +59,39 @@ function initClientAndJoinChannel(agoraAppId, channelName) {
 }
 
 
-window.AGORA_UTILS.setupAgoraListeners();
-
 // join a channel
-function agoraJoinChannel(channelName, cb) {
-  var token = window.AGORA_TOKEN_UTILS.agoraGenerateToken();
+async function agoraJoinChannel(channelName, cb) {
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
+  window.channel_type = 'communication';
 
-  
-  agoraClient.join(token, channelName, userId, async function(uid) {
-    AgoraRTC.Logger.info("User " + uid + " join channel successfully");
-    window.localStreams.camera.id = uid; // keep track of the stream uid 
+  if(window.pre_call_device_test_enabled){
+    let hasVideo = await isVideoAvailable()
+    await createTmpCameraStream(userId, hasVideo);
+  } else{
+    window.AGORA_UTILS.setupAgoraListeners();
     
-    try {
-      await window.AGORA_RTM_UTILS.joinChannel(uid);
-      await createCameraStream(uid);
-      cb && cb(null)
-    } catch(err) {
-      AgoraRTC.Logger.error("[ERROR] : join channel failed", err);
-      cb && cb(err)
-    }
+    var token = window.AGORA_TOKEN_UTILS.agoraGenerateToken();
+    agoraClient.join(token, channelName, userId, async function(uid) {
+      AgoraRTC.Logger.info("User " + uid + " join channel successfully");
+      window.localStreams.camera.id = uid; // keep track of the stream uid 
+      
+      try {
+        if(!jQuery.isEmptyObject( window.localStreams.camera.stream )){
+          window.localStreams.camera.stream.stop();
+        }
+        await window.AGORA_RTM_UTILS.joinChannel(uid);
+        await createCameraStream(uid);
+        cb && cb(null)
+      } catch(err) {
+        AgoraRTC.Logger.error("[ERROR] : join channel failed", err);
+        cb && cb(err)
+      }
 
-  }, function(err) {
-      AgoraRTC.Logger.error("[ERROR] : join channel failed", err);
-      cb && cb(err)
-  });
+    }, function(err) {
+        AgoraRTC.Logger.error("[ERROR] : join channel failed", err);
+        cb && cb(err)
+    });
+  }
 }
 
 //camera validation 
@@ -95,14 +105,30 @@ async function isVideoAvailable() {
 
 // video streams for channel
 function createCameraStream(uid, next) {
+
+  window.channel_type = 'communication';
+
   async function runCameraStream(cb) {
     const hasVideo = await isVideoAvailable()
-    const localStream = AgoraRTC.createStream({
+    let streamSpec = {
       streamID: uid,
       audio: true,
       video: hasVideo,
       screen: false
-    });
+    };
+
+    if(sessionStorage.getItem("microphoneId")!=null){
+      streamSpec.microphoneId = sessionStorage.getItem("microphoneId");
+    }
+
+    if(sessionStorage.getItem("cameraId")!=null){
+      streamSpec.cameraId = sessionStorage.getItem("cameraId");
+    }
+
+    console.log("hlwstreamSpec", streamSpec)
+
+    const localStream = AgoraRTC.createStream(streamSpec);
+
     localStream.setVideoProfile(window.cameraVideoProfile);
     localStream.on("accessAllowed", function() {
       if(window.devices.cameras.length === 0 && window.devices.mics.length === 0) {
@@ -135,13 +161,39 @@ function createCameraStream(uid, next) {
       AgoraRTC.Logger.info("getUserMedia successfully");
       try {
         localStream.play('local-video'); // play the given stream within the local-video div
+
         // publish local stream
-        agoraClient.publish(localStream, function (err) {
-          AgoraRTC.Logger.error("[ERROR] : publish local stream error: " + err);
+        window.agoraClient.publish(localStream, function (err) {
+            AgoraRTC.Logger.error("[ERROR] : publish local stream error: " + err);
         });
-      
+
         window.AGORA_COMMUNICATION_UI.enableUiControls(localStream); // move after testing
+
         window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
+
+        /* Mute Audios and Videos Based on Mute All Users Settings */
+        if(window.mute_all_users_audio_video){
+            if(localStream.getVideoTrack() && localStream.getVideoTrack().enabled){
+                jQuery("#video-btn").trigger('click');
+            }
+            if(localStream.getAudioTrack() && localStream.getAudioTrack().enabled){
+                jQuery("#mic-btn").trigger('click');
+            }
+        }
+      
+        // window.AGORA_COMMUNICATION_UI.enableUiControls(localStream); // move after testing
+        window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
+
+        window.AGORA_UTILS.agora_getUserAvatar(localStream.getId(), function getUserAvatar(avatarData) {
+          let userAvatar = '';
+          if (avatarData && avatarData.user && avatarData.avatar) {
+            userAvatar = avatarData.avatar
+          }
+          if(userAvatar!=''){
+            jQuery('body #no-local-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
+          }
+          window.localStreams.camera.userDetails = {avtar: userAvatar};
+        });
 
         cb && cb(null)
       } catch(ex) {

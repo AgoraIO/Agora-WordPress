@@ -1,8 +1,12 @@
 <?php
 // $channelSettings is defined on the parent contianer of this file
 $recordingSettings = $channelSettings['recording'];
+$chat_support_loggedin = 0;
+if (array_key_exists("chat_support_loggedin", $channelSettings) && $channelSettings['chat_support_loggedin'] == 1) {
+    $chat_support_loggedin = 1;
+}
 ?>
-<footer class="agora-footer">
+<footer class="agora-footer panel-background-color">
 	<div class="buttons-bottom">
 		
 		<div id="audio-controls" class=" text-center btn-group">
@@ -33,13 +37,14 @@ $recordingSettings = $channelSettings['recording'];
 
         <div class="btn-separator"></div>
 
-        <div class="btn-with-title only-desktop">
+        <div class="btn-with-title only-desktop ">
     		<button id="screen-share-btn" type="button" class="btnIcon" title="<?php _e('Screen Share', 'agoraio'); ?>">
               <i id="screen-share-icon" class="fas fa-desktop"></i>
               <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none"></span>
             </button>
             <small class="btn-title"><?php _e('Share', 'agoraio') ?></small>
         </div>
+
 
         <?php if(is_array($recordingSettings) && 
             !empty($recordingSettings['bucket']) &&
@@ -54,8 +59,22 @@ $recordingSettings = $channelSettings['recording'];
         <?php endif; ?>
 
         <?php $enableChat = false; ?>
-        <?php if (isset($agora->settings['agora-chat']) && $agora->settings['agora-chat']==='enabled') : ?>
-            <?php $enableChat = true; ?>
+        <?php //if (isset($agora->settings['agora-chat']) && $agora->settings['agora-chat']==='enabled') : ?>
+            <?php //$enableChat = true; ?>
+        <?php 
+            if (isset($agora->settings['agora-chat']) && $agora->settings['agora-chat']==='enabled'){  
+                $enableChat = true;
+            } 
+            if(is_user_logged_in()){
+                if (isset($agora->settings['agora-chat-loggedin']) && $agora->settings['agora-chat-loggedin']==='enabled'){  
+                    $enableChat = true;
+                } 
+                if($chat_support_loggedin == 0){
+                   $enableChat = false;
+                }
+            }
+            if($enableChat===true){
+        ?>
 		<div class="btn-separator"></div>
         <div class="btn-with-title">
             <button id="chat-btn" class="btnIcon open-chat" title="<?php _e('Open Chat', 'agoraio'); ?>" type="button">
@@ -64,7 +83,7 @@ $recordingSettings = $channelSettings['recording'];
             </button>
             <small class="btn-title"><?php _e('Chat', 'agoraio') ?></small>
         </div>
-        <?php endif; ?>
+        <?php } ?>
 
         <div class="btn-with-title">
             <button id="exit-btn-footer" class="btnIcon btn-danger only-mobile" type="button">

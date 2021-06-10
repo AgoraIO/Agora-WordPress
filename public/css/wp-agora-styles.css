@@ -181,7 +181,7 @@
   padding: 0;
 }
 .agora .screen.sharescreen .screen-users .user {
-  width: calc(100px * 1.5);
+  width: calc(100px * 1.5) !important;
   height: 100px;
 }
 .agora .screen.sharescreen .screen-users {
@@ -212,18 +212,18 @@
 
 /* screeen with 2 users */
 .agora .screen-users-2 .user {
-  width: 49%;
+  width: 49% !important;
   height: 45vh;
 }
 .agora-fullscreen .screen-users-2 .user {
-  width: 50%;
+  width: 50% !important;
   height: 69.5vh;
 }
 
 /* screen with 3-4 users */
 .agora .screen-users-3 .user,
 .agora .screen-users-4 .user{
-  width: 50%;
+  width: 50% !important;
   height: 30vh;
 }
 .agora-fullscreen .screen-users-3 .user,
@@ -233,7 +233,7 @@
 
 /* screen with 5 y 6 users */
 .agora .screen-users-5-6 .user{
-  width: 33%;
+  width: 33% !important;
   height: 25vh;
 }
 .agora-fullscreen .screen-users-5-6 .user{
@@ -242,7 +242,7 @@
 
 /* screen with 7 y 8 users */
 .agora .screen-users-7-9 .user{
-  width: 33%;
+  width: 33% !important;
   height: 20vh;
 }
 .agora-fullscreen .screen-users-7-9 .user{
@@ -251,7 +251,7 @@
 
 /* pantalla 10, 11 y 12*/
 .agora .screen-users-10-12 .user{
-  width: 24.5%;
+  width: 24.5% !important;
   height: 17vh;
 }
 .agora-fullscreen .screen-users-10-12 .user{
@@ -264,7 +264,8 @@
 
 .agora-footer {
   background: var(--agora-background);
-  display: flex;
+  /* display: flex; */
+  display: none;
   justify-content: center;
   align-items: center;
   z-index: 2;
@@ -730,7 +731,7 @@
  */
 @media screen and (max-width: 1023px){
   .agora .screen-users-10-12 .user{
-    width: 22%;
+    width: 22% !important;
   }
 }
 @media screen and (max-width:768px) {
@@ -741,13 +742,13 @@
   .agora.agora-communication .only-mobile { display: block !important; }
 
   .agora .screen-users-2 .user {
-    width: 46.5%;
+    width: 46.5% !important;
   }
   .agora .screen-users-4 .user{
-    width: 46%;
+    width: 46% !important;
   }
   .agora .screen-users-10-12 .user{
-    width: 32%;
+    width: 32% !important;
   }
 }
 @media screen and (max-width: 480px){
@@ -756,14 +757,14 @@
   .agora .screen-users .user { padding: 0.1em; }
   .agora .screen-users-1 .user { height: 70vh; }
   .agora .screen-users-3 .user,
-  .agora .screen-users-4 .user { width: 50%; height: 32vh; }
-  .agora .screen-users-3 .user:last-child{ width: 100%; }
+  .agora .screen-users-4 .user { width: 50% !important; height: 32vh; }
+  .agora .screen-users-3 .user:last-child{ width: 100% !important; }
   .agora .screen-users-2 .user{
-    width: 100%;
+    width: 100% !important;
     height: 32vh;
   }
   .agora .screen-users-5-6 .user { height: 22vh; }
-  .agora .screen-users-7-9 .user { width: 32%; height: 21vh; }
+  .agora .screen-users-7-9 .user { width: 32% !important; height: 21vh; }
 
   .agora-fullscreen .agora-container { height: 100vh; }
   .agora.agora-fullscreen .screen { padding: 0 5px; }
@@ -771,9 +772,9 @@
   .agora-fullscreen .screen-users-2 .user{ height: 40vh; }
   .agora-fullscreen .screen-users-3 .user,
   .agora-fullscreen .screen-users-4 .user { height: 38vh; }
-  .agora-fullscreen .screen-users-5-6 .user { width: 50%; height: 26vh; }
-  .agora-fullscreen .screen-users-7-9 .user { width: 33%; height: 26vh; }
-  .agora-fullscreen .screen-users-10-12 .user { width: 25%; height: 26vh; }
+  .agora-fullscreen .screen-users-5-6 .user { width: 50% !important; height: 26vh; }
+  .agora-fullscreen .screen-users-7-9 .user { width: 33% !important; height: 26vh; }
+  .agora-fullscreen .screen-users-10-12 .user { width: 25% !important; height: 26vh; }
 }
 @media screen and (max-width: 320px) {
   .agora .buttons-botton{
@@ -795,3 +796,190 @@
     font-size: 20px;
   }
 }
+
+/* Bigstep */
+
+/* Active Speaker */
+.activeSpeaker{
+  animation: myVoice 3s infinite;
+  border:1px solid red;
+}
+@keyframes myVoice {
+  from {border-color: #fff;}
+  to {border-color: #ff0000;}
+}
+
+
+/*Ghost Mode */
+#big-no-video-stream .no-video-overlay{
+	position: absolute;
+    z-index: 3;
+    width: calc(100% - 0.4em);
+    top: 40%;
+    color: #cccccc;
+    font-size: 2.5em;
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+}
+
+.agora.agora-audience #big-no-video-stream{
+	height: 65vh;
+}
+
+.agora #big-no-video-stream{
+	height: 50vh;
+}
+
+/* End Ghost Mode */
+
+/* Files in chat */
+.tmp_fileMsg{
+  position: absolute;
+  bottom: 0;
+}
+
+.chat-file-upload label{
+  cursor: pointer;
+}
+
+.chat-file-upload input[type="file"] {
+  display: none !important;
+}
+
+.chat-file-progress-bar{
+  background-color: #005aab;
+  height: 24px;
+}
+
+/* End files in chat */
+
+/****************video*mute*overlay*******************/
+  .user .no-video-overlay { position: absolute; z-index: 1; width: calc(100%); top: 0; color: #cccccc; font-size: 2.5em;  margin: 0 auto;
+  text-align: center;  align-items: center;  justify-content: center;  background-color: #607d8b;  height: 100%;}
+  /*----------------need--to -add display-flex-in  inline-css-----------------*/
+  
+  /****************mike*mute*overlay*end******************/
+  .user .mute-overlay {  position: absolute;  z-index: 2;    left: calc(50% - 14px);  font-size: 1.5em;  padding: 2px 0 0 2px;  display: none; }
+  
+  /****************active*speaker*****************/
+  .user-speraker,
+  .user-speraker:before,
+  .user-speraker:after {
+    border-radius: 50%;
+    width: 1.5em;
+    height: 1.5em;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation: load7 1.8s infinite ease-in-out;
+    animation: load7 1.8s infinite ease-in-out;
+  }
+  .user-speraker {
+    color: #ffffff;
+    font-size: 6px;
+    position: absolute;
+    text-indent: -9999em;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+    z-index: 99;
+    left: 50%;
+    bottom: 7%;
+}
+  .user-speraker:before,
+  .user-speraker:after {
+    content: '';
+    position: absolute;
+    top: 0;
+  }
+  .user-speraker:before {
+    left: -3.5em;
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+  }
+  .user-speraker:after {
+    left: 3.5em;
+  }
+  @-webkit-keyframes load7 {
+    0%,
+    80%,
+    100% {
+      box-shadow: 0 2.5em 0 -1.3em;
+    }
+    40% {
+      box-shadow: 0 2.5em 0 0;
+    }
+  }
+  @keyframes load7 {
+    0%,
+    80%,
+    100% {
+      box-shadow: 0 2.5em 0 -1.3em;
+    }
+    40% {
+      box-shadow: 0 2.5em 0 0;
+    }
+  }
+    /****************active*speaker*end****************/
+      /*-----------------------click-to-unmute----------------------------------*/
+    .user  .resume-userclick {  position: absolute; z-index: 2;  display: inline-block;   background-color: #00000047;  padding: .5rem .8rem;
+      border-radius: 25px;  left: 3%;   color: #fff;   top: 4%;  font-size: .7rem;border: .4px solid #ffffff2e;  }
+     /*-----------------------click-to-unmute-ends---------------------------------*/
+      .speaker-view {  display: flex!important;    justify-content: space-between;  height: 40vh!important;  }
+      .speaker-view .main-screen {   width: 100%;}
+      .speaker-view .screen-users{width: 20%; overflow-y: auto; flex-direction: row; max-height: 50vh!important;}
+      .speaker-view .screen-users .user{width: 100%;max-height: 200px!important;}
+      .speaker-view .main-screen .user {display: block!important;height: 100%; position: relative;}
+       /*-----------------------chat----------------------------------*/
+       .chat .fab_field.user {  align-items: center;    }
+       .chat .fab_field.user .chat_field{line-height: 9px!important;}
+       .chat .fab_field.user { padding: 0 0.5rem 0 .5rem!important;}
+       .chat .tmp_fileMsg { position: relative; padding: .5rem; background-color: #f8f8f8;  margin: .2rem;   margin-left: .5rem!important;    display: inline-block;       }
+       .chat  .tmp_fileMsg .action a {    padding: .1rem .3rem;    background-color: #ff0000; width: 21px;justify-content: center;align-items: center;    display: inline-flex;     margin-top: .2rem;      color: #fff!important;
+        border-radius: 2rem; font-size: .6rem;   }
+       .agora .chat-msg-line.local label {       font-size: 1rem; margin-left: .5rem!important;}
+       .chat .tmp_fileMsg .action {  position: absolute; right: -7px; top: -14px; }
+       .agora .chat .chat-msg-line label{font-size: 1rem!important;}
+       /*-----------------------chat-end---------------------------------*/
+
+
+/* */
+#main-screen-stream-section{
+  height:100%;
+}       
+
+.remote-stream-main-container{
+  width:100%;
+  height: 100%;
+}
+
+/* Test Device */
+#test-device-section{
+  text-align: center;
+  color:#FFFFFF;
+}
+
+.test-device-volume-indicator{
+  display: none;
+}
+
+#test-device-progressBar {
+  width: 100%;
+  height: 8px;
+  background-color: #666666;
+  display: inline-block;
+}
+
+#test-device-myVolume {
+   width: 0%;
+   height: 100%;
+   background-color: #B4BB6B; 
+   display:block;
+ }
+
+.test-device-volumeScaleHolder {
+     padding:0;
+     margin: 3px 0;
+ }

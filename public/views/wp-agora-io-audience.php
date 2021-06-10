@@ -46,7 +46,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
                   <i id="watch-live-icon" class="fas fa-broadcast-tower"></i>
                 <?php } ?>
                 <span id="txt-finished" style="display:none"><?php _e('The Live Stream has finished', 'agoraio'); ?></span>
-                <span id="txt-waiting"><?php _e('Waiting for broadcast connection...', 'agoraio'); ?></span>
+                <span id="txt-waiting"><?php if($channel->type() == 'Communication'){ _e('Waiting for communication connection...', 'agoraio'); } else { _e('Waiting for broadcast connection...', 'agoraio'); }; ?></span>
               </div>
             </div>
           </div>
@@ -59,6 +59,8 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
     if (isset($agora->settings['agora-chat']) && $agora->settings['agora-chat']==='enabled') {
       require_once('parts/chat-fab.php');
     }  ?>
+
+    <?php require_once('parts/raise-hand.php'); ?>
 
   </section>
 
@@ -133,7 +135,17 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
       window.agoraClient.on('stream-added', function addStream(evt) {
         const stream = evt.stream;
         const streamId = stream.getId();
-        window.remoteStreams[streamId] = stream;
+        window.remoteStreams[streamId] = {stream: stream};
+
+        /* Set the remote stream details alongwith user avtar */
+        window.AGORA_UTILS.agora_getUserAvatar(streamId, function getUserAvatar(avatarData) {
+          let userAvatar = '';
+          if (avatarData && avatarData.user && avatarData.avatar) {
+            userAvatar = avatarData.avatar
+          }
+          window.remoteStreams[streamId].userDetails = {avtar: userAvatar};
+        });
+
         if (window.waitingClose) {
           clearTimeout(window.waitingClose)
           window.waitingClose = null;
@@ -203,7 +215,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
         evt.stream.isPlaying() && evt.stream.stop(); // stop the stream
   
         if(window.remoteStreams[streamId] !== undefined) {
-          window.remoteStreams[streamId].isPlaying() && window.remoteStreams[streamId].stop(); //stop playing the feed
+          window.remoteStreams[streamId].stream.isPlaying() && window.remoteStreams[streamId].stream.stop(); //stop playing the feed
 
           delete window.remoteStreams[streamId]; // remove stream from list
           const remoteContainerID = '#' + streamId + '_container';
@@ -239,19 +251,31 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
       // show mute icon whenever a remote has muted their mic
       window.agoraClient.on("mute-audio", function (evt) {
         window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', true);
+        handleGhostMode(evt.uid, 'remote');
       });
 
       window.agoraClient.on("unmute-audio", function (evt) {
         window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', false);
+        handleGhostMode(evt.uid, 'remote');
       });
 
       // show user icon whenever a remote has disabled their video
       window.agoraClient.on("mute-video", function (evt) {
+        handleGhostMode(evt.uid, 'remote');
+        handleMutedVideoBackgroundColor(evt.uid, 'remote');
+        let userAvatar = '';
+        if(window.remoteStreams[evt.uid].userDetails){
+          userAvatar = window.remoteStreams[evt.uid].userDetails.avtar;
+        }
+        if(userAvatar!=''){
+          jQuery('body #'+ evt.uid + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
+        }
         window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', true);
       });
 
       window.agoraClient.on("unmute-video", function (evt) {
         window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', false);
+        handleGhostMode(evt.uid, 'remote');
       });
 
       // ingested live stream 
@@ -260,7 +284,40 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
         // evt.stream.play('full-screen-video');
         AgoraRTC.Logger.info(JSON.stringify(evt));
       }); 
+
+      // Listener for Agora RTM Events
+      window.addEventListener('agora.rtmMessageFromPeer', async function receivePeerRTMMessage(evt) {
+        console.log("hlwPeerMsg Jai Shree Ram  Audeience")
+        if (evt.detail && evt.detail.text) {
+
+          /* Handle Raise Hand Request - Response */
+
+          /* If Raise hand Request is Rejected */
+          if(evt.detail.text.indexOf('RAISE-HAND-REJECTED')===0){
+            console.log("Raise hand Request Rejected")
+            raiseHandRequestRejected();
+          } 
+
+          /* If Raise hand Request is Accepted */
+          else if(evt.detail.text.indexOf('RAISE-HAND-ACCEPTED')===0){
+            console.log("Raise hand Request Accepted")
+            // const fab_save_user_elm = document.getElementById('fab_save_user');
+            // console.log("hlwfab_save_userElement", fab_save_user_elm)
+            // fab_save_user_elm.removeEventListener('click',function(){
+            //   console.log("SavefabUser function has been removed")
+            // });
+            await agoraLeaveChannel();
+            joinAsHost();
+          }
+        }
+      })
+
     });
+
+    function raiseHandRequestRejected(){
+      alert("Your request is rejected");
+      jQuery("#cancelRaiseHand").attr("id", "raiseHand");
+    }
 
     // join a channel
     function agoraJoinChannel() {
@@ -275,6 +332,8 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
       
       window.agoraClient.join(token, window.channelName, window.userID, function(uid) {
           AgoraRTC.Logger.info('User ' + uid + ' join channel successfully');
+          console.log('User ' + uid + ' join channel successfully')
+          window.audienceUserId = uid;
           window.AGORA_RTM_UTILS.joinChannel(uid, function(err){
             if (err) {
               console.error(err)
@@ -289,6 +348,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
       window.dispatchEvent(new CustomEvent("agora.leavingChannel"));
       window.agoraClient.leave(function() {
         AgoraRTC.Logger.info('client leaves channel');
+        console.log('client leaves channel');
         window.AGORA_RTM_UTILS.leaveChannel();
 
         window.dispatchEvent(new CustomEvent("agora.leavedChannel"));

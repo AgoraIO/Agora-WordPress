@@ -16,6 +16,12 @@
 		<div class="fab_field user">
 			<textarea id="chatSend" name="chat_message" placeholder="Send a message" class="chat_field chat_message"></textarea>
 			<a id="fab_send" class="fab"><i class="fas fa-paper-plane"></i></a>
+			<div class="chat-file-upload">
+				<label for="fileInput">
+					<i class="fa fa-paperclip" aria-hidden="true"></i>
+				</label>
+				<input type="file" name="file" id="fileInput">
+			</div>	
 		</div>
 		<div class="fab_field non-user">
 			<label id="label_chat_name" for="chart_name"><?php _e('Please, enter your name to join chat', 'agoraio'); ?></label>
@@ -27,18 +33,5 @@
 	</div>
 </div>
 <script type="text/javascript">
-	window.addEventListener('agora.rtm_init', function loadChatApp() {
-        const headTag = document.head || document.getElementsByTagName("head")[0];
-
-        const chatStyles = document.createElement("link");
-        chatStyles.rel = "stylesheet";
-        chatStyles.href = `${window.agora_base_url}css/chat-fab.css`;
-        headTag.appendChild(chatStyles);
-
-        const arleneLib = document.createElement("script")
-        arleneLib.type = "text/javascript";
-        arleneLib.src = `${window.agora_base_url}js/chat.js`;
-        arleneLib.async = true;
-        headTag.appendChild(arleneLib);
-    });
+	window.addEventListener('agora.rtm_init', loadChatApp);
 </script>

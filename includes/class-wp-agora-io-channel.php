@@ -47,7 +47,7 @@ class WP_Agora_Channel {
     'region' => 0,
     'bucket' => '',
     'accessKey' => '',
-    'secretKey' => ''
+    'secretKey' => '',
   );
 
   // private channel attrs
@@ -171,13 +171,52 @@ class WP_Agora_Channel {
       $recordingSettings = get_post_meta( $this->id, 'channel_recording_settings', true );
       $channelType = get_post_meta( $this->id, 'channel_type', true );
       $channelUserHost = get_post_meta( $this->id, 'channel_user_host', true );
+      
+      if(get_post_meta( $this->id, 'ghost_mode', true )){
+        $GhostMode = get_post_meta( $this->id, 'ghost_mode', true );
+      }else{
+        $GhostMode = 0;
+      }
+      
+      if(get_post_meta( $this->id, 'channel_layout', true )){
+        $channelLayout = get_post_meta( $this->id, 'channel_layout', true );
+      }else{
+        $channelLayout = 'grid';
+      }
+      if(get_post_meta( $this->id, 'chat_support_loggedin', true )){
+        $ChatSupportloggedin = get_post_meta( $this->id, 'chat_support_loggedin', true );
+      }else{
+        $ChatSupportloggedin = 0;
+      }
+      if(get_post_meta( $this->id, 'mute_all_users', true )){
+        $MuteAllUsers = get_post_meta( $this->id, 'mute_all_users', true );
+      }else{
+        $MuteAllUsers = 0;
+      }
+      if(get_post_meta( $this->id, 'chat_history', true )){
+        $ChatHistory = get_post_meta( $this->id, 'chat_history', true );
+      }else{
+        $ChatHistory = 0;
+      }
+      if(get_post_meta( $this->id, 'pre_call_video', true )){
+        $PreCallVideo = get_post_meta( $this->id, 'pre_call_video', true );
+      }else{
+        $PreCallVideo = 0;
+      }
+      
 
       $this->properties = array(
         'type' => $channelType,
         'host' => $channelUserHost,
         'settings' => $videoSettings,
         'appearance' => $appearanceSettings,
-        'recording' => $recordingSettings
+        'recording' => $recordingSettings,
+        'chat_support_loggedin' => $ChatSupportloggedin,
+        'ghost_mode' => $GhostMode,
+        'channel_layout' => $channelLayout,
+        'mute_all_users' => $MuteAllUsers,
+        'chat_history' => $ChatHistory,
+        'pre_call_video' => $PreCallVideo,
       );
       
       // $this->upgrade();
@@ -193,7 +232,13 @@ class WP_Agora_Channel {
       'host' => array(),
       'settings' => array_merge(self::$defaultVideoSettings),
       'appearance' => array_merge(self::$defaultAppearanceSettings),
-      'recording' => array_merge(self::$defaultRecordingSettings)
+      'recording' => array_merge(self::$defaultRecordingSettings),
+      'chat_support_loggedin' => 0,
+      'ghost_mode' => 0,
+      'channel_layout' => 'grid',
+      'mute_all_users' => 0,
+      'chat_history' => 0,
+      'pre_call_video' => 0,
     ) );
     $properties = (array) apply_filters( 'agoraio_channel_properties', $properties, $this );
     return $properties;
@@ -214,7 +259,7 @@ class WP_Agora_Channel {
         'post_title' => sanitize_text_field($args['post_title']),
       ) );
     }
-
+    
     $videoSettings = array();
     array_map(function($key) use ($args, &$videoSettings) {
       $videoSettings[$key] = sanitize_text_field($args[$key]);
@@ -239,11 +284,17 @@ class WP_Agora_Channel {
       $recordingSettings[$key] = sanitize_text_field($args[$key]);
       return $recordingSettings[$key];
     }, array_keys(self::$defaultRecordingSettings));
-
+    
     update_post_meta($post_id, 'channel_video_settings', $videoSettings);
     update_post_meta($post_id, 'channel_appearance_settings', $appearanceSettings);
     update_post_meta($post_id, 'channel_recording_settings', $recordingSettings);
+    update_post_meta($post_id, 'chat_support_loggedin', sanitize_key($args['chat_support_loggedin']));
+    update_post_meta($post_id, 'ghost_mode', sanitize_key($args['ghost_mode']));
+    update_post_meta($post_id, 'channel_layout', sanitize_key($args['channel_layout']));
     update_post_meta($post_id, 'channel_type', sanitize_key($args['type']));
+    update_post_meta($post_id, 'mute_all_users', sanitize_key($args['mute_all_users']));
+    update_post_meta($post_id, 'chat_history', sanitize_key($args['chat_history']));
+    update_post_meta($post_id, 'pre_call_video', sanitize_key($args['pre_call_video']));
 
     if (isset($args['host'])) {
       if (is_array($args['host'])) {
@@ -294,6 +345,27 @@ class WP_Agora_Channel {
   public function title() {
     return $this->title;
   }
+
+
+  public function ghostmode() {
+    return (int)$this->properties['ghost_mode'];
+  }
+  public function channellayout() {
+    return $this->properties['channel_layout'];
+  }
+  public function mute_all_users() {
+    return (int)$this->properties['mute_all_users'];
+  }
+
+  public function chat_history() {
+    return (int)$this->properties['chat_history'];
+  }
+
+  public function pre_call_video() {
+    return (int)$this->properties['pre_call_video'];
+  }
+
+  
 
   public function type() {
     return ucfirst( $this->properties['type'] );
