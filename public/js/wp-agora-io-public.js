@@ -304,12 +304,14 @@ window.AGORA_UTILS = {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', true);
       console.log("callMuteAudioGhostCheck")
       handleGhostMode(evt.uid, 'remote');
+      handleRemoteStreamControlsIcons(evt.uid);
     });
 
     window.agoraClient.on("unmute-audio", function unmuteAudio(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', false);
       console.log("callUnMuteAudioGhostCheck")
       handleGhostMode(evt.uid, 'remote');
+      handleRemoteStreamControlsIcons(evt.uid);
     });
 
     // show user icon whenever a remote has disabled their video
@@ -335,12 +337,14 @@ window.AGORA_UTILS = {
       if(userAvatar!=''){
         jQuery('body #'+ remoteId + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
       }
+      handleRemoteStreamControlsIcons(evt.uid);
     });
 
     agoraClient.on("unmute-video", function unmuteVideo(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', false);
       console.log("callUnMuteVideoGhostCheck")
       handleGhostMode(evt.uid, 'remote');
+      handleRemoteStreamControlsIcons(evt.uid);
     });
 
     // remove the remote-container when a user leaves the channel
@@ -485,6 +489,8 @@ window.AGORA_UTILS = {
 
     // Listener for Agora RTM Events
     window.addEventListener('agora.rtmMessageFromChannel', receiveRTMMessage);
+
+    window.addEventListener('agora.rtmMessageFromPeer', receivePeerRTMMessage);
 
   },
 
@@ -887,12 +893,94 @@ function apply_global_colors(){
   })
 }
 
+/* Function to handle Mute/Unmute streams by Admin User */
+function muteUnmuteRemoteStream(streamRtmUserId, type, status){
+  let msgText = 'CONFIRMATION-'+status.toUpperCase()+'-'+type.toUpperCase();
+  if((window.canUnmuteForcefully) || (status == 'mute')){ 
+    msgText = status.toUpperCase()+'-'+type.toUpperCase();
+  }
+
+  let memberId = streamRtmUserId;
+    const msg = {
+      description: undefined,
+      messageType: 'TEXT',
+      rawMessage: undefined,
+      text: msgText
+    }
+    try{
+      window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
+    } catch(e){
+
+  }
+}
+
+/* Function to show Mute/Unmute icons on remote streams for Admin User */
+function handleRemoteStreamControlsIcons(streamId){
+  streamId= parseInt(streamId);
+  const numberUID = streamId < 1000 ? streamId + 1000 : streamId;
+  const currStreamRTMUserId = 'x'+ String(numberUID); 
+
+  let streamAudioIcon = "<i class='fas fa-microphone mute-remote-audio' rel='"+currStreamRTMUserId+"'></i>";
+  if(!window.remoteStreams[streamId].stream.getAudioTrack() || !window.remoteStreams[streamId].stream.getAudioTrack().enabled){
+    streamAudioIcon = "<i class='fas fa-microphone-slash unmute-remote-audio' rel='"+currStreamRTMUserId+"'></i>";
+  }
+
+  let streamVideoIcon = "<i class='fas fa-video mute-remote-video' rel='"+currStreamRTMUserId+"'></i>";
+  if(!window.remoteStreams[streamId].stream.getVideoTrack() || !window.remoteStreams[streamId].stream.getVideoTrack().enabled){
+    streamVideoIcon = "<i class='fas fa-video-slash unmute-remote-video' rel='"+currStreamRTMUserId+"'></i>";
+  }
+
+  if(jQuery('.remote-stream-controls').length>0){
+    jQuery('.remote-stream-controls .mute-remote-audio-div').html(streamAudioIcon);
+    jQuery('.remote-stream-controls .mute-remote-video-div').html(streamVideoIcon);
+  }
+}
+
 jQuery(document).ready(function(){
 
   /* Show Video Controls footer if no pre call device test is enabled */
   if(!window.pre_call_device_test_enabled || window.agoraMode=='audience'){
     jQuery('body .agora-footer').css('display', 'flex');
   }
+
+  /* Show Mute/Unmute icons on remote streams only to Admin User and mute/unmute functionality */
+  if(window.isAdminUser){
+    jQuery("body").on("mouseenter", ".remote-stream-container", function(){
+      const streamId = jQuery(this).attr('rel'); 
+
+      jQuery(this).append(
+        "<div class='remote-stream-controls'>"+
+          "<div class='mute-remote-audio-div'></div>"+
+          "<div class='mute-remote-video-div'></div>"+
+        "</div>"
+      )
+
+      handleRemoteStreamControlsIcons(streamId);
+    });
+    jQuery("body").on("mouseleave", ".remote-stream-container", function(){
+      if(jQuery("body .remote-stream-container .remote-stream-controls").length>0){
+        jQuery(".remote-stream-controls").remove();
+      }
+    });
+
+    jQuery("body").on("click", ".mute-remote-audio", function(){
+      muteUnmuteRemoteStream(jQuery(this).attr('rel'), 'audio', 'mute');
+    });
+
+    jQuery("body").on("click", ".unmute-remote-audio", function(){
+      muteUnmuteRemoteStream(jQuery(this).attr('rel'), 'audio', 'unmute');
+    });
+
+    jQuery("body").on("click", ".mute-remote-video", function(){
+      muteUnmuteRemoteStream(jQuery(this).attr('rel'), 'video', 'mute');
+    });
+
+    jQuery("body").on("click", ".unmute-remote-video", function(){
+      muteUnmuteRemoteStream(jQuery(this).attr('rel'), 'video', 'unmute');
+    });
+    
+  }
+  /* End Mute/Unmute icons on remote streams only to Admin User and mute/unmute functionality */
 
   apply_global_colors();
 
@@ -1280,3 +1368,106 @@ function loadChatApp() {
     }
 }
 /* End Function that will be run on rtm channel message event listener */
+
+/* Object to handle the requested permissions */
+let requestedPermission = {
+  audio: false,
+  video: false
+}
+
+/* Function to set content in requested permission popup */
+function getPermConfirmationContent(type){
+  console.log("hlwrequestedPermission", requestedPermission)
+  if(requestedPermission.audio && requestedPermission.video){
+    type = 'Audio/Video';
+  } else if(requestedPermission.video){
+    type = 'Video';
+  } else if(requestedPermission.audio){
+    type = 'Audio';
+  }
+  let html = "<div class='permission-confirmation-section'>";
+  html+="<div class='permission-text'>Do you want to allow "+type+" ? </div>";
+  html+="<div class='actions'><button class='accept' onClick='allowAccess()'>Allow</button><button class='deny' onClick='denyAccess()'>Deny</button></div>";
+  html+= "</div>";
+  return html;
+}
+
+/* Reset handle requested permissions object on modal close */
+jQuery(document).ready(function(){
+  jQuery("#view-allow-disallow-permission-modal").on('hidden.bs.modal', function (e) {
+    requestedPermission = {
+      audio: false,
+      video: false
+    }
+  });
+});
+
+/* Function to run when user allow the request */
+function allowAccess(){
+  if(requestedPermission.video){
+    jQuery("#video-icon").trigger('click');
+  } 
+  if(requestedPermission.audio){
+    jQuery("#mic-btn").trigger('click');
+  }
+  jQuery("#view-allow-disallow-permission-modal").modal('toggle');
+}
+
+/* Function to run when user deny the request */
+function denyAccess(){
+  jQuery("#view-allow-disallow-permission-modal").modal('toggle');
+}
+
+async function receivePeerRTMMessage(evt) {
+  if (evt.detail && evt.detail.text) {
+
+    /* Handle Raise Hand Request - Response */
+
+    /* If Raise hand Request is Rejected */
+    if(evt.detail.text.indexOf('RAISE-HAND-REJECTED')===0){
+      console.log("Raise hand Request Rejected")
+      window.AGORA_AUDIENCE.raiseHandRequestRejected();
+    } 
+
+    /* If Raise hand Request is Accepted */
+    else if(evt.detail.text.indexOf('RAISE-HAND-ACCEPTED')===0){
+      console.log("Raise hand Request Accepted")
+      await window.AGORA_AUDIENCE.agoraLeaveChannel();
+      joinAsHost();
+    }
+
+    /* Unmute audio with confirmation from Admin User */
+    else if(evt.detail.text.indexOf('CONFIRMATION-UNMUTE-AUDIO')===0){
+      requestedPermission['audio'] = true;
+      jQuery('#view-allow-disallow-permission-modal #allow-disallow-permissions-content').html(getPermConfirmationContent('audio'));
+      jQuery('#view-allow-disallow-permission-modal').modal('show')
+    }
+    /* Muted audio from Admin User */
+    else if(evt.detail.text.indexOf('UNMUTE-AUDIO')===0){
+      jQuery("#mic-btn").trigger('click');
+    }
+
+    /* Mute audio from Admin User */
+    else if(evt.detail.text.indexOf('MUTE-AUDIO')===0){
+      jQuery("#mic-btn").trigger('click');
+    }
+
+    /* Unmute video with confirmation from Admin User */
+    else if(evt.detail.text.indexOf('CONFIRMATION-UNMUTE-VIDEO')===0){
+      requestedPermission['video'] = true;
+      jQuery('#view-allow-disallow-permission-modal #allow-disallow-permissions-content').html(getPermConfirmationContent('video'));
+      jQuery('#view-allow-disallow-permission-modal').modal('show')
+    }
+    /* Unmute video from Admin User */
+    else if(evt.detail.text.indexOf('UNMUTE-VIDEO')===0){
+      console.log("Unmute Video Accepted")
+      jQuery("#video-icon").trigger('click');
+    }
+
+    /* Mute video from Admin User */
+    else if(evt.detail.text.indexOf('MUTE-VIDEO')===0){
+      jQuery("#video-icon").trigger('click');
+    }
+
+  }
+}
