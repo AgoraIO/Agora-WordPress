@@ -125,8 +125,6 @@ function createCameraStream(uid, next) {
       streamSpec.cameraId = sessionStorage.getItem("cameraId");
     }
 
-    console.log("hlwstreamSpec", streamSpec)
-
     const localStream = AgoraRTC.createStream(streamSpec);
 
     localStream.setVideoProfile(window.cameraVideoProfile);

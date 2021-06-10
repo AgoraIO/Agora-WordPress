@@ -25,9 +25,9 @@ function startMicrophoneTesting(){
     jQuery(".test-device-volume-indicator").show();
 
     currStreamInterval = setInterval(function(){
-        if(typeof window.localStreams.camera.stream!='undefined' && !jQuery.isEmptyObject(window.localStreams.camera.stream)){
+        if(typeof window.localStreams.tmpCameraStream!='undefined' && !jQuery.isEmptyObject(window.localStreams.tmpCameraStream)){
             
-            let volume = window.localStreams.camera.stream.getAudioLevel().toFixed(3)*100;
+            let volume = window.localStreams.tmpCameraStream.getAudioLevel().toFixed(3)*100;
             jQuery('body #test-device-myVolume').css('width', volume+'%')
 
             /* Clear Interval when stream is published */
