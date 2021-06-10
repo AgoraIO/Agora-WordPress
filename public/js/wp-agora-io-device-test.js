@@ -11,7 +11,12 @@ jQuery(document).ready(function(){
         let testMicButton = "<button onClick='startMicrophoneTesting()'>Start</button>";
         let mic_devices_div = "<div class='d-flex_align'><span>Microphone </span><div id='test-device-mic-list'><select id='test-device-mic-options'></select></div></div><div id='test_microphone_div'>"+testMicButton+"</div>";
         let action_button_div = "<div class='action-buttons'><button class='click_to_join'>Click to Join</button></div>";
-        jQuery("body #screen-users").append("<div id='test-device-section'> "+camera_devices_div+mic_devices_div+" <div class='test-device-volume-indicator'>"+volume_indicator_div+"</div> "+action_button_div+" </div>");
+        
+        let main_div_id = "screen-users";
+        if(window.isSpeakerView){
+            main_div_id = 'main-screen-stream-section';
+        }
+        jQuery("body #"+main_div_id).append("<div id='test-device-section'> "+camera_devices_div+mic_devices_div+" <div class='test-device-volume-indicator'>"+volume_indicator_div+"</div> "+action_button_div+" </div>");
     }
 
     jQuery('body').on('click', '.click_to_join', function(){
