@@ -431,6 +431,35 @@ function render_agoraio_channel_form_chat_support($channel) {
         0 => __('No', 'agoraio')
       ), $props, '');
    ?>
+
+  <?php
+    $args = array('fields' => array( 'ID', 'display_name' ) );
+    $users = get_users($args);
+
+    $users_options = array(
+      '' => __('Select', 'agoraio')
+    );
+
+    foreach($users as $user){
+      $users_options[$user->ID] = __($user->display_name, 'agoraio');
+    }
+
+    agora_render_setting_row_select(
+    'admin_user',
+    __('Admin User', 'agoraio'),
+    $users_options, $props, '');
+  ?>
+
+  <?php agora_render_setting_row_select(
+      'admin_user_unmute_forcefully',
+      __('Can Admin user unmute forcefully?', 'agoraio'),
+      array(
+        '' => __('Select', 'agoraio'),
+        1 => __('Yes', 'agoraio'),
+        0 => __('No', 'agoraio')
+      ), $props, '');
+  ?>
+
   </table>
   <?php
 }

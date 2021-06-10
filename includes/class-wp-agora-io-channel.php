@@ -203,6 +203,18 @@ class WP_Agora_Channel {
       }else{
         $PreCallVideo = 0;
       }
+
+      if(get_post_meta( $this->id, 'admin_user', true)){
+        $admin_user = get_post_meta( $this->id, 'admin_user', true);
+      } else {
+        $admin_user = '';
+      }
+
+      if(get_post_meta( $this->id, 'admin_user_unmute_forcefully', true)){
+        $admin_user_unmute_forcefully = get_post_meta( $this->id, 'admin_user_unmute_forcefully', true);
+      } else {
+        $admin_user_unmute_forcefully = 0;
+      }
       
 
       $this->properties = array(
@@ -217,6 +229,8 @@ class WP_Agora_Channel {
         'mute_all_users' => $MuteAllUsers,
         'chat_history' => $ChatHistory,
         'pre_call_video' => $PreCallVideo,
+        'admin_user' => $admin_user,
+        'admin_user_unmute_forcefully' => $admin_user_unmute_forcefully
       );
       
       // $this->upgrade();
@@ -239,6 +253,8 @@ class WP_Agora_Channel {
       'mute_all_users' => 0,
       'chat_history' => 0,
       'pre_call_video' => 0,
+      'admin_user_unmute_forcefully' => 0,
+      'admin_user' => ''
     ) );
     $properties = (array) apply_filters( 'agoraio_channel_properties', $properties, $this );
     return $properties;
@@ -295,6 +311,8 @@ class WP_Agora_Channel {
     update_post_meta($post_id, 'mute_all_users', sanitize_key($args['mute_all_users']));
     update_post_meta($post_id, 'chat_history', sanitize_key($args['chat_history']));
     update_post_meta($post_id, 'pre_call_video', sanitize_key($args['pre_call_video']));
+    update_post_meta($post_id, 'admin_user', sanitize_key($args['admin_user']));
+    update_post_meta($post_id, 'admin_user_unmute_forcefully', sanitize_key($args['admin_user_unmute_forcefully']));
 
     if (isset($args['host'])) {
       if (is_array($args['host'])) {
@@ -365,7 +383,13 @@ class WP_Agora_Channel {
     return (int)$this->properties['pre_call_video'];
   }
 
-  
+  public function admin_user(){
+    return $this->properties['admin_user'];
+  }
+
+  public function admin_user_unmute_forcefully(){
+    return (int)$this->properties['admin_user_unmute_forcefully'];
+  }
 
   public function type() {
     return ucfirst( $this->properties['type'] );
