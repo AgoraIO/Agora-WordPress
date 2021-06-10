@@ -9,7 +9,7 @@
   font-size: 14px;
   position: relative;
   line-height: 16px;
-  font-family: Arial;
+/*  font-family: Arial;*/
   background-color: var(--agora-background);
   z-index: 10;
 }
@@ -152,7 +152,7 @@
 
 .agora .screen {
   height: 100%;
-  padding: 0 15px;
+/*  padding: 0 15px;*/
   overflow: hidden;
 }
 .agora.agora-fullscreen .screen {
@@ -162,14 +162,16 @@
 .agora .screen-users{
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
+
+/*  justify-content: center;
   margin-left: -10px;
-  margin-right: -10px;
+  margin-right: -10px;*/
 }
 .agora .screen-users .user {
   position: relative;
   overflow: hidden;
-  padding: 3px;
+  /*padding: 3px;*/
   background-color: #111;
 }
 .screen-users .user video {
@@ -212,7 +214,7 @@
 
 /* screeen with 2 users */
 .agora .screen-users-2 .user {
-  width: 49% !important;
+  width: 49.5% !important;
   height: 45vh;
 }
 .agora-fullscreen .screen-users-2 .user {
@@ -797,6 +799,29 @@
   }
 }
 
+/*camera settings*/
+.action-buttons > button.click_to_join,
+#test_microphone_div > button
+{
+width: 100%;
+padding: 10px;
+font-size: 15px;
+
+}
+
+.action-buttons
+{
+margin-top: 15px;
+}
+#test-device-camera-list>select{ width: 100%; }
+.d-flex_align {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+.d-flex_align>span{ padding-bottom: 5px; font-size: 16px;}
+
+button#exit-btn{ font-size: 16px;}
 /* Bigstep */
 
 /* Active Speaker */
@@ -855,7 +880,7 @@
 /* End files in chat */
 
 /****************video*mute*overlay*******************/
-  .user .no-video-overlay { position: absolute; z-index: 1; width: calc(100%); top: 0; color: #cccccc; font-size: 2.5em;  margin: 0 auto;
+  .user .no-video-overlay { position: absolute; z-index: 2; width: calc(100%); top: 0; color: #cccccc; font-size: 2.5em;  margin: 0 auto;
   text-align: center;  align-items: center;  justify-content: center;  background-color: #607d8b;  height: 100%;}
   /*----------------need--to -add display-flex-in  inline-css-----------------*/
   
@@ -957,8 +982,9 @@
 
 /* Test Device */
 #test-device-section{
-  text-align: center;
-  color:#FFFFFF;
+    color:#FFFFFF;
+    width: 50%;
+    padding: 0 10px;
 }
 
 .test-device-volume-indicator{
