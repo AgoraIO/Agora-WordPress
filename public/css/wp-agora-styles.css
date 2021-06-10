@@ -954,7 +954,7 @@ button#exit-btn{ font-size: 16px;}
      /*-----------------------click-to-unmute-ends---------------------------------*/
       .speaker-view {  display: flex!important;    justify-content: space-between;  height: 40vh!important;  }
       .speaker-view .main-screen {   width: 100%;}
-      .speaker-view .screen-users{width: 20%; overflow-y: auto; flex-direction: row; max-height: 50vh!important;}
+      .speaker-view .screen-users{width: 20%; display: block; overflow-y: auto; flex-direction: column; max-height: 50vh!important; justify-content: flex-start;}
       .speaker-view .screen-users .user{width: 100%;max-height: 200px!important;}
       .speaker-view .main-screen .user {display: block!important;height: 100%; position: relative;}
        /*-----------------------chat----------------------------------*/
@@ -1023,3 +1023,6 @@ button#exit-btn{ font-size: 16px;}
   justify-content: center;
   height: 100%;
  }
+ /*mutliple stream*/
+ .speaker-view .screen-users .remote-stream-main-container{ height: 33.33%;}
+ .speaker-view .screen-users .remote-stream-main-container .user{ max-height: unset; height: 100%; width: 100% !important; }
