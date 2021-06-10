@@ -190,7 +190,7 @@ function createCameraStream(uid, next) {
             userAvatar = avatarData.avatar
           }
           if(userAvatar!=''){
-            jQuery('body #no-local-video').html('<i class="fas fa-user"></i>')
+            jQuery('body #no-local-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
           }
           window.localStreams.camera.userDetails = {avtar: userAvatar};
         });
