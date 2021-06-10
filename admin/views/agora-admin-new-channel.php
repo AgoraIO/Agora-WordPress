@@ -406,7 +406,7 @@ function render_agoraio_channel_form_chat_support($channel) {
    ?>
     <?php agora_render_setting_row_select(
       'mute_all_users',
-      __('Mute all users?', 'agoraio'),
+      __('Mute all users Audio/Video?', 'agoraio'),
       array(
         '' => __('Select', 'agoraio'),
         1 => __('Yes', 'agoraio'),
