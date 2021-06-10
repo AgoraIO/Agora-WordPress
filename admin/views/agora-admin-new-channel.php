@@ -452,7 +452,7 @@ function render_agoraio_channel_form_chat_support($channel) {
 
   <?php agora_render_setting_row_select(
       'admin_user_unmute_forcefully',
-      __('Can Admin user unmute forcefully?', 'agoraio'),
+      __('Can Admin user unmute Audio/Video forcefully?', 'agoraio'),
       array(
         '' => __('Select', 'agoraio'),
         1 => __('Yes', 'agoraio'),
