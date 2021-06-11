@@ -1034,7 +1034,8 @@ jQuery(document).ready(function(){
       if(mainLargeScreenStreamId == 'local-video' || mainLargeScreenStreamId == 'full-screen-video'){
         isMainStreamLocal = true;
       } else {
-        mainLargeScreenStreamId = jQuery('.main-screen #main-screen-stream-section').find('.remote-stream-container').attr('rel');
+        //mainLargeScreenStreamId = jQuery('.main-screen #main-screen-stream-section div:first-child').find('.remote-stream-container').attr('rel');
+        mainLargeScreenStreamId = jQuery('.main-screen #main-screen-stream-section div:first-child').attr('id').split('_container')[0];
       }
 
       if(isMainStreamLocal){ /* If main stream is of local video */
@@ -1050,7 +1051,8 @@ jQuery(document).ready(function(){
       if(rightStreamId == 'local-video' || mainLargeScreenStreamId == 'full-screen-video'){
         isRightStreamLocal = true;
       } else {
-        rightStreamId =jQuery(this).find('.remote-stream-container').attr('rel');
+        //rightStreamId =jQuery(this).find('.remote-stream-container').attr('rel');
+        rightStreamId =jQuery(this).find('div:first').attr('id').split('_container')[0];
       }
 
       if(isRightStreamLocal){ /* If right side stream is of local video */
@@ -1078,7 +1080,8 @@ jQuery(document).ready(function(){
       if(mainLargeScreenStreamId == 'local-video' || mainLargeScreenStreamId == 'full-screen-video'){
         isMainStreamLocal = true;
       } else {
-        mainLargeScreenStreamId = jQuery('.main-screen #main-screen-stream-section').find('.remote-stream-container').attr('rel');
+        //mainLargeScreenStreamId = jQuery('.main-screen #main-screen-stream-section').find('.remote-stream-container').attr('rel');
+        mainLargeScreenStreamId = jQuery('.main-screen #main-screen-stream-section div:first-child').attr('id').split('_container')[0];
       }
 
       if(isMainStreamLocal) { /* If main stream is of local video */

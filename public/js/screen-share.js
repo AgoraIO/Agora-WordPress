@@ -237,7 +237,7 @@ window.AGORA_SCREENSHARE_UTILS = {
 
     const remoteEl = document.getElementById(streamId + '_container');
     const divWidth = remoteEl.getBoundingClientRect().width;
-    remoteEl.style.height = (divWidth / 1.35) + 'px'; // ratio 16:10
+    //remoteEl.style.height = (divWidth / 1.35) + 'px'; // ratio 16:10
 
     // Play the new screen stream
     remoteStream.play('agora_remote_' + streamId);

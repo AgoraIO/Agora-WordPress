@@ -194,7 +194,8 @@
 
 .agora .screen.sharescreen .screenshare-container {
   width: 100%;
-  height: 50vh;
+  /* height: 50vh; */
+  height: 100%;
 }
 
 /* screen with 1 user */
