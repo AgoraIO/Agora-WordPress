@@ -1048,13 +1048,11 @@ jQuery(document).ready(function(){
       
       /* Handle Right Stream - stop */
       let rightStreamId = jQuery(this).find('div:first-child').attr('id');
-      if(rightStreamId == 'local-video' || mainLargeScreenStreamId == 'full-screen-video'){
-        isRightStreamLocal = true;
+      if(rightStreamId == 'local-video' || rightStreamId == 'full-screen-video'){
       } else {
         //rightStreamId =jQuery(this).find('.remote-stream-container').attr('rel');
         rightStreamId =jQuery(this).find('div:first').attr('id').split('_container')[0];
       }
-
       if(isRightStreamLocal){ /* If right side stream is of local video */
         window.localStreams.camera.stream.stop();
       } else {
