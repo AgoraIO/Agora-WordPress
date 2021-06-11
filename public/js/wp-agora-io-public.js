@@ -275,11 +275,46 @@ window.AGORA_UTILS = {
     document.getElementById('screen-users').classList = "screen-users screen-users-" + countClass;
   },
 
+  handleSpeakerViewStreamsOnRemove: function(streamId){
+    if(window.isSpeakerView){
+      let remoteContainerID = '#' + streamId + '_container';
+      console.log("hlwremoteContainerID", remoteContainerID)
+      let removedStreamParentClass = jQuery(remoteContainerID).parent().attr('class');
+
+      if(removedStreamParentClass == 'main-screen-stream-section'){
+
+        /* If removed div is from main screen (big screen), play local video in main screen */
+        local_stream_div_id = window.agoraMode==='communication' ? 'local-video' : 'full-screen-video';
+        window.localStreams.camera.stream.stop();
+        let localVideoContainer = jQuery('.speaker-view #screen-users').find('#'+local_stream_div_id).prop("outerHTML");
+        jQuery('.speaker-view .main-screen #main-screen-stream-section').html(localVideoContainer);
+        window.localStreams.camera.stream.play(local_stream_div_id);
+
+        /* Remove local stream div from right side stream after setting it in main stream */
+        jQuery('.speaker-view #screen-users').find("#"+local_stream_div_id).parent().empty().remove();
+      } else {
+        
+      } 
+    }
+  },
+
   deleteRemoteStream: function(streamId) {
     window.remoteStreams[streamId].stream.stop(); // stop playing the feed
     delete window.remoteStreams[streamId]; // remove stream from list
-    const remoteContainerID = '#' + streamId + '_container';
-    jQuery(remoteContainerID).empty().remove();
+    let remoteContainerID = '#' + streamId + '_container';
+
+    if(window.isSpeakerView){
+      remoteContainerID = jQuery(remoteContainerID).parent().closest('.remote-stream-main-container');
+      window.AGORA_UTILS.handleSpeakerViewStreamsOnRemove(streamId);
+      jQuery(remoteContainerID).empty().remove();
+      if ( jQuery('#screen-users').children().length == 0 ) {
+        jQuery(".speaker-view .main-screen").css('width', '100%');
+        jQuery(".speaker-view .screen-users").css('width', '0%');
+      }
+    } else {
+      jQuery(remoteContainerID).empty().remove();
+    } 
+    
   },
 
   setupAgoraListeners: function() {
@@ -348,7 +383,7 @@ window.AGORA_UTILS = {
     });
 
     // remove the remote-container when a user leaves the channel
-    window.agoraClient.on("peer-leave", function peerLeave(evt) {
+    window.agoraClient.on("peer-leave", async function peerLeave(evt) {
       if (!evt || !evt.stream) {
         console.error('Stream undefined cannot be removed', evt);
         return false;
@@ -503,7 +538,8 @@ window.AGORA_UTILS = {
     if(jQuery('#screen-users').length==0){
       jQuery('body #screen-zone').append('<div id="screen-users"></div>');
     }
-    jQuery('.speaker-view .main-screen').css('width', '85%');
+    jQuery('.speaker-view .main-screen').css('width', '80%');
+    jQuery(".speaker-view .screen-users").css('width', '20%');
 
     const streamsContainer = jQuery('#screen-users');
 
@@ -990,66 +1026,73 @@ jQuery(document).ready(function(){
   if(window.isSpeakerView){
     /* Handle Pin/Unpin - To pin stream into main view, need to stop the stream and then, start again */
     jQuery("body").on("click", ".remote-stream-main-container", function(){
-      let currMainStream = jQuery('.main-screen #main-screen-stream-section').html();
-      let currStreamDiv = jQuery(this).find('div:first-child');
 
       let isMainStreamLocal = false; isRightStreamLocal = false;
 
       /* Handle Main Stream - Stop */
-      let mainStreamId = jQuery('.main-screen #main-screen-stream-section div:first-child').attr('id');
-      if(mainStreamId == 'local-video' || mainStreamId == 'full-screen-video'){
+      let mainLargeScreenStreamId = jQuery('.main-screen #main-screen-stream-section div:first-child').attr('id');
+      if(mainLargeScreenStreamId == 'local-video' || mainLargeScreenStreamId == 'full-screen-video'){
         isMainStreamLocal = true;
+      } else {
+        mainLargeScreenStreamId = jQuery('.main-screen #main-screen-stream-section').find('.remote-stream-container').attr('rel');
       }
 
       if(isMainStreamLocal){ /* If main stream is of local video */
         window.localStreams.camera.stream.stop();
       } else {
-        window.remoteStreams[jQuery('.main-screen #main-screen-stream-section').find('.remote-stream-container').attr('rel')].stream.stop();
+        window.remoteStreams[mainLargeScreenStreamId].stream.stop();
+        jQuery('#'+mainLargeScreenStreamId+'_container .resume-userclick').remove();
       }
       /* End Handle Main Stream */
       
       /* Handle Right Stream - stop */
-      let rightStreamId = jQuery(currStreamDiv).attr('id');
-      if(rightStreamId == 'local-video'){
+      let rightStreamId = jQuery(this).find('div:first-child').attr('id');
+      if(rightStreamId == 'local-video' || mainLargeScreenStreamId == 'full-screen-video'){
         isRightStreamLocal = true;
+      } else {
+        rightStreamId =jQuery(this).find('.remote-stream-container').attr('rel');
       }
 
       if(isRightStreamLocal){ /* If right side stream is of local video */
         window.localStreams.camera.stream.stop();
       } else {
-        window.remoteStreams[jQuery(this).find('.remote-stream-container').attr('rel')].stream.stop();
+        window.remoteStreams[rightStreamId].stream.stop();
+        jQuery('#'+rightStreamId+'_container .resume-userclick').remove();
       }
       /* End Handle Right Stream */
 
+      /* Store the current main large screen stream id, so that it can be used later when playing right stream */
+      let mainLargeScreenStreamIdAsRightStream = mainLargeScreenStreamId; 
 
       /* Exchange streams positions */
+      let currStreamDiv = jQuery(this).find('div:first-child').prop("outerHTML");
+      let currMainLargeScreenStream = jQuery('.main-screen #main-screen-stream-section').html();
       jQuery('.main-screen #main-screen-stream-section').html(currStreamDiv);
-      jQuery(this).html(currMainStream);
+      jQuery(this).html(currMainLargeScreenStream);
       /* End Exchange streams positions */
 
 
       /* Handle Main Stream - play */
       isMainStreamLocal = false;
-      mainStreamId = jQuery('.main-screen #main-screen-stream-section div:first-child').attr('id');
-      if(mainStreamId == 'local-video' || mainStreamId == 'full-screen-video'){
+      mainLargeScreenStreamId = jQuery('.main-screen #main-screen-stream-section div:first-child').attr('id');
+      if(mainLargeScreenStreamId == 'local-video' || mainLargeScreenStreamId == 'full-screen-video'){
         isMainStreamLocal = true;
+      } else {
+        mainLargeScreenStreamId = jQuery('.main-screen #main-screen-stream-section').find('.remote-stream-container').attr('rel');
       }
 
       if(isMainStreamLocal) { /* If main stream is of local video */
-        jQuery('.main-screen #main-screen-stream-section #player_'+window.localStreams.camera.stream.getId()).remove();
-        window.localStreams.camera.stream.play(mainStreamId);
+        window.localStreams.camera.stream.play(mainLargeScreenStreamId);
       } else {
-        let streamId = jQuery('.main-screen #main-screen-stream-section').find('.remote-stream-container').attr('rel');
-        jQuery('.main-screen #main-screen-stream-section #player_'+streamId).remove();
-        let remoteStream = window.remoteStreams[streamId].stream;
+        let remoteStream = window.remoteStreams[mainLargeScreenStreamId].stream;
         
-        remoteStream.play('agora_remote_' + streamId, function(err){
+        remoteStream.play('agora_remote_' + mainLargeScreenStreamId, function(err){
           if ((err && err.status !== "aborted") || (err && err.audio && err.audio.status !== "aborted")){
-            jQuery('body #' + streamId + '_container').prepend(
-              addAudioErrorGesture(streamId)
+            jQuery('body #' + mainLargeScreenStreamId + '_container').prepend(
+              addAudioErrorGesture(mainLargeScreenStreamId)
             )
           }  
-          handleGhostMode(streamId, 'remote');
+          handleGhostMode(mainLargeScreenStreamId, 'remote');
         });
       }
       /* End Handle Main Stream */
@@ -1057,26 +1100,23 @@ jQuery(document).ready(function(){
 
       /* Handle Right Stream - play */
       isRightStreamLocal = false;
-      rightStreamId = jQuery('.remote-stream-main-container div:first').attr('id');
+      rightStreamId = mainLargeScreenStreamIdAsRightStream;
       if(rightStreamId == 'local-video' || rightStreamId == 'full-screen-video'){ /* If right side stream is of local video */
         isRightStreamLocal = true;
       }
 
       if(isRightStreamLocal) {
-        jQuery('.remote-stream-main-container #player_'+window.localStreams.camera.stream.getId()).remove();
         window.localStreams.camera.stream.play(rightStreamId);
       } else {
-        let streamId = jQuery('.remote-stream-main-container').find('.remote-stream-container').attr('rel');
-        jQuery('.remote-stream-main-container #player_'+streamId).remove();
-        let remoteStream = window.remoteStreams[streamId].stream;
+        let remoteStream = window.remoteStreams[rightStreamId].stream;
         
-        remoteStream.play('agora_remote_' + streamId, function(err){
+        remoteStream.play('agora_remote_' + rightStreamId, function(err){
           if ((err && err.status !== "aborted") || (err && err.audio && err.audio.status !== "aborted")){
-            jQuery('body #' + streamId + '_container').prepend(
-              addAudioErrorGesture(streamId)
+            jQuery('body #' + rightStreamId + '_container').prepend(
+              addAudioErrorGesture(rightStreamId)
             )
           }  
-          handleGhostMode(streamId, 'remote');
+          handleGhostMode(rightStreamId, 'remote');
         });
       }
       /* End Handle Right Stream */

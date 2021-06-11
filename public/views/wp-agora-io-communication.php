@@ -22,7 +22,7 @@ if($channel_layout == 'speaker'){
 
         <?php if($isSpeakerView){ ?>
           <div class="main-screen">
-            <div id="main-screen-stream-section">
+            <div id="main-screen-stream-section" class="main-screen-stream-section">
               <div id="local-video" class="user">
                 <div id="mute-overlay" class="mute-overlay"><i class="fas fa-microphone-slash"></i></div>
                 <div id="no-local-video" class="no-video-overlay text-center"><i class="fas fa-user"></i></div>
