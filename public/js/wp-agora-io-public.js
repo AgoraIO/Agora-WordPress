@@ -490,8 +490,6 @@ window.AGORA_UTILS = {
     // Listener for Agora RTM Events
     window.addEventListener('agora.rtmMessageFromChannel', receiveRTMMessage);
 
-    window.addEventListener('agora.rtmMessageFromPeer', receivePeerRTMMessage);
-
   },
 
   // REMOTE STREAMS UI
@@ -913,12 +911,17 @@ function muteUnmuteRemoteStream(streamRtmUserId, type, status){
 
   }
 }
+  
+/* Function to get RTM UId from Stream ID */
+function generateRTMUidfromStreamId(streamId){
+  streamId= parseInt(streamId);
+  const numberUID = streamId < 1000 ? streamId + 1000 : streamId;
+  return 'x'+ String(numberUID); 
+}
 
 /* Function to show Mute/Unmute icons on remote streams for Admin User */
 function handleRemoteStreamControlsIcons(streamId){
-  streamId= parseInt(streamId);
-  const numberUID = streamId < 1000 ? streamId + 1000 : streamId;
-  const currStreamRTMUserId = 'x'+ String(numberUID); 
+  const currStreamRTMUserId = generateRTMUidfromStreamId(streamId); 
 
   let streamAudioIcon = "<i class='fas fa-microphone mute-remote-audio' rel='"+currStreamRTMUserId+"'></i>";
   if(!window.remoteStreams[streamId].stream.getAudioTrack() || !window.remoteStreams[streamId].stream.getAudioTrack().enabled){
@@ -939,9 +942,9 @@ function handleRemoteStreamControlsIcons(streamId){
 jQuery(document).ready(function(){
 
   /* Show Video Controls footer if no pre call device test is enabled */
-  if(!window.pre_call_device_test_enabled || window.agoraMode=='audience'){
-    jQuery('body .agora-footer').css('display', 'flex');
-  }
+  // if(!window.pre_call_device_test_enabled || window.agoraMode=='audience'){
+  //   jQuery('body .agora-footer').css('display', 'flex');
+  // }
 
   /* Show Mute/Unmute icons on remote streams only to Admin User and mute/unmute functionality */
   if(window.isAdminUser){
@@ -1313,24 +1316,24 @@ function loadChatApp() {
     if (evt.detail && evt.detail.text) {
 
       /* Handle Raise Hand Request */
-      if(evt.detail.text.indexOf('CANCEL-RAISE-HAND-')===0){
-        let senderId = evt.detail.senderId;
-        delete window.raiseHandRequests[senderId];
-        let totalRequests = Object.keys(window.raiseHandRequests).length;
-        if(totalRequests == 0){ totalRequests = '';  }
-        jQuery("body .raise-hand-requests #total-requests").html(totalRequests);
-      }
-      else if (evt.detail.text.indexOf('RAISE-HAND-')===0) {
-        let senderRTCId = evt.detail.text.split('RAISE-HAND-')[1];
-        let senderId = evt.detail.senderId;
-        window.raiseHandRequests[senderId] = {
-          'userId': senderRTCId,
-          'status' : 0
-        }
-        jQuery("body .raise-hand-requests #total-requests").html(Object.keys(window.raiseHandRequests).length);
-      }
+      // if(evt.detail.text.indexOf('CANCEL-RAISE-HAND-')===0){
+      //   let senderId = evt.detail.senderId;
+      //   delete window.raiseHandRequests[senderId];
+      //   let totalRequests = Object.keys(window.raiseHandRequests).length;
+      //   if(totalRequests == 0){ totalRequests = '';  }
+      //   jQuery("body .raise-hand-requests #total-requests").html(totalRequests);
+      // }
+      // else if (evt.detail.text.indexOf('RAISE-HAND-')===0) {
+      //   let senderRTCId = evt.detail.text.split('RAISE-HAND-')[1];
+      //   let senderId = evt.detail.senderId;
+      //   window.raiseHandRequests[senderId] = {
+      //     'userId': senderRTCId,
+      //     'status' : 0
+      //   }
+      //   jQuery("body .raise-hand-requests #total-requests").html(Object.keys(window.raiseHandRequests).length);
+      // }
       /* End Handle Raise Hand Request */
-      else if (evt.detail.text.indexOf('USER_JOINED_WITHOUT_')===0) {
+      if (evt.detail.text.indexOf('USER_JOINED_WITHOUT_')===0) {
         const pos = evt.detail.text.indexOf('**') + 2;
         const uid = evt.detail.text.substring(pos)
 
@@ -1402,6 +1405,8 @@ jQuery(document).ready(function(){
   });
 });
 
+window.addEventListener('agora.rtmMessageFromPeer', receivePeerRTMMessage);
+
 /* Function to run when user allow the request */
 function allowAccess(){
   if(requestedPermission.video){
@@ -1418,13 +1423,34 @@ function denyAccess(){
   jQuery("#view-allow-disallow-permission-modal").modal('toggle');
 }
 
+/* Function that will be run on rtm peer message event listener */
 async function receivePeerRTMMessage(evt) {
+  console.log("hlwPeerMsg", evt.detail.text)
   if (evt.detail && evt.detail.text) {
 
     /* Handle Raise Hand Request - Response */
 
+    /* Handle raise Hand Request */
+    if(evt.detail.text.indexOf('CANCEL-RAISE-HAND-REQUEST-')===0){
+      let senderId = evt.detail.senderId;
+      delete window.raiseHandRequests[senderId];
+      let totalRequests = Object.keys(window.raiseHandRequests).length;
+      if(totalRequests == 0){ totalRequests = '';  }
+      jQuery("body .raise-hand-requests #total-requests").html(totalRequests);
+    }
+    else if (evt.detail.text.indexOf('RAISE-HAND-REQUEST-')===0) {
+      let senderRTCId = evt.detail.text.split('RAISE-HAND-REQUEST-')[1];
+      let senderId = evt.detail.senderId;
+      window.raiseHandRequests[senderId] = {
+        'userId': senderRTCId,
+        'status' : 0
+      }
+      jQuery("body .raise-hand-requests #total-requests").html(Object.keys(window.raiseHandRequests).length);
+    }
+
+    /* Handle raise Hand Response */
     /* If Raise hand Request is Rejected */
-    if(evt.detail.text.indexOf('RAISE-HAND-REJECTED')===0){
+    else if(evt.detail.text.indexOf('RAISE-HAND-REJECTED')===0){
       console.log("Raise hand Request Rejected")
       window.AGORA_AUDIENCE.raiseHandRequestRejected();
     } 
@@ -1471,3 +1497,4 @@ async function receivePeerRTMMessage(evt) {
 
   }
 }
+/* End Function that will be run on rtm peer message event listener */

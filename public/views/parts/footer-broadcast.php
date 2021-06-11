@@ -43,13 +43,18 @@ if (array_key_exists("chat_support_loggedin", $channelSettings) && $channelSetti
             </button>
             <small class="btn-title"><?php _e('Share', 'agoraio') ?></small>
         </div>
-
-        <div class="raise-hand-requests">
-            <button>
-                <i class="fas fa-user"></i>
-                <span id="total-requests"></span>
-            </button>
-        </div>
+        <?php
+        if(isset($channel)){
+            if(json_decode($channel->admin_user_config())->is_admin){ ?>
+                <div class="raise-hand-requests">
+                    <button>
+                        <i class="fas fa-user"></i>
+                        <span id="total-requests"></span>
+                    </button>
+                </div>
+            <?php }
+        }
+        ?>
 
         <?php require_once('modal-raise-hand-requests.php'); ?>
 

@@ -167,6 +167,8 @@ function createCameraStream(uid, next) {
 
         window.AGORA_COMMUNICATION_UI.enableUiControls(localStream); // move after testing
 
+        jQuery('body .agora-footer').css('display', 'flex');
+
         window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
 
         /* Mute Audios and Videos Based on Mute All Users Settings */

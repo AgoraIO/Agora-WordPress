@@ -29,6 +29,8 @@
 
   window.pre_call_device_test_enabled = parseInt('<?php echo $channel->pre_call_video() ?>');
 
+  window.adminUser = '<?php echo $channel->admin_user(); ?>'
+
   window.adminUserConfig = JSON.parse('<?php echo $channel->admin_user_config(); ?>');
   window.isAdminUser = window.adminUserConfig.is_admin;
   window.canUnmuteForcefully = window.adminUserConfig.can_unmute_forecefully;
