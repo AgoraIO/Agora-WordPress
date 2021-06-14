@@ -240,11 +240,11 @@ window.AGORA_SCREENSHARE_UTILS = {
     if(!window.isSpeakerView){
       remoteEl.style.height = (divWidth / 1.35) + 'px'; // ratio 16:10
     }
-    
     // Play the new screen stream
     remoteStream.play('agora_remote_' + streamId);
     const videoEl = document.getElementById('agora_remote_' + streamId).querySelector('video');
     videoEl.style.objectFit = 'contain';
     videoEl.style.objectPosition = 'top';
+    handleGhostMode(streamId, 'remote');
   },
 }
