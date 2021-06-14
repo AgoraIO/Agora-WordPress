@@ -1049,6 +1049,7 @@ jQuery(document).ready(function(){
       /* Handle Right Stream - stop */
       let rightStreamId = jQuery(this).find('div:first-child').attr('id');
       if(rightStreamId == 'local-video' || rightStreamId == 'full-screen-video'){
+        isRightStreamLocal = true;
       } else {
         //rightStreamId =jQuery(this).find('.remote-stream-container').attr('rel');
         rightStreamId =jQuery(this).find('div:first').attr('id').split('_container')[0];
