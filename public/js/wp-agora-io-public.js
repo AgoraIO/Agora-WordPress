@@ -417,6 +417,7 @@ window.AGORA_UTILS = {
         } else {
           delete window.screenshareClients[streamId];
         }
+        handleGhostMode(streamId, 'remote');
       }
 
       if (window.AGORA_CLOUD_RECORDING.isCloudRecording) {
@@ -586,7 +587,7 @@ window.AGORA_UTILS = {
       }
       // console.log("streamPlayGhostCheck", streamId)
       // console.log("streamPlayGhostCheck", remoteStream.getAudioTrack().enabled)
-      // handleGhostMode(streamId, 'remote');
+      handleGhostMode(streamId, 'remote');
     });
   },
 
@@ -837,44 +838,46 @@ function showVisibleScreen(){
     jQuery("body #big-no-video-stream").show();
   } else {
     jQuery("body #big-no-video-stream").hide();
-
-    let newClass = getScreenUsersClass();
-    jQuery("#screen-users").removeClass(oldClass);
-    jQuery("#screen-users").addClass(newClass);
-
   }
+  let newClass = getScreenUsersClass(total_visible_streams);
+  console.log("hlwoldClass", oldClass)
+  jQuery("#screen-users").removeClass(oldClass);
+  jQuery("#screen-users").addClass(newClass);
 }
 
-function getScreenUsersClass(){
-	let total_visible_streams = 0;
+function getScreenUsersClass(total_visible_streams){
+	// let total_visible_streams = 0;
 
-    if(jQuery('body '+local_stream_div_id).is(":visible")){
-      total_visible_streams++;
-    }
+  //   if(jQuery('body '+local_stream_div_id).is(":visible")){
+  //     total_visible_streams++;
+  //   }
     
-	jQuery('body .remote-stream-container').each(function(){
-		if(jQuery(this).is(":visible")){
-			total_visible_streams++;
-		}
-	});
+	// jQuery('body .remote-stream-container').each(function(){
+	// 	if(jQuery(this).is(":visible")){
+	// 		total_visible_streams++;
+	// 	}
+	// });
 	
 	let countClass = 'screen-users screen-users-'+total_visible_streams.toString();
-    if(total_visible_streams == 5 || total_visible_streams == 6) {
+  if(total_visible_streams == 5 || total_visible_streams == 6) {
 		countClass = 'screen-users screen-users-5-6';
 	} 
-	if(total_visible_streams == 7 || total_visible_streams == 8 || total_visible_streams==9) {
+	
+  if(total_visible_streams == 7 || total_visible_streams == 8 || total_visible_streams==9) {
 		countClass = 'screen-users screen-users-7-9';
 	}
 	
 	if(total_visible_streams == 10 || total_visible_streams == 11 || total_visible_streams==12) {
 		countClass = 'screen-users screen-users-9-12';
 	}
+  console.log("hlwcountClass", countClass)
 	return countClass;
 }
 
 function handleGhostMode(uid, streamType='local', channelType='communication'){
   if(window.isGhostModeEnabled){
     if(streamType == 'local'){
+      console.log("hlwLocal")
       if(channelType == 'broadcast'){
         local_stream_div_id = "#full-screen-video";
       }
@@ -888,6 +891,7 @@ function handleGhostMode(uid, streamType='local', channelType='communication'){
       //showVisibleScreen();
     }
     else if(streamType == 'remote' && window.remoteStreams[uid]){
+      console.log("hlwRemite")
       //console.log("hlwRemoteStream", window.remoteStreams[uid].stream)
       if((window.remoteStreams[uid].stream && (!window.remoteStreams[uid].stream.getAudioTrack() || !window.remoteStreams[uid].stream.getAudioTrack().enabled))
       && (window.remoteStreams[uid].stream && (!window.remoteStreams[uid].stream.getVideoTrack() || !window.remoteStreams[uid].stream.getVideoTrack().enabled))
