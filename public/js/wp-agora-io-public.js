@@ -699,12 +699,15 @@ window.AGORA_CLOUD_RECORDING = {
   isCloudRecording: false,
 
   startVideoRecording: function (cb) {
+
+    let user_id = (window.userID == 0) ? window.localStreams.uid : window.userID;
+
     var params = {
       action: 'cloud_record', // wp ajax action
       sdk_action: 'start-recording',
       cid: window.channelId,
       cname: window.channelName,
-      uid: window.userID,
+      uid: user_id,
       token: window.agoraToken
     };
     window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
