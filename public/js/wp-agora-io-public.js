@@ -1044,7 +1044,7 @@ jQuery(document).ready(function(){
 
   apply_global_colors();
 
-  if(winwindow.isSpeakerViewWithRemoteRight){
+  if(window.isSpeakerViewWithRemoteRight){
     /* Handle Pin/Unpin - To pin stream into main view, need to stop the stream and then, start again */
     jQuery("body").on("click", ".remote-stream-main-container", function(){
 
