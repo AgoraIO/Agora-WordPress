@@ -28,9 +28,9 @@ if($channel_layout == 'speaker'){
       <div class="agora-content">
         <?php require_once "parts/header-controls.php" ?>
 
-        <div id="screen-zone" class="screen <?php if($isSpeakerView){ echo 'speaker-view'; } ?>">
+        <div id="screen-zone" class="screen <?php //if($isSpeakerView){ echo 'speaker-view'; } ?>">
 
-        <?php if($isSpeakerView){ ?>
+        <?php /* if($isSpeakerView){ ?>
           <div class="main-screen">
             <div id="main-screen-stream-section" class="main-screen-stream-section">
               <div id="full-screen-video" class="user">
@@ -39,7 +39,7 @@ if($channel_layout == 'speaker'){
               </div>  
             </div>
           </div>
-        <?php } else { ?>
+        <?php } else { */ ?>
 
           <div id="screen-users" class="screen-users screen-users-1">
             <div id="full-screen-video" class="user">
@@ -47,7 +47,7 @@ if($channel_layout == 'speaker'){
               <div id="no-local-video" class="no-video-overlay text-center"><i class="fas fa-user"></i></div>
             </div>
           </div>
-        <?php } ?>
+        <?php //} ?>
 
         </div>
       </div>

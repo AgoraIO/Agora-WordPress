@@ -14,6 +14,9 @@
     window.isGhostModeEnabled = true;
   }
 
+  //window.isSpeakerViewWithRemoteRight = '<?php //echo $channel->channellayout() ?>';
+  window.isSpeakerViewWithRemoteRight = false;
+
   window.isSpeakerView = '<?php echo $channel->channellayout() ?>';
 
   window.audienceUserId = 0;

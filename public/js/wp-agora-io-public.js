@@ -276,7 +276,7 @@ window.AGORA_UTILS = {
   },
 
   handleSpeakerViewStreamsOnRemove: function(streamId){
-    if(window.isSpeakerView){
+    if(window.isSpeakerViewWithRemoteRight){
       let remoteContainerID = '#' + streamId + '_container';
       console.log("hlwremoteContainerID", remoteContainerID)
       let removedStreamParentClass = jQuery(remoteContainerID).parent().attr('class');
@@ -303,7 +303,7 @@ window.AGORA_UTILS = {
     delete window.remoteStreams[streamId]; // remove stream from list
     let remoteContainerID = '#' + streamId + '_container';
 
-    if(window.isSpeakerView){
+    if(window.isSpeakerViewWithRemoteRight){
       remoteContainerID = jQuery(remoteContainerID).parent().closest('.remote-stream-main-container');
       window.AGORA_UTILS.handleSpeakerViewStreamsOnRemove(streamId);
       jQuery(remoteContainerID).empty().remove();
@@ -549,7 +549,7 @@ window.AGORA_UTILS = {
     // avoid duplicate users in case there are errors removing old users and rejoining
     const old = streamsContainer.find(`#${streamId}_container`)
     if (old && old[0]) { old[0].remove() }
-    if(window.isSpeakerView){
+    if(window.isSpeakerViewWithRemoteRight){
       streamsContainer.append(
         jQuery('<div/>', {'class': 'remote-stream-main-container'}).append(
           jQuery('<div/>', {'id': streamId + '_container',  'class': 'user remote-stream-container', 'rel': streamId}).append(
@@ -1044,7 +1044,7 @@ jQuery(document).ready(function(){
 
   apply_global_colors();
 
-  if(window.isSpeakerView){
+  if(winwindow.isSpeakerViewWithRemoteRight){
     /* Handle Pin/Unpin - To pin stream into main view, need to stop the stream and then, start again */
     jQuery("body").on("click", ".remote-stream-main-container", function(){
 

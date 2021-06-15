@@ -169,7 +169,7 @@ window.AGORA_SCREENSHARE_UTILS = {
     const streamId = remoteStream.getId();
     console.log('Adding remote screen share:', streamId);
 
-    if(window.isSpeakerView){
+    if(window.isSpeakerViewWithRemoteRight){
       /* Set Screen Share Stream in main large screen */
 
       isMainStreamLocal = false;
@@ -237,7 +237,7 @@ window.AGORA_SCREENSHARE_UTILS = {
 
     const remoteEl = document.getElementById(streamId + '_container');
     const divWidth = remoteEl.getBoundingClientRect().width;
-    if(!window.isSpeakerView){
+    if(!window.isSpeakerViewWithRemoteRight){
       remoteEl.style.height = (divWidth / 1.35) + 'px'; // ratio 16:10
     }
     // Play the new screen stream

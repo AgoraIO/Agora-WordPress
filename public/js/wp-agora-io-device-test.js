@@ -13,7 +13,7 @@ jQuery(document).ready(function(){
         let action_button_div = "<div class='action-buttons'><button class='click_to_join'>Click to Join</button></div>";
         
         let main_div_id = "screen-users";
-        if(window.isSpeakerView){
+        if(wiwindow.isSpeakerViewWithRemoteRight){
             main_div_id = 'main-screen-stream-section';
             jQuery(".main-screen-stream-section").css('display', 'flex');
         }
