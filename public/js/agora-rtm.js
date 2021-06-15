@@ -192,7 +192,7 @@ function processRtmRequest(value) {
 	    // in case the screen stream is already shown in the layout, it's needed to udpate the layout:
 	    if (window.remoteStreams[uid]) {
 	      // first remove the current screen stream from the normal users layout
-	      const screenStream = window.remoteStreams[uid];
+	      const screenStream = window.remoteStreams[uid].stream;
 	      window.AGORA_UTILS.deleteRemoteStream(uid);
 	      screenStream.stop();
 	      
