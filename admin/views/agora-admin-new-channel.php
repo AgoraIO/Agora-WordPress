@@ -491,6 +491,15 @@ function render_agoraio_channel_form_recording($channel) {
       echo '<input type="hidden" id="region-tmp" value="'.$recording['region'].'" />';
     }
 
+
+    agora_render_setting_row_select(
+      'protoType',
+      __('Type', 'agoraio'),
+      array(
+        'composite' => __('Composite', 'agoraio'),
+        'individual' => __('Individual', 'agoraio')
+      ), $recording, '');
+    
     agora_render_setting_row('bucket', __('Bucket', 'agoraio'), $recording, '', 'text');
 
     agora_render_setting_row('accessKey', __('Access Key', 'agoraio'), $recording, '', 'text');

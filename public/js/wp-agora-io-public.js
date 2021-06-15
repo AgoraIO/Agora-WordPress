@@ -313,7 +313,9 @@ window.AGORA_UTILS = {
       }
     } else {
       jQuery(remoteContainerID).empty().remove();
-    } 
+    }
+    
+    handleGhostMode(streamId, 'remote');
     
   },
 
@@ -415,6 +417,7 @@ window.AGORA_UTILS = {
         } else {
           delete window.screenshareClients[streamId];
         }
+        handleGhostMode(streamId, 'remote');
       }
 
       if (window.AGORA_CLOUD_RECORDING.isCloudRecording) {
@@ -584,7 +587,7 @@ window.AGORA_UTILS = {
       }
       // console.log("streamPlayGhostCheck", streamId)
       // console.log("streamPlayGhostCheck", remoteStream.getAudioTrack().enabled)
-      // handleGhostMode(streamId, 'remote');
+      handleGhostMode(streamId, 'remote');
     });
   },
 
@@ -696,12 +699,15 @@ window.AGORA_CLOUD_RECORDING = {
   isCloudRecording: false,
 
   startVideoRecording: function (cb) {
+
+    let user_id = (window.userID == 0) ? window.localStreams.uid : window.userID;
+
     var params = {
       action: 'cloud_record', // wp ajax action
       sdk_action: 'start-recording',
       cid: window.channelId,
       cname: window.channelName,
-      uid: window.userID,
+      uid: user_id,
       token: window.agoraToken
     };
     window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
@@ -808,57 +814,73 @@ jQuery(document).ready(function(){
 });
 
 function showVisibleScreen(){
+
+  let oldClass = jQuery("#screen-users").attr('class');
+
   console.log("showvisstreams ")
   let total_visible_streams = 0;
-  if(jQuery('body '+local_stream_div_id).is(":visible")){
+  if(jQuery('body #agora-root '+local_stream_div_id).is(":visible")){
     total_visible_streams++;    
     jQuery('body '+local_stream_div_id).css('display', 'inline-flex');
   }
   
-  jQuery('body .remote-stream-container').each(function(){
-  if(jQuery(this).is(":visible")){
+  jQuery('body #agora-root .remote-stream-container').each(function(){
+    if(jQuery(this).is(":visible")){
       total_visible_streams++;
-    jQuery(this).css('display', 'inline-flex');
-  }
+      jQuery(this).css('display', 'inline-flex');
+    }
   });
-  if(total_visible_streams == 0){
-      jQuery("body #big-no-video-stream").show();
-  } else {
-      jQuery("body #big-no-video-stream").hide();
+
+  if(jQuery("body #agora-root .screenshare-container").length>0){
+    total_visible_streams++;
   }
+
+  console.log("hlwtotal_visible_streams", total_visible_streams)
+
+  if(total_visible_streams == 0){
+    jQuery("body #big-no-video-stream").show();
+  } else {
+    jQuery("body #big-no-video-stream").hide();
+  }
+  let newClass = getScreenUsersClass(total_visible_streams);
+  console.log("hlwoldClass", oldClass)
+  jQuery("#screen-users").removeClass(oldClass);
+  jQuery("#screen-users").addClass(newClass);
 }
 
-function getScreenUsersClass(){
-	let total_visible_streams = 0;
+function getScreenUsersClass(total_visible_streams){
+	// let total_visible_streams = 0;
 
-    if(jQuery('body '+local_stream_div_id).is(":visible")){
-      total_visible_streams++;
-    }
+  //   if(jQuery('body '+local_stream_div_id).is(":visible")){
+  //     total_visible_streams++;
+  //   }
     
-	jQuery('body .remote-stream-container').each(function(){
-		if(jQuery(this).is(":visible")){
-			total_visible_streams++;
-		}
-	});
+	// jQuery('body .remote-stream-container').each(function(){
+	// 	if(jQuery(this).is(":visible")){
+	// 		total_visible_streams++;
+	// 	}
+	// });
 	
 	let countClass = 'screen-users screen-users-'+total_visible_streams.toString();
-    if(total_visible_streams == 5 || total_visible_streams == 6) {
+  if(total_visible_streams == 5 || total_visible_streams == 6) {
 		countClass = 'screen-users screen-users-5-6';
 	} 
-	if(total_visible_streams == 7 || total_visible_streams == 8 || total_visible_streams==9) {
+	
+  if(total_visible_streams == 7 || total_visible_streams == 8 || total_visible_streams==9) {
 		countClass = 'screen-users screen-users-7-9';
 	}
 	
 	if(total_visible_streams == 10 || total_visible_streams == 11 || total_visible_streams==12) {
 		countClass = 'screen-users screen-users-9-12';
 	}
+  console.log("hlwcountClass", countClass)
 	return countClass;
 }
 
 function handleGhostMode(uid, streamType='local', channelType='communication'){
   if(window.isGhostModeEnabled){
-    let oldClass = jQuery("#screen-users").attr('class');
     if(streamType == 'local'){
+      console.log("hlwLocal")
       if(channelType == 'broadcast'){
         local_stream_div_id = "#full-screen-video";
       }
@@ -869,9 +891,10 @@ function handleGhostMode(uid, streamType='local', channelType='communication'){
       } else {
         jQuery("body "+local_stream_div_id).show();
       }
-      showVisibleScreen();
+      //showVisibleScreen();
     }
-    else if(streamType == 'remote'){
+    else if(streamType == 'remote' && window.remoteStreams[uid]){
+      console.log("hlwRemite")
       //console.log("hlwRemoteStream", window.remoteStreams[uid].stream)
       if((window.remoteStreams[uid].stream && (!window.remoteStreams[uid].stream.getAudioTrack() || !window.remoteStreams[uid].stream.getAudioTrack().enabled))
       && (window.remoteStreams[uid].stream && (!window.remoteStreams[uid].stream.getVideoTrack() || !window.remoteStreams[uid].stream.getVideoTrack().enabled))
@@ -884,11 +907,9 @@ function handleGhostMode(uid, streamType='local', channelType='communication'){
         console.log("hlwShowGhost", uid)
         window.AGORA_UTILS.toggleVisibility('#' + uid + '_container', true);
       }
-      showVisibleScreen();
+      //showVisibleScreen();
     }
-    let newClass = getScreenUsersClass();
-    jQuery("#screen-users").removeClass(oldClass);
-    jQuery("#screen-users").addClass(newClass);
+    showVisibleScreen();
   }
 }
 /* End Handle Ghost Mode */
@@ -1048,13 +1069,12 @@ jQuery(document).ready(function(){
       
       /* Handle Right Stream - stop */
       let rightStreamId = jQuery(this).find('div:first-child').attr('id');
-      if(rightStreamId == 'local-video' || mainLargeScreenStreamId == 'full-screen-video'){
+      if(rightStreamId == 'local-video' || rightStreamId == 'full-screen-video'){
         isRightStreamLocal = true;
       } else {
         //rightStreamId =jQuery(this).find('.remote-stream-container').attr('rel');
         rightStreamId =jQuery(this).find('div:first').attr('id').split('_container')[0];
       }
-
       if(isRightStreamLocal){ /* If right side stream is of local video */
         window.localStreams.camera.stream.stop();
       } else {

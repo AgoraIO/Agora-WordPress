@@ -48,6 +48,7 @@ class WP_Agora_Channel {
     'bucket' => '',
     'accessKey' => '',
     'secretKey' => '',
+    'protoType' => ''
   );
 
   // private channel attrs

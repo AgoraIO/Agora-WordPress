@@ -81,6 +81,7 @@ async function agoraJoinChannel(channelName, cb) {
         }
         await window.AGORA_RTM_UTILS.joinChannel(uid);
         await createCameraStream(uid);
+        window.localStreams.uid = uid;
         cb && cb(null)
       } catch(err) {
         AgoraRTC.Logger.error("[ERROR] : join channel failed", err);

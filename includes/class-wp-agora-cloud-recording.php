@@ -12,6 +12,9 @@
 define('AGORA_MIN_RAND_VALUE', 10000000);
 define('AGORA_MAX_RAND_VALUE', 4294967295);
 
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
 class AgoraCloudRecording {
     private $API_URL = 'https://api.agora.io/v1/apps/';
     private $settings = null;
@@ -73,10 +76,23 @@ class AgoraCloudRecording {
 
     private function acquire($data) {
         $endpoint = $this->settings['appId']."/cloud_recording/acquire";
+
+        $channel = WP_Agora_Channel::get_instance($data['cid']);
+        $channelSettings    = $channel->get_properties();
+        $recordingSettings = $channelSettings['recording'];
+
+        if($recordingSettings['protoType'] == 'individual'){
+            $clientRequest = new stdClass();
+            $clientRequest->scene = 2;
+        } else{
+            $clientRequest = json_decode("{}");
+        }
+        
         $params = array(
             'cname' => $data['cname'],
             'uid' => $data['uid'],
-            'clientRequest' => json_decode("{}")
+            //'clientRequest' => json_decode("{}")
+            'clientRequest' => $clientRequest
         );
         return $this->callAPI($endpoint, $params, 'POST');
     }
@@ -138,10 +154,12 @@ class AgoraCloudRecording {
 
     private function startRecording($data) {
 
+        $currentUserId = $data['uid'];
+
         $data['uid'] = ''.rand(AGORA_MIN_RAND_VALUE, AGORA_MAX_RAND_VALUE);
 
         $resource = $this->acquire($data);
-        // die("R:<pre>".print_r($resource, true)."</pre>");
+        //die("R:<pre>".print_r($resource, true)."</pre>");
         $resourceId = $resource->resourceId;
         
         $channel = WP_Agora_Channel::get_instance($data['cid']);
@@ -151,22 +169,34 @@ class AgoraCloudRecording {
             return new WP_Error( 'data', "Storage Config not finished." );
         }
 
+        $recordType = 'mix';
+        if($recordingSettings['protoType'] == 'individual'){
+            $recordType = 'individual';
+        }
+
         // $sid = $data['sid'];
-        $endpoint = $this->settings['appId'].'/cloud_recording/resourceid/' . $resourceId . '/mode/mix/start';
+        $endpoint = $this->settings['appId'].'/cloud_recording/resourceid/' . $resourceId . '/mode/'.$recordType.'/start';
 
         $clientRequest = new stdClass();
         $clientRequest->recordingConfig = new stdClass();
         $clientRequest->recordingConfig->channelType = 1; // 1 = broadcast,  0=Communication
-        $clientRequest->recordingConfig->transcodingConfig = new stdClass();
-        $clientRequest->recordingConfig->transcodingConfig->mixedVideoLayout = 1; // best fit layout
-        $clientRequest->recordingConfig->transcodingConfig->backgroundColor = "#000000";
-        $clientRequest->recordingConfig->transcodingConfig->width = 848;
-        $clientRequest->recordingConfig->transcodingConfig->height = 480;
-        $clientRequest->recordingConfig->transcodingConfig->bitrate = 930;
-        $clientRequest->recordingConfig->transcodingConfig->fps = 30;
 
-        // $clientRequest->recordingConfig->subscribeVideoUids
-        // $clientRequest->recordingConfig->subscribeAudioUids
+        if($recordingSettings['protoType'] != 'individual'){
+            $clientRequest->recordingConfig->transcodingConfig = new stdClass();
+            $clientRequest->recordingConfig->transcodingConfig->mixedVideoLayout = 1; // best fit layout
+            $clientRequest->recordingConfig->transcodingConfig->backgroundColor = "#000000";
+            $clientRequest->recordingConfig->transcodingConfig->width = 848;
+            $clientRequest->recordingConfig->transcodingConfig->height = 480;
+            $clientRequest->recordingConfig->transcodingConfig->bitrate = 930;
+            $clientRequest->recordingConfig->transcodingConfig->fps = 30;
+            $clientRequest->recordingFileConfig = new stdClass();
+            $clientRequest->recordingFileConfig->avFileType = ["hls", "mp4"];
+        } else{
+            //$clientRequest->recordingConfig->combinationPolicy = 'postpone_transcoding';
+            $clientRequest->recordingConfig->subscribeUidGroup = 0;
+            // $clientRequest->recordingConfig->subscribeVideoUids = ["1"];
+            // $clientRequest->recordingConfig->subscribeAudioUids = ["1"];
+        }
         $clientRequest->storageConfig = new stdClass();
         $clientRequest->storageConfig->vendor = intval($recordingSettings['vendor']);
         $clientRequest->storageConfig->region = intval($recordingSettings['region']);
@@ -181,12 +211,18 @@ class AgoraCloudRecording {
         
         $fixedTitle = str_replace('-', '', $channel->title());
         $folderName = $month.$day.$year.preg_replace('/\s+/', '', $fixedTitle);
+        $folderName = $currentUserId.$data['cid'];
+        
         $clientRequest->storageConfig->fileNamePrefix = array( $folderName );
         
-        $newToken = $this->parent->generateNewToken($data['cid'], $data['uid']);
+        $newToken = $this->parent->generateNewToken($data['cid'], $data['uid'], 'RTC');
         // die("<pre>".print_r($newToken, true)."</pre>");
         $clientRequest->token = $newToken;
-        
+
+        if($recordingSettings['protoType'] == 'individual'){
+            $clientRequest->appsCollection = new stdClass();
+            $clientRequest->appsCollection->combinationPolicy = 'postpone_transcoding';
+        }
         $params = array(
             'cname' => $data['cname'],
             'uid' => $data['uid'],
@@ -215,8 +251,17 @@ class AgoraCloudRecording {
             return new WP_Error( 'data', "Incomplete data", $data );
         }
 
+        $channel = WP_Agora_Channel::get_instance($data['cid']);
+        $channelSettings    = $channel->get_properties();
+
+        $recordType = 'mix';
+        $recordingSettings = $channelSettings['recording'];
+        if($recordingSettings['protoType'] == 'individual'){
+            $recordType = 'individual';
+        }
+
         $sid = $data['recordingId'];
-        $endpoint = $this->settings['appId'].'/cloud_recording/resourceid/' . $resourceId . '/sid/' . $sid. '/mode/mix/stop';
+        $endpoint = $this->settings['appId'].'/cloud_recording/resourceid/' . $resourceId . '/sid/' . $sid. '/mode/'.$recordType.'/stop';
         
         $params = array(
             'cname' => $data['cname'],
