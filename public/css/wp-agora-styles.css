@@ -163,15 +163,13 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-
-/*  justify-content: center;
   margin-left: -10px;
-  margin-right: -10px;*/
+  margin-right: -10px;
 }
 .agora .screen-users .user {
   position: relative;
   overflow: hidden;
-  /*padding: 3px;*/
+  padding: 3px;
   background-color: #111;
 }
 .screen-users .user video {
@@ -183,7 +181,7 @@
   padding: 0;
 }
 .agora .screen.sharescreen .screen-users .user {
-/*  width: calc(100px * 1.5) !important;*/
+ width: calc(100px * 1.5);
   height: 100px;
 }
 .agora .screen.sharescreen .screen-users {
@@ -215,7 +213,7 @@
 
 /* screeen with 2 users */
 .agora .screen-users-2 .user {
-  width: 49.5% !important;
+  width: 49.5%;
   height: 45vh;
 }
 .agora-fullscreen .screen-users-2 .user {
@@ -224,7 +222,7 @@
 }
 
 /* screen with 3-4 users */
-.agora .screen-users-3 .user,
+/*.agora .screen-users-3 .user,
 .agora .screen-users-4 .user{
   width: 50% !important;
   height: 30vh;
@@ -232,7 +230,7 @@
 .agora-fullscreen .screen-users-3 .user,
 .agora-fullscreen .screen-users-4 .user{
   height: 36vh;
-}
+}*/
 
 /* screen with 5 y 6 users */
 .agora .screen-users-5-6 .user{
