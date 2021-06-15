@@ -142,6 +142,7 @@ async function createCameraStream(uid, deviceIds) {
     // window.AGORA_BROADCAST_UI.calculateVideoScreenSize();
     
     AgoraRTC.Logger.info('getUserMedia successfully');
+     jQuery(".main-screen-stream-section").css('display', 'block');
     localStream.play('full-screen-video'); // play the local stream on the main div
     // publish local stream
 

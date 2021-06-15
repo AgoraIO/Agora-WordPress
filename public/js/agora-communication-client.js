@@ -157,7 +157,9 @@ function createCameraStream(uid, next) {
       thisBtn.find('.spinner-border').hide();
 
       AgoraRTC.Logger.info("getUserMedia successfully");
+
       try {
+          jQuery(".main-screen-stream-section").css('display', 'block');
         localStream.play('local-video'); // play the given stream within the local-video div
 
         // publish local stream

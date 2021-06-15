@@ -157,12 +157,12 @@
 }
 .agora.agora-fullscreen .screen {
   align-items: center;
-  padding: 0 15px;
+ /* padding: 0 15px;*/
 }
 .agora .screen-users{
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
 
 /*  justify-content: center;
   margin-left: -10px;
@@ -183,7 +183,7 @@
   padding: 0;
 }
 .agora .screen.sharescreen .screen-users .user {
-  width: calc(100px * 1.5) !important;
+/*  width: calc(100px * 1.5) !important;*/
   height: 100px;
 }
 .agora .screen.sharescreen .screen-users {
@@ -422,7 +422,7 @@
     overflow-y: auto;
 }
 .agora .modal {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 1050;
@@ -430,7 +430,11 @@
     width: 100%;
     overflow: hidden;
     outline: 0;
-    padding-top: 68px;
+    height: 100%;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+   /* padding-top: 68px;*/
 }
 .agora .fade:not(.show) {
     opacity: 0;
@@ -439,10 +443,13 @@
     transition: opacity .15s linear;
 }
 .agora .modal-dialog {
-    position: relative;
+    position: absolute;
     width: auto;
     margin: 0 auto;
     pointer-events: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)!important;
 }
 .agora .modal.show .modal-dialog {
     -webkit-transform: none;
@@ -455,6 +462,12 @@
   -webkit-transform: translate(0,-35px);
   transform: translate(0,-35px);
 }
+
+/*agora full screen*/
+.agora.agora-communication.agora-fullscreen .speaker-view{ height: calc(100vh - 180px)!important;}
+.agora.agora-communication.agora-fullscreen .speaker-view .main-screen{ height: 100%; }
+
+
 @media (min-width: 576px) {
   .modal-dialog {
     max-width: 500px;
@@ -953,9 +966,9 @@ button#exit-btn{ font-size: 16px;}
     .user  .resume-userclick {  position: absolute; z-index: 2;  display: inline-block;   background-color: #00000047;  padding: .5rem .8rem;
       border-radius: 25px;  left: 3%;   color: #fff;   top: 4%;  font-size: .7rem;border: .4px solid #ffffff2e;  }
      /*-----------------------click-to-unmute-ends---------------------------------*/
-      .speaker-view {  display: flex!important;    justify-content: space-between;  height: 40vh!important;  }
+      .speaker-view {  display: flex!important;    justify-content: space-between;  height: 50vh!important;  }
       .speaker-view .main-screen {   width: 100%;}
-      .speaker-view .screen-users{width: 20%; display: block; overflow-y: auto; flex-direction: column; max-height: 50vh!important; justify-content: flex-start;}
+      .speaker-view .screen-users{width: 20%; display: block; overflow-y: auto; flex-direction: column; height: 100%; max-height: 100%!important; justify-content: flex-start;}
       .speaker-view .screen-users .user{width: 100%;max-height: 200px!important;}
       .speaker-view .main-screen .user {display: block!important;height: 100%; position: relative;}
        /*-----------------------chat----------------------------------*/
@@ -1025,5 +1038,6 @@ button#exit-btn{ font-size: 16px;}
   height: 100%;
  }
  /*mutliple stream*/
- .speaker-view .screen-users .remote-stream-main-container{ height: 33.33%;}
+ .speaker-view .screen-users .remote-stream-main-container{ height: 25%;}
  .speaker-view .screen-users .remote-stream-main-container .user{ max-height: unset; height: 100%; width: 100% !important; }
+
