@@ -29,6 +29,8 @@ class WP_Agora_Public {
 		add_shortcode( 'agora-communication', array($this, 'agoraCommunicationShortcode') );
 		add_shortcode( 'agora-broadcast', array($this, 'agoraBroadcastShortcode') );
 
+		add_shortcode( 'agora-recordings', array($this, 'agoraRecordingsList') );
+
 		$this->settings = get_option($this->plugin_name);
 		if (!$this->settings) {
 			$this->settings = array();
@@ -320,6 +322,12 @@ class WP_Agora_Public {
 		require_once(__DIR__.'/../includes/token-server/RtcTokenBuilder.php');
 
 		return renderCommnicationShortcode( $this, $atts );
+	}
+
+	/**  Get Agora Recordings List Shortcode shortcode **/
+	public function agoraRecordingsList( $atts ){
+		// require_once(__DIR__.'/views/wp-agora-io-recordings.php');
+		// return getRecordingsList($atts);
 	}
 
 	/**  Render Agora Broadcast shortcode **/
