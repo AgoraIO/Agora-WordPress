@@ -321,20 +321,23 @@ window.AGORA_UTILS = {
 
   setupAgoraListeners: function() {
 
-    /* Handle Active Speaker */
-    const THRESHOLD_AUDIO_LEVEL = 1;
-    window.agoraClient.enableAudioVolumeIndicator();
+    if(window.isSpeakerView){
+     /* Handle Active Speaker */
+      const THRESHOLD_AUDIO_LEVEL = 1;
+      window.agoraClient.enableAudioVolumeIndicator();
 
-    window.agoraClient.on("volume-indicator", function(evt){
-      jQuery('.activeSpeaker').removeClass('activeSpeaker');
-      evt.attr.forEach(function(volume, index){
-        console.log(`${index} UID ${volume.uid} Level ${volume.level}`);
-        if(volume.level>THRESHOLD_AUDIO_LEVEL){
-          jQuery('body #' + volume.uid + '_container').addClass('activeSpeaker');
-        }
+      window.agoraClient.on("volume-indicator", function(evt){
+        jQuery('.activeSpeaker').removeClass('activeSpeaker');
+        evt.attr.forEach(function(volume, index){
+          console.log(`${index} UID ${volume.uid} Level ${volume.level}`);
+          if(volume.level>THRESHOLD_AUDIO_LEVEL){
+            jQuery('body #' + volume.uid + '_container').addClass('activeSpeaker');
+            addStreamInLargeView(volume.uid);
+          }
+        });
       });
-    });
-    /* End Handle Active Speaker */
+      /* End Handle Active Speaker */ 
+    }
 
     // show mute icon whenever a remote has muted their mic
     window.agoraClient.on("mute-audio", function muteAudio(evt) {
@@ -994,6 +997,10 @@ function handleRemoteStreamControlsIcons(streamId){
     jQuery('.remote-stream-controls .mute-remote-audio-div').html(streamAudioIcon);
     jQuery('.remote-stream-controls .mute-remote-video-div').html(streamVideoIcon);
   }
+}
+
+function addStreamInLargeView(streamId){
+  window.AGORA_SCREENSHARE_UTILS.addRemoteScreenshare(window.remoteStreams[streamId].stream);
 }
 
 jQuery(document).ready(function(){
