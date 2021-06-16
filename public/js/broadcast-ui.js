@@ -163,12 +163,13 @@ window.AGORA_BROADCAST_UI = {
     }
   },
 
-  toggleVideo: function () {
-    if (window.localStreams.camera.stream) {
+    toggleVideo: function () {
+      if (window.localStreams.camera.stream) {
       window.AGORA_UTILS.toggleBtn(jQuery("#video-btn")); // toggle button colors
       window.AGORA_UTILS.toggleBtn(jQuery("#cam-dropdown"));
       if (jQuery("#video-icon").hasClass('fa-video')) {
         window.localStreams.camera.stream.muteVideo(); // enable the local video
+        handleMutedVideoBackgroundColor(window.localStreams.camera.stream.getId(), 'local');
         window.AGORA_UTILS.toggleVisibility("#no-local-video", true); // show the user icon when video is disabled
         // console.log("muteVideo");
       } else {

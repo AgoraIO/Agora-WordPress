@@ -5,10 +5,11 @@ $appearanceSettings = $channelSettings['appearance'];
 $current_user       = wp_get_current_user();
 $channel_layout = $channelSettings['channel_layout'];
 
-$isSpeakerView = false;
-if($channel_layout == 'speaker'){
-  $isSpeakerView = true;
-}
+/* Code with Reemote Streams on right side - use for future */
+// $isSpeakerView = false;
+// if($channel_layout == 'speaker'){
+//   $isSpeakerView = true;
+// }
 
 ?>
 <div id="agora-root" class="agora agora-broadcast">
@@ -28,9 +29,11 @@ if($channel_layout == 'speaker'){
       <div class="agora-content">
         <?php require_once "parts/header-controls.php" ?>
 
-        <div id="screen-zone" class="screen <?php if($isSpeakerView){ echo 'speaker-view'; } ?>">
+        <div id="screen-zone" class="screen <?php //if($isSpeakerView){ echo 'speaker-view'; } ?>">
 
-        <?php if($isSpeakerView){ ?>
+        <?php 
+        /* Code with Reemote Streams on right side - use for future */
+        /* if($isSpeakerView){ ?>
           <div class="main-screen">
             <div id="main-screen-stream-section" class="main-screen-stream-section">
               <div id="full-screen-video" class="user">
@@ -39,7 +42,7 @@ if($channel_layout == 'speaker'){
               </div>  
             </div>
           </div>
-        <?php } else { ?>
+        <?php } else { */ ?>
 
           <div id="screen-users" class="screen-users screen-users-1">
             <div id="full-screen-video" class="user">
@@ -47,7 +50,7 @@ if($channel_layout == 'speaker'){
               <div id="no-local-video" class="no-video-overlay text-center"><i class="fas fa-user"></i></div>
             </div>
           </div>
-        <?php } ?>
+        <?php //} ?>
 
         </div>
       </div>

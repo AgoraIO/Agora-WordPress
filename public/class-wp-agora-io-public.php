@@ -29,6 +29,8 @@ class WP_Agora_Public {
 		add_shortcode( 'agora-communication', array($this, 'agoraCommunicationShortcode') );
 		add_shortcode( 'agora-broadcast', array($this, 'agoraBroadcastShortcode') );
 
+		add_shortcode( 'agora-recordings', array($this, 'agoraRecordingsList') );
+
 		$this->settings = get_option($this->plugin_name);
 		if (!$this->settings) {
 			$this->settings = array();
@@ -132,7 +134,7 @@ class WP_Agora_Public {
 					$result->time = date("h:i a", $dateInLocalTimezone);
 				}
 				$result->isLocalMessage = false;
-				if((is_user_logged_in() && $chat->user_id == get_current_user_id()) || ($username==$result->username)){
+				if((is_user_logged_in() && $result->user_id == get_current_user_id()) || ($username==$result->username)){
 					$result->isLocalMessage = true;
 				}
 			}
@@ -320,6 +322,12 @@ class WP_Agora_Public {
 		require_once(__DIR__.'/../includes/token-server/RtcTokenBuilder.php');
 
 		return renderCommnicationShortcode( $this, $atts );
+	}
+
+	/**  Get Agora Recordings List Shortcode shortcode **/
+	public function agoraRecordingsList( $atts ){
+		// require_once(__DIR__.'/views/wp-agora-io-recordings.php');
+		// return getRecordingsList($atts);
 	}
 
 	/**  Render Agora Broadcast shortcode **/
