@@ -1906,7 +1906,7 @@ jQuery(document).ready(function(){
 }); 
 /* End Function to handle layout change */
 
-/* */
+/* Function to show or hide Raise hand button based on the condition if audio muted/unmuted(In Communication mode)*/
 function showRaiseHandInCommunication(){
   console.log("hlwwindow.agoraMode", window.agoraMode)
   if(window.agoraMode == 'communication'){
