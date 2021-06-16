@@ -713,8 +713,11 @@ window.AGORA_UTILS = {
 
     sessionStorage.setItem("deviceTested", "Yes");
 
-    jQuery("body #local-video").css('width', '100%');
-    jQuery("body #full-screen-video").css('width', '100%');
+    // jQuery("body #local-video").css('width', '100%');
+    // jQuery("body #full-screen-video").css('width', '100%');
+
+      jQuery("body #local-video").removeAttr('style');
+      jQuery("body #full-screen-video").removeAttr('style');
 
     window.localStreams.tmpCameraStream.stop();
 
