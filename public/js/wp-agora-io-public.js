@@ -357,7 +357,7 @@ window.AGORA_UTILS = {
         if(volume.level>THRESHOLD_AUDIO_LEVEL){
           jQuery('body #' + volume.uid + '_container').addClass('activeSpeaker');
           if(window.isSpeakerView){
-            addStreamInLargeView(volume.uid);
+            addStreamInLargeView(volume.uid, 'speaker');
           }
         }
       });
@@ -1045,9 +1045,9 @@ function isCurrentStreamInMainLargeScreen(streamId){
 }
 
 /* Function to add a stream in large screen */
-function addStreamInLargeView(pinUserId){
+function addStreamInLargeView(pinUserId, cond=''){
     console.log("isInMainStream", isCurrentStreamInMainLargeScreen(pinUserId))
-    if(isCurrentStreamInMainLargeScreen(pinUserId) || window.pinnedUser!=''){
+    if(isCurrentStreamInMainLargeScreen(pinUserId) || (cond == 'speaker' && window.pinnedUser!='')){
       return;
     }
 
