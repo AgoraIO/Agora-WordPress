@@ -357,7 +357,7 @@ window.AGORA_UTILS = {
         if(volume.level>THRESHOLD_AUDIO_LEVEL){
           jQuery('body #' + volume.uid + '_container').addClass('activeSpeaker');
           if(window.isSpeakerView){
-            addStreamInLargeView(volume.uid);
+            addStreamInLargeView(volume.uid, 'speaker');
           }
         }
       });
@@ -1036,55 +1036,10 @@ function handleRemoteStreamControlsIcons(streamId){
 /* Function to show Mute/Unmute icons on remote streams for Admin User */
 
 /* Function to add a stream in large screen */
-function addStreamInLargeView(streamId){
-  //window.AGORA_SCREENSHARE_UTILS.addRemoteScreenshare(window.remoteStreams[streamId].stream);
-}
-/* Function to add a stream in large screen */
+function addStreamInLargeView(pinUserId, cond=''){
 
-/* Pin/Unpin button on streams hover */
-
-/* Function to show Mute/Unmute icons on remote streams for Admin User */
-function handleStreamPinIcons(evt, type){
-  let divId = jQuery(evt).attr('id');
-  if(jQuery(evt).find('#local-video').length>0 && jQuery(evt).find('#full-screen-video')){
-    divId = window.agoraMode==='communication' ? 'local-video' : 'full-screen-video';
-  }
-
-  console.log("hlwdivId", divId)
-
-  if(type == 'pin'){
-    return '<i class="fas fa-thumbtack pin-user" rel="'+divId+'"></i>';
-  } else {
-    return '<i class="fas fa-unlink unpin-user" rel="'+divId+'"></i>';
-  }
-}
-
-jQuery(document).ready(function(){
-
-  /* Remove pin icon on hover of streams on the top */
-  jQuery("body").on("mouseenter", "#screen-users #local-video, #screen-users .remote-stream-container, #screen-users #full-screen-video", function(){
-    if(canHandlePinUnpin()){
-      jQuery(this).append(
-        "<div class='remote-stream-pin-control-section'>"+
-          "<div class='remote-pin-div'>"+handleStreamPinIcons(this, 'pin')+"</div>"+
-        "</div>"
-      );
-    }
-  });
-
-  /* Remove pin icon on mouse leave streams on the top */
-  jQuery("body").on("mouseleave", "#local-video, .remote-stream-container, #full-screen-video", function(){
-    if(jQuery(this).find(".remote-stream-pin-control-section").length>0){
-      jQuery(this).find(".remote-stream-pin-control-section").remove();
-    }
-  });
-
-  jQuery("body").on("click", ".pin-user", function(){
-    let pinUserId = jQuery(this).attr('rel');
-    if(pinUserId!='local-video' && pinUserId!='full-screen-video'){
-      pinUserId = pinUserId.split("_container")[0];
-    }
-    
+  if(cond!='speaker'){
+ 
     /* Check if there is already a screen in Large View */
     var hasMainScreen = false;
     if(jQuery('body .screenshare-container').length>0){
@@ -1170,6 +1125,56 @@ jQuery(document).ready(function(){
         });
       }
     }
+  }
+
+}
+/* Function to add a stream in large screen */
+
+/* Pin/Unpin button on streams hover */
+
+/* Function to show Mute/Unmute icons on remote streams for Admin User */
+function handleStreamPinIcons(evt, type){
+  let divId = jQuery(evt).attr('id');
+  if(jQuery(evt).find('#local-video').length>0 && jQuery(evt).find('#full-screen-video')){
+    divId = window.agoraMode==='communication' ? 'local-video' : 'full-screen-video';
+  }
+
+  console.log("hlwdivId", divId)
+
+  if(type == 'pin'){
+    return '<i class="fas fa-thumbtack pin-user" rel="'+divId+'"></i>';
+  } else {
+    return '<i class="fas fa-unlink unpin-user" rel="'+divId+'"></i>';
+  }
+}
+
+jQuery(document).ready(function(){
+
+  /* Remove pin icon on hover of streams on the top */
+  jQuery("body").on("mouseenter", "#screen-users #local-video, #screen-users .remote-stream-container, #screen-users #full-screen-video", function(){
+    if(canHandlePinUnpin()){
+      jQuery(this).append(
+        "<div class='remote-stream-pin-control-section'>"+
+          "<div class='remote-pin-div'>"+handleStreamPinIcons(this, 'pin')+"</div>"+
+        "</div>"
+      );
+    }
+  });
+
+  /* Remove pin icon on mouse leave streams on the top */
+  jQuery("body").on("mouseleave", "#local-video, .remote-stream-container, #full-screen-video", function(){
+    if(jQuery(this).find(".remote-stream-pin-control-section").length>0){
+      jQuery(this).find(".remote-stream-pin-control-section").remove();
+    }
+  });
+
+  jQuery("body").on("click", ".pin-user", function(){
+    let pinUserId = jQuery(this).attr('rel');
+    if(pinUserId!='local-video' && pinUserId!='full-screen-video'){
+      pinUserId = pinUserId.split("_container")[0];
+    }
+    
+    addStreamInLargeView(pinUserId);
       
     window.pinnedUser = pinUserId;
     
