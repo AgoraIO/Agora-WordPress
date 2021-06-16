@@ -5,6 +5,7 @@ $appearanceSettings = $channelSettings['appearance'];
 $current_user       = wp_get_current_user();
 $channel_layout = $channelSettings['channel_layout'];
 
+/* Code with Reemote Streams on right side - use for future */
 // $isSpeakerView = false;
 // if($channel_layout == 'speaker'){
 //   $isSpeakerView = true;
@@ -20,7 +21,9 @@ $channel_layout = $channelSettings['channel_layout'];
 
       <div id="screen-zone" class="screen <?php //if($isSpeakerView){ echo 'speaker-view'; } ?>">
 
-        <?php /*if($isSpeakerView){ ?>
+        <?php 
+        /* Code with Reemote Streams on right side - use for future */
+        /*if($isSpeakerView){ ?>
           <div class="main-screen">
             <div id="main-screen-stream-section" class="main-screen-stream-section">
               <div id="local-video" class="user">

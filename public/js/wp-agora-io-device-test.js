@@ -13,10 +13,11 @@ jQuery(document).ready(function(){
         let action_button_div = "<div class='action-buttons'><button class='click_to_join'>Click to Join</button></div>";
         
         let main_div_id = "screen-users";
-        if(wiwindow.isSpeakerViewWithRemoteRight){
-            main_div_id = 'main-screen-stream-section';
-            jQuery(".main-screen-stream-section").css('display', 'flex');
-        }
+        /* Code with Reemote Streams on right side - use for future */
+        // if(wiwindow.isSpeakerViewWithRemoteRight){
+        //     main_div_id = 'main-screen-stream-section';
+        //     jQuery(".main-screen-stream-section").css('display', 'flex');
+        // }
         jQuery("body #"+main_div_id).append("<div id='test-device-section'> "+camera_devices_div+mic_devices_div+" <div class='test-device-volume-indicator'>"+volume_indicator_div+"</div> "+action_button_div+" </div>");
     }
 

@@ -134,7 +134,7 @@ class WP_Agora_Public {
 					$result->time = date("h:i a", $dateInLocalTimezone);
 				}
 				$result->isLocalMessage = false;
-				if((is_user_logged_in() && $chat->user_id == get_current_user_id()) || ($username==$result->username)){
+				if((is_user_logged_in() && $result->user_id == get_current_user_id()) || ($username==$result->username)){
 					$result->isLocalMessage = true;
 				}
 			}
