@@ -1886,7 +1886,7 @@ jQuery(document).ready(function(){
     if(view == 'speaker'){
       window.isSpeakerView = true;
     } else {
-      /* Restore to original Grid View if user has not pinned any user (it's default Active speaker user) and the screen share stream is not in large screen */
+      /* Remove large screen view if user has not pinned any user (it's default Active speaker user) and the screen share stream is not in large screen */
       if(window.pinnedUser==''){
         if(jQuery("body #agora-root .screenshare-container").length>0){
           const streamId = jQuery("body #agora-root .screenshare-container").attr('id').split('_container')[0];
@@ -1899,3 +1899,4 @@ jQuery(document).ready(function(){
     }
   });
 }); 
+/* End Function to handle layout change */
