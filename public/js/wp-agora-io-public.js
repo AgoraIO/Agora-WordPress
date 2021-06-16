@@ -1038,10 +1038,23 @@ function handleRemoteStreamControlsIcons(streamId){
 }
 /* Function to show Mute/Unmute icons on remote streams for Admin User */
 
+function isCurrentStreamInMainLargeScreen(streamId){
+  if(jQuery('body .screenshare-container').length>0){
+    let mainLargeScreenStreamId = jQuery('body .screenshare-container').attr('id').split('_container')[0];
+    return (streamId == mainLargeScreenStreamId) ? true : false;
+  } else {
+    return false;
+  }
+}
+
 /* Function to add a stream in large screen */
 function addStreamInLargeView(pinUserId, cond=''){
+    console.log("isInMainStream", isCurrentStreamInMainLargeScreen(pinUserId))
+    if(isCurrentStreamInMainLargeScreen(pinUserId) || (cond == 'speaker' && window.pinnedUser!='')){
+      return;
+    }
 
-  if(cond!='speaker'){
+    console.log("HabhaiaddToLargeScreen")
  
     /* Check if there is already a screen in Large View */
     var hasMainScreen = false;
@@ -1054,7 +1067,6 @@ function addStreamInLargeView(pinUserId, cond=''){
       /* If it is local stream */
       if(jQuery('body .screenshare-container').find('#local-video').length>0 || jQuery('body .screenshare-container').find('#full-screen-video').length>0 ){
         isMainLargeStreamLocal = true;
-        console.log("hnjiLocalVideo")
         mainLargeStreamId = window.agoraMode==='communication' ? 'local-video' : 'full-screen-video';
       } else {
         mainLargeStreamId = mainLargeStreamId.split('_container')[0];
@@ -1128,7 +1140,6 @@ function addStreamInLargeView(pinUserId, cond=''){
         });
       }
     }
-  }
 
 }
 /* Function to add a stream in large screen */
@@ -1829,3 +1840,17 @@ async function receivePeerRTMMessage(evt) {
   }
 }
 /* End Function that will be run on rtm peer message event listener */
+
+
+/* Function to handle layout change */
+jQuery(document).ready(function(){
+  jQuery("body #change-layout-options-list").on("click", "a", function(event){
+    console.log("hnjiClickHoGya", event.target.id)
+    const view = event.target.id;
+    if(view == 'speaker'){
+      window.isSpeakerView = true;
+    } else {
+      window.isSpeakerView = false;
+    }
+  });
+}); 
