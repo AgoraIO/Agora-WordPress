@@ -267,13 +267,7 @@ window.AGORA_SCREENSHARE_UTILS = {
       // Play the new screen stream
       remoteStream.play('agora_remote_' + streamId);
       var videoEl = document.getElementById('agora_remote_' + streamId).querySelector('video');
-      if(!remoteStream.getVideoTrack() || !remoteStream.getVideoTrack().enabled){
-        window.AGORA_UTILS.handleVideoMuted(streamId);
-      }
-
-      if(!remoteStream.getAudioTrack() || !remoteStream.getAudioTrack().enabled){
-        window.AGORA_UTILS.handleAudioMuted(streamId);
-      }
+      window.AGORA_UTILS.handleStreamMuteOnPlay(remoteStream);
     }
     
     videoEl.style.objectFit = 'contain';

@@ -660,10 +660,21 @@ window.AGORA_UTILS = {
       }
       // console.log("streamPlayGhostCheck", streamId)
       // console.log("streamPlayGhostCheck", remoteStream.getAudioTrack().enabled)
+      window.AGORA_UTILS.handleStreamMuteOnPlay(remoteStream);
       handleGhostMode(streamId, 'remote');
     });
   },
 
+  handleStreamMuteOnPlay: function(remoteStream){
+    let streamId = remoteStream.getId();
+    if(!remoteStream.getVideoTrack() || !remoteStream.getVideoTrack().enabled){
+      window.AGORA_UTILS.handleVideoMuted(streamId);
+    }
+
+    if(!remoteStream.getAudioTrack() || !remoteStream.getAudioTrack().enabled){
+      window.AGORA_UTILS.handleAudioMuted(streamId);
+    }
+  },
 
   showPermissionsModal: function() {
     const browser = window.AGORA_UTILS.getBrowser();
@@ -1167,7 +1178,8 @@ function addStreamInLargeView(pinUserId, cond=''){
             jQuery('body #' + mainLargeStreamId + '_container').prepend(
               addAudioErrorGesture(mainLargeStreamId)
             )
-          }  
+          }
+          window.AGORA_UTILS.handleStreamMuteOnPlay(remoteStream);  
           handleGhostMode(mainLargeStreamId, 'remote');
         });
       }
