@@ -54,6 +54,8 @@ if (array_key_exists("chat_support_loggedin", $channelSettings) && $channelSetti
 
         <div class="btn-separator"></div>
 
+        <?php require_once('raise-hand.php'); ?>
+
         <div class="btn-with-title only-desktop ">
     		<button id="screen-share-btn" type="button" class="btnIcon" title="<?php _e('Screen Share', 'agoraio'); ?>">
               <i id="screen-share-icon" class="fas fa-desktop"></i>

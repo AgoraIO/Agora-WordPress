@@ -1712,7 +1712,12 @@ function loadChatApp() {
       //   jQuery("body .raise-hand-requests #total-requests").html(Object.keys(window.raiseHandRequests).length);
       // }
       /* End Handle Raise Hand Request */
-      if (evt.detail.text.indexOf('USER_JOINED_WITHOUT_')===0) {
+
+      if(evt.detail.text.indexOf('RAISE-HAND-')===0){
+        let sendName = evt.detail.text.split('RAISE-HAND-')[1];
+        alert(sendName+" has raised the hand.");
+      }
+      else if (evt.detail.text.indexOf('USER_JOINED_WITHOUT_')===0) {
         const pos = evt.detail.text.indexOf('**') + 2;
         const uid = evt.detail.text.substring(pos)
 
@@ -1900,3 +1905,15 @@ jQuery(document).ready(function(){
   });
 }); 
 /* End Function to handle layout change */
+
+/* */
+function showRaiseHandInCommunication(){
+  console.log("hlwwindow.agoraMode", window.agoraMode)
+  if(window.agoraMode == 'communication'){
+    if(Object.keys(window.localStreams.camera.stream).length>0 && (!window.localStreams.camera.stream.getAudioTrack() || !window.localStreams.camera.stream.getAudioTrack().enabled)){
+      jQuery("body #raiseHand").show();
+    } else {
+      jQuery("body #raiseHand").hide();
+    }
+  }
+}

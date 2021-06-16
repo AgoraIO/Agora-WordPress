@@ -113,6 +113,7 @@ window.AGORA_COMMUNICATION_UI = {
       localStream.unmuteAudio(); // enable the local mic
       window.AGORA_UTILS.toggleVisibility("#mute-overlay", false); // hide the muted mic icon
     }
+    showRaiseHandInCommunication();
   },
 
   toggleVideo: function (localStream) {

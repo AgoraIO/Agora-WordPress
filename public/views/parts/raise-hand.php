@@ -1,12 +1,16 @@
-<div class="fabs">
+<div class="<?php if(isset($channelSettings['type']) && $channelSettings['type'] == 'communication'){ echo 'communication-raise-hand-btn'; } else { echo 'fabs'; } ?>">
 	<div class="raise-hand-icon" id="raiseHand">
         <i class="far fa-hand-paper"></i>
     </div>
 </div>
 
 <script type="text/javascript">
+    jQuery(document).ready(function(){
+        showRaiseHandInCommunication();
+    });
+
 	window.addEventListener('agora.rtm_init', function loadChatApp() {
-        if(window.agoraMode == 'audience'){
+        if(window.agoraMode == 'audience' ||  window.agoraMode == 'communication'){
         const headTag = document.head || document.getElementsByTagName("head")[0];
 
         const chatStyles = document.createElement("link");

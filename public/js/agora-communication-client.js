@@ -167,6 +167,8 @@ function createCameraStream(uid, next) {
         window.agoraClient.publish(localStream, function (err) {
             AgoraRTC.Logger.error("[ERROR] : publish local stream error: " + err);
         });
+        
+        showRaiseHandInCommunication();
 
         window.AGORA_COMMUNICATION_UI.enableUiControls(localStream); // move after testing
 
