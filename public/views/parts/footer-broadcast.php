@@ -36,6 +36,23 @@ if (array_key_exists("chat_support_loggedin", $channelSettings) && $channelSetti
 
         <div class="btn-separator"></div>
 
+        <div id="change-layout-options-controls" class=" text-center btn-group">
+        	<button id="change-layout-options-btn"  type="button" class="btnIcon">
+            <i class="fa fa-columns" aria-hidden="true"></i>
+        	</button>
+        	<button id="change-layout-options-dropdown" type="button" class="btnIcon dropdown-toggle dropdown-toggle-split"
+        		data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        		<span class="sr-only"><?php _e('Change Layout Options Dropdown', 'agoraio'); ?></span>
+        	</button>
+        	<div id="change-layout-options-list" class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" id="grid">Grid</a>
+                <a class="dropdwn-item" id="speaker">Speaker</a>
+            </div>
+            <small class="btn-title"><?php _e('Layout', 'agoraio') ?></small>
+        </div>
+
+        <div class="btn-separator"></div>
+
         <div class="btn-with-title">
             <button id="screen-share-btn" type="button" class="btnIcon" title="<?php _e('Screen Share', 'agoraio'); ?>">
               <i id="screen-share-icon" class="fas fa-desktop"></i>
