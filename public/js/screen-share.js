@@ -227,9 +227,7 @@ window.AGORA_SCREENSHARE_UTILS = {
     if(isLocal){ /* If the stream that is going to be in large screen is local */
       streamId = window.agoraMode==='communication' ? 'local-video' : 'full-screen-video';
       streamsContainer.append(
-        jQuery('<div/>', {'id': streamId + '_container',  'class': 'screenshare-container'}).append(
-          content
-        )
+        jQuery('<div/>', {'id': streamId + '_container',  'class': 'screenshare-container'}).append(content)
       );
     } else {
       streamsContainer.append(
@@ -269,6 +267,13 @@ window.AGORA_SCREENSHARE_UTILS = {
       // Play the new screen stream
       remoteStream.play('agora_remote_' + streamId);
       var videoEl = document.getElementById('agora_remote_' + streamId).querySelector('video');
+      if(!remoteStream.getVideoTrack() || !remoteStream.getVideoTrack().enabled){
+        window.AGORA_UTILS.handleVideoMuted(streamId);
+      }
+
+      if(!remoteStream.getAudioTrack() || !remoteStream.getAudioTrack().enabled){
+        window.AGORA_UTILS.handleAudioMuted(streamId);
+      }
     }
     
     videoEl.style.objectFit = 'contain';

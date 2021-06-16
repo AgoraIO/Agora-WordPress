@@ -343,6 +343,36 @@ window.AGORA_UTILS = {
     }
   },
 
+  handleVideoMuted: function(remoteId){
+    window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
+
+      console.log("remoteVideoMuted")
+      console.log("callMuteVideoGhostCheck")
+
+      // if the main user stops their video select a random user from the list
+      handleGhostMode(remoteId, 'remote');
+      handleMutedVideoBackgroundColor(remoteId, 'remote');
+      let userAvatar = '';
+      if(window.remoteStreams[remoteId]){
+        console.log("hlwremoteStreams", window.remoteStreams[remoteId])
+        console.log("hlwuserAvtar", window.remoteStreams[remoteId].userDetails)
+        if(typeof window.remoteStreams[remoteId].userDetails!='undefined'){
+          userAvatar = window.remoteStreams[remoteId].userDetails.avtar;
+        }
+      }
+      if(userAvatar!=''){
+        jQuery('body #'+ remoteId + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
+      }
+      handleRemoteStreamControlsIcons(remoteId);
+  },
+
+  handleAudioMuted: function(remoteId){
+    window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_mute', true);
+    console.log("callMuteAudioGhostCheck")
+    handleGhostMode(remoteId, 'remote');
+    handleRemoteStreamControlsIcons(remoteId);
+  },
+
   setupAgoraListeners: function() {
 
 
@@ -369,10 +399,11 @@ window.AGORA_UTILS = {
 
     // show mute icon whenever a remote has muted their mic
     window.agoraClient.on("mute-audio", function muteAudio(evt) {
-      window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', true);
-      console.log("callMuteAudioGhostCheck")
-      handleGhostMode(evt.uid, 'remote');
-      handleRemoteStreamControlsIcons(evt.uid);
+      // window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', true);
+      // console.log("callMuteAudioGhostCheck")
+      // handleGhostMode(evt.uid, 'remote');
+      // handleRemoteStreamControlsIcons(evt.uid);
+      window.AGORA_UTILS.handleAudioMuted(evt.uid);
     });
 
     window.agoraClient.on("unmute-audio", function unmuteAudio(evt) {
@@ -385,27 +416,28 @@ window.AGORA_UTILS = {
     // show user icon whenever a remote has disabled their video
     window.agoraClient.on("mute-video", async function muteVideo(evt) {
       const remoteId = evt.uid;
+      window.AGORA_UTILS.handleVideoMuted(remoteId);
 
-      window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
+      // window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
 
-      console.log("remoteVideoMuted")
-      console.log("callMuteVideoGhostCheck")
+      // console.log("remoteVideoMuted")
+      // console.log("callMuteVideoGhostCheck")
 
-      // if the main user stops their video select a random user from the list
-      handleGhostMode(evt.uid, 'remote');
-      handleMutedVideoBackgroundColor(evt.uid, 'remote');
-      let userAvatar = '';
-      if(window.remoteStreams[remoteId]){
-        console.log("hlwremoteStreams", window.remoteStreams[remoteId])
-        console.log("hlwuserAvtar", window.remoteStreams[remoteId].userDetails)
-        if(typeof window.remoteStreams[remoteId].userDetails!='undefined'){
-          userAvatar = window.remoteStreams[remoteId].userDetails.avtar;
-        }
-      }
-      if(userAvatar!=''){
-        jQuery('body #'+ remoteId + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
-      }
-      handleRemoteStreamControlsIcons(evt.uid);
+      // // if the main user stops their video select a random user from the list
+      // handleGhostMode(evt.uid, 'remote');
+      // handleMutedVideoBackgroundColor(evt.uid, 'remote');
+      // let userAvatar = '';
+      // if(window.remoteStreams[remoteId]){
+      //   console.log("hlwremoteStreams", window.remoteStreams[remoteId])
+      //   console.log("hlwuserAvtar", window.remoteStreams[remoteId].userDetails)
+      //   if(typeof window.remoteStreams[remoteId].userDetails!='undefined'){
+      //     userAvatar = window.remoteStreams[remoteId].userDetails.avtar;
+      //   }
+      // }
+      // if(userAvatar!=''){
+      //   jQuery('body #'+ remoteId + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
+      // }
+      // handleRemoteStreamControlsIcons(evt.uid);
     });
 
     agoraClient.on("unmute-video", function unmuteVideo(evt) {
