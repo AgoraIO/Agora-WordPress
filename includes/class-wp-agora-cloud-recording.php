@@ -81,12 +81,17 @@ class AgoraCloudRecording {
         $channelSettings    = $channel->get_properties();
         $recordingSettings = $channelSettings['recording'];
 
+        /*
+        //To handle the file in mp4 format - For future reference
         if($recordingSettings['protoType'] == 'individual'){
             $clientRequest = new stdClass();
             $clientRequest->scene = 2;
         } else{
             $clientRequest = json_decode("{}");
         }
+        */
+
+        $clientRequest = json_decode("{}");
         
         $params = array(
             'cname' => $data['cname'],
@@ -109,21 +114,35 @@ class AgoraCloudRecording {
         if (!isset($data['recordingId']) ) {
             return new WP_Error( 'data', "Incomplete data", $data );
         }
+
+        $channel = WP_Agora_Channel::get_instance($data['cid']);
+        $channelSettings    = $channel->get_properties();
+        $recordingSettings = $channelSettings['recording'];
         
-        $endpointUL = $this->settings['appId'].'/cloud_recording/resourceid/' . $resourceId . '/sid/' . $sid. '/mode/mix/updateLayout';
+        if($recordingSettings['protoType'] != 'individual'){
+            $endpointUL = $this->settings['appId'].'/cloud_recording/resourceid/' . $resourceId . '/sid/' . $sid. '/mode/mix/updateLayout';
 
-        $clientRequest = new stdClass();
-        $clientRequest->mixedVideoLayout = 1; // best fit layout
-        $clientRequest->backgroundColor = "#000000";
+            $mixedVideoLayout = 1; // best fit layout
 
-        $params = array(
-            'cname' => $data['cname'],
-            'uid' => $data['uid'],
-            'clientRequest' => $clientRequest
-        );
-        // header('HTTP/1.1 500 Internal Server Error');
-        // die("<pre>QUERY:".print_r($endpoint, true)."</pre>");
-        return $this->callAPI($endpointUL, $params, 'POST');
+            if($recordingSettings['recording_layout'] !=''){
+                $mixedVideoLayout = $recordingSettings['recording_layout'];
+            }
+
+            $clientRequest = new stdClass();
+            $clientRequest->mixedVideoLayout = $mixedVideoLayout;
+            $clientRequest->backgroundColor = "#000000";
+
+            $params = array(
+                'cname' => $data['cname'],
+                'uid' => $data['uid'],
+                'clientRequest' => $clientRequest
+            );
+            // header('HTTP/1.1 500 Internal Server Error');
+            // die("<pre>QUERY:".print_r($endpoint, true)."</pre>");
+            return $this->callAPI($endpointUL, $params, 'POST');
+        } else {
+            return true;
+        }
     }
 
     private function queryRecording($data) {
@@ -172,6 +191,11 @@ class AgoraCloudRecording {
         $recordType = 'mix';
         if($recordingSettings['protoType'] == 'individual'){
             $recordType = 'individual';
+        } else {
+            $mixedVideoLayout = 1; // best fit layout
+            if($recordingSettings['recording_layout'] !=''){
+                $mixedVideoLayout = $recordingSettings['recording_layout'];
+            }
         }
 
         // $sid = $data['sid'];
@@ -183,14 +207,17 @@ class AgoraCloudRecording {
 
         if($recordingSettings['protoType'] != 'individual'){
             $clientRequest->recordingConfig->transcodingConfig = new stdClass();
-            $clientRequest->recordingConfig->transcodingConfig->mixedVideoLayout = 1; // best fit layout
+            $clientRequest->recordingConfig->transcodingConfig->mixedVideoLayout = $mixedVideoLayout; // best fit layout
             $clientRequest->recordingConfig->transcodingConfig->backgroundColor = "#000000";
             $clientRequest->recordingConfig->transcodingConfig->width = 848;
             $clientRequest->recordingConfig->transcodingConfig->height = 480;
             $clientRequest->recordingConfig->transcodingConfig->bitrate = 930;
             $clientRequest->recordingConfig->transcodingConfig->fps = 30;
+            /*
+            //To handle the file in mp4 format - For future reference
             $clientRequest->recordingFileConfig = new stdClass();
             $clientRequest->recordingFileConfig->avFileType = ["hls", "mp4"];
+            */
         } else{
             //$clientRequest->recordingConfig->combinationPolicy = 'postpone_transcoding';
             $clientRequest->recordingConfig->subscribeUidGroup = 0;
@@ -219,10 +246,13 @@ class AgoraCloudRecording {
         // die("<pre>".print_r($newToken, true)."</pre>");
         $clientRequest->token = $newToken;
 
+        /*
+        //To handle the file in mp4 format - For future reference
         if($recordingSettings['protoType'] == 'individual'){
             $clientRequest->appsCollection = new stdClass();
             $clientRequest->appsCollection->combinationPolicy = 'postpone_transcoding';
         }
+        */
         $params = array(
             'cname' => $data['cname'],
             'uid' => $data['uid'],

@@ -31,8 +31,6 @@
     window.isSpeakerView = false;
   }
 
-  window.max_users_limit = 1;
-
   window.pre_call_device_test_enabled = parseInt('<?php echo $channel->pre_call_video() ?>');
 
   window.adminUser = '<?php echo $channel->admin_user(); ?>'
@@ -40,6 +38,8 @@
   window.adminUserConfig = JSON.parse('<?php echo $channel->admin_user_config(); ?>');
   window.isAdminUser = window.adminUserConfig.is_admin;
   window.canUnmuteForcefully = window.adminUserConfig.can_unmute_forecefully;
+
+  window.max_host_users_limit = parseInt('<?php echo $channel->max_host_users_limit(); ?>');
 
   if(sessionStorage.getItem("deviceTested")=="Yes" || window.pre_call_device_test_enabled == "0"){
     window.pre_call_device_test_enabled = 0;

@@ -48,7 +48,8 @@ class WP_Agora_Channel {
     'bucket' => '',
     'accessKey' => '',
     'secretKey' => '',
-    'protoType' => ''
+    'protoType' => '',
+    'recording_layout' => ''
   );
 
   // private channel attrs
@@ -217,6 +218,11 @@ class WP_Agora_Channel {
         $admin_user_unmute_forcefully = 0;
       }
       
+      if(get_post_meta( $this->id, 'max_host_users', true)){
+        $max_host_users = get_post_meta( $this->id, 'max_host_users', true);
+      } else {
+        $max_host_users = '';
+      }
 
       $this->properties = array(
         'type' => $channelType,
@@ -231,7 +237,8 @@ class WP_Agora_Channel {
         'chat_history' => $ChatHistory,
         'pre_call_video' => $PreCallVideo,
         'admin_user' => $admin_user,
-        'admin_user_unmute_forcefully' => $admin_user_unmute_forcefully
+        'admin_user_unmute_forcefully' => $admin_user_unmute_forcefully,
+        'max_host_users' => $max_host_users
       );
       
       // $this->upgrade();
@@ -255,7 +262,8 @@ class WP_Agora_Channel {
       'chat_history' => 0,
       'pre_call_video' => 0,
       'admin_user_unmute_forcefully' => 0,
-      'admin_user' => ''
+      'admin_user' => '',
+      'max_host_users' => ''
     ) );
     $properties = (array) apply_filters( 'agoraio_channel_properties', $properties, $this );
     return $properties;
@@ -314,6 +322,7 @@ class WP_Agora_Channel {
     update_post_meta($post_id, 'pre_call_video', sanitize_key($args['pre_call_video']));
     update_post_meta($post_id, 'admin_user', sanitize_key($args['admin_user']));
     update_post_meta($post_id, 'admin_user_unmute_forcefully', sanitize_key($args['admin_user_unmute_forcefully']));
+    update_post_meta($post_id, 'max_host_users', sanitize_key($args['max_host_users']));
 
     if (isset($args['host'])) {
       if (is_array($args['host'])) {
@@ -390,6 +399,10 @@ class WP_Agora_Channel {
 
   public function admin_user_unmute_forcefully(){
     return (int)$this->properties['admin_user_unmute_forcefully'];
+  }
+
+  public function max_host_users_limit(){
+    return (int)$this->properties['max_host_users'];
   }
 
   public function admin_user_config(){

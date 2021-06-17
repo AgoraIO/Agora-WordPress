@@ -149,7 +149,7 @@ function createCameraStream(uid, next) {
       // alert('denied!')
     })
 
-    localStream.init(function initSuccess() {
+    localStream.init(async function initSuccess() {
       jQuery('#rejoin-container').hide();
       jQuery('#buttons-container').removeClass('hidden');
 
@@ -160,45 +160,53 @@ function createCameraStream(uid, next) {
       AgoraRTC.Logger.info("getUserMedia successfully");
 
       try {
-          jQuery(".main-screen-stream-section").css('display', 'block');
-        localStream.play('local-video'); // play the given stream within the local-video div
+        jQuery(".main-screen-stream-section").css('display', 'block');
 
-        // publish local stream
-        window.agoraClient.publish(localStream, function (err) {
-            AgoraRTC.Logger.error("[ERROR] : publish local stream error: " + err);
-        });
+        let canJoinAsHost = await window.AGORA_COMMUNICATION_UI.canJoinAsHost();
+        console.log("hlwcanJoinAsHost", canJoinAsHost)
         
-        showRaiseHandInCommunication();
+        if(canJoinAsHost){
+          localStream.play('local-video'); // play the given stream within the local-video div
 
-        window.AGORA_COMMUNICATION_UI.enableUiControls(localStream); // move after testing
+          // publish local stream
+          window.agoraClient.publish(localStream, function (err) {
+              AgoraRTC.Logger.error("[ERROR] : publish local stream error: " + err);
+          });
+          
+          showRaiseHandInCommunication();
 
-        jQuery('body .agora-footer').css('display', 'flex');
+          window.AGORA_COMMUNICATION_UI.enableUiControls(localStream); // move after testing
 
-        window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
+          jQuery('body .agora-footer').css('display', 'flex');
 
-        /* Mute Audios and Videos Based on Mute All Users Settings */
-        if(window.mute_all_users_audio_video){
-            if(localStream.getVideoTrack() && localStream.getVideoTrack().enabled){
-                jQuery("#video-btn").trigger('click');
+          window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
+
+          /* Mute Audios and Videos Based on Mute All Users Settings */
+          if(window.mute_all_users_audio_video){
+              if(localStream.getVideoTrack() && localStream.getVideoTrack().enabled){
+                  jQuery("#video-btn").trigger('click');
+              }
+              if(localStream.getAudioTrack() && localStream.getAudioTrack().enabled){
+                  jQuery("#mic-btn").trigger('click');
+              }
+          }
+        
+          // window.AGORA_COMMUNICATION_UI.enableUiControls(localStream); // move after testing
+          window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
+
+          window.AGORA_UTILS.agora_getUserAvatar(localStream.getId(), function getUserAvatar(avatarData) {
+            let userAvatar = '';
+            if (avatarData && avatarData.user && avatarData.avatar) {
+              userAvatar = avatarData.avatar
             }
-            if(localStream.getAudioTrack() && localStream.getAudioTrack().enabled){
-                jQuery("#mic-btn").trigger('click');
+            if(userAvatar!=''){
+              jQuery('body #no-local-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
             }
+            window.localStreams.camera.userDetails = {avtar: userAvatar};
+          });
+        } else {
+          window.AGORA_COMMUNICATION_UI.joinAsAudience();
         }
-      
-        // window.AGORA_COMMUNICATION_UI.enableUiControls(localStream); // move after testing
-        window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
-
-        window.AGORA_UTILS.agora_getUserAvatar(localStream.getId(), function getUserAvatar(avatarData) {
-          let userAvatar = '';
-          if (avatarData && avatarData.user && avatarData.avatar) {
-            userAvatar = avatarData.avatar
-          }
-          if(userAvatar!=''){
-            jQuery('body #no-local-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
-          }
-          window.localStreams.camera.userDetails = {avtar: userAvatar};
-        });
 
         cb && cb(null)
       } catch(ex) {

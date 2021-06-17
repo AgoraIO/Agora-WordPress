@@ -227,4 +227,67 @@ window.AGORA_COMMUNICATION_UI = {
       })
     }
   },
+
+  canJoinAsHost: function(){
+    if(window.joinAsHost == 0){
+      
+      let totalRemoteStreams = Object.keys(window.remoteStreams).length;
+      
+      let count = Object.keys(window.remoteStreams).filter(k => k in window.screenshareClients).length;
+      totalRemoteStreams = totalRemoteStreams-count;
+
+      if(totalRemoteStreams>=window.max_host_users_limit){
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+  },
+
+  joinAsAudience: async function(){
+    //setTimeout(async() => {
+      
+      await window.AGORA_COMMUNICATION_CLIENT.agoraLeaveChannel();
+      var params = {
+        action: 'load_audience_view', // wp ajax action
+        channel_id: window.channelId,
+        page_title: page_title
+      };
+    
+      /* Remove Previous RTM Event Listeners when joining from audience to host */
+      window.removeEventListener('agora.rtm_init', loadChatApp);
+      window.removeEventListener('agora.rtmMessageFromChannel', receiveRTMMessage);
+    
+      /* Remove Previous Files of audience */
+      if(jQuery("script#wp-agora-io-chat-js").length>0){
+        jQuery("script#wp-agora-io-chat-js").remove();
+      }
+    
+      if(jQuery("script#AgoraCommunicationClient-js").length>0){
+        jQuery("script#AgoraCommunicationClient-js").remove();
+      }
+
+      if(jQuery("script#wp-agora-raise-hand-js").length>0){
+        jQuery("script#wp-agora-raise-hand-js").remove();
+      }
+    
+      //jQuery("link#wp-agora-io-chat-fab-css").remove();
+    
+      window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
+        console.log("afterAjaxSuccess")
+    
+        let mainElm = jQuery('#agora-root').parent();
+        jQuery('#agora-root').remove();
+        mainElm.html(res);
+        jQuery("#raiseHand").remove();
+        apply_global_colors();
+    
+      }).fail(function(err) {
+        console.error('API Error:', err.responseJSON ? err.responseJSON.errors : err);
+      })
+    //}, 2000);
+  }
+
 }

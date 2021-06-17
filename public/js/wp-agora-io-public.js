@@ -1649,7 +1649,8 @@ jQuery(document).ready(function(){
 function joinAsHost(){
   var params = {
     action: 'load_host_view', // wp ajax action
-    channel_id: window.channelId
+    channel_id: window.channelId,
+    page_title: page_title
   };
 
   /* Remove Previous RTM Event Listeners when joining from audience to host */

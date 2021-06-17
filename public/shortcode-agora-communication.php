@@ -28,6 +28,13 @@ function renderCommnicationShortcode($agora, $attrs) {
 
     ob_start();
 
+    $host = is_array($props['host']) ? $props['host'] : array($props['host']);
+
+    if ( in_array($current_user->ID, $host) ) { ?>
+      <script> window.joinAsHost = 1; </script>
+    <?php } else { ?>
+      <script> window.joinAsHost = 0; </script>
+    <?php }
     require_once('views/wp-agora-io-communication.php');
 
     $out = ob_get_clean();

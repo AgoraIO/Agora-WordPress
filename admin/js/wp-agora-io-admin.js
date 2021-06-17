@@ -272,6 +272,13 @@ function agoraChatChangeLoggedin() {
 
 			$('#type').change(validateChannelType);
 
+			$('#protoType').change(validateRecordingType);
+
+			const protoType = $('#protoType').val();
+			if (protoType && protoType.length>0) {
+				$('#protoType').change();
+			}
+
 			const channelType = $('#type').val();
 			if (channelType && channelType.length>0) {
 				$('#type').change();
@@ -393,13 +400,16 @@ function agoraChatChangeLoggedin() {
 	function validateChannelType() {
 		var typeChannel = $(this).val();
 		var bhr = $('#broadcast-host-row');
+		var mxur = $('#max_host_users-row');
 		var linkTab2 = $('#link-tab-2');
 		var linkTab3 = $('#link-tab-3');
 		var splashImageURL = $('#splashImageURL').parent().parent();
 		var watchButtonText = $('#watchButtonText').parent().parent();
 		var watchButtonIcon = $('#watchButtonIcon').parent().parent();
 		if (typeChannel==='communication') {
-			bhr.hide();
+			//bhr.hide();
+			bhr.show();
+			mxur.show();
 			linkTab2.parent().hide();
 			linkTab3.parent().hide();
 			splashImageURL.hide();
@@ -407,6 +417,7 @@ function agoraChatChangeLoggedin() {
 			watchButtonIcon.hide();
 		} else {
 			bhr.show();
+			mxur.hide();
 			linkTab2.parent().show();
 			linkTab3.parent().show();
 			splashImageURL.show();
@@ -416,6 +427,17 @@ function agoraChatChangeLoggedin() {
 
 
 		// on communication, also hide Splash screen, and text and icon  button
+	}
+
+	function validateRecordingType() {
+		var recordingType = $(this).val();
+		var rlr = $('#recording_layout-row');
+		if (recordingType==='composite') {
+			rlr.show();
+		} else {
+			rlr.hide();
+		}
+		// on individual, hide the layout options
 	}
 
 })( jQuery );

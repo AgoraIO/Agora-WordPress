@@ -71,8 +71,16 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
     window.remoteStreams = {};
     var WAIT_FOR_RECONNECT_TIMEOUT = 15000; // 10 Seconds!
 
+    if(typeof window.roleFromHostToAudience!='undefined'){
+      handleOnLoad();
+    }
+    else{
+      window.addEventListener('load', function() {
+        handleOnLoad();
+      });
+    }
 
-    window.addEventListener('load', function() {
+    function handleOnLoad(){
       // set log level:
       // -- .DEBUG for dev 
       // -- .NONE for prod
@@ -287,8 +295,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
 
       // Listener for Agora RTM Events
       //window.addEventListener('agora.rtmMessageFromPeer', receivePeerRTMMessage)
-
-    });
+    }
 
     window.AGORA_AUDIENCE = {
       agoraLeaveChannel: agoraLeaveChannel,

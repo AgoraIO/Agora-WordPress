@@ -33,7 +33,7 @@ function agoraio_admin_save_button( $channel_id ) {
 function agora_render_setting_row_select($id, $title, $options, $settings, $prefix=null) {
   $input_id = !empty($prefix) ? $prefix.'-'.$id : $id;
   ?>
-  <tr>
+  <tr id="<?php echo $id; ?>-row">
     <th scope="row"><label for="<?php echo $input_id ?>"><?php echo $title; ?></label></th>
     <td>
       <select id="<?php echo $input_id ?>" name="<?php echo $input_id ?>">
@@ -50,7 +50,7 @@ function agora_render_setting_row_select($id, $title, $options, $settings, $pref
 function agora_render_setting_row($id, $title, $settings, $prefix, $inputType="number") {
   $input_id = !empty($prefix) ? $prefix.'-'.$id : $id;
   ?>
-  <tr>
+  <tr id="<?php echo $id; ?>-row">
     <th scope="row"><label for="<?php echo $input_id ?>"><?php echo $title ?></label></th>
     <td>
       <input
@@ -460,6 +460,10 @@ function render_agoraio_channel_form_chat_support($channel) {
       ), $props, '');
   ?>
 
+<?php 
+  agora_render_setting_row('max_host_users', __('Maximum No. of hosts (Including Broadcasters)', 'agoraio'), $props, '', 'text');    
+?>
+
   </table>
   <?php
 }
@@ -491,7 +495,6 @@ function render_agoraio_channel_form_recording($channel) {
       echo '<input type="hidden" id="region-tmp" value="'.$recording['region'].'" />';
     }
 
-
     agora_render_setting_row_select(
       'protoType',
       __('Type', 'agoraio'),
@@ -499,6 +502,15 @@ function render_agoraio_channel_form_recording($channel) {
         'composite' => __('Composite', 'agoraio'),
         'individual' => __('Individual', 'agoraio')
       ), $recording, '');
+
+    agora_render_setting_row_select(
+      'recording_layout',
+      __('Layout', 'agoraio'),
+      array(
+        1 => __('Best Fit', 'agoraio'),
+        0 => __('Floating', 'agoraio'),
+        2 => __('Vertical', 'agoraio')
+      ), $recording, '');   
     
     agora_render_setting_row('bucket', __('Bucket', 'agoraio'), $recording, '', 'text');
 
