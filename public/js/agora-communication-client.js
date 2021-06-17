@@ -110,62 +110,63 @@ function createCameraStream(uid, next) {
   window.channel_type = 'communication';
 
   async function runCameraStream(cb) {
-    const hasVideo = await isVideoAvailable()
-    let streamSpec = {
-      streamID: uid,
-      audio: true,
-      video: hasVideo,
-      screen: false
-    };
+    
+    let canJoinAsHost = await window.AGORA_COMMUNICATION_UI.canJoinAsHost();
+    console.log("hlwcanJoinAsHost", canJoinAsHost)
+    
+    if(canJoinAsHost){
+      const hasVideo = await isVideoAvailable()
+      let streamSpec = {
+        streamID: uid,
+        audio: true,
+        video: hasVideo,
+        screen: false
+      };
 
-    if(sessionStorage.getItem("microphoneId")!=null){
-      streamSpec.microphoneId = sessionStorage.getItem("microphoneId");
-    }
-
-    if(sessionStorage.getItem("cameraId")!=null){
-      streamSpec.cameraId = sessionStorage.getItem("cameraId");
-    }
-
-    const localStream = AgoraRTC.createStream(streamSpec);
-
-    localStream.setVideoProfile(window.cameraVideoProfile);
-    localStream.on("accessAllowed", function() {
-      if(window.devices.cameras.length === 0 && window.devices.mics.length === 0) {
-        AgoraRTC.Logger.info('[DEBUG] : checking for cameras & mics');
-        window.AGORA_UTILS.getCameraDevices();
-        window.AGORA_UTILS.getMicDevices();
+      if(sessionStorage.getItem("microphoneId")!=null){
+        streamSpec.microphoneId = sessionStorage.getItem("microphoneId");
       }
-      AgoraRTC.Logger.info("accessAllowed");
-      if(!hasVideo){
-        const msg = {
-          text: "USER_JOINED_WITHOUT_VIDEO**"+uid,
-          messageType: "TEXT"
+
+      if(sessionStorage.getItem("cameraId")!=null){
+        streamSpec.cameraId = sessionStorage.getItem("cameraId");
+      }
+
+      const localStream = AgoraRTC.createStream(streamSpec);
+
+      localStream.setVideoProfile(window.cameraVideoProfile);
+      localStream.on("accessAllowed", function() {
+        if(window.devices.cameras.length === 0 && window.devices.mics.length === 0) {
+          AgoraRTC.Logger.info('[DEBUG] : checking for cameras & mics');
+          window.AGORA_UTILS.getCameraDevices();
+          window.AGORA_UTILS.getMicDevices();
         }
-        window.AGORA_RTM_UTILS.sendChannelMessage(msg)
-      }
-    });
+        AgoraRTC.Logger.info("accessAllowed");
+        if(!hasVideo){
+          const msg = {
+            text: "USER_JOINED_WITHOUT_VIDEO**"+uid,
+            messageType: "TEXT"
+          }
+          window.AGORA_RTM_UTILS.sendChannelMessage(msg)
+        }
+      });
 
-    localStream.on("accessDenied", function() {
-      // alert('denied!')
-    })
+      localStream.on("accessDenied", function() {
+        // alert('denied!')
+      })
 
-    localStream.init(async function initSuccess() {
-      jQuery('#rejoin-container').hide();
-      jQuery('#buttons-container').removeClass('hidden');
+      localStream.init(async function initSuccess() {
+        jQuery('#rejoin-container').hide();
+        jQuery('#buttons-container').removeClass('hidden');
 
-      var thisBtn = jQuery('#rejoin-btn');
-      thisBtn.prop("disabled", false);
-      thisBtn.find('.spinner-border').hide();
+        var thisBtn = jQuery('#rejoin-btn');
+        thisBtn.prop("disabled", false);
+        thisBtn.find('.spinner-border').hide();
 
-      AgoraRTC.Logger.info("getUserMedia successfully");
+        AgoraRTC.Logger.info("getUserMedia successfully");
 
-      try {
-        jQuery(".main-screen-stream-section").css('display', 'block');
+        try {
+          jQuery(".main-screen-stream-section").css('display', 'block');
 
-        let canJoinAsHost = await window.AGORA_COMMUNICATION_UI.canJoinAsHost();
-        console.log("hlwcanJoinAsHost", canJoinAsHost)
-        
-        if(canJoinAsHost){
           localStream.play('local-video'); // play the given stream within the local-video div
 
           // publish local stream
@@ -204,36 +205,36 @@ function createCameraStream(uid, next) {
             }
             window.localStreams.camera.userDetails = {avtar: userAvatar};
           });
+
+          cb && cb(null)
+        } catch(ex) {
+          // TODO: Show this error somewhere
+          AgoraRTC.Logger.error('Stream error...', ex);
+          agoraLeaveChannel();
+          alert("Your video cannot be started!")
+          cb && cb(ex)
+        }
+      }, function initError(err) {
+        AgoraRTC.Logger.error("[ERROR] : getUserMedia failed", err);
+
+        if (err.msg==='NotAllowedError') {
+
+          const msg = {
+            text: "USER_JOINED_WITHOUT_PERMISSIONS**"+uid,
+            messageType:"TEXT"
+          }
+          window.AGORA_RTM_UTILS.sendChannelMessage(msg)
+          
+          window.AGORA_COMMUNICATION_UI.enableExit()
+          window.AGORA_UTILS.showPermissionsModal()
         } else {
-          window.AGORA_COMMUNICATION_UI.joinAsAudience();
+          cb && cb(err)
         }
 
-        cb && cb(null)
-      } catch(ex) {
-        // TODO: Show this error somewhere
-        AgoraRTC.Logger.error('Stream error...', ex);
-        agoraLeaveChannel();
-        alert("Your video cannot be started!")
-        cb && cb(ex)
+      });
+    }  else {
+        window.AGORA_COMMUNICATION_UI.joinAsAudience();
       }
-    }, function initError(err) {
-      AgoraRTC.Logger.error("[ERROR] : getUserMedia failed", err);
-
-      if (err.msg==='NotAllowedError') {
-
-        const msg = {
-          text: "USER_JOINED_WITHOUT_PERMISSIONS**"+uid,
-          messageType:"TEXT"
-        }
-        window.AGORA_RTM_UTILS.sendChannelMessage(msg)
-        
-        window.AGORA_COMMUNICATION_UI.enableExit()
-        window.AGORA_UTILS.showPermissionsModal()
-      } else {
-        cb && cb(err)
-      }
-
-    });
   }
 
   if (next) {
