@@ -39,7 +39,10 @@
   window.isAdminUser = window.adminUserConfig.is_admin;
   window.canUnmuteForcefully = window.adminUserConfig.can_unmute_forecefully;
 
-  window.max_host_users_limit = parseInt('<?php echo $channel->max_host_users_limit(); ?>');
+  window.max_host_users_limit = '<?php echo $channel->max_host_users_limit(); ?>';
+  if(window.max_host_users_limit!=''){
+    window.max_host_users_limit = parseInt(window.max_host_users_limit);
+  }
 
   if(sessionStorage.getItem("deviceTested")=="Yes" || window.pre_call_device_test_enabled == "0"){
     window.pre_call_device_test_enabled = 0;

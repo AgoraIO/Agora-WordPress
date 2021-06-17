@@ -229,7 +229,7 @@ window.AGORA_COMMUNICATION_UI = {
   },
 
   canJoinAsHost: function(){
-    if(window.joinAsHost == 0){
+    if(window.joinAsHost == 0 && window.max_host_users_limit!=''){
       
       let totalRemoteStreams = Object.keys(window.remoteStreams).length;
       
