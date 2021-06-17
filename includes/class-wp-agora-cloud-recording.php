@@ -238,7 +238,7 @@ class AgoraCloudRecording {
         
         $fixedTitle = str_replace('-', '', $channel->title());
         $folderName = $month.$day.$year.preg_replace('/\s+/', '', $fixedTitle);
-        $folderName = $currentUserId.$data['cid'];
+        $folderName = $data['cid'];
         
         $clientRequest->storageConfig->fileNamePrefix = array( $folderName );
         
