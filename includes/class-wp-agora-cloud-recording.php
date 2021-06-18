@@ -130,6 +130,12 @@ class AgoraCloudRecording {
 
             $clientRequest = new stdClass();
             $clientRequest->mixedVideoLayout = (int)$mixedVideoLayout;
+
+            //In case of vertical layout, specify large screen UID
+            if($mixedVideoLayout == 2){
+                $clientRequest->maxResolutionUid = $data['maxResolutionUid'];
+            }
+
             $clientRequest->backgroundColor = "#000000";
 
             $params = array(
@@ -174,6 +180,7 @@ class AgoraCloudRecording {
     private function startRecording($data) {
 
         $currentUserId = $data['uid'];
+        $maxResolutionUid = $data['maxResolutionUid'];
 
         $data['uid'] = ''.rand(AGORA_MIN_RAND_VALUE, AGORA_MAX_RAND_VALUE);
 
@@ -208,6 +215,12 @@ class AgoraCloudRecording {
         if($recordingSettings['protoType'] != 'individual'){
             $clientRequest->recordingConfig->transcodingConfig = new stdClass();
             $clientRequest->recordingConfig->transcodingConfig->mixedVideoLayout = (int)$mixedVideoLayout; // best fit layout
+
+            //In case of vertical layout, specify large screen UID
+            if($mixedVideoLayout == 2){
+                $clientRequest->recordingConfig->transcodingConfig->maxResolutionUid = $data['maxResolutionUid'];
+            }
+
             $clientRequest->recordingConfig->transcodingConfig->backgroundColor = "#000000";
             $clientRequest->recordingConfig->transcodingConfig->width = 848;
             $clientRequest->recordingConfig->transcodingConfig->height = 480;
@@ -238,7 +251,7 @@ class AgoraCloudRecording {
         
         $fixedTitle = str_replace('-', '', $channel->title());
         $folderName = $month.$day.$year.preg_replace('/\s+/', '', $fixedTitle);
-        $folderName = $currentUserId.$data['cid'];
+        $folderName = $data['cid'];
         
         $clientRequest->storageConfig->fileNamePrefix = array( $folderName );
         

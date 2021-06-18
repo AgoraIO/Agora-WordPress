@@ -795,8 +795,10 @@ window.AGORA_CLOUD_RECORDING = {
       cid: window.channelId,
       cname: window.channelName,
       uid: user_id,
-      token: window.agoraToken
+      token: window.agoraToken,
+      maxResolutionUid: window.localStreams.uid
     };
+    console.log("params ",params)
     window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
       // var startRecordURL = agoraAPI + window.agoraAppId + '/cloud_recording/resourceid/' + res.resourceId + '/mode/mix/start';
       // console.log(res);
@@ -873,7 +875,8 @@ window.AGORA_CLOUD_RECORDING = {
       cname: window.channelName,
       uid: window.uid,
       resourceId: window.resourceId,
-      recordingId: window.recordingId
+      recordingId: window.recordingId,
+      maxResolutionUid: window.localStreams.uid
     };
     // window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
     //   console.log('Query:', res);

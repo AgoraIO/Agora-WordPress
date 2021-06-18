@@ -228,6 +228,7 @@ window.AGORA_COMMUNICATION_UI = {
     }
   },
 
+  /* Function to check if user can join as a host (If user is not in the list of broadcaster users and total remote streams is already equeal to max hosts allowed, then, user will join as audience) */
   canJoinAsHost: function(){
     if(window.joinAsHost == 0 && window.max_host_users_limit!=''){
       
