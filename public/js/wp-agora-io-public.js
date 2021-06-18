@@ -381,19 +381,16 @@ window.AGORA_UTILS = {
     window.agoraClient.enableAudioVolumeIndicator();
 
     window.agoraClient.on("volume-indicator", function(evt){
-      // jQuery('.activeSpeaker').removeClass('activeSpeaker');
-      // evt.attr.forEach(function(volume, index){
-      //   console.log(`${index} UID ${volume.uid} Level ${volume.level}`);
-      //   if(volume.level>THRESHOLD_AUDIO_LEVEL){
-      //     jQuery('body #' + volume.uid + '_container').addClass('activeSpeaker');
-      //     if(window.isSpeakerView){
-      //       addStreamInLargeView(volume.uid, 'speaker');
-      //     }
-      //   }
-      // });
-      if(window.isSpeakerView){
-        addStreamInLargeView(1, 'speaker');
-      }
+      jQuery('.activeSpeaker').removeClass('activeSpeaker');
+      evt.attr.forEach(function(volume, index){
+        console.log(`${index} UID ${volume.uid} Level ${volume.level}`);
+        if(volume.level>THRESHOLD_AUDIO_LEVEL){
+          jQuery('body #' + volume.uid + '_container').addClass('activeSpeaker');
+          if(window.isSpeakerView){
+            addStreamInLargeView(volume.uid);
+          }
+        }
+      });
     });
     /* End Handle Active Speaker */ 
 
@@ -484,6 +481,11 @@ window.AGORA_UTILS = {
           delete window.screenshareClients[streamId];
         }
         handleGhostMode(streamId, 'remote');
+      }
+
+      /* If the peer which is leaving is pinned user, then, update the variable  */
+      if(streamId == window.pinnedUser){
+        window.pinnedUser = '';
       }
 
       if (window.AGORA_CLOUD_RECORDING.isCloudRecording) {
@@ -789,6 +791,19 @@ window.AGORA_CLOUD_RECORDING = {
 
     let user_id = (window.userID == 0) ? window.localStreams.uid : window.userID;
 
+    /* Vertical Layout */
+    let maxResolutionUid = window.AGORA_CLOUD_RECORDING.getLargeScreenInVerticalLayout();
+
+    /* Speaker View */
+    if(window.isSpeakerView){
+      /* Set Local stream as main stream if it's not screen share and not local (i.e. if it's active speaker id) */
+      if(maxResolutionUid != window.pinnedUser && !screenshareClients.hasOwnProperty(maxResolutionUid)){
+        maxResolutionUid = window.localStreams.uid;
+      }
+    }
+
+    /* Vertical Layout */
+
     var params = {
       action: 'cloud_record', // wp ajax action
       sdk_action: 'start-recording',
@@ -796,7 +811,7 @@ window.AGORA_CLOUD_RECORDING = {
       cname: window.channelName,
       uid: user_id,
       token: window.agoraToken,
-      maxResolutionUid: window.localStreams.uid
+      maxResolutionUid: maxResolutionUid
     };
     console.log("params ",params)
     window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
@@ -824,6 +839,21 @@ window.AGORA_CLOUD_RECORDING = {
     })
   },
 
+  /* Function to get Large Screen to be set in Vertical Layout */
+  getLargeScreenInVerticalLayout: function(){
+    //Set Local Video Stream in Large
+    let maxResolutionUid = window.localStreams.uid;
+
+    if(jQuery('body .screenshare-container').length>0){
+      // If another stream in large screen
+      if(jQuery('body .screenshare-container').find('#local-video').length == 0 && jQuery('body .screenshare-container').find('#full-screen-video').length>0 ){
+        let mainLargeStreamId = jQuery('body .screenshare-container').attr('id');
+        maxResolutionUid = mainLargeStreamId.split('_container')[0];
+      }
+    }
+
+    return maxResolutionUid;
+  },
 
   stopVideoRecording: function (cb) {
     var params = {
@@ -868,6 +898,20 @@ window.AGORA_CLOUD_RECORDING = {
   },
 
   updateLayout: function() {
+
+    /* Vertical Layout */
+    let maxResolutionUid = window.AGORA_CLOUD_RECORDING.getLargeScreenInVerticalLayout();
+
+    /* Speaker View */
+    if(window.isSpeakerView){
+      /* Update layout only if local user id, pinned user id or screen share id is to be set in main large screen (Not every speaker) */
+      if(maxResolutionUid != window.localStreams.uid && maxResolutionUid != window.pinnedUser && !screenshareClients.hasOwnProperty(maxResolutionUid) ){
+        return;
+      }
+    }
+
+    /* Vertical Layout */
+
     var params = {
       action: 'cloud_record', // wp ajax action
       sdk_action: 'updateLayout',
@@ -876,7 +920,7 @@ window.AGORA_CLOUD_RECORDING = {
       uid: window.uid,
       resourceId: window.resourceId,
       recordingId: window.recordingId,
-      maxResolutionUid: window.localStreams.uid
+      maxResolutionUid: maxResolutionUid
     };
     // window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
     //   console.log('Query:', res);
@@ -1097,8 +1141,10 @@ function isCurrentStreamInMainLargeScreen(streamId){
 }
 
 /* Function to add a stream in large screen */
-function addStreamInLargeView(pinUserId, cond=''){
-    if(isCurrentStreamInMainLargeScreen(pinUserId) || (cond == 'speaker' && window.pinnedUser!='')){
+function addStreamInLargeView(pinUserId){
+
+    /* Return in the stream which is going to be in large screen is the same that is alredy there. Do not add any stream in large screen if any pinned user is there until a user unpins him/her */
+    if(isCurrentStreamInMainLargeScreen(pinUserId) || (window.isSpeakerView && window.pinnedUser!='')){
       return;
     }
  
@@ -1188,6 +1234,11 @@ function addStreamInLargeView(pinUserId, cond=''){
       }
     }
 
+    /* Update Recording Layout when a large screen stream is changed */
+    if (window.AGORA_CLOUD_RECORDING.isCloudRecording) {
+      window.AGORA_CLOUD_RECORDING.updateLayout();
+    }
+
 }
 /* Function to add a stream in large screen */
 
@@ -1228,6 +1279,12 @@ function removeStreamFromLargeView(unpinUserId){
   }
 
   jQuery("#screen-zone").removeClass("sharescreen");
+
+  /* Update Recording Layout when a user pins (not in case of speaker view) */
+  if (window.AGORA_CLOUD_RECORDING.isCloudRecording) {
+    window.AGORA_CLOUD_RECORDING.updateLayout();
+  }
+
 }
 
 /* Pin/Unpin button on streams hover */
@@ -1914,6 +1971,10 @@ jQuery(document).ready(function(){
           if (!window.screenshareClients.hasOwnProperty(streamId)) {
             removeStreamFromLargeView(streamId);
           }
+        }
+        /* Update Recording Layout when a large screen stream is changed */
+        if (window.AGORA_CLOUD_RECORDING.isCloudRecording) {
+          window.AGORA_CLOUD_RECORDING.updateLayout();
         }
       }
       window.isSpeakerView = false;
