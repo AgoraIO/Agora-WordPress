@@ -357,9 +357,9 @@ function agoraChatChangeLoggedin() {
 	function submitNewChannel(e) {
 		const channelType = $('#type').val();
 
-		if (channelType==='communication') {
-			return true;
-		}
+		// if (channelType==='communication') {
+		// 	return true;
+		// }
 
 		const users = [];
 		const usersRow = jQuery('#broadcast-users-list');
