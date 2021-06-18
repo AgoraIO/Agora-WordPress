@@ -571,7 +571,10 @@ window.AGORA_UTILS = {
         window.AGORA_UTILS.updateUsersCounter(usersCount);
       }
 
+      console.log("hlwRcordainLargeStreamId", window.AGORA_CLOUD_RECORDING.getLargeScreenInVerticalLayout())
+
       if (window.AGORA_CLOUD_RECORDING.isCloudRecording) {
+        console.log("hnjiStreamSubscribedUpdateLayout")
         window.AGORA_CLOUD_RECORDING.updateLayout();
       }
 
@@ -811,7 +814,7 @@ window.AGORA_CLOUD_RECORDING = {
       cname: window.channelName,
       uid: user_id,
       token: window.agoraToken,
-      maxResolutionUid: maxResolutionUid
+      maxResolutionUid: maxResolutionUid.toString()
     };
     console.log("params ",params)
     window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
@@ -846,13 +849,13 @@ window.AGORA_CLOUD_RECORDING = {
 
     if(jQuery('body .screenshare-container').length>0){
       // If another stream in large screen
-      if(jQuery('body .screenshare-container').find('#local-video').length == 0 && jQuery('body .screenshare-container').find('#full-screen-video').length>0 ){
+      if(jQuery('body .screenshare-container').find('#local-video').length == 0 && jQuery('body .screenshare-container').find('#full-screen-video').length==0 ){
         let mainLargeStreamId = jQuery('body .screenshare-container').attr('id');
         maxResolutionUid = mainLargeStreamId.split('_container')[0];
       }
     }
 
-    return maxResolutionUid;
+    return parseInt(maxResolutionUid);
   },
 
   stopVideoRecording: function (cb) {
@@ -920,14 +923,14 @@ window.AGORA_CLOUD_RECORDING = {
       uid: window.uid,
       resourceId: window.resourceId,
       recordingId: window.recordingId,
-      maxResolutionUid: maxResolutionUid
+      maxResolutionUid: maxResolutionUid.toString()
     };
-    // window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
-    //   console.log('Query:', res);
+    window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
+      console.log('Query:', res);
 
-    // }).fail(function(err) {
-    //   console.error('API Error:',err);
-    // })
+    }).fail(function(err) {
+      console.error('API Error:',err);
+    })
   }
 }
 
@@ -1236,6 +1239,7 @@ function addStreamInLargeView(pinUserId){
 
     /* Update Recording Layout when a large screen stream is changed */
     if (window.AGORA_CLOUD_RECORDING.isCloudRecording) {
+      console.log("largeScreenLayoutChange")
       window.AGORA_CLOUD_RECORDING.updateLayout();
     }
 
@@ -1280,7 +1284,7 @@ function removeStreamFromLargeView(unpinUserId){
 
   jQuery("#screen-zone").removeClass("sharescreen");
 
-  /* Update Recording Layout when a user pins (not in case of speaker view) */
+  /* Update Recording Layout when a user pins */
   if (window.AGORA_CLOUD_RECORDING.isCloudRecording) {
     window.AGORA_CLOUD_RECORDING.updateLayout();
   }

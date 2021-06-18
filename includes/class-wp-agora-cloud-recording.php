@@ -115,6 +115,8 @@ class AgoraCloudRecording {
             return new WP_Error( 'data', "Incomplete data", $data );
         }
 
+        $sid = $data['recordingId'];
+
         $channel = WP_Agora_Channel::get_instance($data['cid']);
         $channelSettings    = $channel->get_properties();
         $recordingSettings = $channelSettings['recording'];
