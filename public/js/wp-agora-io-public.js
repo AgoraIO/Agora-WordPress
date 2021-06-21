@@ -956,7 +956,7 @@ jQuery(document).ready(function(){
   }
 });
 
-function showVisibleScreen(){
+function showVisibleScreen(uid, currStreamVisible){
 
   let oldClass = jQuery("#screen-users").attr('class');
 
@@ -988,6 +988,40 @@ function showVisibleScreen(){
         total_visible_streams++;
       }
     });
+  }
+
+  /* Not Remote user stream i.e. screen-share stream */
+  jQuery('body #agora-root .remote-video').each(function(){
+    if(jQuery(this).parents('.remote-stream-container').length==0){
+      if(jQuery(this).is(":visible")){
+        console.log("innertestHlo",jQuery(this).attr('class'))
+        total_visible_streams++;
+      }
+    }
+  });
+
+  /* Check if large screen is present - toggle share screen class based on large stream screen is visible or hidden */
+  if(jQuery('.screenshare-container').length>0){
+    /* If main large stream is local */
+    if(jQuery('.screenshare-container').find(local_stream_div_id).length>0){
+      if(jQuery('.screenshare-container '+local_stream_div_id).is(':visible')){
+        if(!jQuery("#screen-zone").hasClass('sharescreen')){ /* Add class if main large stream is visible */
+          jQuery("#screen-zone").addClass("sharescreen");
+        }
+      } else {
+        if(jQuery("#screen-zone").hasClass('sharescreen')){ /* Remove class if main large stream is hidden */
+          jQuery("#screen-zone").removeClass("sharescreen");
+        }
+      }
+    } else if(jQuery('.screenshare-container').is(':visible')){ /* Add class if main large stream is visible */
+      if(!jQuery("#screen-zone").hasClass('sharescreen')){
+        jQuery("#screen-zone").addClass("sharescreen");
+      }
+    } else {
+      if(jQuery("#screen-zone").hasClass('sharescreen')){ /* Remove class if main large stream is hidden */
+        jQuery("#screen-zone").removeClass("sharescreen");
+      }
+    }
   }
 
   console.log("hlwtotal_visible_streams", total_visible_streams)
@@ -1034,6 +1068,9 @@ function getScreenUsersClass(total_visible_streams){
 
 function handleGhostMode(uid, streamType='local', channelType='communication'){
   if(window.isGhostModeEnabled){
+
+    let currStreamVisible = 1;
+
     if(streamType == 'local'){
       console.log("hlwLocal")
       if(channelType == 'broadcast'){
@@ -1043,8 +1080,10 @@ function handleGhostMode(uid, streamType='local', channelType='communication'){
       && (!window.localStreams.camera.stream.getVideoTrack() || !window.localStreams.camera.stream.getVideoTrack().enabled)
       ){
         jQuery("body "+local_stream_div_id).hide();
+        currStreamVisible = 0;
       } else {
         jQuery("body "+local_stream_div_id).show();
+        currStreamVisible = 1;
       }
       //showVisibleScreen();
     }
@@ -1056,15 +1095,17 @@ function handleGhostMode(uid, streamType='local', channelType='communication'){
       ){
         console.log("hlwHideGhost")
         window.AGORA_UTILS.toggleVisibility('#' + uid + '_container', false);
+        currStreamVisible = 0;
       } else {
         console.log("audioTrackStaastu", window.remoteStreams[uid].stream.getAudioTrack().enabled)
         console.log("audioTrackStaastu", window.remoteStreams[uid].stream.getVideoTrack().enabled)
         console.log("hlwShowGhost", uid)
         window.AGORA_UTILS.toggleVisibility('#' + uid + '_container', true);
+        currStreamVisible = 1;
       }
       //showVisibleScreen();
     }
-    showVisibleScreen();
+    showVisibleScreen(uid, currStreamVisible);
   }
 }
 /* End Handle Ghost Mode */
