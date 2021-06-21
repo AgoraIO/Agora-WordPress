@@ -271,8 +271,10 @@ window.AGORA_UTILS = {
       countClass = '10-12'
     }
 
-    // Update users class to keep layout organized
-    document.getElementById('screen-users').classList = "screen-users screen-users-" + countClass;
+    if(!window.isGhostModeEnabled){
+      // Update users class to keep layout organized
+      document.getElementById('screen-users').classList = "screen-users screen-users-" + countClass;
+    }
   },
 
   handleSpeakerViewStreamsOnRemove: function(streamId){
@@ -570,8 +572,6 @@ window.AGORA_UTILS = {
         const usersCount = Object.keys(window.remoteStreams).length + 1
         window.AGORA_UTILS.updateUsersCounter(usersCount);
       }
-
-      console.log("hlwRcordainLargeStreamId", window.AGORA_CLOUD_RECORDING.getLargeScreenInVerticalLayout())
 
       if (window.AGORA_CLOUD_RECORDING.isCloudRecording) {
         console.log("hnjiStreamSubscribedUpdateLayout")
@@ -962,15 +962,17 @@ function showVisibleScreen(){
   }
   
   jQuery('body #agora-root .remote-stream-container').each(function(){
+    console.log("checkthiAttr", jQuery(this).attr('id'))
     if(jQuery(this).is(":visible")){
+      console.log("visibleHBhua",jQuery(this).attr('id'))
       total_visible_streams++;
       jQuery(this).css('display', 'inline-flex');
     }
   });
 
-  if(jQuery("body #agora-root .screenshare-container").length>0){
-    total_visible_streams++;
-  }
+  // if(jQuery("body #agora-root .screenshare-container").length>0){
+  //   total_visible_streams++;
+  // }
 
   console.log("hlwtotal_visible_streams", total_visible_streams)
 
@@ -982,6 +984,7 @@ function showVisibleScreen(){
   let newClass = getScreenUsersClass(total_visible_streams);
   console.log("hlwoldClass", oldClass)
   jQuery("#screen-users").removeClass(oldClass);
+  console.log("hlwnewClass", newClass)
   jQuery("#screen-users").addClass(newClass);
 }
 
@@ -1010,7 +1013,6 @@ function getScreenUsersClass(total_visible_streams){
 	if(total_visible_streams == 10 || total_visible_streams == 11 || total_visible_streams==12) {
 		countClass = 'screen-users screen-users-9-12';
 	}
-  console.log("hlwcountClass", countClass)
 	return countClass;
 }
 

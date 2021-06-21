@@ -259,6 +259,8 @@ window.AGORA_SCREENSHARE_UTILS = {
 
     remoteEl.style.height = (divWidth / 1.35) + 'px'; // ratio 16:10
 
+    remoteEl.style.width = '100%';
+
     if(isLocal){
       streamId = window.agoraMode==='communication' ? 'local-video' : 'full-screen-video';
       remoteStream.play(streamId);
@@ -272,6 +274,10 @@ window.AGORA_SCREENSHARE_UTILS = {
     
     videoEl.style.objectFit = 'contain';
     videoEl.style.objectPosition = 'top';
-    handleGhostMode(streamId, 'remote');
+    if(isLocal){
+      handleGhostMode(streamId, 'local');
+    } else {
+      handleGhostMode(streamId, 'remote');
+    }
   },
 }
