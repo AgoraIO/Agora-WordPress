@@ -227,11 +227,11 @@ window.AGORA_SCREENSHARE_UTILS = {
     if(isLocal){ /* If the stream that is going to be in large screen is local */
       streamId = window.agoraMode==='communication' ? 'local-video' : 'full-screen-video';
       streamsContainer.append(
-        jQuery('<div/>', {'id': streamId + '_container',  'class': 'screenshare-container'}).append(content)
+        jQuery('<div/>', {'id': streamId + '_container',  'class': 'screenshare-container', 'rel': streamId}).append(content)
       );
     } else {
       streamsContainer.append(
-        jQuery('<div/>', {'id': streamId + '_container',  'class': 'screenshare-container'}).append(
+        jQuery('<div/>', {'id': streamId + '_container',  'class': 'screenshare-container', 'rel': streamId}).append(
           jQuery('<div/>', {'id': streamId + '_mute', 'class': 'mute-overlay'}).append(
               jQuery('<i/>', {'class': 'fas fa-microphone-slash'})
           ),

@@ -937,6 +937,12 @@ window.AGORA_CLOUD_RECORDING = {
 /* Handle Ghost Mode */
 
 let local_stream_div_id = '#local-video';
+//let local_stream_div_id = window.agoraMode==='communication' ? '#local-video' : '#full-screen-video'
+
+jQuery(document).ready(function(){
+  local_stream_div_id = window.agoraMode==='communication' ? '#local-video' : '#full-screen-video';
+})
+
 
 function noVideoStreamsDiv(){
   return '<div id="big-no-video-stream" style="display:none"><div id="" class="no-video-overlay text-center"><i class="fas fa-user"></i></div></div>';
@@ -973,6 +979,16 @@ function showVisibleScreen(){
   // if(jQuery("body #agora-root .screenshare-container").length>0){
   //   total_visible_streams++;
   // }
+
+  if(jQuery('body #agora-root .remote-video').parents('.remote-stream-container').length==0){
+    console.log("testHlo",jQuery(this).attr('class'))
+    jQuery(this).each(function(){
+      if(jQuery(this).is(":visible")){
+        console.log("innertestHlo",jQuery(this).attr('class'))
+        total_visible_streams++;
+      }
+    });
+  }
 
   console.log("hlwtotal_visible_streams", total_visible_streams)
 
@@ -1398,20 +1414,21 @@ jQuery(document).ready(function(){
 
   /* Show Mute/Unmute icons on remote streams only to Admin User and mute/unmute functionality */
   if(window.isAdminUser){
-    jQuery("body").on("mouseenter", ".remote-stream-container", function(){
+    jQuery("body").on("mouseenter", ".remote-stream-container, .screenshare-container", function(){
       const streamId = jQuery(this).attr('rel'); 
+      if (window.remoteStreams.hasOwnProperty(streamId)) {
+        jQuery(this).append(
+          "<div class='remote-stream-controls'>"+
+            "<div class='mute-remote-audio-div'></div>"+
+            "<div class='mute-remote-video-div'></div>"+
+          "</div>"
+        )
 
-      jQuery(this).append(
-        "<div class='remote-stream-controls'>"+
-          "<div class='mute-remote-audio-div'></div>"+
-          "<div class='mute-remote-video-div'></div>"+
-        "</div>"
-      )
-
-      handleRemoteStreamControlsIcons(streamId);
+        handleRemoteStreamControlsIcons(streamId);
+      }
     });
-    jQuery("body").on("mouseleave", ".remote-stream-container", function(){
-      if(jQuery("body .remote-stream-container .remote-stream-controls").length>0){
+    jQuery("body").on("mouseleave", ".remote-stream-container, .screenshare-container", function(){
+      if(jQuery(this).find(".remote-stream-controls").length>0){
         jQuery(".remote-stream-controls").remove();
       }
     });
