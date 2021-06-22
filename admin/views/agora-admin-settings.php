@@ -388,12 +388,15 @@ jQuery(document).ready(function() {
 
             jQuery(this).removeClass("border").removeClass("over");
 
+            /* Get drop position based on its class */
             let position = jQuery(event.target).parents('td').attr('class').split('wp-agora-io-drop-')[1];
 
+            /* Update Remote Speaker position - If it's position is changed */
             if(currentComponent == 'remoteSpeakers'){
               agoraComponentPositionChange('agora-remote-speakers-position', position);
             }
 
+            /* Update Chat position - If it's position is changed */
             if(currentComponent == 'chat'){
               agoraComponentPositionChange('agora-chat-position', position);
             }
@@ -408,14 +411,12 @@ jQuery(document).ready(function() {
 
           // If the droppable element we're hovered over already contains a .draggable element, 
           // don't allow another one to be dropped on it
-          console.log("hlwjQuery(this).has('.wp-agora-io-draggable')", jQuery(this).has('.wp-agora-io-draggable').length)
           if(jQuery(this).has('.wp-agora-io-draggable').length) {
             jQuery(this).droppable('disable');
           }
         }
     });
 
-    //$(".drop").sortable();
 });
 </script>
 <?php /* Drag-drop */ ?>

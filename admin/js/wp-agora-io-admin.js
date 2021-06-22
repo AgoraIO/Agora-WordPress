@@ -252,6 +252,7 @@ function agoraChatChange() {
 	})
 }
 
+/* Function to update component's position through Drag-Drop Builder */
 function agoraComponentPositionChange(component, position) {
 	updateSettingValue(component, position, function(err, res) {
 		if (!res || !res.updated) {
