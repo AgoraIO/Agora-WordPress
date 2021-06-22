@@ -16,6 +16,8 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
   $screenStyles = "background-size:cover; background-image: url('".$settings['appearance']['noHostImageURL']."')";
 }
 
+$remoteSpeakersPos = isset($settingssettings['agora-remote-speakers-position']) ? $settings['agora-remote-speakers-position'] : '';
+
 // $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
 ?>
 <div id="agora-root" class="agora agora-broadcast agora-audience">
@@ -25,7 +27,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
     <div class="agora-content">
       <?php require_once "parts/header-controls.php" ?>
 
-      <div id="screen-zone" class="screen" <?php echo $agoraStyle ?>>
+      <div id="screen-zone" class="screen agora-screen-users-<?php if($remoteSpeakersPos == '') { echo 'top'; } else { echo $remoteSpeakersPos; } ?>" <?php echo $agoraStyle ?>>
         <div id="screen-users" class="screen-users screen-users-1">
           <div id="full-screen-video" class="user" style="display: none; <?php echo $screenStyles; ?>"></div>
 

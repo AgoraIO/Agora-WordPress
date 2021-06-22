@@ -5,6 +5,8 @@ $appearanceSettings = $channelSettings['appearance'];
 $current_user       = wp_get_current_user();
 $channel_layout = $channelSettings['channel_layout'];
 
+$remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ? $agora->settings['agora-remote-speakers-position'] : '';
+
 /* Code with Reemote Streams on right side - use for future */
 // $isSpeakerView = false;
 // if($channel_layout == 'speaker'){
@@ -19,7 +21,7 @@ $channel_layout = $channelSettings['channel_layout'];
     <div class="agora-content">
       <?php require_once "parts/header-controls.php" ?>
 
-      <div id="screen-zone" class="screen <?php //if($isSpeakerView){ echo 'speaker-view'; } ?>">
+      <div id="screen-zone" class="screen <?php //if($isSpeakerView){ echo 'speaker-view'; } ?> agora-screen-users-<?php if($remoteSpeakersPos == '') { echo 'top'; } else { echo $remoteSpeakersPos; } ?>">
 
         <?php 
         /* Code with Reemote Streams on right side - use for future */

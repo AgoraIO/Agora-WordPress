@@ -252,6 +252,14 @@ function agoraChatChange() {
 	})
 }
 
+function agoraComponentPositionChange(component, position) {
+	updateSettingValue(component, position, function(err, res) {
+		if (!res || !res.updated) {
+			// TODO: Show error?
+		}
+	})
+}
+
 function agoraChatChangeLoggedin() {
 	const enabled = document.querySelector('#agora-chat-check-loggedin').checked;
 	const box = document.querySelector('#chat-status-text-loggedin');
