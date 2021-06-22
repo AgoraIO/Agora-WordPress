@@ -14,6 +14,8 @@ class WP_Agora_Public {
 	private $plugin_name;
 	public $version;
 
+	public static $recordings_regions = array();
+
 	private static $shortcodeRendered = array();
 
 	/**
@@ -24,6 +26,12 @@ class WP_Agora_Public {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 		$this->settings = null;
+		
+		self::$recordings_regions['qiniu'] = ['East China', 'North China', 'South China', 'North America'];
+		self::$recordings_regions['aws'] = ['US_EAST_1', 'US_EAST_2', 'US_WEST_1', 'US_WEST_2', 'EU_WEST_1', 'EU_WEST_2', 'EU_WEST_3', 'EU_CENTRAL_1', 'AP_SOUTHEAST_1', 'AP_SOUTHEAST_2', 'AP_NORTHEAST_1', 'AP_NORTHEAST_2', 'SA_EAST_1', 'CA_CENTRAL_1', 'AP_SOUTH_1', 'CN_NORTH_1', 'CN_NORTHWEST_1', 'US_GOV_WEST_1'];
+		self::$recordings_regions['alibaba'] = ['CN_Hangzhou', 'CN_Shanghai', 'CN_Qingdao', 'CN_Beijing', 'CN_Zhangjiakou', 'CN_Huhehaote', 'CN_Shenzhen', 'CN_Hongkong', 'US_West_1', 'US_East_1', 'AP_Southeast_1', 'AP_Southeast_2', 'AP_Southeast_3', 'AP_Southeast_5', 'AP_Northeast_1', 'AP_South_1', 'EU_Central_1', 'EU_West_1', 'EU_East_1'];
+
+		//self::$recordings_regions = (object) self::$recordings_regions;
 
 		// Declaration of shortcodes and widgets
 		add_shortcode( 'agora-communication', array($this, 'agoraCommunicationShortcode') );
@@ -355,8 +363,8 @@ class WP_Agora_Public {
 
 	/**  Get Agora Recordings List Shortcode shortcode **/
 	public function agoraRecordingsList( $atts ){
-		// require_once(__DIR__.'/views/wp-agora-io-recordings.php');
-		// return getRecordingsList($atts);
+		require_once(__DIR__.'/views/wp-agora-io-recordings.php');
+		return getRecordingsList($atts);
 	}
 
 	/**  Render Agora Broadcast shortcode **/
