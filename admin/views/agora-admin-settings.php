@@ -305,7 +305,7 @@ $remoteSpeakersPos = isset($agora_options['agora-remote-speakers-position']) ? $
           <tbody id="containment">
               <tr class="wp-agora-io-drop-top-row">
                   <td colspan="3" class="wp-agora-io-drop-top">
-                    <div class="drop">
+                    <div class="wp-agora-io-drop">
                       <?php if($remoteSpeakersPos == '' || $remoteSpeakersPos == 'top'){ ?>
                         <div class="wp-agora-io-draggable remote-speakers-draggable">Remote Speakers</div>
                       <?php } ?> 
@@ -317,7 +317,7 @@ $remoteSpeakersPos = isset($agora_options['agora-remote-speakers-position']) ? $
               </tr>
               <tr class="wp-agora-io-drop-middle-row">
                   <td width="20%" class="wp-agora-io-drop-left">
-                    <div class="drop">
+                    <div class="wp-agora-io-drop">
                       <?php if($remoteSpeakersPos == 'left'){ ?>
                         <div class="wp-agora-io-draggable remote-speakers-draggable">Remote Speakers</div>
                       <?php } ?>
@@ -327,7 +327,7 @@ $remoteSpeakersPos = isset($agora_options['agora-remote-speakers-position']) ? $
                     </div>
                   </td>
                   <td width="60%" class="wp-agora-io-drop-overlaid">
-                    <div class="drop">
+                    <div class="wp-agora-io-drop">
                       <?php if($remoteSpeakersPos == 'overlaid'){ ?>
                         <div class="wp-agora-io-draggable remote-speakers-draggable">Remote Speakers</div>
                       <?php } ?>
@@ -337,7 +337,7 @@ $remoteSpeakersPos = isset($agora_options['agora-remote-speakers-position']) ? $
                     </div>
                   </td>
                   <td width="20%" class="wp-agora-io-drop-right">
-                    <div class="drop">
+                    <div class="wp-agora-io-drop">
                       <?php if($remoteSpeakersPos == 'right'){ ?>
                         <div class="wp-agora-io-draggable remote-speakers-draggable">Remote Speakers</div>
                       <?php } ?>
@@ -349,7 +349,7 @@ $remoteSpeakersPos = isset($agora_options['agora-remote-speakers-position']) ? $
               </tr>
               <tr class="wp-agora-io-drop-bottom-row">
                   <td colspan="3" class="wp-agora-io-drop-bottom">
-                    <div class="drop">
+                    <div class="wp-agora-io-drop">
                       <?php if($remoteSpeakersPos == 'bottom'){ ?>
                         <div class="wp-agora-io-draggable remote-speakers-draggable">Remote Speakers</div>
                       <?php } ?>
@@ -381,7 +381,7 @@ jQuery(document).ready(function() {
         }
     });
 
-    jQuery(".drop").droppable({ 
+    jQuery(".wp-agora-io-drop").droppable({ 
         accept: ".wp-agora-io-draggable", 
         activeClass: "over",
         drop: function(event, ui) {
@@ -407,11 +407,13 @@ jQuery(document).ready(function() {
         },
         over: function(event, ui) {
           // Enable all the .droppable elements
-          jQuery('.drop').droppable('enable');
+          jQuery('.wp-agora-io-drop').droppable('enable');
 
-          // If the droppable element we're hovered over already contains a .draggable element, 
+          let position = jQuery(this).parents('td').attr('class').split('wp-agora-io-drop-')[1];
+          // If the droppable element we're hovered over already contains a .draggable element, or if remote speakers position to be set as overlaid 
           // don't allow another one to be dropped on it
-          if(jQuery(this).has('.wp-agora-io-draggable').length) {
+          //Remote Speakers position as overlaid does not make any sense, so ignore it
+          if((jQuery(this).has('.wp-agora-io-draggable').length) || (currentComponent == 'remoteSpeakers' && position == 'overlaid')) {
             jQuery(this).droppable('disable');
           }
         }
