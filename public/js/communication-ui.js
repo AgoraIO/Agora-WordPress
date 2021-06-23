@@ -94,7 +94,8 @@ window.AGORA_COMMUNICATION_UI = {
   enableExit: function() {
     const exitCall = function(){
       console.log("so sad to see you leave the channel");
-      window.AGORA_COMMUNICATION_CLIENT.agoraLeaveChannel(); 
+      window.AGORA_COMMUNICATION_CLIENT.agoraLeaveChannel();
+      sessionStorage.clear(); 
     };
     jQuery("#exit-btn").click(exitCall);
     jQuery("#exit-btn-footer").click(exitCall);

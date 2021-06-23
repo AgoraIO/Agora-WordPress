@@ -27,6 +27,7 @@ window.AGORA_BROADCAST_UI = {
     jQuery("#exit-btn").click(function(){
       console.log("so sad to see you leave the channel");
       window.AGORA_BROADCAST_CLIENT.agoraLeaveChannel(); 
+      sessionStorage.clear();
     });
 
     jQuery("#screen-share-btn").click(function() {
