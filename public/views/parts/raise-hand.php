@@ -1,6 +1,6 @@
 <div class="<?php if(isset($channelSettings['type']) && $channelSettings['type'] == 'communication'){ echo 'communication-raise-hand-btn'; } else { echo 'fabs'; } ?>">
 	<div class="raise-hand-icon" id="raiseHand">
-        <i class="far fa-hand-paper"></i>
+        <i class="far fa-hand-paper" title="Raise Hand"></i>
     </div>
 </div>
 

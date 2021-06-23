@@ -16,8 +16,12 @@
                 rawMessage: undefined,
                 text: 'RAISE-HAND-' + userName
             }
+            try{
+                window.AGORA_RTM_UTILS.sendChannelMessage(msg);
+                alert("Your Raise hand request is sent.");
+            } catch(e) {
 
-            window.AGORA_RTM_UTILS.sendChannelMessage(msg);
+            }
         } else {
             window.rtmChannel.getMembers().then(members => {
                 const adminUserRTMId = generateRTMUidfromStreamId(window.adminUser);
@@ -32,6 +36,10 @@
                     }
                     try{
                         window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
+                        jQuery("#raiseHand").attr("id", "cancelRaiseHand");
+                        jQuery("#cancelRaiseHand i").attr('title', 'Cancel Raise Hand Request');
+                        raisedHand = true;
+                        alert("Your Raise hand request is sent.");
                     } catch(e){
 
                     }
@@ -52,10 +60,32 @@
 
     /* When user cancel raise hand request */
     jQuery("body").on("click","#cancelRaiseHand", function handleCancelRaiseHandRequest() {
-        const cancelRaiseHand = 'CANCEL-RAISE-HAND--REQUEST-' + window.audienceUserId;
-        window.AGORA_RTM_UTILS.sendChatMessage(cancelRaiseHand);
-        jQuery("#cancelRaiseHand").attr("id", "raiseHand");
-        raisedHand = true;
+
+        window.rtmChannel.getMembers().then(members => {
+            const adminUserRTMId = generateRTMUidfromStreamId(window.adminUser);
+            if(members.indexOf(adminUserRTMId) > -1){
+
+                let memberId = adminUserRTMId;
+                const msg = {
+                    description: undefined,
+                    messageType: 'TEXT',
+                    rawMessage: undefined,
+                    text: 'CANCEL-RAISE-HAND-REQUEST-'+ window.audienceUserId
+                }
+                try{
+                    window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
+                    jQuery("#cancelRaiseHand").attr("id", "raiseHand");
+                    jQuery("#raiseHand i").attr('title', 'Raise Hand');
+                    raisedHand = false;
+                } catch(e){
+
+                }
+            } else {
+                alert("You cannot cancel raise hand right now as Admin User is not available.")
+            }
+        })
+
+
     });
 
 
