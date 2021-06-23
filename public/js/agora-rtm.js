@@ -54,6 +54,9 @@ window.AGORA_RTM_UTILS = {
 		})
 
 		window.rtmChannel.on('MemberLeft', memberId => {
+			if(window.isAdminUser){ //If current user is admin user and the peer leaves then update the raise hand requests object
+				handleRaiseHandReqContentAfterProcess(memberId);
+			}
 			updateUsersCount()
 		})
 
