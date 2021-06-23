@@ -78,7 +78,12 @@ $remoteSpeakersPos = isset($settingssettings['agora-remote-speakers-position']) 
     }
     else{
       window.addEventListener('load', function() {
-        handleOnLoad();
+        /* Check if Raise Hand Request was accepted - on Refresh (using session storage) */
+        if(sessionStorage.getItem("joinAsHostApproved") == "1"){
+          joinAsHost();
+        } else {
+          handleOnLoad();
+        }
       });
     }
 

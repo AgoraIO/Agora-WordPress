@@ -950,12 +950,16 @@ function noVideoStreamsDiv(){
 }
 
 jQuery(document).ready(function(){
+  appendDivWithAllStreamHiddenInGhostMode();
+});
 
+/* Append an empty grey div to be shown if all divs are hidden */
+function appendDivWithAllStreamHiddenInGhostMode(){
   if(jQuery('body #agora-root #big-no-video-stream').length==0){
     let noStreamDiv = noVideoStreamsDiv();
     jQuery('body #screen-zone').append(noStreamDiv);
   }
-});
+}
 
 function showVisibleScreen(uid, currStreamVisible){
 
@@ -1799,7 +1803,9 @@ function joinAsHost(){
     let mainElm = jQuery('#agora-root').parent();
     jQuery('#agora-root').remove();
     mainElm.html(res);
+    appendDivWithAllStreamHiddenInGhostMode();
     apply_global_colors();
+    sessionStorage.setItem("joinAsHostApproved", "1");
 
   }).fail(function(err) {
     console.error('API Error:', err.responseJSON ? err.responseJSON.errors : err);
