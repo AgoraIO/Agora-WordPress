@@ -27,20 +27,27 @@
                 const adminUserRTMId = generateRTMUidfromStreamId(window.adminUser);
                 if(members.indexOf(adminUserRTMId) > -1){
 
+                    let userName = 'Guest User with id - '+window.audienceUserId;
+                    if(typeof window.wp_username!='undefined' && window.wp_username!=""){
+                        userName = window.wp_username;
+                    }
+
                     let memberId = adminUserRTMId;
                     const msg = {
                         description: undefined,
                         messageType: 'TEXT',
                         rawMessage: undefined,
-                        text: 'RAISE-HAND-REQUEST-'+ window.audienceUserId
+                        text: 'RAISE-HAND-REQUEST-' + userName
                     }
                     try{
                         window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
                         jQuery("#raiseHand").attr("id", "cancelRaiseHand");
                         jQuery("#cancelRaiseHand i").attr('title', 'Cancel Raise Hand Request');
-                        sessionStorage.setItem("raisedHandReqUserId", window.userID);
+                        if(canHandleStateOnRefresh()){
+                            sessionStorage.setItem("raisedHandReqUserId", window.userID);
+                        }
                         raisedHand = true;
-                        alert("Your Raise hand request is sent.");
+                        alert("Your Raise hand request has been sent.");
                     } catch(e){
 
                     }
@@ -77,6 +84,9 @@
                     window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
                     jQuery("#cancelRaiseHand").attr("id", "raiseHand");
                     jQuery("#raiseHand i").attr('title', 'Raise Hand');
+                    if(canHandleStateOnRefresh()){
+                        sessionStorage.removeItem("raisedHandReqUserId");
+                    }
                     raisedHand = false;
                 } catch(e){
 
