@@ -25,7 +25,8 @@
   window.audienceUserId = 0;
   window.raiseHandRequests = {};
 
-  if(window.isSpeakerView == 'speaker'){
+  /* If speaker view is set from admin or from change layout option (check through session storage value) then, set speaker view as default view */
+  if(window.isSpeakerView == 'speaker' || sessionStorage.getItem("isSpeakerView")=="1"){
     window.isSpeakerView = true;
   } else {
     window.isSpeakerView = false;
@@ -44,7 +45,8 @@
     window.max_host_users_limit = parseInt(window.max_host_users_limit);
   }
 
-  if(sessionStorage.getItem("deviceTested")=="Yes" || window.pre_call_device_test_enabled == "0"){
+  /* If pre call device test is not enabled or if it was already tested(check through session storage value) then, no need to test it again */
+  if(sessionStorage.getItem("preCallDeviceTested")=="1" || window.pre_call_device_test_enabled == "0"){
     window.pre_call_device_test_enabled = 0;
   }
 

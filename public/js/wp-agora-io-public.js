@@ -762,7 +762,6 @@ window.AGORA_UTILS = {
   //Join and publish Local Stream
   async joinVideoCall (localStream, cond=''){
 
-    sessionStorage.setItem("deviceTested", "Yes");
 
     // jQuery("body #local-video").css('width', '100%');
     // jQuery("body #full-screen-video").css('width', '100%');
@@ -777,7 +776,9 @@ window.AGORA_UTILS = {
     jQuery('body .agora-footer').css('display', 'flex');
 
     window.pre_call_device_test_enabled = 0;
-    sessionStorage.setItem("deviceTested", "Yes");
+    
+    sessionStorage.setItem("preCallDeviceTested", "1"); // Save Value in session storage to manage it on Refresh
+    
     if(window.channel_type == 'communication'){
       await window.AGORA_COMMUNICATION_CLIENT.agoraJoinChannel(window.channelName);
     } else {
@@ -2027,6 +2028,7 @@ jQuery(document).ready(function(){
     const view = event.target.id;
     if(view == 'speaker'){
       window.isSpeakerView = true;
+      sessionStorage.setItem("isSpeakerView", "1"); //Set value in session storage to manage it on Refresh
     } else {
       /* Remove large screen view if user has not pinned any user (it's default Active speaker user) and the screen share stream is not in large screen */
       if(window.pinnedUser==''){
@@ -2042,6 +2044,7 @@ jQuery(document).ready(function(){
         }
       }
       window.isSpeakerView = false;
+      sessionStorage.setItem("isSpeakerView", "0"); //Set value in session storage to manage it on Refresh
     }
   });
 }); 

@@ -38,7 +38,7 @@ function startMicrophoneTesting(){
             jQuery('body #test-device-myVolume').css('width', volume+'%')
 
             /* Clear Interval when stream is published */
-            if(sessionStorage.getItem("deviceTested")=="Yes"){
+            if(sessionStorage.getItem("preCallDeviceTested")=="1"){
                 clearInterval(currStreamInterval);
             }
         }
