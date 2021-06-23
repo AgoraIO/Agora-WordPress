@@ -1795,6 +1795,9 @@ function joinAsHost(){
     jQuery("script#wp-agora-raise-hand-js").remove();
   }
 
+  sessionStorage.setItem("joinAsHostApprovedUserId", window.userID);
+  sessionStorage.setItem("raisedHandReqUserId", 0);
+
   jQuery("link#wp-agora-io-chat-fab-css").remove();
 
   window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
@@ -1805,7 +1808,6 @@ function joinAsHost(){
     mainElm.html(res);
     appendDivWithAllStreamHiddenInGhostMode();
     apply_global_colors();
-    sessionStorage.setItem("joinAsHostApproved", "1");
 
   }).fail(function(err) {
     console.error('API Error:', err.responseJSON ? err.responseJSON.errors : err);

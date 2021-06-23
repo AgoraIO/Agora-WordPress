@@ -79,7 +79,8 @@ $remoteSpeakersPos = isset($settingssettings['agora-remote-speakers-position']) 
     else{
       window.addEventListener('load', function() {
         /* Check if Raise Hand Request was accepted - on Refresh (using session storage) */
-        if(sessionStorage.getItem("joinAsHostApproved") == "1"){
+        /* In joinAsHostApprovedUserId, there will be window.userId - that will be 0 for logged-out user, so skipping that as in logged out users every time, a new user id is generated */
+        if(sessionStorage.getItem("joinAsHostApprovedUserId")!=0 && sessionStorage.getItem("joinAsHostApprovedUserId") == window.userID){
           joinAsHost();
         } else {
           handleOnLoad();
@@ -312,6 +313,7 @@ $remoteSpeakersPos = isset($settingssettings['agora-remote-speakers-position']) 
     function raiseHandRequestRejected(){
       alert("Your request is rejected");
       jQuery("#cancelRaiseHand").attr("id", "raiseHand");
+      sessionStorage.setItem("raisedHandReqUserId", 0);
     }
 
     // join a channel

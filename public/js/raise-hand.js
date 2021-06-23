@@ -18,7 +18,7 @@
             }
             try{
                 window.AGORA_RTM_UTILS.sendChannelMessage(msg);
-                alert("Your Raise hand request is sent.");
+                alert("Your Raise hand request has been sent.");
             } catch(e) {
 
             }
@@ -38,6 +38,7 @@
                         window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
                         jQuery("#raiseHand").attr("id", "cancelRaiseHand");
                         jQuery("#cancelRaiseHand i").attr('title', 'Cancel Raise Hand Request');
+                        sessionStorage.setItem("raisedHandReqUserId", window.userID);
                         raisedHand = true;
                         alert("Your Raise hand request is sent.");
                     } catch(e){
