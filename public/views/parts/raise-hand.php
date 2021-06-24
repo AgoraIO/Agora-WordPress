@@ -24,15 +24,6 @@
         arleneLib.setAttribute('id', 'wp-agora-raise-hand-js');
         arleneLib.async = true;
         headTag.appendChild(arleneLib);
-
-        if(window.agoraMode == 'audience'){
-            /* If user has raised hand and the refresh, skipping 0 - for logged out users, as on refresh, a random uid will be generated. */
-            if(sessionStorage.getItem("raisedHandReqUserId")!=0 && sessionStorage.getItem("raisedHandReqUserId") == window.userID){
-                jQuery("#raiseHand").attr("id", "cancelRaiseHand");
-                jQuery("#cancelRaiseHand i").attr('title', 'Cancel Raise Hand Request');
-            }
-        }
-
     } else {
         if(jQuery("script#wp-agora-raise-hand-js").length > 0){
             jQuery("#wp-agora-raise-hand-js").remove();

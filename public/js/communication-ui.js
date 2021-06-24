@@ -109,11 +109,15 @@ window.AGORA_COMMUNICATION_UI = {
 
     if (!localStream.userMuteAudio) {
       localStream.muteAudio(); // disable the local audio
-      sessionStorage.setItem("muteAudio", "1"); //save value in session storage to maintain it's state on refresh
+      if(canHandleStateOnRefresh()){
+        sessionStorage.setItem("muteAudio", "1"); //save value in session storage to maintain it's state on refresh
+      }
       window.AGORA_UTILS.toggleVisibility("#mute-overlay", true); // show the muted mic icon
     } else {
       localStream.unmuteAudio(); // enable the local mic
-      sessionStorage.setItem("muteAudio", "0"); //save value in session storage to maintain it's state on refresh
+      if(canHandleStateOnRefresh()){
+        sessionStorage.setItem("muteAudio", "0"); //save value in session storage to maintain it's state on refresh
+      }
       window.AGORA_UTILS.toggleVisibility("#mute-overlay", false); // hide the muted mic icon
     }
     showRaiseHandInCommunication();
@@ -126,12 +130,16 @@ window.AGORA_COMMUNICATION_UI = {
 
     if (!localStream.userMuteVideo) {
       localStream.muteVideo(); // disable the local video
-      sessionStorage.setItem("muteVideo", "1"); //save value in session storage to maintain it's state on refresh
+      if(canHandleStateOnRefresh()){
+        sessionStorage.setItem("muteVideo", "1"); //save value in session storage to maintain it's state on refresh
+      }
       handleMutedVideoBackgroundColor(localStream.getId(), 'local');
       window.AGORA_UTILS.toggleVisibility("#no-local-video", true); // show the user icon when video is disabled
     } else {
       localStream.unmuteVideo(); // enable the local video
-      sessionStorage.setItem("muteVideo", "0"); //save value in session storage to maintain it's state on refresh
+      if(canHandleStateOnRefresh()){
+        sessionStorage.setItem("muteVideo", "0"); //save value in session storage to maintain it's state on refresh
+      }
       window.AGORA_UTILS.toggleVisibility("#no-local-video", false); // hide the user icon when video is enabled
       window.AGORA_COMMUNICATION_UI.logCameraDevices();
     }

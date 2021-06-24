@@ -312,8 +312,11 @@ $remoteSpeakersPos = isset($settingssettings['agora-remote-speakers-position']) 
 
     function raiseHandRequestRejected(){
       alert("Your request is rejected");
+      jQuery("#cancelRaiseHand .hand-icon").attr("title", "Raise Hand");
       jQuery("#cancelRaiseHand").attr("id", "raiseHand");
-      sessionStorage.setItem("raisedHandReqUserId", 0);
+      if(canHandleStateOnRefresh()){
+        sessionStorage.removeItem("raisedHandReqUserId");
+      }
     }
 
     // join a channel

@@ -3,8 +3,21 @@
 
 	let raisedHand = false;
 
-    /* When user raises hand */
-    jQuery("body").on("click","#raiseHand", function handleRaiseHandRequest() {
+    if(window.agoraMode == 'audience'){
+
+        /* Handle On Page Refresh */
+
+        /* If user has raised hand and the refresh, skipping 0 - for logged out users, as on refresh, a random uid will be generated. */
+        if(sessionStorage.getItem("raisedHandReqUserId")!=0 && sessionStorage.getItem("raisedHandReqUserId") == window.userID){
+            jQuery("#raiseHand").attr("id", "cancelRaiseHand");
+            jQuery("#cancelRaiseHand .hand-icon").attr('title', 'Cancel Raise Hand Request');
+            
+            //Again Send Peer Message if user has raised the hand, as we are updating the request object when user leave
+            handleRaiseHandRequest('raiseHandOnRefresh');
+        }
+    }
+
+    function handleRaiseHandRequest(cond='') {
         if(window.agoraMode == 'communication'){
             let userName = 'Guest User with id - '+window.localStreams.uid;
             if(typeof window.wp_username!='undefined' && window.wp_username!=""){
@@ -27,20 +40,31 @@
                 const adminUserRTMId = generateRTMUidfromStreamId(window.adminUser);
                 if(members.indexOf(adminUserRTMId) > -1){
 
+                    let userName = 'Guest User with id - '+window.audienceUserId;
+                    if(typeof window.wp_username!='undefined' && window.wp_username!=""){
+                        userName = window.wp_username;
+                    }
+
                     let memberId = adminUserRTMId;
                     const msg = {
                         description: undefined,
                         messageType: 'TEXT',
                         rawMessage: undefined,
-                        text: 'RAISE-HAND-REQUEST-'+ window.audienceUserId
+                        text: 'RAISE-HAND-REQUEST-' + userName
                     }
                     try{
                         window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
                         jQuery("#raiseHand").attr("id", "cancelRaiseHand");
-                        jQuery("#cancelRaiseHand i").attr('title', 'Cancel Raise Hand Request');
-                        sessionStorage.setItem("raisedHandReqUserId", window.userID);
+                        jQuery("#cancelRaiseHand .hand-icon").attr('title', 'Cancel Raise Hand Request');
+                        if(canHandleStateOnRefresh()){
+                            sessionStorage.setItem("raisedHandReqUserId", window.userID);
+                        }
                         raisedHand = true;
-                        alert("Your Raise hand request is sent.");
+
+                        //Not show alert on Page Refresh
+                        if(cond!='raiseHandOnRefresh'){
+                            alert("Your Raise hand request has been sent.");
+                        }
                     } catch(e){
 
                     }
@@ -57,6 +81,11 @@
         // raisedHand = true;
 
 
+    }
+
+    /* When user raises hand */
+    jQuery("body").on("click","#raiseHand", function(){
+        handleRaiseHandRequest();
     });
 
     /* When user cancel raise hand request */
@@ -76,7 +105,10 @@
                 try{
                     window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
                     jQuery("#cancelRaiseHand").attr("id", "raiseHand");
-                    jQuery("#raiseHand i").attr('title', 'Raise Hand');
+                    jQuery("#raiseHand .hand-icon").attr('title', 'Raise Hand');
+                    if(canHandleStateOnRefresh()){
+                        sessionStorage.removeItem("raisedHandReqUserId");
+                    }
                     raisedHand = false;
                 } catch(e){
 

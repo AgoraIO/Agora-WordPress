@@ -942,6 +942,7 @@ let local_stream_div_id = '#local-video';
 
 jQuery(document).ready(function(){
   local_stream_div_id = window.agoraMode==='communication' ? '#local-video' : '#full-screen-video';
+  checkRaiseHandRequestsOnRefresh();
 })
 
 
@@ -1714,7 +1715,7 @@ function raiseHandRequestsContent(){
     html+="<div class='request-row'>No request!!</div>";
   } else{
     Object.keys(requests).forEach(function(key) {
-      html+="<div class='request-row' id='request-row-"+key+"'><div class='user-details'>"+requests[key].userId+"</div><button class='accept-raise-hand' id='"+key+"'>Accept</button>"+"<button class='reject-raise-hand' id='"+key+"'>Reject</button>"+"</div>";
+      html+="<div class='request-row' id='request-row-"+key+"'><div class='user-details'>"+requests[key].userDetails+"</div><button class='accept-raise-hand' id='"+key+"'>Accept</button>"+"<button class='reject-raise-hand' id='"+key+"'>Reject</button>"+"</div>";
     });
   }
   html+="</div>";
@@ -1722,9 +1723,10 @@ function raiseHandRequestsContent(){
 }
 
 /* Function to change the HTML content after Raise hand Request is processed */
-function handleRequestContentAfterProcess(memberId){
+function handleRaiseHandReqContentAfterProcess(memberId){
   delete window.raiseHandRequests[memberId];
   jQuery("body #request-row-"+memberId).remove();
+  sessionStorage.setItem("raiseHandRequests", JSON.stringify(window.raiseHandRequests));
   let totalRequests = Object.keys(window.raiseHandRequests).length;
   if(totalRequests == 0){ totalRequests = '';  }
   jQuery("body .raise-hand-requests #total-requests").html(totalRequests);
@@ -1747,7 +1749,7 @@ jQuery(document).ready(function(){
     }
     try{
       window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
-      handleRequestContentAfterProcess(memberId);
+      handleRaiseHandReqContentAfterProcess(memberId);
     } catch(e){
 
     }
@@ -1763,7 +1765,7 @@ jQuery(document).ready(function(){
     }
     try{
       window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
-      handleRequestContentAfterProcess(memberId);
+      handleRaiseHandReqContentAfterProcess(memberId);
     } catch(e){
 
     }
@@ -1794,9 +1796,10 @@ function joinAsHost(){
   if(jQuery("script#wp-agora-raise-hand-js").length>0){
     jQuery("script#wp-agora-raise-hand-js").remove();
   }
-
-  sessionStorage.setItem("joinAsHostApprovedUserId", window.userID);
-  sessionStorage.setItem("raisedHandReqUserId", 0);
+  if(canHandleStateOnRefresh()){
+    sessionStorage.setItem("joinAsHostApprovedUserId", window.userID);
+    sessionStorage.removeItem("raisedHandReqUserId");
+  }
 
   jQuery("link#wp-agora-io-chat-fab-css").remove();
 
@@ -1969,12 +1972,13 @@ async function receivePeerRTMMessage(evt) {
       jQuery("body .raise-hand-requests #total-requests").html(totalRequests);
     }
     else if (evt.detail.text.indexOf('RAISE-HAND-REQUEST-')===0) {
-      let senderRTCId = evt.detail.text.split('RAISE-HAND-REQUEST-')[1];
+      let userDetails = evt.detail.text.split('RAISE-HAND-REQUEST-')[1];
       let senderId = evt.detail.senderId;
       window.raiseHandRequests[senderId] = {
-        'userId': senderRTCId,
+        'userDetails': userDetails,
         'status' : 0
       }
+      sessionStorage.setItem("raiseHandRequests", JSON.stringify(window.raiseHandRequests));
       jQuery("body .raise-hand-requests #total-requests").html(Object.keys(window.raiseHandRequests).length);
     }
 
@@ -2029,6 +2033,20 @@ async function receivePeerRTMMessage(evt) {
 }
 /* End Function that will be run on rtm peer message event listener */
 
+/* Function to get Raise Hand Requests Lists on Refresh for Admin User */
+function checkRaiseHandRequestsOnRefresh(){
+  if(window.isAdminUser){
+    if(sessionStorage.getItem("raiseHandRequests")!=null){
+      if(typeof JSON.parse(sessionStorage.getItem("raiseHandRequests")) !='undefined'){
+        window.raiseHandRequests = JSON.parse(sessionStorage.getItem("raiseHandRequests"));
+        let totalRequests = Object.keys(window.raiseHandRequests).length;
+        if(totalRequests == 0){ totalRequests = '';  }
+        jQuery("body .raise-hand-requests #total-requests").html(totalRequests);
+      }
+    }
+  }
+}
+
 /* Function to handle layout change */
 jQuery(document).ready(function(){
   jQuery("body #change-layout-options-list").on("click", "a", function(event){
@@ -2036,7 +2054,9 @@ jQuery(document).ready(function(){
     const view = event.target.id;
     if(view == 'speaker'){
       window.isSpeakerView = true;
-      sessionStorage.setItem("isSpeakerView", "1"); //Set value in session storage to manage it on Refresh
+      if(canHandleStateOnRefresh()){
+        sessionStorage.setItem("isSpeakerView", "1"); //Set value in session storage to manage it on Refresh
+      }
     } else {
       /* Remove large screen view if user has not pinned any user (it's default Active speaker user) and the screen share stream is not in large screen */
       if(window.pinnedUser==''){
@@ -2052,7 +2072,9 @@ jQuery(document).ready(function(){
         }
       }
       window.isSpeakerView = false;
-      sessionStorage.setItem("isSpeakerView", "0"); //Set value in session storage to manage it on Refresh
+      if(canHandleStateOnRefresh()){
+        sessionStorage.setItem("isSpeakerView", "0"); //Set value in session storage to manage it on Refresh
+      }
     }
   });
 }); 
@@ -2067,5 +2089,14 @@ function showRaiseHandInCommunication(){
     } else {
       jQuery("body #raiseHand").hide();
     }
+  }
+}
+
+/* Function to check that do we need to manage state for this user */
+function canHandleStateOnRefresh(){
+  if(window.userID != 0){ // Save Value only for loggd-in users as on refresh, a new user with randowm uid will be generated
+    return true;
+  } else {
+    return false;
   }
 }
