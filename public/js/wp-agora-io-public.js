@@ -1722,8 +1722,14 @@ function raiseHandRequestsContent(){
   return html;
 }
 
-/* Function to change the HTML content after Raise hand Request is processed */
-function handleRaiseHandReqContentAfterProcess(memberId){
+/* Function to change the HTML content after Raise hand Request is received - add it */
+function addNewRaiseHandReqContent(){
+  jQuery("body .raise-hand-requests #total-requests").html(Object.keys(window.raiseHandRequests).length);
+  jQuery("body").find("#view-raise-hand-requests-modal #raise-hand-requests-list").html(raiseHandRequestsContent());
+}
+
+/* Function to change the HTML content after Raise hand Request is processed - remove it */
+function removeRaiseHandReqContent(memberId){
   delete window.raiseHandRequests[memberId];
   jQuery("body #request-row-"+memberId).remove();
   sessionStorage.setItem("raiseHandRequests", JSON.stringify(window.raiseHandRequests));
@@ -1749,7 +1755,7 @@ jQuery(document).ready(function(){
     }
     try{
       window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
-      handleRaiseHandReqContentAfterProcess(memberId);
+      removeRaiseHandReqContent(memberId);
     } catch(e){
 
     }
@@ -1765,7 +1771,7 @@ jQuery(document).ready(function(){
     }
     try{
       window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
-      handleRaiseHandReqContentAfterProcess(memberId);
+      removeRaiseHandReqContent(memberId);
     } catch(e){
 
     }
@@ -1969,7 +1975,8 @@ async function receivePeerRTMMessage(evt) {
       delete window.raiseHandRequests[senderId];
       let totalRequests = Object.keys(window.raiseHandRequests).length;
       if(totalRequests == 0){ totalRequests = '';  }
-      jQuery("body .raise-hand-requests #total-requests").html(totalRequests);
+      //jQuery("body .raise-hand-requests #total-requests").html(totalRequests);
+      removeRaiseHandReqContent(senderId);
     }
     else if (evt.detail.text.indexOf('RAISE-HAND-REQUEST-')===0) {
       let userDetails = evt.detail.text.split('RAISE-HAND-REQUEST-')[1];
@@ -1979,7 +1986,8 @@ async function receivePeerRTMMessage(evt) {
         'status' : 0
       }
       sessionStorage.setItem("raiseHandRequests", JSON.stringify(window.raiseHandRequests));
-      jQuery("body .raise-hand-requests #total-requests").html(Object.keys(window.raiseHandRequests).length);
+      addNewRaiseHandReqContent();
+      //jQuery("body .raise-hand-requests #total-requests").html(Object.keys(window.raiseHandRequests).length);
     }
 
     /* Handle raise Hand Response */
