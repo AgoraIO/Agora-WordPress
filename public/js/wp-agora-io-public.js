@@ -89,7 +89,7 @@ function getCameraDevices() {
 
 
     jQuery('#camera-list a').click(function(event) {
-      changeCameraDevice(event.target.id)
+      n(event.target.id)
     });
 
     jQuery('#test-device-camera-list select').on('change', function() {
@@ -1715,7 +1715,7 @@ function raiseHandRequestsContent(){
     html+="<div class='request-row'>No request!!</div>";
   } else{
     Object.keys(requests).forEach(function(key) {
-      html+="<div class='request-row' id='request-row-"+key+"'><div class='user-details'>"+requests[key].userDetails+"</div><button class='accept-raise-hand' id='"+key+"'>Accept</button>"+"<button class='reject-raise-hand' id='"+key+"'>Reject</button>"+"</div>";
+      html+="<div class='request-row' id='request-row-"+key+"'><div class='user-details'>"+requests[key].userDetails+"</div><div class='button_accept_reject'><button class='accept-raise-hand' id='"+key+"'>Accept</button>"+"<button class='reject-raise-hand' id='"+key+"'>Reject</button></div>"+"</div>";
     });
   }
   html+="</div>";

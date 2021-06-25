@@ -783,14 +783,14 @@
 /*
  * Communication Chat
  */
-/* .agora .fabs {
+.agora .fabs {
   bottom: 0;
   right: 0;
   position: absolute;
   z-index: 1031;
-} */
+}
 
-.agora .fabs {
+.agora .fabs.raise-hand-icon-fabs {
   position: absolute;
   bottom: 20px;
   left: 50%;
@@ -798,6 +798,9 @@
   background: rgba(0, 0, 0, 0.5);
   padding: 10px;
   border-radius: 10px;
+  right: unset;
+  z-index: 99;
+  width: auto;
 }
 
 .agora .fabs .fas {
@@ -1322,7 +1325,7 @@ button#exit-btn {
 /* allow/reject button */
 
 .permission-confirmation-section .actions > button {
-  padding: 5px 10px;
+  padding: 5px 15px;
   font-size: 15px;
   margin: 20px 5px;
 }
@@ -1335,4 +1338,60 @@ button#exit-btn {
 
 .raise-hand-requests > button {
   padding: 2px 7px;
+}
+
+/* modal popup ui*/
+/* allow/reject button */
+
+.accept-raise-hand,
+.reject-raise-hand {
+  padding: 5px 15px;
+  font-size: 15px;
+  margin: 20px 5px 10px;
+}
+.user-details {
+  font-size: 17px;
+}
+
+/* left and right screen user */
+.screen.agora-screen-users-left.sharescreen,
+.screen.agora-screen-users-right.sharescreen {
+  display: flex;
+}
+.screen.agora-screen-users-left.sharescreen > .screen-users,
+.screen.agora-screen-users-right.sharescreen > .screen-users {
+  flex: 0 0 25%;
+  max-width: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  max-height: 315px;
+  height: 100%;
+}
+.screen.agora-screen-users-left.sharescreen > .screenshare-container,
+.screen.agora-screen-users-right.sharescreen > .screenshare-container {
+  flex: 0 0 75%;
+  max-width: 75%;
+}
+
+/* for right screen user */
+.screen.agora-screen-users-right.sharescreen {
+  flex-direction: row-reverse;
+}
+
+/* for bottom screen user */
+.screen.agora-screen-users-bottom.sharescreen {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.button_accept_reject {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.request-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
