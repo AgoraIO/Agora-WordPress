@@ -307,6 +307,7 @@ window.AGORA_COMMUNICATION_UI = {
         let mainElm = jQuery('#agora-root').parent();
         jQuery('#agora-root').remove();
         mainElm.html(res);
+        appendDivWithAllStreamHiddenInGhostMode();
         jQuery("#raiseHand").remove();
         apply_global_colors();
     
