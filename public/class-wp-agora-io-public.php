@@ -454,6 +454,8 @@ class WP_Agora_Public {
 			}
 		}
 
+		wp_enqueue_script($this->plugin_name.'-hls-player-js', 'https://cdn.jsdelivr.net/npm/hls.js@latest', array( ), $this->version, false);
+
 		// add data before JS plugin
 		// useful to load dynamic settings and env vars
 		add_action( 'wp_footer', array($this, 'createPublicJSvars'), 1);

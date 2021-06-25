@@ -461,7 +461,7 @@ function render_agoraio_channel_form_chat_support($channel) {
   ?>
 
 <?php 
-  agora_render_setting_row('max_host_users', __('Maximum No. of hosts (Including Broadcasters)', 'agoraio'), $props, '', 'text');    
+  agora_render_setting_row('max_host_users', __('Maximum No. of hosts (Excluding Broadcasters)', 'agoraio'), $props, '', 'text');    
 ?>
 
   </table>

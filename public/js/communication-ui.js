@@ -243,12 +243,24 @@ window.AGORA_COMMUNICATION_UI = {
 
   /* Function to check if user can join as a host (If user is not in the list of broadcaster users and total remote streams is already equeal to max hosts allowed, then, user will join as audience) */
   canJoinAsHost: function(){
+    console.log("testFucCalled")
     if(window.joinAsHost == 0 && window.max_host_users_limit!=''){
+
+      //window.host_users
+
+      let obj = window.remoteStreams;
       
       let totalRemoteStreams = Object.keys(window.remoteStreams).length;
       
+      /* Exclude Screen Share Streams from count */
       let count = Object.keys(window.remoteStreams).filter(k => k in window.screenshareClients).length;
       totalRemoteStreams = totalRemoteStreams-count;
+
+      /* Exclude Host users streams from count */
+      let hostsCount = Object.keys(window.remoteStreams).filter(k => k in window.host_users).length;
+      totalRemoteStreams = totalRemoteStreams-hostsCount;
+
+      console.log("hlwtotalRemoteStreams", totalRemoteStreams)
 
       if(totalRemoteStreams>=window.max_host_users_limit){
         return false;
@@ -295,6 +307,7 @@ window.AGORA_COMMUNICATION_UI = {
         let mainElm = jQuery('#agora-root').parent();
         jQuery('#agora-root').remove();
         mainElm.html(res);
+        appendDivWithAllStreamHiddenInGhostMode();
         jQuery("#raiseHand").remove();
         apply_global_colors();
     
