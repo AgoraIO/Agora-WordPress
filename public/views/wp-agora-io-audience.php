@@ -177,8 +177,8 @@ $remoteSpeakersPos = isset($settingssettings['agora-remote-speakers-position']) 
 
         /*Hide Raise hand button in case if user joins as audience from communication channel due to users restriction limit */
         const raiseHandIcon = document.querySelector(".raise-hand-icon-fabs");
-        if(sessionStorage.getItem("channelType") == 'communication'){
-          raiseHandIcon.style.display = "none";
+        if(sessionStorage.getItem("channelType") != 'communication'){
+          raiseHandIcon.style.display = "block";
         }
 
         jQuery("#watch-live-closed").hide();
@@ -262,6 +262,11 @@ $remoteSpeakersPos = isset($settingssettings['agora-remote-speakers-position']) 
             const chatBtn = document.querySelector('#chatToggleBtn');
             if (chatBtn) {
               chatBtn.style.display = "none";
+            }
+
+            const raiseHandIcon = document.querySelector(".raise-hand-icon-fabs");
+            if (raiseHandIcon) {
+              raiseHandIcon.style.display = "none";
             }
 
             finishVideoScreen();
