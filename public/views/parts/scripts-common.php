@@ -19,6 +19,9 @@
 
   window.isSpeakerView = '<?php echo $channel->channellayout() ?>';
 
+  window.host_users = JSON.parse('<?php echo $channel->host_users(); ?>');
+  console.log("hlwwindow.host_users", window.host_users)
+
   /* Variable to store current pinned user value */
   window.pinnedUser = '';
 

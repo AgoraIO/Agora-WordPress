@@ -405,6 +405,10 @@ class WP_Agora_Channel {
     return (int)$this->properties['max_host_users'];
   }
 
+  public function host_users(){
+    return json_encode(array_flip($this->properties['host']));
+  }
+
   public function admin_user_config(){
     //return $this->admin_user();
     if($this->admin_user()!='' && $this->admin_user()==get_current_user_id()){
