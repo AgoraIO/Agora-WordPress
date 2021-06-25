@@ -412,8 +412,8 @@ jQuery(document).ready(function() {
           let position = jQuery(this).parents('td').attr('class').split('wp-agora-io-drop-')[1];
           // If the droppable element we're hovered over already contains a .draggable element, or if remote speakers position to be set as overlaid 
           // don't allow another one to be dropped on it
-          //Remote Speakers position as overlaid does not make any sense, so ignore it
-          if((jQuery(this).has('.wp-agora-io-draggable').length) || (currentComponent == 'remoteSpeakers' && position == 'overlaid')) {
+          //Remote Speakers position as overlaid does not make any sense, so ignore it. Also igored top position for chat
+          if((jQuery(this).has('.wp-agora-io-draggable').length) || (currentComponent == 'remoteSpeakers' && position == 'overlaid') || (currentComponent == 'chat' && position == 'top')) {
             jQuery(this).droppable('disable');
           }
         }
