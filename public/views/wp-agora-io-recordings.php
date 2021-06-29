@@ -215,15 +215,21 @@ function getRecordingsList($atts) {
                 $output.='<video id="video-'.$i.'" controls></video>';
 
                 $output .= '<script>';
-                $output .= "if(Hls.isSupported()){";
                 $output .= "var video = document.getElementById('video-".$i."');";
+                $output .= "if(Hls.isSupported()){";
                 $output .= "var hls = new Hls();";
                 $output .= "hls.loadSource('".$file."');";
                 $output .= "hls.attachMedia(video);";
                 $output .= "}";
 
                 $output .= "else if (video.canPlayType('application/vnd.apple.mpegurl')){";
-                $output .= "video.src = '".$file."'";
+                $output .= "video.src = '".$file."';";
+                $output .= "}";
+                $output .= " else {";
+                $output.= "var source = document.createElement('source');";
+                $output.= "source.src = '".$file."';";
+                $output.= "source.type = 'video';";
+                $output.= "video.appendChild(source);";
                 $output .= "}";
                 $output .= '</script>';
 
