@@ -81,7 +81,7 @@ class AgoraCloudRecording {
         $channelSettings    = $channel->get_properties();
         $recordingSettings = $channelSettings['recording'];
 
-        /*
+        
         //To handle the file in mp4 format - For future reference
         if($recordingSettings['protoType'] == 'individual'){
             $clientRequest = new stdClass();
@@ -89,9 +89,9 @@ class AgoraCloudRecording {
         } else{
             $clientRequest = json_decode("{}");
         }
-        */
+        
 
-        $clientRequest = json_decode("{}");
+        //$clientRequest = json_decode("{}");
         
         $params = array(
             'cname' => $data['cname'],
@@ -255,19 +255,20 @@ class AgoraCloudRecording {
         $folderName = $month.$day.$year.preg_replace('/\s+/', '', $fixedTitle);
         $folderName = $data['cid'];
         
-        $clientRequest->storageConfig->fileNamePrefix = array( $folderName );
+        //$clientRequest->storageConfig->fileNamePrefix = array( $folderName );
+        $clientRequest->storageConfig->fileNamePrefix = array($folderName, $recordingSettings['protoType']);
         
         $newToken = $this->parent->generateNewToken($data['cid'], $data['uid'], 'RTC');
         // die("<pre>".print_r($newToken, true)."</pre>");
         $clientRequest->token = $newToken;
 
-        /*
+        
         //To handle the file in mp4 format - For future reference
         if($recordingSettings['protoType'] == 'individual'){
             $clientRequest->appsCollection = new stdClass();
             $clientRequest->appsCollection->combinationPolicy = 'postpone_transcoding';
         }
-        */
+        
         $params = array(
             'cname' => $data['cname'],
             'uid' => $data['uid'],
