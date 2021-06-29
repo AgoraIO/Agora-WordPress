@@ -67,7 +67,7 @@ function getRecordingsList($atts) {
                         if (array_key_exists('HTTPS', $_SERVER) && $_SERVER["HTTPS"] == "on") {
                             $amazonawsURL = 'https://%s.s3.amazonaws.com/%s';
                         }
-                        if($fileExt == "m3u8"){
+                        if(($atts['recording_type'] == 'individual' && $fileExt == "mp4") || ($atts['recording_type'] == 'composite' && $fileExt == "m3u8")){
                             $allFiles[] = sprintf($amazonawsURL, $bucket, $filename); 
                         }
                     }
@@ -99,7 +99,7 @@ function getRecordingsList($atts) {
                     if (! empty($objectList)) {
                         foreach ($objectList as $objectInfo) {
                             $fileExt = pathinfo($objectInfo->getKey(), PATHINFO_EXTENSION);
-                            if($fileExt == "m3u8"){
+                            if(($atts['recording_type'] == 'individual' && $fileExt == "mp4") || ($atts['recording_type'] == 'composite' && $fileExt == "m3u8")){
                                 $allFiles[] = 'https://'.$bucket.'.'.$endpoint.'/'.$objectInfo->getKey();
                             }
                         }

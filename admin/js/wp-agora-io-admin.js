@@ -454,3 +454,7 @@ function agoraChatChangeLoggedin() {
 	}
 
 })( jQuery );
+
+function updateRecordingShortcode(recType){
+	console.log("hlwTestrecType", recType)
+}
