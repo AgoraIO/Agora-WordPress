@@ -106,7 +106,10 @@ $remoteSpeakersPos = isset($settingssettings['agora-remote-speakers-position']) 
       const exitBtn = jQuery('#exit-btn')
       exitBtn.hide();
       exitBtn.click(function() {
-        Object.values(window.remoteStreams).forEach(stream => stream.close());
+        //Object.values(window.remoteStreams).forEach(stream => stream.close());
+        Object.keys(window.remoteStreams).forEach(function(key) {
+          window.remoteStreams[key].stream.close()
+        });
         window.remoteStreams = {};
         finishVideoScreen();
       })
