@@ -12,7 +12,7 @@ function getRecordingsList($atts) {
 
     $output = '';
 
-    if(isset($atts['channel_id'])){
+    if(isset($atts['channel_id']) && isset($atts['recording_type'])){
 
         $channel_id = $atts['channel_id'];
         try{
@@ -36,7 +36,7 @@ function getRecordingsList($atts) {
 
             $allFiles = array();
 
-            $keyname = $channel_id.'/';
+            $keyname = $channel_id.'/'.$atts['recording_type'].'/';
 
             if($recordingSettings['vendor'] == 1){ //Amazon S3
 
