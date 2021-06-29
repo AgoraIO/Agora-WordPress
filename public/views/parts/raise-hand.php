@@ -4,7 +4,7 @@ style="<?php if(!isset($channelSettings['type']) || $channelSettings['type'] != 
 <!-- Hide Raise Hand Icon by defeault for audience mode in boradcast channel type -->
 
 	<div class="raise-hand-icon" id="raiseHand">
-        <i class="far fa-hand-paper" title="Raise Hand"></i>
+        <button class="btnIcon"><i class="far fa-hand-paper" title="Raise Hand"></i></button>
     </div>
 </div>
 

@@ -280,7 +280,7 @@
   align-items: center;
   z-index: 2;
   flex-direction: column;
-  position: relative;
+  /* position: relative; */
 }
 .agora-fullscreen .agora-footer {
   width: 100%;
@@ -808,9 +808,9 @@
 }
 
 .agora .fabs .chat {
-  position: absolute;
+  /* position: absolute;
   right: 0;
-  bottom: 0;
+  bottom: 0; */
   display: none;
   opacity: 0;
 }
@@ -1365,7 +1365,7 @@ button#exit-btn {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  max-height: 315px;
+  max-height: 338px;
   height: 100%;
 }
 .screen.agora-screen-users-left.sharescreen > .screenshare-container,
@@ -1394,4 +1394,10 @@ button#exit-btn {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+/* chat position left */
+.agora .fabs .chat.chat-bottom {
+  right: -14px;
+  bottom: -14px;
 }

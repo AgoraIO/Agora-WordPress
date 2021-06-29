@@ -596,8 +596,8 @@
 /* SMARTPHONES LANDSCAPE */
 @media only screen and (min-width: 480px) {
   .agora .fabs {
-    /* width: auto; */
-    margin: 1em;
+    /* width: auto; 
+    margin: 1em;*/
   }
   .agora .chat {
     width: 300px;
@@ -680,9 +680,34 @@
   /* Firefox 4 - 18 */
   color: #bbb;
 }
+/* chat position right */
+.fabs.fabs-chat-right {
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  bottom: auto;
+  margin: 0;
+  /* height: 100%; */
+  position: absolute;
+  left: auto;
+  width: auto;
+}
 
 /* chat position left */
-.agora .fabs .chat.chat-bottom {
-  right: -14px;
-  bottom: -14px;
+.fabs.fabs-chat-left {
+  right: auto;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  bottom: auto;
+  margin: 0;
+  /* height: 100%; */
+  position: absolute;
+  left: auto;
+  width: auto;
+}
+
+/* chat position bottom */
+.fabs.fabs-chat-bottom {
+  width: auto;
 }
