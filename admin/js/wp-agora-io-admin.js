@@ -453,6 +453,11 @@ function agoraChatChangeLoggedin() {
 		// on individual, hide the layout options
 	}
 
+	jQuery(document).on('change', 'select#recording_layout', function (e) {
+		const recLayout = jQuery(this).val();
+		jQuery("body tr#recording_layout-row .recording_layout_image_section img").attr('src', plugineBaseURL+'/imgs/recordings/'+recLayout+'-layout.png');
+	});
+
 })( jQuery );
 
 function updateRecordingShortcode(recType, channel_id){

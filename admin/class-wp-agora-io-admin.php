@@ -425,7 +425,10 @@ class WP_Agora_Admin {
 		
 		$recordings_regions = WP_Agora_Public::$recordings_regions;
 		?>
-		<script> var cloudRegions = '<?php print_r(json_encode($recordings_regions)); ?>'; </script>
+		<script> 
+			var plugineBaseURL = "<?php echo plugins_url('wp-agora-io'); ?>";
+			var cloudRegions = '<?php print_r(json_encode($recordings_regions)); ?>'; 
+		</script>
 		<?php 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-agora-io-admin.js', array( 'jquery' ), $this->version, false );
 
