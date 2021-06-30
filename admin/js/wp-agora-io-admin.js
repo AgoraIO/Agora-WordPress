@@ -455,7 +455,9 @@ function agoraChatChangeLoggedin() {
 
 	jQuery(document).on('change', 'select#recording_layout', function (e) {
 		const recLayout = jQuery(this).val();
-		jQuery("body tr#recording_layout-row .recording_layout_image_section img").attr('src', plugineBaseURL+'/imgs/recordings/'+recLayout+'-layout.png');
+		const imgURL = plugineBaseURL+'/imgs/recordings/'+recLayout+'-layout.png';
+		jQuery("body tr#recording_layout-row .recording_layout_image_section a").attr('href', imgURL);
+		jQuery("body tr#recording_layout-row .recording_layout_image_section img").attr('src', imgURL);
 	});
 
 })( jQuery );
