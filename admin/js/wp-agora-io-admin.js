@@ -455,6 +455,11 @@ function agoraChatChangeLoggedin() {
 
 })( jQuery );
 
-function updateRecordingShortcode(recType){
-	console.log("hlwTestrecType", recType)
+function updateRecordingShortcode(recType, channel_id){
+
+	let shortcodeContent = '';
+	if(recType!=''){
+		shortcodeContent+=`<input type='text' onfocus='this.select();' readonly='readonly' value='[agora-recordings channel_id="${channel_id}" recording_type="${recType}"]' class='large-text code'>`
+	}
+	jQuery("body .recording-shortcode-row-"+channel_id).html(shortcodeContent);
 }
