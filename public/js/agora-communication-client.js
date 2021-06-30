@@ -134,19 +134,28 @@ function createCameraStream(uid, next) {
       const localStream = AgoraRTC.createStream(streamSpec);
 
       localStream.setVideoProfile(window.cameraVideoProfile);
-      localStream.on("accessAllowed", function() {
-        if(window.devices.cameras.length === 0 && window.devices.mics.length === 0) {
-          AgoraRTC.Logger.info('[DEBUG] : checking for cameras & mics');
-          window.AGORA_UTILS.getCameraDevices();
-          window.AGORA_UTILS.getMicDevices();
-        }
-        AgoraRTC.Logger.info("accessAllowed");
-        if(!hasVideo){
-          const msg = {
-            text: "USER_JOINED_WITHOUT_VIDEO**"+uid,
-            messageType: "TEXT"
+      localStream.on("accessAllowed", async function() {
+        
+        /* To handle the case if user allows camera and microphone access at the same time */
+        let canJoinAsHost = await window.AGORA_COMMUNICATION_UI.canJoinAsHost();
+        console.log("hlwcanJoinAsHost", canJoinAsHost)
+        
+        if(canJoinAsHost){
+          if(window.devices.cameras.length === 0 && window.devices.mics.length === 0) {
+            AgoraRTC.Logger.info('[DEBUG] : checking for cameras & mics');
+            window.AGORA_UTILS.getCameraDevices();
+            window.AGORA_UTILS.getMicDevices();
           }
-          window.AGORA_RTM_UTILS.sendChannelMessage(msg)
+          AgoraRTC.Logger.info("accessAllowed");
+          if(!hasVideo){
+            const msg = {
+              text: "USER_JOINED_WITHOUT_VIDEO**"+uid,
+              messageType: "TEXT"
+            }
+            window.AGORA_RTM_UTILS.sendChannelMessage(msg)
+          }
+        } else {
+          window.AGORA_COMMUNICATION_UI.joinAsAudience();
         }
       });
 
