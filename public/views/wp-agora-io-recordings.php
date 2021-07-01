@@ -210,54 +210,59 @@ function getRecordingsList($atts) {
 
             if(count($allFiles)>0){ 
                 $i=0;
+                $output.= '<div class="agora_io_video_recording_container">';
                 foreach($allFiles as $file){ 
 
-                $output.='<video id="video-'.$i.'" controls></video>';
+                    $output.='<video id="video-'.$i.'" controls></video>';
 
-                $output .= '<script>';
-                $output .= "var video = document.getElementById('video-".$i."');";
-                $output .= "if(Hls.isSupported()){";
-                $output .= "var hls = new Hls();";
-                $output .= "hls.loadSource('".$file."');";
-                $output .= "hls.attachMedia(video);";
-                $output .= "}";
+                    $output .= '<script>';
+                    $output .= "var video = document.getElementById('video-".$i."');";
+                    $output .= "if(Hls.isSupported()){";
+                    $output .= "var hls = new Hls();";
+                    $output .= "hls.loadSource('".$file."');";
+                    $output .= "hls.attachMedia(video);";
+                    $output .= "}";
 
-                $output .= "else if (video.canPlayType('application/vnd.apple.mpegurl')){";
-                $output .= "video.src = '".$file."';";
-                $output .= "}";
-                $output .= " else {";
-                $output.= "var source = document.createElement('source');";
-                $output.= "source.src = '".$file."';";
-                $output.= "source.type = 'video';";
-                $output.= "video.appendChild(source);";
-                $output .= "}";
-                $output .= '</script>';
+                    $output .= "else if (video.canPlayType('application/vnd.apple.mpegurl')){";
+                    $output .= "video.src = '".$file."';";
+                    $output .= "}";
+                    $output .= " else {";
+                    $output.= "var source = document.createElement('source');";
+                    $output.= "source.src = '".$file."';";
+                    $output.= "source.type = 'video';";
+                    $output.= "video.appendChild(source);";
+                    $output .= "}";
+                    $output .= '</script>';
 
-                // echo $file;
-                  /*  ?>
-                <video id="video-<?php echo $i; ?>" controls></video>
-                <script>
-                if(Hls.isSupported())
-                {
-                    var video = document.getElementById('video-<?php echo $i; ?>');
-                    var hls = new Hls();
-                    hls.loadSource("<?php echo $file; ?>");
-                    hls.attachMedia(video);
-                    hls.on(Hls.Events.MANIFEST_PARSED,function()
+                    // echo $file;
+                    /*  ?>
+                    <video id="video-<?php echo $i; ?>" controls></video>
+                    <script>
+                    if(Hls.isSupported())
                     {
-                        //video.play();
-                    });
-                }
-                else if (video.canPlayType('application/vnd.apple.mpegurl'))
-                {
-                    video.src = "<?php echo $file; ?>";
-                    video.addEventListener('canplay',function()
+                        var video = document.getElementById('video-<?php echo $i; ?>');
+                        var hls = new Hls();
+                        hls.loadSource("<?php echo $file; ?>");
+                        hls.attachMedia(video);
+                        hls.on(Hls.Events.MANIFEST_PARSED,function()
+                        {
+                            //video.play();
+                        });
+                    }
+                    else if (video.canPlayType('application/vnd.apple.mpegurl'))
                     {
-                        //video.play();
-                    });
-                }
-                </script>
-            <?php */ $i++; } }
+                        video.src = "<?php echo $file; ?>";
+                        video.addEventListener('canplay',function()
+                        {
+                            //video.play();
+                        });
+                    }
+                    </script>
+                    <?php */ 
+                    $i++; 
+                } 
+                $output.= '</div>';
+            }
         } catch(Exception $e) {
             print_r($e);
             return;
