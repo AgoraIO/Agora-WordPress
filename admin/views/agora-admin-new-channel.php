@@ -37,7 +37,12 @@ function agora_render_setting_row_select($id, $title, $options, $settings, $pref
     <th scope="row"><label for="<?php echo $input_id ?>"><?php echo $title; ?></label></th>
     <td>
       <select id="<?php echo $input_id ?>" name="<?php echo $input_id ?>" style="<?php if($id == "recording_layout"){ echo "float:left;"; } ?>">
-        <?php foreach ($options as $key => $value) {
+        <?php 
+        //If no layout is selected default layout will be best fit
+        if($id == "recording_layout" && $settings[$input_id]==''){
+          $settings[$input_id] = 1;
+        }
+        foreach ($options as $key => $value) {
           $selected = ($settings[$input_id]==$key) ? 'selected="selected"' : '';
           echo '<option value="'.$key.'" '.$selected.'>'.$value.'</option>';
         } ?>
