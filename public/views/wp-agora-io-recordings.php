@@ -213,7 +213,7 @@ function getRecordingsList($atts) {
                 $output.= '<div class="agora_io_video_recording_container">';
                 foreach($allFiles as $file){ 
 
-                    $output.='<video id="video-'.$i.'" controls></video>';
+                    $output.='<div class="agora_io_video_container"><video id="video-'.$i.'" controls></video></div>';
 
                     $output .= '<script>';
                     $output .= "var video = document.getElementById('video-".$i."');";
