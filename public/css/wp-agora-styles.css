@@ -1420,7 +1420,7 @@ button#exit-btn {
   max-width: 1200px !important;
   margin: auto;
   width: 100%;
-  background: green;
+  /* background: green; */
 }
 .agora_io_video_container > video {
   width: 100%;

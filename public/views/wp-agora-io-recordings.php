@@ -211,6 +211,11 @@ function getRecordingsList($atts) {
             if(count($allFiles)>0){ 
                 $i=0;
                 $output.= '<div class="agora_io_video_recording_container">';
+
+                if(isset($atts['recording_type']) && ($atts['recording_type'] == 'individual')){
+                    $output.= '<div class="recording_tooltip">If your recording is not available right now, please try after some time as it may take some time to process ..</div>';
+                }
+
                 foreach($allFiles as $file){ 
 
                     $output.='<div class="agora_io_video_container"><video id="video-'.$i.'" controls></video></div>';
