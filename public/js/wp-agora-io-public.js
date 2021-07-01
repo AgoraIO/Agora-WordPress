@@ -2108,3 +2108,19 @@ function canHandleStateOnRefresh(){
     return false;
   }
 }
+
+/* Handle Streaming Controls Icons on Exiting Full Screen */
+if (document.addEventListener) {
+  document.addEventListener('webkitfullscreenchange', exitHandler, false);
+  document.addEventListener('mozfullscreenchange', exitHandler, false);
+  document.addEventListener('fullscreenchange', exitHandler, false);
+  document.addEventListener('MSFullscreenChange', exitHandler, false);
+}
+
+function exitHandler() {
+  if (!document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+     if(jQuery("body #agora-root").hasClass('agora-fullscreen')){
+       jQuery("body #agora-root").removeClass('agora-fullscreen');
+     }
+  }
+}
