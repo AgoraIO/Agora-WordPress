@@ -296,3 +296,15 @@
   float: left;
   margin-left: 10px;
 }
+
+
+td.recordings.column-recordings > select, td.recordings.column-recordings > span {
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+td.recordings.column-recordings {
+    display: flex;
+}
+
+
