@@ -453,4 +453,20 @@ function agoraChatChangeLoggedin() {
 		// on individual, hide the layout options
 	}
 
+	jQuery(document).on('change', 'select#recording_layout', function (e) {
+		const recLayout = jQuery(this).val();
+		const imgURL = plugineBaseURL+'/imgs/recordings/'+recLayout+'-layout.png';
+		jQuery("body tr#recording_layout-row .recording_layout_image_section a").attr('href', imgURL);
+		jQuery("body tr#recording_layout-row .recording_layout_image_section img").attr('src', imgURL);
+	});
+
 })( jQuery );
+
+function updateRecordingShortcode(recType, channel_id){
+
+	let shortcodeContent = '';
+	if(recType!=''){
+		shortcodeContent+=`<input type='text' onfocus='this.select();' readonly='readonly' value='[agora-recordings channel_id="${channel_id}" recording_type="${recType}"]' class='large-text code'>`
+	}
+	jQuery("body .recording-shortcode-row-"+channel_id).html(shortcodeContent);
+}

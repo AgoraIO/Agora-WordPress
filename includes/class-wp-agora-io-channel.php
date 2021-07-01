@@ -452,12 +452,37 @@ class WP_Agora_Channel {
     }
   }
 
-  public function shortcode() {
-    $type = $this->properties['type'];
-    if($type==='broadcast') {
-      return '[agora-broadcast channel_id="'.$this->id.'"]';
-    } else if($type==='communication') {
-      return '[agora-communication channel_id="'.$this->id.'"]';
+  public function isrecordingSettingsDone(){
+    //$this->properties['recording']['protoType']
+    $recordingSettings = $this->properties['recording'];
+
+    $response = true;
+
+    foreach($recordingSettings as $setting=>$value){
+      if($value == ''){
+        $response = false;
+        break;
+      }
+    }
+    
+    return $response;
+  }
+
+  public function getRecordingType(){
+    return $this->properties['recording']['protoType'];
+  }
+
+  public function shortcode($type='') {
+    if($type == 'recording'){
+      $recording_type = $this->properties['recording']['protoType'];
+      return '[agora-recordings channel_id="'.$this->id.'" recording_type="'.$recording_type.'"]';
+    } else {
+      $type = $this->properties['type'];
+      if($type==='broadcast') {
+        return '[agora-broadcast channel_id="'.$this->id.'"]';
+      } else if($type==='communication') {
+        return '[agora-communication channel_id="'.$this->id.'"]';
+      }
     }
   }
 

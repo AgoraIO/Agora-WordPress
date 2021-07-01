@@ -36,12 +36,27 @@ function agora_render_setting_row_select($id, $title, $options, $settings, $pref
   <tr id="<?php echo $id; ?>-row">
     <th scope="row"><label for="<?php echo $input_id ?>"><?php echo $title; ?></label></th>
     <td>
-      <select id="<?php echo $input_id ?>" name="<?php echo $input_id ?>">
+      <select id="<?php echo $input_id ?>" name="<?php echo $input_id ?>" style="<?php if($id == "recording_layout"){ echo "float:left;"; } ?>">
         <?php foreach ($options as $key => $value) {
           $selected = ($settings[$input_id]==$key) ? 'selected="selected"' : '';
           echo '<option value="'.$key.'" '.$selected.'>'.$value.'</option>';
         } ?>
       </select>
+
+      <?php 
+      /* Add and show recording layout images with the option */
+      if($id == "recording_layout"){ 
+        $layoutImg = plugins_url('wp-agora-io')."/imgs/recordings/".$settings[$input_id]."-layout.png";
+        ?>
+        <div class="recording_layout_image_section">
+          <a href="<?php echo $layoutImg; ?>" target="_blank">
+            <div>
+              <img src="<?php echo $layoutImg; ?>" height="30" width="50">
+            </div>
+          </a>
+        </div>  
+      <?php } ?>
+
     </td>
   </tr>
   <?php

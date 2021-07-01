@@ -12,7 +12,7 @@ function getRecordingsList($atts) {
 
     $output = '';
 
-    if(isset($atts['channel_id'])){
+    if(isset($atts['channel_id']) && isset($atts['recording_type'])){
 
         $channel_id = $atts['channel_id'];
         try{
@@ -36,7 +36,7 @@ function getRecordingsList($atts) {
 
             $allFiles = array();
 
-            $keyname = $channel_id.'/';
+            $keyname = $channel_id.'/'.$atts['recording_type'].'/';
 
             if($recordingSettings['vendor'] == 1){ //Amazon S3
 
@@ -67,7 +67,7 @@ function getRecordingsList($atts) {
                         if (array_key_exists('HTTPS', $_SERVER) && $_SERVER["HTTPS"] == "on") {
                             $amazonawsURL = 'https://%s.s3.amazonaws.com/%s';
                         }
-                        if($fileExt == "m3u8"){
+                        if(($atts['recording_type'] == 'individual' && $fileExt == "mp4") || ($atts['recording_type'] == 'composite' && $fileExt == "m3u8")){
                             $allFiles[] = sprintf($amazonawsURL, $bucket, $filename); 
                         }
                     }
@@ -99,7 +99,7 @@ function getRecordingsList($atts) {
                     if (! empty($objectList)) {
                         foreach ($objectList as $objectInfo) {
                             $fileExt = pathinfo($objectInfo->getKey(), PATHINFO_EXTENSION);
-                            if($fileExt == "m3u8"){
+                            if(($atts['recording_type'] == 'individual' && $fileExt == "mp4") || ($atts['recording_type'] == 'composite' && $fileExt == "m3u8")){
                                 $allFiles[] = 'https://'.$bucket.'.'.$endpoint.'/'.$objectInfo->getKey();
                             }
                         }
@@ -215,15 +215,21 @@ function getRecordingsList($atts) {
                 $output.='<video id="video-'.$i.'" controls></video>';
 
                 $output .= '<script>';
-                $output .= "if(Hls.isSupported()){";
                 $output .= "var video = document.getElementById('video-".$i."');";
+                $output .= "if(Hls.isSupported()){";
                 $output .= "var hls = new Hls();";
                 $output .= "hls.loadSource('".$file."');";
                 $output .= "hls.attachMedia(video);";
                 $output .= "}";
 
                 $output .= "else if (video.canPlayType('application/vnd.apple.mpegurl')){";
-                $output .= "video.src = '".$file."'";
+                $output .= "video.src = '".$file."';";
+                $output .= "}";
+                $output .= " else {";
+                $output.= "var source = document.createElement('source');";
+                $output.= "source.src = '".$file."';";
+                $output.= "source.type = 'video';";
+                $output.= "video.appendChild(source);";
                 $output .= "}";
                 $output .= '</script>';
 
