@@ -696,7 +696,7 @@
 /* chat position left */
 .fabs.fabs-chat-left {
   right: auto;
-  left: 0;
+  left: 0 !important;
   top: 50%;
   transform: translateY(-50%);
   bottom: auto;
