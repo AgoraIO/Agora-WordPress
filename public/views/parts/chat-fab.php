@@ -1,12 +1,16 @@
 <?php
 $chatPos = isset($agora->settings['agora-chat-position']) ? strtolower($agora->settings['agora-chat-position']) : '';
 ?>
-
-<div class="fabs fabs-chat-<?php if($chatPos == '') { echo 'overlaid'; } else { echo $chatPos; } ?>">
-	<a id="chatToggleBtn" class="fab" style="display: none">
+<div class="chat_position">
+<a id="chatToggleBtn" class="fab" style="display: none">
 		<i id="chat-alert" class="fas fa-bell"></i>
 		<i class="fas fa-comment"></i>
 	</a>
+
+</div>
+
+<div class="fabs fabs-chat-<?php if($chatPos == '') { echo 'overlaid'; } else { echo $chatPos; } ?>">
+	
 	<div class="chat chat-<?php if($chatPos == '') { echo 'overlaid'; } else { echo $chatPos; } ?>">
 		<div class="chat_header">
 			<?php _e('Chat', 'agoraio'); ?>
