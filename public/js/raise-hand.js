@@ -117,7 +117,8 @@
 
                 }
             } else {
-                alert("You cannot cancel raise hand right now as Admin User is not available.")
+                //alert("You cannot cancel raise hand right now as Admin User is not available.")
+                showToastMsg('Error', "You cannot cancel raise hand right now as Admin User is not available.");
             }
         })
 
