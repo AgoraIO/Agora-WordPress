@@ -2007,7 +2007,7 @@ async function receivePeerRTMMessage(evt) {
         await window.AGORA_AUDIENCE.agoraLeaveChannel();
         joinAsHost();
       } else {
-        showToastMsg('Error', "You cannot raise hand as agora host limit is reached.");
+        showToastMsg('Error', "You cannot raise hand as host limit has been reached.");
       }
     }
 
@@ -2134,7 +2134,7 @@ async function canJoinAsHostByAgoraLimit(){
   totalRemoteStreams = totalRemoteStreams-count;
   console.log("hlwcheckHosttotalRemoteStreams", totalRemoteStreams)
 
-  if(totalRemoteStreams<2){
+  if(totalRemoteStreams<17){
     return true;
   } else{
     return false;

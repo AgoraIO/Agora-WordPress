@@ -78,7 +78,7 @@
                     }
                 })
             } else {
-                showToastMsg('Error', "You cannot raise hand as agora host limit is reached.");
+                showToastMsg('Error', "You cannot raise hand as host limit has been reached.");
             }
         }
 
