@@ -1427,3 +1427,18 @@ button#exit-btn {
   width: 100%;
   height: 100%;
 }
+
+.raise-hand-requests > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.raise-hand-requests > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.raise-hand-requests > button > i {
+  padding-right: 5px;
+}
