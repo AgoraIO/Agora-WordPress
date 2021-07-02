@@ -21,7 +21,7 @@ class Agora_Channels_List_Table extends WP_List_Table {
       'title' => __( 'Title', 'agoraio' ),
       'type' => __( 'Type', 'agoraio' ),
       'shortcode' => __( 'Shortcode', 'agoraio' ),
-      'recordings' => __( 'Rcecordings', 'agoraio' ),
+      'recordings' => __( 'Recordings', 'agoraio' ),
       'date' => __( 'Date', 'agoraio' ),
     );
 

@@ -47,7 +47,7 @@ if (array_key_exists("chat_support_loggedin", $channelSettings) && $channelSetti
         	</button>
         	<div id="change-layout-options-list" class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" id="grid">Grid</a>
-                <a class="dropdwn-item" id="speaker">Speaker</a>
+                <a class="dropdown-item" id="speaker">Speaker</a>
             </div>
             <small class="btn-title"><?php _e('Layout', 'agoraio') ?></small>
         </div>

@@ -641,6 +641,7 @@
   position: absolute;
   top: 88px;
   left: 7px;
+  z-index: 9;
 }
 
 .toast:not(:last-child) {
@@ -1049,7 +1050,7 @@ button#exit-btn {
 /*.user .mute-overlay {  position: absolute;  z-index: 3;    left: calc(50% - 14px);  font-size: 1.5em;  padding: 2px 0 0 2px;  display: none; }*/
 .user .mute-overlay {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   left: 0;
   font-size: 1em;
   padding: 10px;
