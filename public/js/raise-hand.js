@@ -31,7 +31,8 @@
             }
             try{
                 window.AGORA_RTM_UTILS.sendChannelMessage(msg);
-                alert("Your Raise hand request has been sent.");
+                //alert("Your Raise hand request has been sent.");
+                showToastMsg('Raise Hand Request', "Your Raise hand request has been sent.");
             } catch(e) {
 
             }
@@ -63,13 +64,15 @@
 
                         //Not show alert on Page Refresh
                         if(cond!='raiseHandOnRefresh'){
-                            alert("Your Raise hand request has been sent.");
+                            //alert("Your Raise hand request has been sent.");
+                            showToastMsg('Raise Hand Request', "Your Raise hand request has been sent.");
                         }
                     } catch(e){
 
                     }
                 } else {
-                    alert("You cannot raise hand right now as Admin User is not available.")
+                    //alert("You cannot raise hand right now as Admin User is not available.")
+                    showToastMsg('Error', "You cannot raise hand right now as Admin User is not available.");
                 }
             })
         }

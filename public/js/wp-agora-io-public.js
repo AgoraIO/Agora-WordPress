@@ -1870,7 +1870,8 @@ function loadChatApp() {
 
       if(evt.detail.text.indexOf('RAISE-HAND-')===0){
         let sendName = evt.detail.text.split('RAISE-HAND-')[1];
-        alert(sendName+" has raised the hand.");
+        //alert(sendName+" has raised the hand.");
+        showToastMsg('Raised Hand', sendName+" has raised the hand.");
       }
       else if (evt.detail.text.indexOf('USER_JOINED_WITHOUT_')===0) {
         const pos = evt.detail.text.indexOf('**') + 2;
@@ -2098,6 +2099,13 @@ function showRaiseHandInCommunication(){
       jQuery("body #raiseHand").hide();
     }
   }
+}
+
+function showToastMsg(title, msg){
+  document.getElementById('agora-toast-title').innerText = title;
+  document.getElementById('agora-toast-body').innerText = msg;
+
+  jQuery('.toast').toast('show')
 }
 
 /* Function to check that do we need to manage state for this user */
