@@ -144,6 +144,7 @@
   margin: 0 auto;
   display: none;
   text-align: center;
+  max-height: 100%;
 }
 .agora .screen.sharescreen .no-video-overlay {
   font-size: 1.8em;
