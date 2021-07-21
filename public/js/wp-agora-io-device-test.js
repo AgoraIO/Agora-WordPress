@@ -8,7 +8,7 @@ jQuery(document).ready(function(){
 
         let volume_indicator_div = '<span class="test-device-volumeScaleHolder"><span id="test-device-progressBar"><span id="test-device-myVolume"></span></span></span>';
         let camera_devices_div = "<div class='d-flex_align'><span>Camera</span><div id='test-device-camera-list'><select id='test-device-camera-options'></select></div></div>";
-        let testMicButton = "<button onClick='startMicrophoneTesting()'>Start</button>";
+        let testMicButton = "<button onClick='startMicrophoneTesting()'>Start Audio Test</button>";
         let mic_devices_div = "<div class='d-flex_align'><span>Microphone </span><div id='test-device-mic-list'><select id='test-device-mic-options'></select></div></div><div id='test_microphone_div'>"+testMicButton+"</div>";
         let action_button_div = "<div class='action-buttons'><button class='click_to_join'>Click to Join</button></div>";
         
@@ -28,7 +28,7 @@ jQuery(document).ready(function(){
 
 /* Show Audio Level on device test - Microphone */
 function startMicrophoneTesting(){
-    jQuery("#test_microphone_div").html("<button onClick='stopMicrophoneTesting()'>Stop</button>");
+    jQuery("#test_microphone_div").html("<button onClick='stopMicrophoneTesting()'>Stop Audio Test</button>");
     jQuery(".test-device-volume-indicator").show();
 
     currStreamInterval = setInterval(function(){
@@ -47,7 +47,7 @@ function startMicrophoneTesting(){
 
 /* Stop or Remove Audio Level on device test - Microphone */
 function stopMicrophoneTesting(){
-    jQuery("#test_microphone_div").html("<button onClick='startMicrophoneTesting()'>Start</button>");
+    jQuery("#test_microphone_div").html("<button onClick='startMicrophoneTesting()'>Start Audio Test</button>");
     jQuery(".test-device-volume-indicator").hide();
     if(currStreamInterval!=''){
         clearInterval(currStreamInterval);
