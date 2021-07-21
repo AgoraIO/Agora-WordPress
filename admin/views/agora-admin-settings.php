@@ -260,6 +260,7 @@
     </div>
   </div>
 
+  <?php /* ?>
   <div class="card">
     <h2 class="title">More Settings</h2>
     
@@ -289,6 +290,8 @@
 
     </div>
   </div>
+
+  <?php */ ?>
 
 <?php /* Drag-drop */ ?>
 
