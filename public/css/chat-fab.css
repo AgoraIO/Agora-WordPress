@@ -707,6 +707,11 @@
   width: auto;
 }
 
+.agora-fullscreen .fabs.fabs-chat-left, .agora-fullscreen .fabs.fabs-chat-right{
+  top: auto;
+  transform: translateY(-150%);
+}
+
 /* chat position bottom */
 .fabs.fabs-chat-bottom {
   width: auto;
