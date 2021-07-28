@@ -44,6 +44,9 @@
         <button class="agora-copy-recording-shortcode-btn">Copy</button>
     </div>
 
+    <div class="agora_recording_videos_section">
+    </div>
+
     <script>
 
     jQuery( function() {
@@ -135,6 +138,7 @@
         recording_shortcode+=']';
 
         jQuery("body #agora_recording_shortcode").html(recording_shortcode);
+        renderShortCodedata();
     });
 
     function fallbackCopyTextToClipboard(text) {
@@ -189,6 +193,7 @@
 
     jQuery(document).ready(function(){
         jQuery("body #generateRecShortcodeBtn").trigger('click');
+        renderShortCodedata();
     })
 
     jQuery('body .agora-copy-recording-shortcode-btn').hover(function(){ 
@@ -197,6 +202,24 @@
     }, function(){ 
         //jQuery(this).text(oldtext) 
     }); 
+
+    function renderShortCodedata(){
+        let data = { 
+            action: 'run_recordings_shortcode', 
+            shortcode: jQuery("body .agora_recording_shortcode_section #agora_recording_shortcode").text() 
+        };
+
+        let ajaxParams = {
+            type: 'POST',
+            url: ajaxurl, // from wp admin...
+            data
+        };
+    
+        jQuery.ajax(ajaxParams).then(function(data) {
+            console.log("recordingsShotcodeResponse", data);
+            jQuery("body .agora_recording_videos_section").html(data);
+        })
+    }
 
 
     </script>

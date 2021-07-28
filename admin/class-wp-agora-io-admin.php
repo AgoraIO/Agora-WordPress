@@ -35,6 +35,13 @@ class WP_Agora_Admin {
 		add_action('wp_ajax_save-agora-setting', array($this, 'saveAjaxSettings'));
 
 		add_action('wp_ajax_get_all_users_list', array($this, 'getAllUsersList'));
+		add_action('wp_ajax_run_recordings_shortcode', array($this, 'runRecordingShortcode'));
+	}
+
+	public function runRecordingShortcode(){
+		$shortcode = stripslashes($_POST['shortcode']);
+		echo do_shortcode($shortcode);
+		wp_die();
 	}
 
 	public function getAllUsersList(){
@@ -508,6 +515,8 @@ class WP_Agora_Admin {
 
 		/* jQuery UI drag-drop JS */
 		wp_enqueue_script( $this->plugin_name.'-jquery-ui', 'https://code.jquery.com/ui/1.12.1/jquery-ui.js', array( 'jquery' ), $this->version, false );
+
+		wp_enqueue_script($this->plugin_name.'-hls-player-js', 'https://cdn.jsdelivr.net/npm/hls.js@latest', array( ), $this->version, false);
 	}
 
 }

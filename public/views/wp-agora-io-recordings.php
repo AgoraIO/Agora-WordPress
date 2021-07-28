@@ -56,6 +56,7 @@ function getRecordingListArray($keyname, $bucketregionIndex, $accessKey, $secret
                 'Marker'    => $marker,
             ));
             $files = $result->getPath('Contents') ?: array();
+
             //$dirs = $result->getPath('CommonPrefixes/*/Prefix') ?: array();
             $marker = $result['IsTruncated'] ? end($files) : null;
             // DO WHATEVER YOU WANT WITH $files AND $dirs
@@ -64,7 +65,6 @@ function getRecordingListArray($keyname, $bucketregionIndex, $accessKey, $secret
         $result = $s3->listObjects(array('Bucket' => $bucket, 'Prefix' => $keyname));
 
         $files = $result->getPath('Contents');
-
     
 
         //$files = $result->getPath('Contents');
