@@ -525,7 +525,9 @@ function render_agoraio_channel_form_recording($channel) {
 
     agora_render_setting_row_select(
       'recording_layout',
-      __('Layout', 'agoraio'),
+      __('Layout <div class="tooltip">&#9432;
+      <span class="tooltiptext">Tooltip text</span>
+    </div>', 'agoraio'),
       array(
         1 => __('Best Fit', 'agoraio'),
         0 => __('Floating', 'agoraio'),
