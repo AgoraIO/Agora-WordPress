@@ -39,7 +39,7 @@ class WP_Agora_Admin {
 	}
 
 	public function runRecordingShortcode(){
-		$shortcode = stripslashes($_POST['shortcode']);
+		$shortcode = stripslashes(sanitize_text_field($_POST['shortcode']));
 		echo do_shortcode($shortcode);
 		wp_die();
 	}
