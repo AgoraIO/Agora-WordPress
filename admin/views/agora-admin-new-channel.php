@@ -54,11 +54,9 @@ function agora_render_setting_row_select($id, $title, $options, $settings, $pref
         $layoutImg = plugins_url('wp-agora-io')."/imgs/recordings/".$settings[$input_id]."-layout.png";
         ?>
         <div class="recording_layout_image_section">
-          <a href="<?php echo $layoutImg; ?>" target="_blank">
             <div>
               <img src="<?php echo $layoutImg; ?>" height="30" width="50">
             </div>
-          </a>
         </div>  
       <?php } ?>
 

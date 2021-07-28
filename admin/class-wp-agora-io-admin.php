@@ -165,6 +165,7 @@ class WP_Agora_Admin {
 			$this->create_agora_metaboxes_form();
 			$post_id = $post->initial() ? -1 : $post->id();
 			include_once('views/agora-admin-new-channel.php');
+			include_once('views/parts/modal-layout-image.php');
 			return;
 		}
 
@@ -174,6 +175,8 @@ class WP_Agora_Admin {
 		$this->channels_obj = new Agora_Channels_List_Table();
 		$this->channels_obj->prepare_items();
 		include_once('views/agora-admin-channels.php');
+		
+
 	}
 
 	private function create_agora_metaboxes_form() {
@@ -517,6 +520,10 @@ class WP_Agora_Admin {
 		wp_enqueue_script( $this->plugin_name.'-jquery-ui', 'https://code.jquery.com/ui/1.12.1/jquery-ui.js', array( 'jquery' ), $this->version, false );
 
 		wp_enqueue_script($this->plugin_name.'-hls-player-js', 'https://cdn.jsdelivr.net/npm/hls.js@latest', array( ), $this->version, false);
+
+		$bootstrap_js = plugin_dir_url( $this->plugin_name ) . $this->plugin_name.'/public/js/bootstrap/bootstrap.min.js';
+        wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
+
 	}
 
 }
