@@ -307,4 +307,11 @@ td.recordings.column-recordings {
     display: flex;
 }
 
+.agora_recordings_filter_inner_section {
+  float: left;
+  margin-right: 15px;
+}
 
+.agora_recording_shortcode_section{
+  clear: both;
+}
