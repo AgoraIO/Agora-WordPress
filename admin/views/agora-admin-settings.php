@@ -300,7 +300,7 @@ $remoteSpeakersPos = isset($agora_options['agora-remote-speakers-position']) ? $
 ?>
 
 <div class="card">
-  <h2 class="title">Component's Position Settings</h2>
+  <h2 class="title">UI Position Settings</h2>
 
   <div id="">
       <table id="wp-aora-io-drag-drop" >
@@ -309,7 +309,7 @@ $remoteSpeakersPos = isset($agora_options['agora-remote-speakers-position']) ? $
                   <td colspan="3" class="wp-agora-io-drop-top">
                     <div class="wp-agora-io-drop">
                       <?php if($remoteSpeakersPos == '' || $remoteSpeakersPos == 'top'){ ?>
-                        <div class="wp-agora-io-draggable remote-speakers-draggable">Remote Speakers</div>
+                        <div class="wp-agora-io-draggable remote-speakers-draggable">Speakers</div>
                       <?php } ?> 
                       <?php if($chatPos == 'top'){ ?>
                         <div class="wp-agora-io-draggable chat-draggable">Chat</div>
@@ -321,7 +321,7 @@ $remoteSpeakersPos = isset($agora_options['agora-remote-speakers-position']) ? $
                   <td width="20%" class="wp-agora-io-drop-left">
                     <div class="wp-agora-io-drop">
                       <?php if($remoteSpeakersPos == 'left'){ ?>
-                        <div class="wp-agora-io-draggable remote-speakers-draggable">Remote Speakers</div>
+                        <div class="wp-agora-io-draggable remote-speakers-draggable">Speakers</div>
                       <?php } ?>
                       <?php if($chatPos == 'left'){ ?>
                         <div class="wp-agora-io-draggable chat-draggable">Chat</div>
@@ -331,7 +331,7 @@ $remoteSpeakersPos = isset($agora_options['agora-remote-speakers-position']) ? $
                   <td width="60%" class="wp-agora-io-drop-overlaid">
                     <div class="wp-agora-io-drop">
                       <?php if($remoteSpeakersPos == 'overlaid'){ ?>
-                        <div class="wp-agora-io-draggable remote-speakers-draggable">Remote Speakers</div>
+                        <div class="wp-agora-io-draggable remote-speakers-draggable">Speakers</div>
                       <?php } ?>
                       <?php if($chatPos == '' || $chatPos == 'overlaid'){ ?>
                         <div class="wp-agora-io-draggable chat-draggable">Chat</div>
@@ -341,7 +341,7 @@ $remoteSpeakersPos = isset($agora_options['agora-remote-speakers-position']) ? $
                   <td width="20%" class="wp-agora-io-drop-right">
                     <div class="wp-agora-io-drop">
                       <?php if($remoteSpeakersPos == 'right'){ ?>
-                        <div class="wp-agora-io-draggable remote-speakers-draggable">Remote Speakers</div>
+                        <div class="wp-agora-io-draggable remote-speakers-draggable">Speakers</div>
                       <?php } ?>
                       <?php if($chatPos == 'right'){ ?>
                         <div class="wp-agora-io-draggable chat-draggable">Chat</div>
@@ -353,7 +353,7 @@ $remoteSpeakersPos = isset($agora_options['agora-remote-speakers-position']) ? $
                   <td colspan="3" class="wp-agora-io-drop-bottom">
                     <div class="wp-agora-io-drop">
                       <?php if($remoteSpeakersPos == 'bottom'){ ?>
-                        <div class="wp-agora-io-draggable remote-speakers-draggable">Remote Speakers</div>
+                        <div class="wp-agora-io-draggable remote-speakers-draggable">Speakers</div>
                       <?php } ?>
                       <?php if($chatPos == 'bottom'){ ?>
                         <div class="wp-agora-io-draggable chat-draggable">Chat</div>
