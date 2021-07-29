@@ -515,7 +515,9 @@ function render_agoraio_channel_form_recording($channel) {
 
     agora_render_setting_row_select(
       'protoType',
-      __('Type', 'agoraio'),
+      __('Type <div class="tooltip">&#9432;
+      <span class="tooltiptext">For composite recording, we are playing m3u8 and mp4 for individual.</span>
+      </div>', 'agoraio'),
       array(
         'composite' => __('Composite', 'agoraio'),
         'individual' => __('Individual', 'agoraio')
@@ -523,9 +525,7 @@ function render_agoraio_channel_form_recording($channel) {
 
     agora_render_setting_row_select(
       'recording_layout',
-      __('Layout <div class="tooltip">&#9432;
-      <span class="tooltiptext">Tooltip text</span>
-    </div>', 'agoraio'),
+      __('Layout', 'agoraio'),
       array(
         1 => __('Best Fit', 'agoraio'),
         0 => __('Floating', 'agoraio'),
