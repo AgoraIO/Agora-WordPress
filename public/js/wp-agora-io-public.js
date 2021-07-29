@@ -155,6 +155,7 @@ window.AGORA_UTILS = {
 
   getMicDevices: getMicDevices,
   getCameraDevices: getCameraDevices,
+  canJoinAsHostByAgoraLimit: canJoinAsHostByAgoraLimit,
 
   toggleFullscreen: function() {
     const root = jQuery('#agora-root');
@@ -2001,8 +2002,13 @@ async function receivePeerRTMMessage(evt) {
     /* If Raise hand Request is Accepted */
     else if(evt.detail.text.indexOf('RAISE-HAND-ACCEPTED')===0){
       console.log("Raise hand Request Accepted")
-      await window.AGORA_AUDIENCE.agoraLeaveChannel();
-      joinAsHost();
+      let canJoinAsHostByAgoraLimit = await window.AGORA_UTILS.canJoinAsHostByAgoraLimit();
+      if(canJoinAsHostByAgoraLimit){
+        await window.AGORA_AUDIENCE.agoraLeaveChannel();
+        joinAsHost();
+      } else {
+        showToastMsg('Error', "You cannot raise hand as host limit has been reached.");
+      }
     }
 
     /* Unmute audio with confirmation from Admin User */
@@ -2113,6 +2119,24 @@ function canHandleStateOnRefresh(){
   if(window.userID != 0){ // Save Value only for loggd-in users as on refresh, a new user with randowm uid will be generated
     return true;
   } else {
+    return false;
+  }
+}
+
+/* Function to check Agora Host Limit during raise hand and raise hand approval in broadcast channel */
+async function canJoinAsHostByAgoraLimit(){
+  let obj = window.remoteStreams;
+      
+  let totalRemoteStreams = Object.keys(window.remoteStreams).length;
+  
+  /* Exclude Screen Share Streams from count */
+  let count = Object.keys(window.remoteStreams).filter(k => k in window.screenshareClients).length;
+  totalRemoteStreams = totalRemoteStreams-count;
+  console.log("hlwcheckHosttotalRemoteStreams", totalRemoteStreams)
+
+  if(totalRemoteStreams<17){
+    return true;
+  } else{
     return false;
   }
 }

@@ -252,11 +252,13 @@ class AgoraCloudRecording {
         $year = strtolower(date("Y", strtotime($t)));
         
         $fixedTitle = str_replace('-', '', $channel->title());
-        $folderName = $month.$day.$year.preg_replace('/\s+/', '', $fixedTitle);
+        $dateFolderName = $month.$day.$year.preg_replace('/\s+/', '', $fixedTitle);
+        $dateFolderName = date("Ymd");
+        $timeFolderName = date("Hi", time());
         $folderName = $data['cid'];
         
         //$clientRequest->storageConfig->fileNamePrefix = array( $folderName );
-        $clientRequest->storageConfig->fileNamePrefix = array($folderName, $recordingSettings['protoType']);
+        $clientRequest->storageConfig->fileNamePrefix = array($folderName, $dateFolderName, $timeFolderName, $recordingSettings['protoType']);
         
         $newToken = $this->parent->generateNewToken($data['cid'], $data['uid'], 'RTC');
         // die("<pre>".print_r($newToken, true)."</pre>");

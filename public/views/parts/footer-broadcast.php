@@ -63,11 +63,12 @@ if (array_key_exists("chat_support_loggedin", $channelSettings) && $channelSetti
         <?php
         if(isset($channel)){
             if(json_decode($channel->admin_user_config())->is_admin){ ?>
-                <div class="raise-hand-requests">
-                    <button>
+                <div class="raise-hand-requests btn-with-title">
+                    <button class="btnIcon" title="Requests">
                         <i class="fas fa-user"></i>
                         <span id="total-requests"></span>
                     </button>
+                    <small class="btn-title">Requests</small>
                 </div>
             <?php }
         }

@@ -460,13 +460,20 @@ function agoraChatChangeLoggedin() {
 		jQuery("body tr#recording_layout-row .recording_layout_image_section img").attr('src', imgURL);
 	});
 
+	jQuery(document).on("click", ".recording_layout_image_section img", function(event){
+		event.preventDefault();
+		let imgSrc = jQuery(this).attr('src');
+		jQuery('body #view-recording-layout-image-modal .modal-body #layout-image-content').html("<img src= '"+imgSrc+"'>");
+		jQuery('body #view-recording-layout-image-modal').modal('show');
+	});	
+
 })( jQuery );
 
-function updateRecordingShortcode(recType, channel_id){
+// function updateRecordingShortcode(recType, channel_id){
 
-	let shortcodeContent = '';
-	if(recType!=''){
-		shortcodeContent+=`<input type='text' onfocus='this.select();' readonly='readonly' value='[agora-recordings channel_id="${channel_id}" recording_type="${recType}"]' class='large-text code'>`
-	}
-	jQuery("body .recording-shortcode-row-"+channel_id).html(shortcodeContent);
-}
+// 	let shortcodeContent = '';
+// 	if(recType!=''){
+// 		shortcodeContent+=`<input type='text' onfocus='this.select();' readonly='readonly' value='[agora-recordings channel_id="${channel_id}" recording_type="${recType}"]' class='large-text code'>`
+// 	}
+// 	jQuery("body .recording-shortcode-row-"+channel_id).html(shortcodeContent);
+// }

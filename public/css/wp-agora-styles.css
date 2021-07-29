@@ -144,6 +144,7 @@
   margin: 0 auto;
   display: none;
   text-align: center;
+  max-height: 100%;
 }
 .agora .screen.sharescreen .no-video-overlay {
   font-size: 1.8em;
@@ -1441,4 +1442,9 @@ button#exit-btn {
 }
 .raise-hand-requests > button > i {
   padding-right: 5px;
+}
+
+#raise-hand-requests-list{
+  max-height: 60vh;
+  overflow: scroll;
 }

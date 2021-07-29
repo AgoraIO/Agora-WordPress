@@ -707,6 +707,11 @@
   width: auto;
 }
 
+.agora-fullscreen .fabs.fabs-chat-left, .agora-fullscreen .fabs.fabs-chat-right{
+  top: auto;
+  transform: translateY(-150%);
+}
+
 /* chat position bottom */
 .fabs.fabs-chat-bottom {
   width: auto;
@@ -717,10 +722,14 @@
   position: absolute;
   bottom: 0px;
   right: 0px;
-  background: rgba(0, 0, 0, 0.5);
+  /* background: rgba(0, 0, 0, 0.5); */
   width: 35px;
   height: 35px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#chatToggleBtn{
+  z-index: 2;
 }

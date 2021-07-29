@@ -8,11 +8,232 @@
  use OSS\OssClient;
  use OSS\Core\OssException;
 
+function getDatesFromRange($start, $end, $format = 'Y-m-d') {
+      
+    // Declare an empty array
+    $array = array();
+      
+    // Variable that store the date interval
+    // of period 1 day
+    $interval = new DateInterval('P1D');
+  
+    $realEnd = new DateTime($end);
+    $realEnd->add($interval);
+  
+    $period = new DatePeriod(new DateTime($start), $interval, $realEnd);
+  
+    // Use loop to store date into array
+    foreach($period as $date) {                 
+        $array[] = $date->format($format); 
+    }
+  
+    // Return the array elements
+    return $array;
+}
+
+function getRecordingListArray($keyname, $bucketregionIndex, $accessKey, $secretKey, $bucket, $recordingSettings, $recordings_regions, $date, $recording_type, $user_id, $allFiles){
+    if($recordingSettings['vendor'] == 1){ //Amazon S3
+
+        //$recordings_regions['aws'][$region];
+
+        $bucketregion = str_replace("_","-",strtolower($recordings_regions['aws'][$bucketregionIndex]));
+
+        $s3 = S3Client::factory([
+            'version'     => 'latest',
+            //'region'      => 'us-east-1',
+            'region'      => $bucketregion,
+            'credentials' => [
+                'key'    => $accessKey,
+                'secret' => $secretKey,
+            ]
+        ]);
+
+        $marker = null;
+        do {
+            $result = $s3->listObjects(array(
+                'Bucket'    => $bucket,
+                'Prefix'    => $keyname,
+                'Marker'    => $marker,
+            ));
+            $files = $result->getPath('Contents') ?: array();
+
+            //$dirs = $result->getPath('CommonPrefixes/*/Prefix') ?: array();
+            $marker = $result['IsTruncated'] ? end($files) : null;
+            // DO WHATEVER YOU WANT WITH $files AND $dirs
+        } while ($marker);
+
+        $result = $s3->listObjects(array('Bucket' => $bucket, 'Prefix' => $keyname));
+
+        $files = $result->getPath('Contents');
+    
+
+        //$files = $result->getPath('Contents');
+
+        if($files!=""){
+            foreach ($files as $file) {
+                
+                $filename = $file['Key'];
+                $fileExt = pathinfo($filename, PATHINFO_EXTENSION);
+
+                $amazonawsURL = 'http://%s.s3.amazonaws.com/%s';
+
+                if (array_key_exists('HTTPS', $_SERVER) && $_SERVER["HTTPS"] == "on") {
+                    $amazonawsURL = 'https://%s.s3.amazonaws.com/%s';
+                }
+                // if(($recording_type == 'individual' && $fileExt == "mp4") || ($recording_type == 'composite' && $fileExt == "m3u8")){
+                //     if(isset($atts['user_id']) && $atts['user_id']!=''){
+                //         if (strpos($filename, 'uid_s_'.$atts['user_id'].'__') !== false) {
+                //             $allFiles[] = sprintf($amazonawsURL, $bucket, $filename); 
+                //         }
+                //     } else {
+                //         $allFiles[] = sprintf($amazonawsURL, $bucket, $filename); 
+                //     }
+                // } else {
+
+                    $fileDir = pathinfo($filename);
+                    
+                    $fileDir = basename($fileDir['dirname']);
+                    
+                    if($fileDir == 'individual'){
+                        if($fileExt == "mp4"){
+                            if($recording_type == '' || $recording_type == $fileDir){
+                                //echo "individual ".$filename;
+                                if($user_id!=''){
+                                    if (strpos($filename, 'uid_s_'.$user_id.'__') !== false){
+                                        $allFiles[] = sprintf($amazonawsURL, $bucket, $filename); 
+                                    }
+                                } else {
+                                    $allFiles[] = sprintf($amazonawsURL, $bucket, $filename); 
+                                }
+                            }
+                        }
+                    } else if($fileExt == "m3u8") {
+                        if($recording_type == '' || $recording_type == $fileDir){
+                            $allFiles[] = sprintf($amazonawsURL, $bucket, $filename); 
+                        }
+                    }
+                //}
+            }
+        }
+
+    } else if($recordingSettings['vendor'] == 2){ //Alibaba Cloud
+
+        $endpointregion = str_replace("_","-",strtolower($recordings_regions['alibaba'][$bucketregionIndex]));
+
+        //$endpoint = "oss-us-east-1.aliyuncs.com";
+        $endpoint = "oss-".$endpointregion.".aliyuncs.com";
+
+        try {
+            $ossClient = new OssClient($accessKey, $secretKey, $endpoint);
+        
+            // $options = array(
+            //     'prefix' => $keyname,
+            // );
+            // try {
+            //     $listObjectInfo = $ossClient->listObjects($bucket, $options);
+            // } catch (OssException $e) {
+            //     printf(__FUNCTION__ . ": FAILED\n");
+            //     printf($e->getMessage() . "\n");
+            //     return;
+            // }
+            
+            // $objectList = $listObjectInfo->getObjectList(); // object list
+            
+            // if (! empty($objectList)) {
+            //     foreach ($objectList as $objectInfo) {
+            //         $fileExt = pathinfo($objectInfo->getKey(), PATHINFO_EXTENSION);
+            //         if(($recording_type == 'individual' && $fileExt == "mp4") || ($recording_type == 'composite' && $fileExt == "m3u8")){
+            //             $allFiles[] = 'https://'.$bucket.'.'.$endpoint.'/'.$objectInfo->getKey();
+            //         }
+            //     }
+            // }
+
+            $nextMarker = '';
+
+            while (true) {
+                try {
+                    $options = array(
+                        'prefix' => $keyname,
+                        'delimiter' => '',
+                        'marker' => $nextMarker,
+                    );
+                    $listObjectInfo = $ossClient->listObjects($bucket, $options);
+                } catch (OssException $e) {
+                    printf(__FUNCTION__ . ": FAILED\n");
+                    printf($e->getMessage() . "\n");
+                    return;
+                }
+                // Obtain nextMarker to list the remaining objects. The reading starts with the object next to the last object previously obtained through the ListObjects API operation.
+                $nextMarker = $listObjectInfo->getNextMarker();
+                $listObject = $listObjectInfo->getObjectList();
+                $listPrefix = $listObjectInfo->getPrefixList();
+
+                if (! empty($listObject)) {
+                    //print("objectList:\n");
+                    foreach ($listObject as $objectInfo) {
+
+                        $filename = $objectInfo->getKey();
+
+                        $fileExt = pathinfo($objectInfo->getKey(), PATHINFO_EXTENSION);
+                        $fileDir = pathinfo($filename);
+                    
+                        if($fileDir == 'individual'){
+                            if($fileExt == "mp4"){
+                                if($recording_type == '' || $recording_type == $fileDir){
+                                    //echo "individual ".$filename;
+                                    if($user_id!=''){
+                                        if (strpos($filename, 'uid_s_'.$user_id.'__') !== false){
+                                            $allFiles[] = 'https://'.$bucket.'.'.$endpoint.'/'.$objectInfo->getKey(); 
+                                        }
+                                    } else {
+                                        $allFiles[] = 'https://'.$bucket.'.'.$endpoint.'/'.$objectInfo->getKey(); 
+                                    }
+                                }
+                            }
+                        } else if($fileExt == "m3u8") {
+                            if($recording_type == '' || $recording_type == $fileDir){
+                                $allFiles[] = 'https://'.$bucket.'.'.$endpoint.'/'.$objectInfo->getKey();
+                            }
+                        }
+                    }
+                }
+
+                if ($listObjectInfo->getIsTruncated() !== "true") {
+                    break;
+                }
+            }
+
+        
+            
+        } catch (OssException $e) {
+            print $e->getMessage();
+        }
+    }
+
+    return $allFiles;
+}
+
 function getRecordingsList($atts) {
 
-    $output = '';
+    $output = ''; $recording_type = ''; $from_date = ''; $to_date = ''; $user_id='';
 
-    if(isset($atts['channel_id']) && isset($atts['recording_type'])){
+    if(isset($atts['recording_type'])){
+        $recording_type = $atts['recording_type'];
+    }
+
+    if(isset($atts['from_date'])){
+        $from_date = $atts['from_date'];
+    }
+
+    if(isset($atts['user_id'])){
+        $user_id = $atts['user_id'];
+    }
+
+    if(isset($atts['to_date'])){
+        $to_date = $atts['to_date'];
+    }
+
+    if(isset($atts['channel_id']) ){
 
         $channel_id = $atts['channel_id'];
         try{
@@ -29,87 +250,136 @@ function getRecordingsList($atts) {
             $accessKey = $recordingSettings['accessKey'];
             $secretKey = $recordingSettings['secretKey'];
 
-            $bucketregion = $recordingSettings['region'];
+            $bucketregionIndex = $recordingSettings['region'];
 
             $recordings_regions = WP_Agora_Public::$recordings_regions;
 
 
             $allFiles = array();
 
-            $keyname = $channel_id.'/'.$atts['recording_type'].'/';
+            $keyname = $channel_id.'/';
 
-            if($recordingSettings['vendor'] == 1){ //Amazon S3
-
-                //$recordings_regions['aws'][$region];
-
-                $bucketregion = str_replace("_","-",strtolower($recordings_regions['aws'][$bucketregion]));
-
-                $s3 = S3Client::factory([
-                    'version'     => 'latest',
-                    //'region'      => 'us-east-1',
-                    'region'      => $bucketregion,
-                    'credentials' => [
-                        'key'    => $accessKey,
-                        'secret' => $secretKey,
-                    ]
-                ]);
-
-                $result = $s3->listObjects(array('Bucket' => $bucket, 'Prefix' => $keyname));
-                $files = $result->getPath('Contents');
-
-                if($files!=""){
-                    foreach ($files as $file) {
-                        
-                        $filename = $file['Key'];
-                        $fileExt = pathinfo($filename, PATHINFO_EXTENSION);
-                        $amazonawsURL = 'http://%s.s3.amazonaws.com/%s';
-
-                        if (array_key_exists('HTTPS', $_SERVER) && $_SERVER["HTTPS"] == "on") {
-                            $amazonawsURL = 'https://%s.s3.amazonaws.com/%s';
-                        }
-                        if(($atts['recording_type'] == 'individual' && $fileExt == "mp4") || ($atts['recording_type'] == 'composite' && $fileExt == "m3u8")){
-                            $allFiles[] = sprintf($amazonawsURL, $bucket, $filename); 
-                        }
-                    }
+            if($from_date == ''){
+             $allFiles = getRecordingListArray($keyname, $bucketregionIndex, $accessKey, $secretKey, $bucket, $recordingSettings, $recordings_regions, $from_date, $recording_type, $user_id, $allFiles);
+            } else{
+                if($to_date==''){
+                    $to_date = $from_date;
                 }
-
-            } else if($recordingSettings['vendor'] == 2){ //Alibaba Cloud
-
-                $endpointregion = str_replace("_","-",strtolower($recordings_regions['alibaba'][$bucketregion]));
-
-                //$endpoint = "oss-us-east-1.aliyuncs.com";
-                $endpoint = "oss-".$endpointregion.".aliyuncs.com";
-
-                try {
-                    $ossClient = new OssClient($accessKey, $secretKey, $endpoint);
                 
-                    $options = array(
-                        'prefix' => $keyname,
-                    );
-                    try {
-                        $listObjectInfo = $ossClient->listObjects($bucket, $options);
-                    } catch (OssException $e) {
-                        printf(__FUNCTION__ . ": FAILED\n");
-                        printf($e->getMessage() . "\n");
-                        return;
-                    }
-                    
-                    $objectList = $listObjectInfo->getObjectList(); // object list
-                    
-                    if (! empty($objectList)) {
-                        foreach ($objectList as $objectInfo) {
-                            $fileExt = pathinfo($objectInfo->getKey(), PATHINFO_EXTENSION);
-                            if(($atts['recording_type'] == 'individual' && $fileExt == "mp4") || ($atts['recording_type'] == 'composite' && $fileExt == "m3u8")){
-                                $allFiles[] = 'https://'.$bucket.'.'.$endpoint.'/'.$objectInfo->getKey();
-                            }
-                        }
-                    }
+                $recordingsFilterDates = getDatesFromRange($from_date, $to_date);
                 
-                    
-                } catch (OssException $e) {
-                    print $e->getMessage();
+                foreach($recordingsFilterDates as $date){
+                    $keyname = $channel_id.'/';
+                    $keyname=$keyname.str_replace("-","",$date).'/';
+                    // if($recording_type!=''){
+                    //     $keyname = $keyname.$recording_type.'/';
+                    // }
+                   
+                    $allFiles = getRecordingListArray($keyname, $bucketregionIndex, $accessKey, $secretKey, $bucket, $recordingSettings, $recordings_regions, $from_date, $recording_type, $user_id, $allFiles);
                 }
             }
+            // die;
+
+            // echo "<pre>";
+            // print_r($allFiles);
+            // die;
+
+            // if(!isset($atts['to_date']) || $atts['to_date']==''){
+            //     $atts['to_date'] = $atts['from_date'].'/';
+            // }
+
+            // $recordingsFilterDates = getDatesFromRange($atts['from_date'], $atts['to_date']);
+            
+            // foreach($recordingsFilterDates as $date){
+
+            //     $keyname = $channel_id.'/';
+
+            //     $keyname=$keyname.str_replace("-","",$date).'/';
+
+            //     if($recording_type!=''){
+            //         $keyname = $keyname.$recording_type.'/';
+            //     }
+
+            //     if($recordingSettings['vendor'] == 1){ //Amazon S3
+
+            //         //$recordings_regions['aws'][$region];
+
+            //         $bucketregion = str_replace("_","-",strtolower($recordings_regions['aws'][$bucketregionIndex]));
+
+            //         $s3 = S3Client::factory([
+            //             'version'     => 'latest',
+            //             //'region'      => 'us-east-1',
+            //             'region'      => $bucketregion,
+            //             'credentials' => [
+            //                 'key'    => $accessKey,
+            //                 'secret' => $secretKey,
+            //             ]
+            //         ]);
+
+            //         $result = $s3->listObjects(array('Bucket' => $bucket, 'Prefix' => $keyname));
+
+            //         $files = $result->getPath('Contents');
+
+            //         if($files!=""){
+            //             foreach ($files as $file) {
+                            
+            //                 $filename = $file['Key'];
+            //                 $fileExt = pathinfo($filename, PATHINFO_EXTENSION);
+            //                 $amazonawsURL = 'http://%s.s3.amazonaws.com/%s';
+
+            //                 if (array_key_exists('HTTPS', $_SERVER) && $_SERVER["HTTPS"] == "on") {
+            //                     $amazonawsURL = 'https://%s.s3.amazonaws.com/%s';
+            //                 }
+            //                 if(($recording_type == 'individual' && $fileExt == "mp4") || ($recording_type == 'composite' && $fileExt == "m3u8")){
+            //                     if(isset($atts['user_id']) && $atts['user_id']!=''){
+            //                         if (strpos($filename, 'uid_s_'.$atts['user_id'].'__') !== false) {
+            //                             $allFiles[] = sprintf($amazonawsURL, $bucket, $filename); 
+            //                         }
+            //                     } else {
+            //                         $allFiles[] = sprintf($amazonawsURL, $bucket, $filename); 
+            //                     }
+            //                 }
+            //             }
+            //         }
+
+            //     } else if($recordingSettings['vendor'] == 2){ //Alibaba Cloud
+
+            //         $endpointregion = str_replace("_","-",strtolower($recordings_regions['alibaba'][$bucketregionIndex]));
+
+            //         //$endpoint = "oss-us-east-1.aliyuncs.com";
+            //         $endpoint = "oss-".$endpointregion.".aliyuncs.com";
+
+            //         try {
+            //             $ossClient = new OssClient($accessKey, $secretKey, $endpoint);
+                    
+            //             $options = array(
+            //                 'prefix' => $keyname,
+            //             );
+            //             try {
+            //                 $listObjectInfo = $ossClient->listObjects($bucket, $options);
+            //             } catch (OssException $e) {
+            //                 printf(__FUNCTION__ . ": FAILED\n");
+            //                 printf($e->getMessage() . "\n");
+            //                 return;
+            //             }
+                        
+            //             $objectList = $listObjectInfo->getObjectList(); // object list
+                        
+            //             if (! empty($objectList)) {
+            //                 foreach ($objectList as $objectInfo) {
+            //                     $fileExt = pathinfo($objectInfo->getKey(), PATHINFO_EXTENSION);
+            //                     if(($recording_type == 'individual' && $fileExt == "mp4") || ($recording_type == 'composite' && $fileExt == "m3u8")){
+            //                         $allFiles[] = 'https://'.$bucket.'.'.$endpoint.'/'.$objectInfo->getKey();
+            //                     }
+            //                 }
+            //             }
+                    
+                        
+            //         } catch (OssException $e) {
+            //             print $e->getMessage();
+            //         }
+            //     }
+            // }
 
             /*$uniqueKey = '121';
 
@@ -212,7 +482,7 @@ function getRecordingsList($atts) {
                 $i=0;
                 $output.= '<div class="agora_io_video_recording_container">';
 
-                if(isset($atts['recording_type']) && ($atts['recording_type'] == 'individual')){
+                if(isset($recording_type) && ($recording_type == 'individual')){
                     $output.= '<div class="recording_tooltip">If your recording is not available right now, please try after some time as it may take some time to process ..</div>';
                 }
 

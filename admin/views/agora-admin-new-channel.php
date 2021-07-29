@@ -54,11 +54,9 @@ function agora_render_setting_row_select($id, $title, $options, $settings, $pref
         $layoutImg = plugins_url('wp-agora-io')."/imgs/recordings/".$settings[$input_id]."-layout.png";
         ?>
         <div class="recording_layout_image_section">
-          <a href="<?php echo $layoutImg; ?>" target="_blank">
             <div>
               <img src="<?php echo $layoutImg; ?>" height="30" width="50">
             </div>
-          </a>
         </div>  
       <?php } ?>
 
@@ -399,7 +397,7 @@ function render_agoraio_channel_form_chat_support($channel) {
   <table class="form-table">
   <?php agora_render_setting_row_select(
       'chat_support_loggedin',
-      __('Chat Support Enable?', 'agoraio'),
+      __('Enable Chat Support', 'agoraio'),
       array(
         '' => __('Select', 'agoraio'),
         1 => __('Yes', 'agoraio'),
@@ -408,7 +406,7 @@ function render_agoraio_channel_form_chat_support($channel) {
    ?>
   <?php agora_render_setting_row_select(
       'ghost_mode',
-      __('Ghost Mode', 'agoraio'),
+      __('Enable Ghost Mode', 'agoraio'),
       array(
         '' => __('Select', 'agoraio'),
         1 => __('Yes', 'agoraio'),
@@ -426,7 +424,7 @@ function render_agoraio_channel_form_chat_support($channel) {
    ?>
     <?php agora_render_setting_row_select(
       'mute_all_users',
-      __('Mute all users Audio/Video?', 'agoraio'),
+      __('Mute all users Audio/Video', 'agoraio'),
       array(
         '' => __('Select', 'agoraio'),
         1 => __('Yes', 'agoraio'),
@@ -435,7 +433,7 @@ function render_agoraio_channel_form_chat_support($channel) {
    ?>
     <?php agora_render_setting_row_select(
       'chat_history',
-      __('Save Chat History?', 'agoraio'),
+      __('Enable Chat History', 'agoraio'),
       array(
         '' => __('Select', 'agoraio'),
         1 => __('Yes', 'agoraio'),
@@ -444,7 +442,7 @@ function render_agoraio_channel_form_chat_support($channel) {
    ?>
     <?php agora_render_setting_row_select(
       'pre_call_video',
-      __('Pre-call/video test?', 'agoraio'),
+      __('Pre-call/video test', 'agoraio'),
       array(
         '' => __('Select', 'agoraio'),
         1 => __('Yes', 'agoraio'),
@@ -472,7 +470,7 @@ function render_agoraio_channel_form_chat_support($channel) {
 
   <?php agora_render_setting_row_select(
       'admin_user_unmute_forcefully',
-      __('Can Admin user unmute Audio/Video forcefully?', 'agoraio'),
+      __('Can Admin user unmute Audio/Video forcefully', 'agoraio'),
       array(
         '' => __('Select', 'agoraio'),
         1 => __('Yes', 'agoraio'),
@@ -525,7 +523,9 @@ function render_agoraio_channel_form_recording($channel) {
 
     agora_render_setting_row_select(
       'recording_layout',
-      __('Layout', 'agoraio'),
+      __('Layout <div class="tooltip">&#9432;
+      <span class="tooltiptext">Tooltip text</span>
+    </div>', 'agoraio'),
       array(
         1 => __('Best Fit', 'agoraio'),
         0 => __('Floating', 'agoraio'),

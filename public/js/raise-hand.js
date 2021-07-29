@@ -17,7 +17,7 @@
         }
     }
 
-    function handleRaiseHandRequest(cond='') {
+    async function handleRaiseHandRequest(cond='') {
         if(window.agoraMode == 'communication'){
             let userName = 'Guest User with id - '+window.localStreams.uid;
             if(typeof window.wp_username!='undefined' && window.wp_username!=""){
@@ -37,44 +37,49 @@
 
             }
         } else {
-            window.rtmChannel.getMembers().then(members => {
-                const adminUserRTMId = generateRTMUidfromStreamId(window.adminUser);
-                if(members.indexOf(adminUserRTMId) > -1){
+            let canJoinAsHostByAgoraLimit = await window.AGORA_UTILS.canJoinAsHostByAgoraLimit();
+            if(canJoinAsHostByAgoraLimit){
+                window.rtmChannel.getMembers().then(members => {
+                    const adminUserRTMId = generateRTMUidfromStreamId(window.adminUser);
+                    if(members.indexOf(adminUserRTMId) > -1){
 
-                    let userName = 'Guest User with id - '+window.audienceUserId;
-                    if(typeof window.wp_username!='undefined' && window.wp_username!=""){
-                        userName = window.wp_username;
-                    }
-
-                    let memberId = adminUserRTMId;
-                    const msg = {
-                        description: undefined,
-                        messageType: 'TEXT',
-                        rawMessage: undefined,
-                        text: 'RAISE-HAND-REQUEST-' + userName
-                    }
-                    try{
-                        window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
-                        jQuery("#raiseHand").attr("id", "cancelRaiseHand");
-                        jQuery("#cancelRaiseHand .hand-icon").attr('title', 'Cancel Raise Hand Request');
-                        if(canHandleStateOnRefresh()){
-                            sessionStorage.setItem("raisedHandReqUserId", window.userID);
+                        let userName = 'Guest User with id - '+window.audienceUserId;
+                        if(typeof window.wp_username!='undefined' && window.wp_username!=""){
+                            userName = window.wp_username;
                         }
-                        raisedHand = true;
 
-                        //Not show alert on Page Refresh
-                        if(cond!='raiseHandOnRefresh'){
-                            //alert("Your Raise hand request has been sent.");
-                            showToastMsg('Raise Hand Request', "Your Raise hand request has been sent.");
+                        let memberId = adminUserRTMId;
+                        const msg = {
+                            description: undefined,
+                            messageType: 'TEXT',
+                            rawMessage: undefined,
+                            text: 'RAISE-HAND-REQUEST-' + userName
                         }
-                    } catch(e){
+                        try{
+                            window.AGORA_RTM_UTILS.sendPeerMessage(msg, memberId);
+                            jQuery("#raiseHand").attr("id", "cancelRaiseHand");
+                            jQuery("#cancelRaiseHand .hand-icon").attr('title', 'Cancel Raise Hand Request');
+                            if(canHandleStateOnRefresh()){
+                                sessionStorage.setItem("raisedHandReqUserId", window.userID);
+                            }
+                            raisedHand = true;
 
+                            //Not show alert on Page Refresh
+                            if(cond!='raiseHandOnRefresh'){
+                                //alert("Your Raise hand request has been sent.");
+                                showToastMsg('Raise Hand Request', "Your Raise hand request has been sent.");
+                            }
+                        } catch(e){
+
+                        }
+                    } else {
+                        //alert("You cannot raise hand right now as Admin User is not available.")
+                        showToastMsg('Error', "You cannot raise hand right now as Admin User is not available.");
                     }
-                } else {
-                    //alert("You cannot raise hand right now as Admin User is not available.")
-                    showToastMsg('Error', "You cannot raise hand right now as Admin User is not available.");
-                }
-            })
+                })
+            } else {
+                showToastMsg('Error', "You cannot raise hand as host limit has been reached.");
+            }
         }
 
 
