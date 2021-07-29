@@ -522,3 +522,42 @@ td.recordings.column-recordings {
 .modal-body #layout-image-content{
   text-align: center;
 }
+
+.agora_recording_shortcode_section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.agora_recording_shortcode_section div#agora_recording_shortcode {
+    background: rgba(0,0,0,0.7);
+    margin: 0 10px 0 0;
+    padding: 9px 10px;
+    color: #fff;
+    border-radius: 5px;
+    line-height: 0.8;
+}
+
+.agora_recording_shortcode_section .agora-copy-recording-shortcode-btn{line-height: 0.8;
+    padding: 6px 10px;}
+
+    .agora_io_video_recording_container .agora_io_video_container>video {
+    height: 100%;
+    width: 100%;
+}
+
+.agora_io_video_recording_container .agora_io_video_container {
+    flex: 0 0 25%;
+    max-width: 25%;
+    padding-right: 25px;
+    box-sizing: border-box;
+    margin-top: 25px;
+}
+
+.agora_io_video_recording_container {
+    display: flex;
+    flex-wrap: wrap;
+}
+.agora_recording_videos_section {
+    clear: both;
+}
