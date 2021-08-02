@@ -397,7 +397,7 @@ function render_agoraio_channel_form_chat_support($channel) {
   <table class="form-table">
   <?php agora_render_setting_row_select(
       'chat_support_loggedin',
-      __('Enable Chat Support', 'agoraio'),
+      __('Enable Chat Support (logged-in users)', 'agoraio'),
       array(
         '' => __('Select', 'agoraio'),
         1 => __('Yes', 'agoraio'),
