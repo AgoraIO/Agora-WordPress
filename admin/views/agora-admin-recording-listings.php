@@ -12,6 +12,15 @@
     <h3><strong>Channel Name:</strong> <?php echo $channel_name; ?></h3>
 
     <div class="agora_recordings_filter_section">
+
+      
+
+    <div class="agora_recording_shortcode_section">
+        <div id="agora_recording_shortcode"></div>
+        <button class="agora-copy-recording-shortcode-btn">Copy</button>
+    </div>
+</div>
+
         <div class="agora_recordings_filter_inner_section agora_recording_type_section">
             <label for="agora_recording_type">Recording Type</label>
             <select class="create_recordings_shortcode" name="agora_recording_type" id="agora_recording_type" onchange="updateRecordingTypeOptions(this.value)">
@@ -33,16 +42,10 @@
 
         <div id="agoraio_users_list" class="agora_recordings_filter_inner_section agora_recording_users_list_section"></div>
        
-        <div class="agora_recordings_filter_inner_section agora_recording_type_section">
+         <div class="agora_recordings_filter_inner_section agora_recording_type_section">
             <button id="generateRecShortcodeBtn">Generate shortcode</button>
-        </div>    
+            </div>
 
-    </div>
-
-    <div class="agora_recording_shortcode_section">
-        <div id="agora_recording_shortcode"></div>
-        <button class="agora-copy-recording-shortcode-btn">Copy</button>
-    </div>
 
     <div class="agora_recording_videos_section">
     </div>

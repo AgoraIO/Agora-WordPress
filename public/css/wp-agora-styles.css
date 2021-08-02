@@ -177,7 +177,7 @@
 .agora .screen-users .user {
   position: relative;
   overflow: hidden;
-  padding: 3px;
+  padding: 2px;
   background-color: #111;
 }
 .screen-users .user video {
@@ -642,7 +642,7 @@
   position: absolute;
   top: 88px;
   left: 7px;
-  z-index: 9;
+  z-index: 1;
 }
 
 .toast:not(:last-child) {
@@ -1031,7 +1031,9 @@ button#exit-btn {
 /* End files in chat */
 
 /****************video*mute*overlay*******************/
-.user .no-video-overlay {
+.user .no-video-overlay,
+.screenshare-container .no-video-overlay
+ {
   position: absolute;
   z-index: 2;
   width: calc(100%);

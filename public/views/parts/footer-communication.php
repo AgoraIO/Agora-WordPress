@@ -116,7 +116,7 @@ if (array_key_exists("chat_support_loggedin", $channelSettings) && $channelSetti
     <div class="error-container">
         <span id="error-msg" class="text-danger"></span>
     </div>
-    <?php if ($enableChat===true) { require_once('chat-fab.php'); } ?>
+    
 </footer>
-
+<?php if ($enableChat===true) { require_once('chat-fab.php'); } ?>
 <?php require_once "toast.php" ?>
