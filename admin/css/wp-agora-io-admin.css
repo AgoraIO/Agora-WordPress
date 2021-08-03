@@ -290,4 +290,274 @@
 .multiple-speaker-views {  width: 20%;  }
 .dragable-speaker-main .current{border: 1px dashed #000!important;background: #c5e6fc;}
 .main-view,.multiple-speaker-views{border: 1px solid #c8c8c8;}
-/*-----------------draggabl settings end----------------------------------*/
+/*-----------------draggable settings end----------------------------------*/
+
+.recording_layout_image_section{
+  float: left;
+  margin-left: 10px;
+}
+
+
+td.recordings.column-recordings > select, td.recordings.column-recordings > span {
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+td.recordings.column-recordings {
+    display: flex;
+}
+
+.agora_recordings_filter_inner_section {
+  float: left;
+  margin-right: 15px;
+}
+
+.agora_recording_shortcode_section{
+  clear: both;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  /* border-bottom: 1px dotted black; */
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  /* padding: 5px 0; */
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.recording_layout_image_section img:hover{
+  cursor: pointer;
+}
+
+
+.modal, .hidden {
+  display: none;
+}
+
+/*
+ * Boostrap Modal Styles
+ */
+.modal-open .modal {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  display: none;
+  width: 100%;
+  overflow: hidden;
+  outline: 0;
+  height: 100%;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* padding-top: 68px;*/
+}
+.fade:not(.show) {
+  opacity: 0;
+}
+.fade {
+  transition: opacity 0.15s linear;
+}
+.modal-dialog {
+  position: absolute;
+  width: 100%;
+  /* width: auto; */
+  margin: 0 auto;
+  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+}
+.modal.show .modal-dialog {
+  -webkit-transform: none;
+  transform: none;
+}
+.modal.fade .modal-dialog {
+  transition: -webkit-transform 0.3s ease-out;
+  transition: transform 0.3s ease-out;
+  transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+  -webkit-transform: translate(0, -35px);
+  transform: translate(0, -35px);
+}
+
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 500px;
+    margin: 2.5rem auto 0;
+  }
+}
+.modal-content {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0.3rem;
+  outline: 0;
+}
+.modal-header {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  /* padding: 0 1rem 0; */
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;
+}
+.modal-body {
+  position: relative;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  /* padding: 1rem 1rem 0.25rem; */
+  padding: 1rem;
+}
+.modal-footer {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  padding: 1rem;
+  border-top: 1px solid #e9ecef;
+  border-bottom-right-radius: 0.3rem;
+  border-bottom-left-radius: 0.3rem;
+}
+.modal-footer > :not(:last-child) {
+  margin-right: 0.25rem;
+}
+.modal .btn {
+  padding: 0.5rem 0.7rem;
+  cursor: pointer;
+}
+.modal .btn.btn-primary {
+  background-color: #6c757e;
+  border: 1px solid #565b5f;
+  border-radius: 3px;
+}
+.modal .btn.btn-primary:hover {
+  background-color: #878e96;
+  border-color: #868c90;
+}
+.close {
+  float: right;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  opacity: 0.5;
+}
+.close:hover {
+  color: #000;
+  text-decoration: none;
+  background: transparent;
+}
+.close:not(:disabled):not(.disabled) {
+  cursor: pointer;
+}
+
+.close:not(:disabled):not(.disabled):focus,
+.close:not(:disabled):not(.disabled):hover {
+  opacity: 0.75;
+}
+.agora button.close {
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+.modal-header .close {
+  padding: 0.5rem;
+  margin: 0.05rem 0 0;
+}
+.modal-title .fas {
+  color: #8b8b8b;
+}
+.modal-backdrop.show {
+  opacity: 0.5;
+}
+.modal-backdrop {
+  display: none;
+}
+.modal .img-permissions {
+  margin: auto;
+  display: block;
+  min-height: 100px;
+  max-height: 280px;
+  margin-bottom: 10px;
+  box-shadow: 2px 2px 8px 0px #6c6c6c;
+}
+
+.modal-body #layout-image-content{
+  text-align: center;
+}
+
+.agora_recording_shortcode_section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.agora_recording_shortcode_section div#agora_recording_shortcode {
+    background: rgba(0,0,0,0.7);
+    margin: 0 10px 0 0;
+    padding: 9px 10px;
+    color: #fff;
+    border-radius: 5px;
+    line-height: 0.8;
+}
+
+.agora_recording_shortcode_section .agora-copy-recording-shortcode-btn{line-height: 0.8;
+    padding: 6px 10px;}
+
+    .agora_io_video_recording_container .agora_io_video_container>video {
+    height: 100%;
+    width: 100%;
+}
+
+.agora_io_video_recording_container .agora_io_video_container {
+    flex: 0 0 25%;
+    max-width: 25%;
+    padding-right: 25px;
+    box-sizing: border-box;
+    margin-top: 25px;
+}
+
+.agora_io_video_recording_container {
+    display: flex;
+    flex-wrap: wrap;
+}
+.agora_recording_videos_section {
+    clear: both;
+}

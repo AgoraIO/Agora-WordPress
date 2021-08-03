@@ -33,6 +33,31 @@ class WP_Agora_Admin {
 		// add_filter('plugin_action_links_'.$name, array($this, 'plugin_add_settings_link') );
 
 		add_action('wp_ajax_save-agora-setting', array($this, 'saveAjaxSettings'));
+
+		add_action('wp_ajax_get_all_users_list', array($this, 'getAllUsersList'));
+		add_action('wp_ajax_run_recordings_shortcode', array($this, 'runRecordingShortcode'));
+	}
+
+	public function runRecordingShortcode(){
+		$shortcode = stripslashes(sanitize_text_field($_POST['shortcode']));
+		echo do_shortcode($shortcode);
+		wp_die();
+	}
+
+	public function getAllUsersList(){
+		$args = array('fields' => array( 'ID', 'display_name' ) );
+		$users = get_users($args);
+
+		$users_options = array(
+			0 => __('Select', 'agoraio')
+		);
+
+		foreach($users as $user){
+			$users_options[$user->ID] = __($user->display_name, 'agoraio');
+		}
+		
+		echo json_encode($users_options);
+		wp_die();
 	}
 
 
@@ -45,7 +70,7 @@ class WP_Agora_Admin {
 		if($key != 'global_colors'){
 			$value = sanitize_text_field( $_POST[$key] );
 		}else{
-			$value = sanitize_text_field($_POST[$key]);
+			$value = $_POST[$key];
 		}
 		
 		$options = sanitize_option($this->plugin_name, get_option($this->plugin_name));
@@ -109,6 +134,22 @@ class WP_Agora_Admin {
 
 		add_action( 'load-' . $addnew, array($this, 'agora_load_channel_pages'), 10, 0 );
 
+		$recordings = add_submenu_page( 'agoraio',
+			__( 'Agora Recordings', 'agoraio' ),
+			__( 'Recordings', 'agoraio' ),
+			'manage_options', 'agoraio-recordings',
+			array($this, 'include_agora_recordings_page') );
+
+		add_action( 'load-' . $recordings, array($this, 'agora_load_channel_pages'), 10, 0 );
+		
+		$recordings_listing = add_submenu_page( '',
+			__( 'Agora Recordings Listing', 'agoraio' ),
+			__( 'Recordings', 'agoraio' ),
+			'manage_options', 'agoraio-recordings-listing',
+			array($this, 'include_agora_recordings_listing_page') );
+
+		add_action( 'load-' . $recordings_listing, array($this, 'agora_recordings_listing_page'), 10, 0 );
+
 		$settings = add_submenu_page( 'agoraio',
 			__( 'Agora Settings', 'agoraio' ),
 			__( 'Settings', 'agoraio' ),
@@ -124,6 +165,7 @@ class WP_Agora_Admin {
 			$this->create_agora_metaboxes_form();
 			$post_id = $post->initial() ? -1 : $post->id();
 			include_once('views/agora-admin-new-channel.php');
+			include_once('views/parts/modal-layout-image.php');
 			return;
 		}
 
@@ -133,6 +175,8 @@ class WP_Agora_Admin {
 		$this->channels_obj = new Agora_Channels_List_Table();
 		$this->channels_obj->prepare_items();
 		include_once('views/agora-admin-channels.php');
+		
+
 	}
 
 	private function create_agora_metaboxes_form() {
@@ -162,7 +206,7 @@ class WP_Agora_Admin {
     	'agora_channel_recording'
     );
 
-    // Chat metabox
+    // Custom Settings metabox
     add_meta_box(
     	'agora-form-chat',
     	__('Settings', 'agoraio'),
@@ -205,7 +249,7 @@ class WP_Agora_Admin {
 		}
 		// die("<pre>P:".print_r($post, true)."</pre>");
  
-    $this->create_agora_metaboxes_form();
+    	$this->create_agora_metaboxes_form();
 
 		$post_id = $post->initial() ? -1 : $post->id();
 		include_once('views/agora-admin-new-channel.php');
@@ -261,6 +305,23 @@ class WP_Agora_Admin {
 		do_meta_boxes( get_current_screen(), 'agora_layout', $channel );
 		unset( $wp_meta_boxes['post']['agora_layout'] );
 	}*/
+
+	public function include_agora_recordings_page(){
+
+		if ( ! class_exists( 'Agora_Channels_List_Table' ) ) {
+			require_once( 'class-agora-channels-list-table.php' );
+		}
+		$this->channels_obj = new Agora_Channels_List_Table();
+		$this->channels_obj->prepare_items();
+
+		//$agora_options = get_option($this->plugin_name);
+		include_once('views/agora-admin-recordings.php');
+	}
+
+	public function include_agora_recordings_listing_page(){
+		if(!isset($_GET['id'])){ return; }
+		include_once('views/agora-admin-recording-listings.php');
+	}
 
 	public function include_agora_settings_page() {
 		$agora_options = get_option($this->plugin_name);
@@ -365,6 +426,20 @@ class WP_Agora_Admin {
 			// die("EDIT: <pre>".print_r($channel, true)."</pre>");
 			// $this->include_agora_new_channel_page();
 
+		} else if($_GET['page'] == "agoraio-recordings"){
+
+			if ( ! class_exists( 'Agora_Channels_List_Table' ) ) {
+				require_once( 'class-agora-channels-list-table.php' );
+			}
+
+			add_filter( 'manage_' . $current_screen->id . '_columns',
+				array( 'Agora_Channels_List_Table', 'define_recordings_channels_columns' ), 10, 0 );
+
+			add_screen_option( 'per_page', array(
+				'default' => 20,
+				'option' => 'agoraio_per_page',
+			) );
+
 		} else {
 			if ( ! class_exists( 'Agora_Channels_List_Table' ) ) {
 			  require_once( 'class-agora-channels-list-table.php' );
@@ -398,6 +473,15 @@ class WP_Agora_Admin {
 		return $channel;
 	}
 
+	public function agora_load_recordings_pages() {
+		global $plugin_page;
+		$current_screen = get_current_screen();
+	}
+
+	public function agora_recordings_listing_page(){
+		
+	}
+
 	public function agora_load_settings_pages() {
 		global $plugin_page;
 		$current_screen = get_current_screen();
@@ -413,11 +497,33 @@ class WP_Agora_Admin {
 	// Admin styles for settings pages...
 	public function enqueue_styles() {
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-agora-io-admin.css', array(), $this->version, 'all' );
+
+		/* jQuery UI drag-drop CSS */
+		wp_enqueue_style( $this->plugin_name.'-drag-drop-custom-css', plugin_dir_url( __FILE__ ) . 'css/wp-agora-io-drag-drop.css', $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name.'-jquery-ui-css', 'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css', $this->version, 'all' );
+
 	}
 
 	// Admin scripts for ajax requests on settings pages...
 	public function enqueue_scripts() {
+		
+		$recordings_regions = WP_Agora_Public::$recordings_regions;
+		?>
+		<script> 
+			var plugineBaseURL = "<?php echo plugins_url('wp-agora-io'); ?>";
+			var cloudRegions = '<?php print_r(json_encode($recordings_regions)); ?>'; 
+		</script>
+		<?php 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-agora-io-admin.js', array( 'jquery' ), $this->version, false );
+
+		/* jQuery UI drag-drop JS */
+		wp_enqueue_script( $this->plugin_name.'-jquery-ui', 'https://code.jquery.com/ui/1.12.1/jquery-ui.js', array( 'jquery' ), $this->version, false );
+
+		wp_enqueue_script($this->plugin_name.'-hls-player-js', 'https://cdn.jsdelivr.net/npm/hls.js@latest', array( ), $this->version, false);
+
+		$bootstrap_js = plugin_dir_url( $this->plugin_name ) . $this->plugin_name.'/public/js/bootstrap/bootstrap.min.js';
+        wp_enqueue_script( 'bootstrap_js', $bootstrap_js, array('jquery'), null );
+
 	}
 
 }
