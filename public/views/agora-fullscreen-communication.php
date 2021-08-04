@@ -25,7 +25,7 @@ $current_path       = plugins_url('wp-agora-io') . '/public';
         <div id="screen-zone" class="screen">
           <div id="screen-users" class="screen-users screen-users-1">
 
-            <div id="local-video" class="user">
+            <div id="local-video" class="user" >
               <div id="mute-overlay" class="mute-overlay"><i class="fas fa-microphone-slash"></i></div>
               <div id="no-local-video" class="no-video-overlay text-center"><i class="fas fa-user"></i></div>
             </div>
