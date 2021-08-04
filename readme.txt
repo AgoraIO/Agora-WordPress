@@ -172,6 +172,15 @@ Resolves an issue in full screen templates with RTM not loading in the correct o
 Version 2.0.9
 Resolves an issue with the UI for channels containing more than 9 streams.
 
+Version 3.0.0.beta
+Adds new features, exposes more customizations, and resolves some issues.
+  - Added Channel Admin user
+  - Added pre-call/device test view
+  - Added ui to indicate "click to unmute" on auto play
+  - Added color customizations for more UI elements
+  - Floating and Grid layouts supported
+  - Added setting to limit # of broadcasters (non-user specific)
+  - And More (see Changelog for full list)
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 

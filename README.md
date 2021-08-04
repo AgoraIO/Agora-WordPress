@@ -30,11 +30,6 @@ Agora  fully supports a range of development environments, making it easy to del
 
 Get started for free! The first 10,000 minutes each month are free, including free starter support through Slack. Agora offer a simple and affordable pricing model including volume discounts. 
 
-- Terms of Service: [https://www.agora.io/en/terms-of-service](https://www.agora.io/en/terms-of-service)
-- Privacy Policy: [https://www.agora.io/en/privacy-policy](https://www.agora.io/en/privacy-policy)
-- Acceptable Use Policy: [https://www.agora.io/en/acceptable-use-policy](https://www.agora.io/en/acceptable-use-policy)
-- Compliance Policy: [https://www.agora.io/en/compliance](https://www.agora.io/en/compliance)
-
 ## Features ##
 -  Live video streaming with Host UI template
 -  Video calling with group video chat UI template
@@ -76,3 +71,10 @@ See Agora website for pricing details: [https://www.agora.io/pricing](https://ww
 ![Channels List](/assets/screenshot-1.png?raw=true "Channels List")
 ![Broadcast Channel Settings](/assets/screenshot-2.png?raw=true "Broadcast Channel Settings")
 ![WP Agora.io Settings Page](/assets/screenshot-3.png?raw=true "WP Agora.io Settings Page")
+
+
+### Legal ###
+- Terms of Service: [https://www.agora.io/en/terms-of-service](https://www.agora.io/en/terms-of-service)
+- Privacy Policy: [https://www.agora.io/en/privacy-policy](https://www.agora.io/en/privacy-policy)
+- Acceptable Use Policy: [https://www.agora.io/en/acceptable-use-policy](https://www.agora.io/en/acceptable-use-policy)
+- Compliance Policy: [https://www.agora.io/en/compliance](https://www.agora.io/en/compliance)
