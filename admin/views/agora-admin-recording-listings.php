@@ -43,7 +43,7 @@
         <div id="agoraio_users_list" class="agora_recordings_filter_inner_section agora_recording_users_list_section"></div>
        
          <div class="agora_recordings_filter_inner_section agora_recording_type_section">
-            <button id="generateRecShortcodeBtn">Apply Filter & Generate hortcode</button>
+            <button id="generateRecShortcodeBtn">Apply Filter & Generate Shortcode</button>
             </div>
 
 
