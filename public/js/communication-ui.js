@@ -224,6 +224,7 @@ window.AGORA_COMMUNICATION_UI = {
       });
     } else {
       console.log("Stoping rec...");
+      btn.removeClass('stop-rec').addClass('load-rec');
       window.AGORA_CLOUD_RECORDING.stopVideoRecording(function(err, res) {
         if (err) {
           // console.error(err);
@@ -231,6 +232,7 @@ window.AGORA_COMMUNICATION_UI = {
         } else {
           if(!res.errors) {
             console.log(res);
+            btn.removeClass('load-rec');
             btn.removeClass('stop-rec').addClass('start-rec').attr('title', 'Start Recording');
           } else {
             console.error(res.errors);

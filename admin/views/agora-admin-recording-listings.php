@@ -43,11 +43,12 @@
         <div id="agoraio_users_list" class="agora_recordings_filter_inner_section agora_recording_users_list_section"></div>
        
          <div class="agora_recordings_filter_inner_section agora_recording_type_section">
-            <button id="generateRecShortcodeBtn">Generate shortcode</button>
+            <button id="generateRecShortcodeBtn">Apply Filter & Generate Shortcode</button>
             </div>
 
 
     <div class="agora_recording_videos_section">
+        <div class="loader"></div>
     </div>
 
     <script>
@@ -217,6 +218,8 @@
             url: ajaxurl, // from wp admin...
             data
         };
+
+        jQuery("body .agora_recording_videos_section").html('<div class="loader"></div>');
     
         jQuery.ajax(ajaxParams).then(function(data) {
             console.log("recordingsShotcodeResponse", data);
