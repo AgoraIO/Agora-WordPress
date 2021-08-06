@@ -1026,6 +1026,7 @@ button#exit-btn {
 .chat-file-progress-bar {
   background-color: #005aab;
   height: 24px;
+  text-align: center;
 }
 
 /* End files in chat */
