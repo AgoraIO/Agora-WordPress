@@ -183,6 +183,7 @@ Adds new features, exposes more customizations, and resolves some issues.
   - Option to limit # of "hosts" within a communication channel (non-user specific)
   - Set an Admin Host to allow for moderator controls within a channel
   - Improved handling for browser "auto-play" policies
+  - Chat now supports sending and recieving files (limited to specific common file types)
   
 
 == Frequently Asked Questions ==
