@@ -233,7 +233,7 @@
 		}
 
 		msgLine.append(
-			$('<span/>', {'class': 'chat_msg_item chat_msg_item_local_user'}).append(fileName+'<div class="progress"><div class="chat-file-progress-bar progress-bar-'+index+'"></div></div>')
+			$('<span/>', {'class': 'chat_msg_item chat_msg_item_local_user'}).append(fileName+'<div class="progress"><div class="chat-file-progress-bar progress-bar-'+index+'"></div><div class="response"></div></div>')
 		);
 		chatMsgWindow.append(msgLine);
 		// scroll to bottom
@@ -288,7 +288,8 @@
 						jQuery(".progress-bar-"+index).css('background-color', '#228b22');
 					});
 				} else if(response.status == 'err'){
-					jQuery(".progress-bar-"+index).css('background-color', '#8E020C');
+					jQuery(".progress-bar-"+index).css('background-color', 'rgb(224 14 29)');
+					jQuery(".progress-bar-"+index).closest('.progress').find('.response').html('<div class="error">'+response.reason+'</div>');
 					//$('#uploadStatus').html('<p style="color:#EA4335;">Please select a valid file to upload.</p>');
 				}
 			}

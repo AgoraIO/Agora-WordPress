@@ -215,7 +215,8 @@ class WP_Agora_Public {
 	public function uploadChatFile(){
 		$response = array(
 			'fileURL' => '',
-			'status' => 'err'
+			'status' => 'err',
+			'reason' => ''
 		);
 		//$upload = 'err'; 
 		if(!empty($_FILES['file'])){ 
@@ -228,24 +229,30 @@ class WP_Agora_Public {
 			$targetDirPath = plugin_dir_path( dirname( __FILE__ ) ).'/uploads/'.$channel_id.'/';
 			if (!file_exists($targetDirPath)) {
 				mkdir($targetDirPath);
-			}			
+			}
+			
+			$allowedFileTypes = array("jpg", "jpeg", "png", "bmp", "svg", "tiff", "mp4", "mov", "mpeg", "mkv", "doc", "docx", "xls", "xlsx", "zip", "txt", "ppt", "pptx");
 			
 			$file = sanitize_file_name($_FILES['file']['name']);
-
+		
 			/* Create unique name of file */
 			$fileName = pathinfo($file, PATHINFO_FILENAME);
 			$ext = pathinfo($file, PATHINFO_EXTENSION);
-			$newFileName = $fileName.'-'.uniqid().'.'.$ext;
+			if(in_array($ext, $allowedFileTypes)){
+				$newFileName = $fileName.'-'.uniqid().'.'.$ext;
 
-			$targetFilePath = $targetDirPath.$newFileName; 
-			
-			// Upload file to the server 
-			if(move_uploaded_file($_FILES['file']['tmp_name'], $targetFilePath)){ 
-				//$upload = 'ok'; 
-				$response = array(
-					'fileURL' => $targetDirURL.$newFileName,
-					'status' => 'ok'
-				);
+				$targetFilePath = $targetDirPath.$newFileName; 
+				
+				// Upload file to the server 
+				if(move_uploaded_file($_FILES['file']['tmp_name'], $targetFilePath)){ 
+					//$upload = 'ok'; 
+					$response = array(
+						'fileURL' => $targetDirURL.$newFileName,
+						'status' => 'ok'
+					);
+				}
+			} else {
+				$response['reason'] = 'Invalid file type';
 			}
 		} 
 		//echo $upload;
