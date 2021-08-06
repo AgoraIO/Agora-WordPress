@@ -221,8 +221,8 @@
 		jQuery(document).find('input[type="file"]').val('');
 	}
 
-	function addLocalFileMsg(index, fileName) {
-		const msgLine = $('<div/>', {class: 'chat-msg-line local'});
+	function addLocalFileMsg(index, fileName, chatMsgIndex) {
+		const msgLine = $('<div/>', {class: 'chat-msg-line local chat-msg-line-'+chatMsgIndex});
 
 		const user = window.wp_username;
 		if (user !== lastUserChat) {
@@ -233,7 +233,7 @@
 		}
 
 		msgLine.append(
-			$('<span/>', {'class': 'chat_msg_item chat_msg_item_local_user'}).append(fileName+'<div class="progress"><div class="chat-file-progress-bar progress-bar-'+index+'"></div></div>')
+			$('<span/>', {'class': 'chat_msg_item chat_msg_item_local_user'}).append(fileName+'<div class="progress"><div class="chat-file-progress-bar chat-file-upload-msg-line-'+chatMsgIndex+' progress-bar-'+index+'" rel="'+chatMsgIndex+'"></div></div>')
 		);
 		chatMsgWindow.append(msgLine);
 		// scroll to bottom
@@ -241,8 +241,6 @@
 	}
 
 	function uploadFile(index){
-
-		console.log("hlwUploadfiles", processingFiles)
 		
 		let fileData = processingFiles[index].data;
 		let fileName = processingFiles[index].name;
@@ -251,6 +249,8 @@
 		fd.append("file", fileData);
 		fd.append("channel_id", window.channelId);
 		fd.append('action', 'upload_chat_file');  
+
+		const chatMsgIndex = jQuery('.chat-msg-line.local').length;
 
 		jQuery.ajax({
 			xhr: function() {
@@ -272,8 +272,9 @@
 			processData:false,
 			beforeSend: function(){
 				jQuery("body #tmp_fileMsg-"+index).remove();
-				addLocalFileMsg(index, fileName);
-				jQuery(".progress-bar-"+index).width('0%');
+				addLocalFileMsg(index, fileName, chatMsgIndex);
+				//const chatMsgIndex = jQuery('.chat-msg-line.local').length-1;
+				jQuery(".chat-msg-line-"+chatMsgIndex+" .progress-bar-"+index).width('0%');
 				//jQuery('#uploadStatus').html('<img src="images/loading.gif"/>');
 			},
 			error:function(){
@@ -285,11 +286,11 @@
 					const data = 'CHAT-FILE' + TOKEN_SEP + window.userID + TOKEN_SEP+ window.wp_username + TOKEN_SEP + fileName + TOKEN_SEP + response.fileURL;
 					window.AGORA_RTM_UTILS.sendChatMessage(data, function() {
 						saveChat('file', '<a href="'+response.fileURL+'">'+fileName+'</a>');
-						jQuery(".progress-bar-"+index).css('background-color', '#228b22');
+						jQuery(".chat-msg-line-"+chatMsgIndex+" .progress-bar-"+index).css('background-color', '#228b22');
 					});
 				} else if(response.status == 'err'){
-					jQuery(".progress-bar-"+index).css('background-color', 'rgb(224 14 29)');
-					jQuery(".progress-bar-"+index).html(response.reason);
+					jQuery(".chat-msg-line-"+chatMsgIndex+" .progress-bar-"+index).css('background-color', 'rgb(224 14 29)');
+					jQuery(".chat-msg-line-"+chatMsgIndex+" .progress-bar-"+index).html(response.reason);
 					//$('#uploadStatus').html('<p style="color:#EA4335;">Please select a valid file to upload.</p>');
 				}
 			}
@@ -324,7 +325,7 @@
 
 		let month = new Date().getMonth()+1;
 		let todayDate = new Date().getFullYear()+'-'+month+'-'+new Date().getDate();
-		console.log("hnjitodayDate",todayDate)
+
 		var params = {
 			action: 'get_previous_chats', // wp ajax action
 			channel_id: window.channelId,
@@ -335,7 +336,7 @@
 
 		window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(data) {
 			let chatData = JSON.parse(data);
-			console.log("previosChatsData", chatData.length)
+
 			if(chatData.length>0){
 				chatData.forEach(function (chat, index) {
 					let avatarElement = '';
