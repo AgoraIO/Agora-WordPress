@@ -238,6 +238,8 @@ class WP_Agora_Public {
 			/* Create unique name of file */
 			$fileName = pathinfo($file, PATHINFO_FILENAME);
 			$ext = pathinfo($file, PATHINFO_EXTENSION);
+
+			/* File Type Restriction */
 			if(in_array($ext, $allowedFileTypes)){
 				$newFileName = $fileName.'-'.uniqid().'.'.$ext;
 
