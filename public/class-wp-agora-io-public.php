@@ -231,7 +231,7 @@ class WP_Agora_Public {
 				mkdir($targetDirPath);
 			}
 			
-			$allowedFileTypes = array("jpg", "jpeg", "png", "bmp", "svg", "tiff", "mp4", "mov", "mpeg", "mkv", "doc", "docx", "xls", "xlsx", "zip", "txt", "ppt", "pptx");
+			$allowedFileTypes = array("jpg", "jpeg", "gif", "png", "bmp", "svg", "tiff", "mp4", "mov", "mpeg", "mkv", "doc", "docx", "xls", "xlsx", "zip", "txt", "ppt", "pptx");
 			
 			$file = sanitize_file_name($_FILES['file']['name']);
 		
