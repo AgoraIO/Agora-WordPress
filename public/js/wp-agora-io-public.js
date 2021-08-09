@@ -391,7 +391,7 @@ window.AGORA_UTILS = {
         if(volume.level>THRESHOLD_AUDIO_LEVEL){
           jQuery('body #' + volume.uid + '_container').addClass('activeSpeaker');
           if(window.isSpeakerView){
-            addStreamInLargeView(volume.uid);
+            addStreamInLargeView(volume.uid, setFromSpeakerView);
           }
         }
       });
@@ -1213,10 +1213,10 @@ function isCurrentStreamInMainLargeScreen(streamId){
 }
 
 /* Function to add a stream in large screen */
-function addStreamInLargeView(pinUserId){
+function addStreamInLargeView(pinUserId, setFromSpeakerView = false){
 
     /* Return in the stream which is going to be in large screen is the same that is alredy there. Do not add any stream in large screen if any pinned user is there until a user unpins him/her */
-    if(isCurrentStreamInMainLargeScreen(pinUserId) || (window.isSpeakerView && window.pinnedUser!='')){
+    if(isCurrentStreamInMainLargeScreen(pinUserId) || (window.isSpeakerView && setFromSpeakerView && window.pinnedUser!='')){
       return;
     }
  
