@@ -312,8 +312,9 @@ window.AGORA_UTILS = {
   },
 
   deleteRemoteStream: function(streamId) {
-    window.remoteStreams[streamId].stream.stop(); // stop playing the feed
-
+    if(typeof window.remoteStreams[streamId].stream!='undefined'){
+      window.remoteStreams[streamId].stream.stop(); // stop playing the feed
+    }
     delete window.remoteStreams[streamId]; // remove stream from list
     
     let remoteContainerID = '#' + streamId + '_container';
@@ -451,11 +452,13 @@ window.AGORA_UTILS = {
     window.agoraClient.on("peer-leave", async function peerLeave(evt) {
       if (!evt || !evt.stream) {
         console.error('Stream undefined cannot be removed', evt);
-        return false;
+        var streamId = evt.uid; // the the stream id
+        //return false;
+      }else{
+        console.log('peer-leave:', evt);
+        var streamId = evt.stream.getId(); // the the stream id
+        jQuery('#uid-'+streamId).remove();
       }
-      console.log('peer-leave:', evt);
-      var streamId = evt.stream.getId(); // the the stream id
-      jQuery('#uid-'+streamId).remove();
 
       if(window.remoteStreams[streamId] !== undefined) {
         window.AGORA_UTILS.deleteRemoteStream(streamId);
