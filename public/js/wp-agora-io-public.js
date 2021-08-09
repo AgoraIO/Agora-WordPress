@@ -2158,4 +2158,10 @@ function exitHandler() {
        jQuery("body #agora-root").removeClass('agora-fullscreen');
      }
   }
+  /* Change Screen Share Container (Large Screen) height on full screen and exit full screen */
+  const remoteEl = document.querySelector('.screenshare-container')
+  if (remoteEl) {
+    const divWidth = remoteEl.getBoundingClientRect().width;
+    remoteEl.style.height = (divWidth / 1.35) + 'px'; // ratio 16:10
+  }
 }
