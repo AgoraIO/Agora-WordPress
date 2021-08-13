@@ -172,7 +172,7 @@ Resolves an issue in full screen templates with RTM not loading in the correct o
 Version 2.0.9
 Resolves an issue with the UI for channels containing more than 9 streams.
 
-Version 3.0.0.beta
+Version 3.0.0
 Adds new features, exposes more customizations, and resolves some issues.
   - Channel Admin user
   - Embed cloud recordings using shortcodes
@@ -183,7 +183,9 @@ Adds new features, exposes more customizations, and resolves some issues.
   - Option to limit # of "hosts" within a communication channel (non-user specific)
   - Set an Admin Host to allow for moderator controls within a channel
   - Improved handling for browser "auto-play" policies
-  - Chat now supports sending and recieving files (limited to specific common file types)
+  - Auto-mute mic/audio on channel start
+  - Chat now supports sending and receiving files (limited to specific common file types)
+  - Resolves issues: [44](https://github.com/AgoraIO/Agora-WordPress/issues/44), [53](https://github.com/AgoraIO/Agora-WordPress/issues/53) , [55](https://github.com/AgoraIO/Agora-WordPress/issues/55), [62](https://github.com/AgoraIO/Agora-WordPress/issues/62), [66](https://github.com/AgoraIO/Agora-WordPress/issues/66)  , [94](https://github.com/AgoraIO/Agora-WordPress/issues/94), [101](https://github.com/AgoraIO/Agora-WordPress/issues/101) , [103](https://github.com/AgoraIO/Agora-WordPress/issues/103) 
   
 
 == Frequently Asked Questions ==
