@@ -233,14 +233,17 @@ $remoteSpeakersPos = isset($settingssettings['agora-remote-speakers-position']) 
         
         if (!evt || !evt.stream) {
           console.error('Stream undefined cannot be removed', evt);
-          return false;
+          var streamId = evt.uid; // the the stream id
+          //return false;
+        } else{
+          const streamId = evt.stream.getId(); // the the stream id
+          evt.stream.isPlaying() && evt.stream.stop(); // stop the stream
         }
-
-        const streamId = evt.stream.getId(); // the the stream id
-        evt.stream.isPlaying() && evt.stream.stop(); // stop the stream
   
         if(window.remoteStreams[streamId] !== undefined) {
-          window.remoteStreams[streamId].stream.isPlaying() && window.remoteStreams[streamId].stream.stop(); //stop playing the feed
+          if(typeof window.remoteStreams[streamId].stream!='undefined'){
+            window.remoteStreams[streamId].stream.isPlaying() && window.remoteStreams[streamId].stream.stop(); //stop playing the feed
+          }
 
           delete window.remoteStreams[streamId]; // remove stream from list
           const remoteContainerID = '#' + streamId + '_container';
