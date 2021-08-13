@@ -172,6 +172,20 @@ Resolves an issue in full screen templates with RTM not loading in the correct o
 Version 2.0.9
 Resolves an issue with the UI for channels containing more than 9 streams.
 
+Version 3.0.0.beta
+Adds new features, exposes more customizations, and resolves some issues.
+  - Channel Admin user
+  - Embed cloud recordings using shortcodes
+  - Option to enable pre-call/device-test view
+  - Floating or Grid layout option per channel
+  - Color customizations for all UI elements
+  - Cloud recording settings for individual or composite recordings
+  - Option to limit # of "hosts" within a communication channel (non-user specific)
+  - Set an Admin Host to allow for moderator controls within a channel
+  - Improved handling for browser "auto-play" policies
+  - Chat now supports sending and recieving files (limited to specific common file types)
+  
+
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
