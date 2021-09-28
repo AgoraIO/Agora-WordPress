@@ -12,10 +12,12 @@ window.AGORA_COMMUNICATION_UI = {
 
     jQuery("#mic-btn").click(function(){
       window.AGORA_COMMUNICATION_UI.toggleMic(localStream);
+      handleGhostMode(localStream.getId(), 'local');
     });
 
     jQuery("#video-btn").click(function(){
       window.AGORA_COMMUNICATION_UI.toggleVideo(localStream);
+      handleGhostMode(localStream.getId(), 'local');
     });
 
     jQuery("#cloud-recording-btn").click(function(){
@@ -92,7 +94,8 @@ window.AGORA_COMMUNICATION_UI = {
   enableExit: function() {
     const exitCall = function(){
       console.log("so sad to see you leave the channel");
-      window.AGORA_COMMUNICATION_CLIENT.agoraLeaveChannel(); 
+      window.AGORA_COMMUNICATION_CLIENT.agoraLeaveChannel();
+      sessionStorage.clear(); 
     };
     jQuery("#exit-btn").click(exitCall);
     jQuery("#exit-btn-footer").click(exitCall);
@@ -105,12 +108,19 @@ window.AGORA_COMMUNICATION_UI = {
     jQuery("#mic-icon").toggleClass('fa-microphone', localStream.userMuteAudio).toggleClass('fa-microphone-slash', !localStream.userMuteAudio); // toggle the mic icon
 
     if (!localStream.userMuteAudio) {
-      localStream.muteAudio(); // disable the local video
+      localStream.muteAudio(); // disable the local audio
+      if(canHandleStateOnRefresh()){
+        sessionStorage.setItem("muteAudio", "1"); //save value in session storage to maintain it's state on refresh
+      }
       window.AGORA_UTILS.toggleVisibility("#mute-overlay", true); // show the muted mic icon
     } else {
       localStream.unmuteAudio(); // enable the local mic
+      if(canHandleStateOnRefresh()){
+        sessionStorage.setItem("muteAudio", "0"); //save value in session storage to maintain it's state on refresh
+      }
       window.AGORA_UTILS.toggleVisibility("#mute-overlay", false); // hide the muted mic icon
     }
+    showRaiseHandInCommunication();
   },
 
   toggleVideo: function (localStream) {
@@ -120,9 +130,16 @@ window.AGORA_COMMUNICATION_UI = {
 
     if (!localStream.userMuteVideo) {
       localStream.muteVideo(); // disable the local video
+      if(canHandleStateOnRefresh()){
+        sessionStorage.setItem("muteVideo", "1"); //save value in session storage to maintain it's state on refresh
+      }
+      handleMutedVideoBackgroundColor(localStream.getId(), 'local');
       window.AGORA_UTILS.toggleVisibility("#no-local-video", true); // show the user icon when video is disabled
     } else {
       localStream.unmuteVideo(); // enable the local video
+      if(canHandleStateOnRefresh()){
+        sessionStorage.setItem("muteVideo", "0"); //save value in session storage to maintain it's state on refresh
+      }
       window.AGORA_UTILS.toggleVisibility("#no-local-video", false); // hide the user icon when video is enabled
       window.AGORA_COMMUNICATION_UI.logCameraDevices();
     }
@@ -207,6 +224,7 @@ window.AGORA_COMMUNICATION_UI = {
       });
     } else {
       console.log("Stoping rec...");
+      btn.removeClass('stop-rec').addClass('load-rec');
       window.AGORA_CLOUD_RECORDING.stopVideoRecording(function(err, res) {
         if (err) {
           // console.error(err);
@@ -214,6 +232,7 @@ window.AGORA_COMMUNICATION_UI = {
         } else {
           if(!res.errors) {
             console.log(res);
+            btn.removeClass('load-rec');
             btn.removeClass('stop-rec').addClass('start-rec').attr('title', 'Start Recording');
           } else {
             console.error(res.errors);
@@ -223,4 +242,81 @@ window.AGORA_COMMUNICATION_UI = {
       })
     }
   },
+
+  /* Function to check if user can join as a host (If user is not in the list of broadcaster users and total remote streams is already equeal to max hosts allowed, then, user will join as audience) */
+  canJoinAsHost: function(){
+    console.log("testFucCalled")
+    if(window.joinAsHost == 0 && window.max_host_users_limit!=''){
+
+      //window.host_users
+
+      let obj = window.remoteStreams;
+      
+      let totalRemoteStreams = Object.keys(window.remoteStreams).length;
+      
+      /* Exclude Screen Share Streams from count */
+      let count = Object.keys(window.remoteStreams).filter(k => k in window.screenshareClients).length;
+      totalRemoteStreams = totalRemoteStreams-count;
+
+      /* Exclude Host users streams from count */
+      let hostsCount = Object.keys(window.remoteStreams).filter(k => k in window.host_users).length;
+      totalRemoteStreams = totalRemoteStreams-hostsCount;
+
+      console.log("hlwtotalRemoteStreams", totalRemoteStreams)
+
+      if(totalRemoteStreams>=window.max_host_users_limit){
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+  },
+
+  joinAsAudience: async function(){
+    //setTimeout(async() => {
+      
+      await window.AGORA_COMMUNICATION_CLIENT.agoraLeaveChannel();
+      var params = {
+        action: 'load_audience_view', // wp ajax action
+        channel_id: window.channelId,
+        page_title: page_title
+      };
+    
+      /* Remove Previous RTM Event Listeners when joining from audience to host */
+      window.removeEventListener('agora.rtm_init', loadChatApp);
+      window.removeEventListener('agora.rtmMessageFromChannel', receiveRTMMessage);
+    
+      /* Remove Previous Files of audience */
+      if(jQuery("script#wp-agora-io-chat-js").length>0){
+        jQuery("script#wp-agora-io-chat-js").remove();
+      }
+    
+      if(jQuery("script#AgoraCommunicationClient-js").length>0){
+        jQuery("script#AgoraCommunicationClient-js").remove();
+      }
+
+      if(jQuery("script#wp-agora-raise-hand-js").length>0){
+        jQuery("script#wp-agora-raise-hand-js").remove();
+      }
+    
+      //jQuery("link#wp-agora-io-chat-fab-css").remove();
+    
+      window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
+        console.log("afterAjaxSuccess")
+    
+        let mainElm = jQuery('#agora-root').parent();
+        jQuery('#agora-root').remove();
+        mainElm.html(res);
+        appendDivWithAllStreamHiddenInGhostMode();
+        jQuery("#raiseHand").remove();
+        apply_global_colors();
+    
+      }).fail(function(err) {
+        console.error('API Error:', err.responseJSON ? err.responseJSON.errors : err);
+      })
+    //}, 2000);
+  }
+
 }

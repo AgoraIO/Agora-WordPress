@@ -1,21 +1,26 @@
-var cloudRegions = {
-	// North America in China?
-  'qiniu': ['East China', 'North China', 'South China', 'North America'],
+// var cloudRegions = {
+// 	// North America in China?
+//   'qiniu': ['East China', 'North China', 'South China', 'North America'],
 
-  'aws': ['US_EAST_1', 'US_EAST_2', 'US_WEST_1', 'US_WEST_2', 'EU_WEST_1', 'EU_WEST_2', 'EU_WEST_3', 'EU_CENTRAL_1', 'AP_SOUTHEAST_1', 'AP_SOUTHEAST_2', 'AP_NORTHEAST_1', 'AP_NORTHEAST_2', 'SA_EAST_1', 'CA_CENTRAL_1', 'AP_SOUTH_1', 'CN_NORTH_1', 'CN_NORTHWEST_1', 'US_GOV_WEST_1'],
+//   'aws': ['US_EAST_1', 'US_EAST_2', 'US_WEST_1', 'US_WEST_2', 'EU_WEST_1', 'EU_WEST_2', 'EU_WEST_3', 'EU_CENTRAL_1', 'AP_SOUTHEAST_1', 'AP_SOUTHEAST_2', 'AP_NORTHEAST_1', 'AP_NORTHEAST_2', 'SA_EAST_1', 'CA_CENTRAL_1', 'AP_SOUTH_1', 'CN_NORTH_1', 'CN_NORTHWEST_1', 'US_GOV_WEST_1'],
   
-  'alibaba': ['CN_Hangzhou', 'CN_Shanghai', 'CN_Qingdao', 'CN_Beijing', 'CN_Zhangjiakou', 'CN_Huhehaote', 'CN_Shenzhen', 'CN_Hongkong', 'US_West_1', 'US_East_1', 'AP_Southeast_1', 'AP_Southeast_2', 'AP_Southeast_3', 'AP_Southeast_5', 'AP_Northeast_1', 'AP_South_1', 'EU_Central_1', 'EU_West_1', 'EU_East_1'],
-};
+//   'alibaba': ['CN_Hangzhou', 'CN_Shanghai', 'CN_Qingdao', 'CN_Beijing', 'CN_Zhangjiakou', 'CN_Huhehaote', 'CN_Shenzhen', 'CN_Hongkong', 'US_West_1', 'US_East_1', 'AP_Southeast_1', 'AP_Southeast_2', 'AP_Southeast_3', 'AP_Southeast_5', 'AP_Northeast_1', 'AP_South_1', 'EU_Central_1', 'EU_West_1', 'EU_East_1'],
+// };
+
+cloudRegions = JSON.parse(cloudRegions);
+
+console.log("hlwcloudRegions", cloudRegions)
 
 function updateSettingValue(settingName, newValue, callback) {
 	var data = { action: 'save-agora-setting' };
 	data[settingName] = newValue;
-
+	
 	var ajaxParams = {
 		type: 'POST',
 		url: ajaxurl, // from wp admin...
 		data
 	};
+	
 	jQuery.ajax(ajaxParams).then(function(data) {
 		callback && callback(null, data);
 	}).fail(function(error) {
@@ -247,17 +252,45 @@ function agoraChatChange() {
 	})
 }
 
+/* Function to update component's position through Drag-Drop Builder */
+function agoraComponentPositionChange(component, position) {
+	updateSettingValue(component, position, function(err, res) {
+		if (!res || !res.updated) {
+			// TODO: Show error?
+		}
+	})
+}
+
+function agoraChatChangeLoggedin() {
+	const enabled = document.querySelector('#agora-chat-check-loggedin').checked;
+	const box = document.querySelector('#chat-status-text-loggedin');
+	const statusText = box.dataset[enabled ? 'enabled' : 'disabled'];
+	box.innerText = statusText;
+
+	updateSettingValue('agora-chat-loggedin', statusText, function(err, res) {
+		if (!res || !res.updated) {
+			// TODO: Show error?
+		}
+	})
+}
 (function( $ ) {
 	'use strict';
 
 	$( window ).load(function() {
 		$('.app-setting').each(applicationSettingsForm);
-
+		$('.agora-color-picker').wpColorPicker();
 		if ($('#agoraio-new-channel').length>0) {
 			activateAgoraTabs();
 			$('.agora-color-picker').wpColorPicker();
 
 			$('#type').change(validateChannelType);
+
+			$('#protoType').change(validateRecordingType);
+
+			const protoType = $('#protoType').val();
+			if (protoType && protoType.length>0) {
+				$('#protoType').change();
+			}
 
 			const channelType = $('#type').val();
 			if (channelType && channelType.length>0) {
@@ -281,15 +314,65 @@ function agoraChatChange() {
 			$('#agora-chat-check').change(agoraChatChange);
 			agoraChatChange();
 		}
+
+		if (document.querySelector('#agora-chat-check-loggedin')) {
+			$('#agora-chat-check-loggedin').change(agoraChatChangeLoggedin);
+			agoraChatChangeLoggedin();
+		}
+		//Save new global color settings - start
+		jQuery(document).on('click','#globalColors-save',function(){
+			$('#globalColors-save').prop('disabled', true);
+			const srcLoader = AGORA_ADMIN_URL + 'css/loader.svg';
+			const agoraLoader = jQuery('<span class="agora-loader" style="display:none"><img src="' + srcLoader + '" width="32" /></span>');
+			jQuery(this).parents('inside').append(agoraLoader);
+			agoraLoader.show();
+			var settingName = 'global_colors';
+			var globalColors = {};
+
+			jQuery('#globalColors').find('.inputBoxGS').each(function(){
+				var name_setting = jQuery(this).attr('name');
+				var newValue = jQuery(this).val();
+				globalColors[name_setting] = newValue;
+			});
+			updateSettingValue(settingName, globalColors, function(err, res) {
+				if (!err && res.updated===true) {
+					agoraLoader.hide();
+					$('#globalColors-save').prop('disabled', false);
+				} else {
+					// TODO: Improve error messages!
+					jQuery('.error-messageglobalColors').text(err);
+				}
+			});
+
+		});
+		//Save new global color settings - end
+
+
+		//Save new global color settings - start
+		jQuery(document).on('change','.NewSettingField',function(){
+			var settingName = jQuery(this).attr('id');
+			var newValue = jQuery(this).val();
+
+			updateSettingValue(settingName, newValue, function(err, res) {
+				if (!err && res.updated===true) {
+					
+				} else {
+					// TODO: Improve error messages!
+					jQuery('.error-messageglobalColors').text(err);
+				}
+			});
+
+		});
+		//Save new global color settings - end
 	});
 
 
 	function submitNewChannel(e) {
 		const channelType = $('#type').val();
 
-		if (channelType==='communication') {
-			return true;
-		}
+		// if (channelType==='communication') {
+		// 	return true;
+		// }
 
 		const users = [];
 		const usersRow = jQuery('#broadcast-users-list');
@@ -330,13 +413,16 @@ function agoraChatChange() {
 	function validateChannelType() {
 		var typeChannel = $(this).val();
 		var bhr = $('#broadcast-host-row');
+		var mxur = $('#max_host_users-row');
 		var linkTab2 = $('#link-tab-2');
 		var linkTab3 = $('#link-tab-3');
 		var splashImageURL = $('#splashImageURL').parent().parent();
 		var watchButtonText = $('#watchButtonText').parent().parent();
 		var watchButtonIcon = $('#watchButtonIcon').parent().parent();
 		if (typeChannel==='communication') {
-			bhr.hide();
+			//bhr.hide();
+			bhr.show();
+			mxur.show();
 			linkTab2.parent().hide();
 			linkTab3.parent().hide();
 			splashImageURL.hide();
@@ -344,6 +430,7 @@ function agoraChatChange() {
 			watchButtonIcon.hide();
 		} else {
 			bhr.show();
+			mxur.hide();
 			linkTab2.parent().show();
 			linkTab3.parent().show();
 			splashImageURL.show();
@@ -355,4 +442,38 @@ function agoraChatChange() {
 		// on communication, also hide Splash screen, and text and icon  button
 	}
 
+	function validateRecordingType() {
+		var recordingType = $(this).val();
+		var rlr = $('#recording_layout-row');
+		if (recordingType==='composite') {
+			rlr.show();
+		} else {
+			rlr.hide();
+		}
+		// on individual, hide the layout options
+	}
+
+	jQuery(document).on('change', 'select#recording_layout', function (e) {
+		const recLayout = jQuery(this).val();
+		const imgURL = plugineBaseURL+'/imgs/recordings/'+recLayout+'-layout.png';
+		jQuery("body tr#recording_layout-row .recording_layout_image_section a").attr('href', imgURL);
+		jQuery("body tr#recording_layout-row .recording_layout_image_section img").attr('src', imgURL);
+	});
+
+	jQuery(document).on("click", ".recording_layout_image_section img", function(event){
+		event.preventDefault();
+		let imgSrc = jQuery(this).attr('src');
+		jQuery('body #view-recording-layout-image-modal .modal-body #layout-image-content').html("<img src= '"+imgSrc+"'>");
+		jQuery('body #view-recording-layout-image-modal').modal('show');
+	});	
+
 })( jQuery );
+
+// function updateRecordingShortcode(recType, channel_id){
+
+// 	let shortcodeContent = '';
+// 	if(recType!=''){
+// 		shortcodeContent+=`<input type='text' onfocus='this.select();' readonly='readonly' value='[agora-recordings channel_id="${channel_id}" recording_type="${recType}"]' class='large-text code'>`
+// 	}
+// 	jQuery("body .recording-shortcode-row-"+channel_id).html(shortcodeContent);
+// }

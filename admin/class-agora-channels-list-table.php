@@ -21,6 +21,17 @@ class Agora_Channels_List_Table extends WP_List_Table {
       'title' => __( 'Title', 'agoraio' ),
       'type' => __( 'Type', 'agoraio' ),
       'shortcode' => __( 'Shortcode', 'agoraio' ),
+      //'recordings' => __( 'Recordings', 'agoraio' ),
+      'date' => __( 'Date', 'agoraio' ),
+    );
+
+    return $columns;
+  }
+
+  public static function define_recordings_channels_columns() {
+    $columns = array(
+      'title' => __( 'Channel Name', 'agoraio' ),
+      'type' => __( 'Type', 'agoraio' ),
       'date' => __( 'Date', 'agoraio' ),
     );
 
@@ -62,6 +73,10 @@ class Agora_Channels_List_Table extends WP_List_Table {
     $actions = array(
       'delete' => __( 'Delete', 'agoraio' ),
     );
+    
+    if(isset($_GET['page']) && ($_GET['page'] == 'agoraio-recordings')){
+      $actions = array();
+    }
 
     return $actions;
   }
@@ -181,11 +196,14 @@ class Agora_Channels_List_Table extends WP_List_Table {
 
   function column_title( $item ) {
     $title = '<strong>' . $item->title() . '</strong>';
+    if(isset($_GET['page']) && ($_GET['page'] == 'agoraio-recordings')){
+      $title = '<a href="'. esc_url( admin_url('admin.php?page=agoraio-recordings-listing&id='.$item->id()) ) .'"><strong>' . $item->title() . '</strong></a>';
+    }
     return $title;
   }
 
   protected function handle_row_actions( $item, $column_name, $primary ) {
-    if ( $column_name !== $primary ) {
+    if ( $column_name !== $primary || ((isset($_GET['page']) && ($_GET['page'] == 'agoraio-recordings')))) {
       return '';
     }
 
@@ -250,6 +268,33 @@ class Agora_Channels_List_Table extends WP_List_Table {
   public function column_type( $item ) {
     return $item->type();
   }
+
+  /* public function column_recordings( $item ){ 
+    $isrecordingSettingsDone = $item->isrecordingSettingsDone();  
+    $recordingOptions = array(""=>"Type", "composite" => "Composite", "individual" => "Individual");
+    $output = 'Please fill recording settings details.';
+
+    // Show Recordings Shortcode if recording setting is done
+    if($isrecordingSettingsDone){
+     $recording_type = $item->getRecordingType();
+    ?>
+    
+    <select class="create_recordings_shortcode" onchange="updateRecordingShortcode(this.value, <?php echo $item->id(); ?>)">
+      <?php foreach($recordingOptions as $value=>$option) { ?>
+        <option value="<?php echo $value; ?>" <?php if($value == $recording_type){ echo "selected"; } ?>><?php echo $option; ?></option>
+      <?php } ?>
+    </select>
+
+    <?php
+    $shortcode =  $item->shortcode('recording');
+    $output = "\n" . '<span class="shortcode recording-shortcode-row-'.$item->id().'"><input type="text"'
+      . ' onfocus="this.select();" readonly="readonly"'
+      . ' value="' . esc_attr( $shortcode ) . '"'
+      . ' class="large-text code" /></span>';
+    }
+
+    return trim( $output );
+  } */
 
   /**
    * Render a column when no column specific method exists.
