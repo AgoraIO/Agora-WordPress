@@ -2,9 +2,9 @@
 **Contributors:** [jalamprea](https://github.com/jalamprea), [digitallysavvy](https://github.com/digitallysavvy)  
 **Tags:** live streaming, video streaming, video call, video conference  
 **Requires at least:** 5.0.0   
-**Tested up to:** 5.6   
+**Tested up to:** 5.8.1   
 **Requires PHP:** 7.1   
-**Stable tag:** 2.0.9  
+**Stable tag:** 3.0.0  
 **License:** CC BY-ND 4.0   
 **License URI:** https://creativecommons.org/licenses/by-nd/4.0  
 **GitHub:** https://github.com/AgoraIO/Agora-Word-Press  
@@ -70,8 +70,8 @@ See Agora website for pricing details: [https://www.agora.io/pricing](https://ww
 # Screen Shots
 ![Channels List](/assets/screenshot-1.png?raw=true "Channels List")
 ![Broadcast Channel Settings](/assets/screenshot-2.png?raw=true "Broadcast Channel Settings")
-![WP Agora.io Settings Page](/assets/screenshot-3.png?raw=true "WP Agora.io Settings Page")
-
+![Cloud Recordings Page](/assets/screenshot-4.png?raw=true "Cloud Recordings Page")
+![WP Agora Settings Page](/assets/screenshot-3.png?raw=true "WP Agora Settings Page")
 
 ### Legal ###
 - Terms of Service: [https://www.agora.io/en/terms-of-service](https://www.agora.io/en/terms-of-service)
