@@ -1365,8 +1365,8 @@ button#exit-btn {
 }
 .screen.agora-screen-users-left.sharescreen > .screen-users,
 .screen.agora-screen-users-right.sharescreen > .screen-users {
-  flex: 0 0 25%;
-  max-width: 25%;
+  flex: 0 0 15%;
+  max-width: 15%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -1375,8 +1375,8 @@ button#exit-btn {
 }
 .screen.agora-screen-users-left.sharescreen > .screenshare-container,
 .screen.agora-screen-users-right.sharescreen > .screenshare-container {
-  flex: 0 0 75%;
-  max-width: 75%;
+  flex: 0 0 85%;
+  max-width: 85%;
 }
 
 /* for right screen user */
