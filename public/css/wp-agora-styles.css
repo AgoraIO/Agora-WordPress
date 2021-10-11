@@ -225,7 +225,7 @@
   width: 49.5%;
   height: 45vh;
 }
-.agora-fullscreen .screen-users-2 .user {
+.agora-fullscreen:not(.agora-fullscreen-template) .screen-users-2 .user {
   width: 50% !important;
   height: 69.5vh;
 }
