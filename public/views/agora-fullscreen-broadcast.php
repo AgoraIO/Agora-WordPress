@@ -40,7 +40,6 @@ $current_path       = plugins_url('wp-agora-io') . '/public';
     
   </div>
 
-  <?php wp_footer(); ?>
   <?php require_once "parts/scripts-common.php" ?>
   <?php require_once "parts/scripts-broadcast.php" ?>
   <script>
@@ -71,5 +70,6 @@ $current_path       = plugins_url('wp-agora-io') . '/public';
     });// end addEventListener Load
 
   </script>
+  <?php wp_footer(); ?>
 </body>
 </html>

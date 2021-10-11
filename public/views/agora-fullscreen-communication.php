@@ -37,7 +37,7 @@ $current_path       = plugins_url('wp-agora-io') . '/public';
       <?php require_once "parts/footer-communication.php" ?>
     </section>
   </div>
-  <?php wp_footer(); ?>
+  
   <?php require_once "parts/scripts-common.php" ?>
   <script>
     window.agoraMode = 'communication';
@@ -49,5 +49,6 @@ $current_path       = plugins_url('wp-agora-io') . '/public';
       window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel(window.agoraAppId, window.channelName);
     });
   </script>
+  <?php wp_footer(); ?>
 </body>
 </html>
