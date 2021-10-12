@@ -214,14 +214,6 @@
   height: 75vh;
 }
 
-.agora .screen.sharescreen .screen-users{
-  height: 30vh;
-}
-
-.agora .screenshare-container{
-  height: 70vh;
-}
-
 .agora.agora-audience .screen-users-1 .user {
   height: 65vh;
   background-color: transparent;
@@ -234,7 +226,7 @@
   height: 45vh;
 }
 .agora-fullscreen .screen-users-2 .user {
-  width: 50%;
+  width: 50% !important;
   height: 69.5vh;
 }
 

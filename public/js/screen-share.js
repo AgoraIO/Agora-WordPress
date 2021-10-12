@@ -257,7 +257,7 @@ window.AGORA_SCREENSHARE_UTILS = {
     // remoteEl.style.height = (divWidth / 1.35) + 'px'; // ratio 16:10
     //}
 
-    //remoteEl.style.height = (divWidth / 1.35) + 'px'; // ratio 16:10
+    remoteEl.style.height = (divWidth / 1.35) + 'px'; // ratio 16:10
 
     remoteEl.style.width = '100%';
 
