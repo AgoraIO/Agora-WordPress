@@ -458,10 +458,12 @@ window.AGORA_UTILS = {
       }else{
         console.log('peer-leave:', evt);
         var streamId = evt.stream.getId(); // the the stream id
-        jQuery('#uid-'+streamId).remove();
+        console.log("hlwRemoveRemteStreamPreCalled")
+        //jQuery('#uid-'+streamId).remove();
       }
 
       if(window.remoteStreams[streamId] !== undefined) {
+        console.log("hlwRemoveRemteStreamCalled")
         window.AGORA_UTILS.deleteRemoteStream(streamId);
         // always is +1 due to the remote streams + local user
         const usersCount = Object.keys(window.remoteStreams).length + 1
