@@ -2062,8 +2062,8 @@ if (document.addEventListener) {
 
 function exitHandler() {
   if (!document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
-     if(jQuery("body #agora-root").hasClass('agora-fullscreen').not('.agora-fullscreen-template')){
-       jQuery("body #agora-root").removeClass('agora-fullscreen');
+     if(jQuery("body #agora-root").hasClass('agora-fullscreen')){
+       jQuery("body #agora-root").not('.agora-fullscreen-template').removeClass('agora-fullscreen');
      }
   }
   /* Change Screen Share Container (Large Screen) height on full screen and exit full screen */
