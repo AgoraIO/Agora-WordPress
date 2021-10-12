@@ -341,7 +341,7 @@ window.AGORA_UTILS = {
   },
 
   removeLargeStreamView: function(remoteContainerID){
-    if(jQuery(remoteContainerID).attr('class') == 'screenshare-container'){
+    if(jQuery(remoteContainerID).hasClass('screenshare-container')){
       const streamsContainer = jQuery('#screen-zone');
       streamsContainer.toggleClass('sharescreen');
     }
