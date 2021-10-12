@@ -2062,7 +2062,7 @@ if (document.addEventListener) {
 
 function exitHandler() {
   if (!document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
-     if(jQuery("body #agora-root").hasClass('agora-fullscreen')){
+     if(jQuery("body #agora-root").hasClass('agora-fullscreen').not('.agora-fullscreen-template')){
        jQuery("body #agora-root").removeClass('agora-fullscreen');
      }
   }
