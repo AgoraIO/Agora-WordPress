@@ -162,7 +162,7 @@ window.AGORA_UTILS = {
     if(document.webkitFullscreenElement) {
       document.webkitCancelFullScreen();
       if (root.hasClass('agora-fullscreen')) {
-        root.removeClass('agora-fullscreen')
+        root.not('.agora-fullscreen-template').removeClass('agora-fullscreen')
       }
     } else {
       root[0].webkitRequestFullScreen();
