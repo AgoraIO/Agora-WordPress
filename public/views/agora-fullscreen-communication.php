@@ -5,6 +5,9 @@ $appearanceSettings = $channelSettings['appearance'];
 $recordingSettings  = $channelSettings['recording'];
 $current_user       = wp_get_current_user();
 $current_path       = plugins_url('wp-agora-io') . '/public';
+
+$remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ? $agora->settings['agora-remote-speakers-position'] : '';
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -22,7 +25,7 @@ $current_path       = plugins_url('wp-agora-io') . '/public';
       <div class="agora-content">
         <?php require_once "parts/header-controls.php" ?>
 
-        <div id="screen-zone" class="screen">
+        <div id="screen-zone" class="screen <?php //if($isSpeakerView){ echo 'speaker-view'; } ?> agora-screen-users-<?php if($remoteSpeakersPos == '') { echo 'top'; } else { echo $remoteSpeakersPos; } ?>">
           <div id="screen-users" class="screen-users screen-users-1">
 
             <div id="local-video" class="user" >
