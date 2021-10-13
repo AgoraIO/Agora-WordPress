@@ -225,6 +225,9 @@
   width: 49.5%;
   height: 45vh;
 }
+.agora-fullscreen .sharescreen .screen-users-2 .user {
+    width: calc(100px * 1.5) !important;
+}
 .agora-fullscreen .screen-users-2 .user {
   width: 50% !important;
   height: 69.5vh;
@@ -251,6 +254,9 @@
 }
 
 /* screen with 7 y 8 users */
+.agora-fullscreen .sharescreen .screen-users-7-9 .user {
+  width: calc(100px * 1.5) !important;
+}
 .agora .screen-users-7-9 .user {
   width: 33% !important;
   height: 20vh;
@@ -260,6 +266,9 @@
 }
 
 /* pantalla 10, 11 y 12*/
+.agora-fullscreen .sharescreen .screen-users-10-12 .user{
+  width: calc(100px * 1.5) !important;
+}
 .agora .screen-users-10-12 .user {
   width: 24.5% !important;
   height: 17vh;
