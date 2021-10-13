@@ -67,6 +67,20 @@
   display: grid;
   grid-template-rows: 8vh 92vh;
 }
+.agora-fullscreen-template.agora-fullscreen-template-users-bottom .agora-content {
+  grid-template-rows: 8vh 68vh;
+}
+
+.agora-fullscreen-template.agora-fullscreen-template-users-bottom .agora-content .agora-screen-users-bottom .screen-users {
+  overflow: visible !important;
+}
+.agora-fullscreen-template.agora-fullscreen-template-users-bottom .agora-content #local-video, 
+.agora-fullscreen-template.agora-fullscreen-template-users-top #local-video {
+  max-height: 100%;
+}
+.agora-fullscreen-template .agora-screen-users-top .screenshare-container {
+    max-height: 68%;
+}
 
 .agora .buttons-top {
   display: flex;
