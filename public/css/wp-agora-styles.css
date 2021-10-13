@@ -65,7 +65,7 @@
 }
 .agora-fullscreen .agora-content {
   display: grid;
-  grid-template-rows: 8vh calc(100vh - 160px);
+  grid-template-rows: 8vh 92vh;
 }
 
 .agora .buttons-top {
