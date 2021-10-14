@@ -14,7 +14,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
 // }
 
 ?>
-<div id="agora-root" class="agora agora-broadcast agora-default-template">
+<div id="agora-root" class="agora agora-broadcast agora-default-template agora-default-template-screen-users-<?php if($remoteSpeakersPos == '') { echo 'top'; } else { echo $remoteSpeakersPos; } ?>">
       <?php /* if(is_array($recordingSettings) && 
             !empty($recordingSettings['bucket']) &&
             !empty($recordingSettings['accessKey'])) : ?>
