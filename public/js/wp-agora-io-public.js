@@ -1422,6 +1422,8 @@ jQuery(document).ready(function(){
 
     removeStreamFromLargeView(unpinUserId);
 
+    showVisibleScreen();
+
     window.pinnedUser = '';
 
   });
