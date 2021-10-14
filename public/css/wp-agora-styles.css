@@ -1517,3 +1517,11 @@ button#exit-btn {
 .agora-active-view-selected{
   color: #4221ff;
 }
+
+.agora-broadcast.agora-default-template.agora-fullscreen .agora-content .screenshare-container{
+  max-height: 100%;
+}
+
+.agora-broadcast.agora-default-template.agora-fullscreen .agora-content .agora-content {
+  grid-template-rows: 8vh 74vh;
+}
