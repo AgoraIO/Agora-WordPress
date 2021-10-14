@@ -500,6 +500,8 @@ window.AGORA_UTILS = {
       if (window.AGORA_CLOUD_RECORDING.isCloudRecording) {
         window.AGORA_CLOUD_RECORDING.updateLayout();
       }
+
+      showVisibleScreen();
     });
 
 
