@@ -16,7 +16,7 @@ if (!empty($settings['appearance']['noHostImageURL'])) {
   $screenStyles = "background-size:cover; background-image: url('".$settings['appearance']['noHostImageURL']."')";
 }
 
-$remoteSpeakersPos = isset($settings['agora-remote-speakers-position']) ? $settings['agora-remote-speakers-position'] : '';
+$remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ? $agora->settings['agora-remote-speakers-position'] : '';
 
 // $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
 ?>
