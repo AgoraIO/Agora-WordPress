@@ -14,7 +14,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
 // }
 
 ?>
-<div id="agora-root" class="agora agora-communication">
+<div id="agora-root" class="agora agora-communication agora-default-template">
   <section class="agora-container">
     <?php require_once "parts/header.php" ?>
 

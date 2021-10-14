@@ -20,7 +20,7 @@ $remoteSpeakersPos = isset($settingssettings['agora-remote-speakers-position']) 
 
 // $user_avatar = get_avatar_data( $settings['host'], array('size' => 168) );
 ?>
-<div id="agora-root" class="agora agora-broadcast agora-audience">
+<div id="agora-root" class="agora agora-broadcast agora-audience agora-default-template">
   <section class="agora-container no-footer">
     <?php require_once "parts/header.php" ?>
 
