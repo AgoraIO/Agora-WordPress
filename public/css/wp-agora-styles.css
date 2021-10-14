@@ -1548,4 +1548,8 @@ button#exit-btn {
   }
 }  
 
-.user{max-height: 100%;}
+.user, .screenshare-container{max-height: 100%;}
+
+.agora-communication.agora-default-template.agora-default-template-screen-users-right.agora-fullscreen .agora-content {
+  grid-template-rows: 8vh 74vh;
+}
