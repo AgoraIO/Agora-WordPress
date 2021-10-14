@@ -1522,6 +1522,6 @@ button#exit-btn {
   max-height: 100%;
 }
 
-.agora-broadcast.agora-default-template.agora-fullscreen .agora-content .agora-content {
+.agora-broadcast.agora-default-template.agora-fullscreen .agora-content {
   grid-template-rows: 8vh 74vh;
 }
