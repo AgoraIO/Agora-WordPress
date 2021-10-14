@@ -77,18 +77,28 @@
   justify-content: space-between;
   padding: 0 5px;
 }
-.agora-default-template.agora-fullscreen .fabs.fabs-chat-left, 
+.agora-broadcast.agora-default-template.agora-fullscreen .fabs.fabs-chat-left, 
+.agora-broadcast.agora-default-template.agora-fullscreen .fabs.fabs-chat-right, 
+.agora-fullscreen.agora-boardcast-fullscreen .fabs.fabs-chat-right, 
+.agora-fullscreen.agora-boardcast-fullscreen .fabs.fabs-chat-left {
+    top: auto;
+    bottom: 50%;
+}
+/*.agora-communication.agora-default-template .agora-container .fabs.fabs-chat-left{
+    bottom: auto;
+    top: 50%;
+}
 .agora-default-template.agora-fullscreen .fabs.fabs-chat-right {
   bottom: 50%;
   top: auto;
   transform: translateY(-70%);
 }
-.agora-fullscreen.agora-fullscreen-template .fabs.fabs-chat-left, 
-.agora-fullscreen.agora-fullscreen-template .fabs.fabs-chat-right {
+.agora-fullscreen.agora-fullscreen-template .fabs.fabs-chat-right, 
+.agora-broadcast.agora-default-template.agora-fullscreen .fabs.fabs-chat-left {
     top: auto;
     bottom: 45%;
     transform: translateY(-45%);
-}
+}*/
 /*.agora-fullscreen .fabs.fabs-chat-right {
   bottom: 45%;
   top: auto;
