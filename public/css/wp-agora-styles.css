@@ -71,6 +71,11 @@
 .agora-default-template.agora-default-template-screen-users-bottom.agora-fullscreen .agora-content {
   grid-template-rows: 8vh 74vh;
 }
+.agora-content .buttons-top {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5px;
+}
 
 .agora-fullscreen-template.agora-fullscreen-template-users-bottom .agora-content .agora-screen-users-bottom .screen-users,
 .agora-default-template.agora-default-template-screen-users-bottom.agora-fullscreen .agora-screen-users-bottom .screen-users {
