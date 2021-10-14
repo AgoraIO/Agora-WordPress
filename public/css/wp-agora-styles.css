@@ -67,11 +67,13 @@
   display: grid;
   grid-template-rows: 8vh 92vh;
 }
-.agora-fullscreen-template.agora-fullscreen-template-users-bottom .agora-content {
-  grid-template-rows: 8vh 68vh;
+.agora-fullscreen-template.agora-fullscreen-template-users-bottom .agora-content, 
+.agora-default-template.agora-default-template-screen-users-bottom.agora-fullscreen .agora-content {
+  grid-template-rows: 8vh 74vh;
 }
 
-.agora-fullscreen-template.agora-fullscreen-template-users-bottom .agora-content .agora-screen-users-bottom .screen-users {
+.agora-fullscreen-template.agora-fullscreen-template-users-bottom .agora-content .agora-screen-users-bottom .screen-users,
+.agora-default-template.agora-default-template-screen-users-bottom.agora-fullscreen .agora-screen-users-bottom .screen-users {
   overflow: visible !important;
 }
 .agora-fullscreen-template.agora-fullscreen-template-users-bottom .agora-content #local-video, 
@@ -225,7 +227,7 @@
   height: 50vh;
 }
 .agora-fullscreen .screen-users-1 .user {
-  height: 75vh;
+  height: 68vh;
 }
 
 .agora.agora-audience .screen-users-1 .user {
@@ -1312,7 +1314,7 @@ button#exit-btn {
 .remote-stream-pin-control-section,
 .remote-stream-unpin-control-section {
   position: absolute;
-  z-index: 50;
+  z-index: 99999;
   /* width: calc(100%); */
   top: 0;
   color: #fff;
