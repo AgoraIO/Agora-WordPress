@@ -77,13 +77,16 @@
   overflow: visible !important;
 }
 .agora-fullscreen-template.agora-fullscreen-template-users-bottom .agora-content #local-video, 
-.agora-fullscreen-template.agora-fullscreen-template-users-top #local-video {
+.agora-fullscreen-template.agora-fullscreen-template-users-top #local-video,
+.agora-fullscreen-template.agora-fullscreen-template-users-left .screenshare-container,
+.agora-fullscreen-template.agora-fullscreen-template-users-right .screenshare-container {
   max-height: 100%;
 }
 .agora-fullscreen-template .agora-screen-users-top .screenshare-container {
     max-height: 68%;
 }
 
+.agora-fullscreen-template.agora-fullscreen-template-users-left
 .agora .buttons-top {
   display: flex;
   justify-content: space-between;
