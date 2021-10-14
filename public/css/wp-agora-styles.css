@@ -1529,3 +1529,21 @@ button#exit-btn {
 .agora-broadcast.agora-default-template.agora-fullscreen #full-screen-video, .agora-broadcast.agora-default-template #full-screen-video_container, .agora-broadcast.agora-default-template #full-screen-video {
   max-height: 100%;
 }
+
+@media only screen and (max-width: 600px) {
+  .agora .buttons-top {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .agora-content .buttons-top .left-button {
+          margin: 10px 0;
+  }
+  .agora-content .buttons-top .right-buttons {
+      margin-bottom: 5px;
+  }
+  .agora .buttons-bottom {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}  
