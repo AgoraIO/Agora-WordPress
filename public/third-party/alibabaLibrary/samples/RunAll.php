@@ -1,6 +1,6 @@
 <?php
 
-error_reporting(E_ALL | E_NOTICE);
+//error_reporting(E_ALL | E_NOTICE);
 
 require_once __DIR__ . '/Bucket.php';
 require_once __DIR__ . '/BucketCors.php';

@@ -5,6 +5,9 @@ $appearanceSettings = $channelSettings['appearance'];
 $recordingSettings  = $channelSettings['recording'];
 $current_user       = wp_get_current_user();
 $current_path       = plugins_url('wp-agora-io') . '/public';
+
+$remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ? $agora->settings['agora-remote-speakers-position'] : '';
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -15,14 +18,14 @@ $current_path       = plugins_url('wp-agora-io') . '/public';
   <?php wp_head() ?>
 </head>
 <body <?php body_class(); ?> style="min-height: 100vh; min-height: -webkit-fill-available;">
-  <div id="agora-root" class="agora agora-fullscreen">
+  <div id="agora-root" class="agora agora-fullscreen agora-boardcast-fullscreen agora-fullscreen-template agora-fullscreen-template-users-<?php if($remoteSpeakersPos == '') { echo 'top'; } else { echo $remoteSpeakersPos; } ?>">
     <section class="agora-container">
       <?php require_once "parts/header.php" ?>
 
       <div class="agora-content">
         <?php require_once "parts/header-controls.php" ?>
 
-        <div id="screen-zone" class="screen">
+        <div id="screen-zone" class="screen <?php //if($isSpeakerView){ echo 'speaker-view'; } ?> agora-screen-users-<?php if($remoteSpeakersPos == '') { echo 'top'; } else { echo $remoteSpeakersPos; } ?>">
           <div id="screen-users" class="screen-users screen-users-1">
 
             <div id="full-screen-video" class="user">
@@ -40,7 +43,6 @@ $current_path       = plugins_url('wp-agora-io') . '/public';
     
   </div>
 
-  <?php wp_footer(); ?>
   <?php require_once "parts/scripts-common.php" ?>
   <?php require_once "parts/scripts-broadcast.php" ?>
   <script>
@@ -71,5 +73,6 @@ $current_path       = plugins_url('wp-agora-io') . '/public';
     });// end addEventListener Load
 
   </script>
+  <?php wp_footer(); ?>
 </body>
 </html>

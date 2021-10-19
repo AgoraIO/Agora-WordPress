@@ -162,7 +162,7 @@ window.AGORA_UTILS = {
     if(document.webkitFullscreenElement) {
       document.webkitCancelFullScreen();
       if (root.hasClass('agora-fullscreen')) {
-        root.removeClass('agora-fullscreen')
+        root.not('.agora-fullscreen-template').removeClass('agora-fullscreen')
       }
     } else {
       root[0].webkitRequestFullScreen();
@@ -341,7 +341,8 @@ window.AGORA_UTILS = {
   },
 
   removeLargeStreamView: function(remoteContainerID){
-    if(jQuery(remoteContainerID).attr('class') == 'screenshare-container'){
+    console.log("hlwjQuery(remoteContainerID)", jQuery(remoteContainerID).attr('class'));
+    if(jQuery(remoteContainerID).hasClass('screenshare-container')){
       const streamsContainer = jQuery('#screen-zone');
       streamsContainer.toggleClass('sharescreen');
     }
@@ -457,10 +458,12 @@ window.AGORA_UTILS = {
       }else{
         console.log('peer-leave:', evt);
         var streamId = evt.stream.getId(); // the the stream id
-        jQuery('#uid-'+streamId).remove();
+        console.log("hlwRemoveRemteStreamPreCalled")
+        //jQuery('#uid-'+streamId).remove();
       }
 
       if(window.remoteStreams[streamId] !== undefined) {
+        console.log("hlwRemoveRemteStreamCalled")
         window.AGORA_UTILS.deleteRemoteStream(streamId);
         // always is +1 due to the remote streams + local user
         const usersCount = Object.keys(window.remoteStreams).length + 1
@@ -497,6 +500,8 @@ window.AGORA_UTILS = {
       if (window.AGORA_CLOUD_RECORDING.isCloudRecording) {
         window.AGORA_CLOUD_RECORDING.updateLayout();
       }
+
+      showVisibleScreen();
     });
 
 
@@ -1419,6 +1424,8 @@ jQuery(document).ready(function(){
 
     removeStreamFromLargeView(unpinUserId);
 
+    showVisibleScreen();
+
     window.pinnedUser = '';
 
   });
@@ -2060,7 +2067,7 @@ if (document.addEventListener) {
 function exitHandler() {
   if (!document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
      if(jQuery("body #agora-root").hasClass('agora-fullscreen')){
-       jQuery("body #agora-root").removeClass('agora-fullscreen');
+       jQuery("body #agora-root").not('.agora-fullscreen-template').removeClass('agora-fullscreen');
      }
   }
   /* Change Screen Share Container (Large Screen) height on full screen and exit full screen */
