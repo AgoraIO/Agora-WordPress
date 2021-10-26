@@ -226,7 +226,12 @@ class WP_Agora_Public {
 			$targetDirURL = plugin_dir_url( dirname( __FILE__ ) ).'/uploads/'.$channel_id.'/';
 			
 			// File upload configuration 
-			$targetDirPath = plugin_dir_path( dirname( __FILE__ ) ).'/uploads/'.$channel_id.'/';
+			$targetMainUploadsDirPath = plugin_dir_path( dirname( __FILE__ ) ).'/uploads/';
+			
+			if (!file_exists($targetMainUploadsDirPath)) {
+				mkdir($targetMainUploadsDirPath);
+			}
+			$targetDirPath = $targetMainUploadsDirPath.$channel_id.'/';
 			if (!file_exists($targetDirPath)) {
 				mkdir($targetDirPath);
 			}
