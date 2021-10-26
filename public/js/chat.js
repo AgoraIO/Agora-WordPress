@@ -468,6 +468,7 @@
 			uploadFile(index);
 		});	
 		files = [];
+		processingFiles = [];
 	  }
 	  if(msg!=""){
 		saveChat('text', msg, '');
