@@ -285,7 +285,7 @@
 				if(response.status == 'ok'){
 					const data = 'CHAT-FILE' + TOKEN_SEP + window.userID + TOKEN_SEP+ window.wp_username + TOKEN_SEP + fileName + TOKEN_SEP + response.fileURL;
 					window.AGORA_RTM_UTILS.sendChatMessage(data, function() {
-						saveChat('file', '<a href="'+response.fileURL+'">'+fileName+'</a>');
+						saveChat('file', fileName, response.fileURL);
 						jQuery(".chat-msg-line-"+chatMsgIndex+" .progress-bar-"+index).css('background-color', '#228b22');
 					});
 				} else if(response.status == 'err'){
@@ -307,7 +307,7 @@
 
 	/* Handle Chat History */
 
-	function saveChat(type, msg){
+	function saveChat(type, msg, link=''){
 		if(window.chat_history_enabled){
 			var params = {
 				action: 'save_chat', // wp ajax action
@@ -315,7 +315,8 @@
 				uid: window.userID,
 				uname: window.wp_username,
 				type: type,
-				msg: msg
+				msg: msg,
+				link: link
 			};
 			window.AGORA_UTILS.agoraApiRequest(ajax_url, params);
 		}
@@ -469,7 +470,7 @@
 		files = [];
 	  }
 	  if(msg!=""){
-		saveChat('text', msg);
+		saveChat('text', msg, '');
 	  }
 	}
 
