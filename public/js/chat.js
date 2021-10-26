@@ -287,6 +287,8 @@
 					window.AGORA_RTM_UTILS.sendChatMessage(data, function() {
 						saveChat('file', fileName, response.fileURL);
 						jQuery(".chat-msg-line-"+chatMsgIndex+" .progress-bar-"+index).css('background-color', '#228b22');
+
+						jQuery(".chat-msg-line-"+chatMsgIndex+" .progress-bar-"+index).removeClass("progress-bar-"+index);
 					});
 				} else if(response.status == 'err'){
 					jQuery(".chat-msg-line-"+chatMsgIndex+" .progress-bar-"+index).css('background-color', 'rgb(224 14 29)');
