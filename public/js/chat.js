@@ -281,6 +281,11 @@
 				jQuery('#uploadStatus').html('<p style="color:#EA4335;">File upload failed, please try again.</p>');
 			},
 			success: function(resp){
+				if(index == files.length){
+					files = [];
+					processingFiles = [];
+				}
+				
 				let response = JSON.parse(resp);
 				if(response.status == 'ok'){
 					const data = 'CHAT-FILE' + TOKEN_SEP + window.userID + TOKEN_SEP+ window.wp_username + TOKEN_SEP + fileName + TOKEN_SEP + response.fileURL;
