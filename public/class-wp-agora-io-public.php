@@ -240,7 +240,7 @@ class WP_Agora_Public {
 			$ext = pathinfo($file, PATHINFO_EXTENSION);
 
 			/* File Type Restriction */
-			if(in_array($ext, $allowedFileTypes)){
+			if(in_array(strtolower($ext), $allowedFileTypes)){
 				$newFileName = $fileName.'-'.uniqid().'.'.$ext;
 
 				$targetFilePath = $targetDirPath.$newFileName; 
