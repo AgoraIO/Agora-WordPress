@@ -303,6 +303,9 @@
 		const index = jQuery(this).attr('rel');
 		files.splice(index, 1);
 		jQuery("body #tmp_fileMsg-"+index).remove();
+		jQuery("body .tmp_fileMsg").each(function(index, value){
+			jQuery(this).attr('id', 'tmp_fileMsg-'+index);
+		})
 	});
 
 	/* End Handle File */
