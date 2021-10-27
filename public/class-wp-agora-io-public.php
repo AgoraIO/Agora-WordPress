@@ -189,8 +189,13 @@ class WP_Agora_Public {
 		$username = sanitize_text_field($_POST['uname']);
 		$type = sanitize_text_field($_POST['type']);
 		$message = sanitize_text_field($_POST['msg']);
+		$link = sanitize_text_field($_POST['link']);
 		$time = strtotime(date("Y-m-d H:i:s"));
 		$created_on = date("Y-m-d H:i:s");
+
+		if($type == 'file'){
+			$message = '<a href="'.$link.'">'.$message.'</a>';
+		}
 
 		$table_name = $wpdb->prefix . 'agora_io_chats';
 
@@ -226,7 +231,12 @@ class WP_Agora_Public {
 			$targetDirURL = plugin_dir_url( dirname( __FILE__ ) ).'/uploads/'.$channel_id.'/';
 			
 			// File upload configuration 
-			$targetDirPath = plugin_dir_path( dirname( __FILE__ ) ).'/uploads/'.$channel_id.'/';
+			$targetMainUploadsDirPath = plugin_dir_path( dirname( __FILE__ ) ).'/uploads/';
+			
+			if (!file_exists($targetMainUploadsDirPath)) {
+				mkdir($targetMainUploadsDirPath);
+			}
+			$targetDirPath = $targetMainUploadsDirPath.$channel_id.'/';
 			if (!file_exists($targetDirPath)) {
 				mkdir($targetDirPath);
 			}
@@ -240,7 +250,7 @@ class WP_Agora_Public {
 			$ext = pathinfo($file, PATHINFO_EXTENSION);
 
 			/* File Type Restriction */
-			if(in_array($ext, $allowedFileTypes)){
+			if(in_array(strtolower($ext), $allowedFileTypes)){
 				$newFileName = $fileName.'-'.uniqid().'.'.$ext;
 
 				$targetFilePath = $targetDirPath.$newFileName; 

@@ -424,13 +424,24 @@ function render_agoraio_channel_form_chat_support($channel) {
    ?>
     <?php agora_render_setting_row_select(
       'mute_all_users',
-      __('Mute all users Audio/Video', 'agoraio'),
+      __('Mute all users Audio', 'agoraio'),
       array(
         '' => __('Select', 'agoraio'),
         1 => __('Yes', 'agoraio'),
         0 => __('No', 'agoraio')
       ), $props, '');
    ?>
+
+  <?php agora_render_setting_row_select(
+      'mute_all_users_video',
+      __('Mute all users Video', 'agoraio'),
+      array(
+        '' => __('Select', 'agoraio'),
+        1 => __('Yes', 'agoraio'),
+        0 => __('No', 'agoraio')
+      ), $props, '');
+   ?>
+
     <?php agora_render_setting_row_select(
       'chat_history',
       __('Enable Chat History', 'agoraio'),
