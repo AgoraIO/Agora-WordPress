@@ -2,7 +2,7 @@
 Contributors: jalejo08, hermesf
 Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
-Tested up to: 5.6
+Tested up to: 5.8.1
 Requires PHP: 7.1
 Stable tag: 2.0.9
 Donate link:
@@ -93,6 +93,7 @@ Agora's flexible APIs enable deep integration of high quality, low latency – l
 #1. View all channels and their short codes
 #2. View and edit a broadcast channel's settings
 #3. View and edit your Agora credentials
+#4. View all of your Agora Cloud Recordings
 
 == Changelog ==
 Version 1.0
@@ -172,6 +173,22 @@ Resolves an issue in full screen templates with RTM not loading in the correct o
 Version 2.0.9
 Resolves an issue with the UI for channels containing more than 9 streams.
 
+Version 3.0.0
+Adds new features, exposes more customizations, and resolves some issues.
+  - Channel Admin user
+  - Embed cloud recordings using shortcodes
+  - Option to enable pre-call/device-test view
+  - Floating or Grid layout option per channel
+  - Color customizations for all UI elements
+  - Cloud recording settings for individual or composite recordings
+  - Option to limit # of "hosts" within a communication channel (non-user specific)
+  - Set an Admin Host to allow for moderator controls within a channel
+  - Improved handling for browser "auto-play" policies
+  - Auto-mute mic/audio on channel start
+  - Chat now supports sending and receiving files (limited to specific common file types)
+  - Resolves issues: [44](https://github.com/AgoraIO/Agora-WordPress/issues/44), [53](https://github.com/AgoraIO/Agora-WordPress/issues/53) , [55](https://github.com/AgoraIO/Agora-WordPress/issues/55), [62](https://github.com/AgoraIO/Agora-WordPress/issues/62), [66](https://github.com/AgoraIO/Agora-WordPress/issues/66)  , [94](https://github.com/AgoraIO/Agora-WordPress/issues/94), [101](https://github.com/AgoraIO/Agora-WordPress/issues/101) , [103](https://github.com/AgoraIO/Agora-WordPress/issues/103) 
+  
+
 == Frequently Asked Questions ==
 #1.  Why don't my project credentials (App ID and App Certificate) get saved when I input them on the Settings tab? 
 
@@ -205,5 +222,5 @@ Resolves an issue with the UI for channels containing more than 9 streams.
 ``.agora .screen-users video{ object-fit: contain !important;}
 
 == Upgrade Notice ==
-[Minor Update] Version 2.0.9 resolves UI issue when scaling beyond 9 streams.
+[Major Update] Version 3.0.0 adds many new features and resolves past issues.
 ...

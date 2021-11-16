@@ -28,9 +28,33 @@ function renderCommnicationShortcode($agora, $attrs) {
 
     ob_start();
 
+    $host = is_array($props['host']) ? $props['host'] : array($props['host']);
+    
+    /* If user is in the list of broadcast users */
+    if ( in_array($current_user->ID, $host) ) { ?>
+      <script> window.joinAsHost = 1; </script>
+    <?php } else { ?>
+      <script> window.joinAsHost = 0; </script>
+    <?php }
+
+    $out = '
+    <script>
+      if(sessionStorage.getItem("channelType")!= null){ //Check If there is any state value from session storage
+        //Clear Previous state values if it was not from communication (it is from broadcast)
+        //That will be the case when a user just change the URL (from broadcast to communication) and hits enter
+        if(sessionStorage.getItem("channelType")!= "communication"){
+          sessionStorage.clear();
+        }
+      }
+
+      //Save Value in Session Storage just to save the current channel type for reference - just for state rference on Refresh (that current state was from communication)
+      sessionStorage.setItem("channelType", "communication");
+    </script>
+    ';
+    
     require_once('views/wp-agora-io-communication.php');
 
-    $out = ob_get_clean();
+    $out.= ob_get_clean();
   } else {
     $out = "<!-- Agora: No channel found! -->";
   }

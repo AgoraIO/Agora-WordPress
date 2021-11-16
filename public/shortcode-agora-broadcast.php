@@ -32,6 +32,21 @@ function renderBroadcastShortcode($agora, $attrs) {
     }
     $out = ob_get_clean();
 
+    $out.='
+      <script>
+        if(sessionStorage.getItem("channelType")!= null){ //Check If there is any state value from session storage
+          //Clear Previous state values if it was not from broadcast (or it is from communication)
+          //That will be the case when a user just change the URL (from communication to broadcast) and hits enter
+          if(sessionStorage.getItem("channelType")!= "broadcast"){
+            sessionStorage.clear();
+          }
+        }
+
+        //Save Value in Session Storage just to save the current channel type for reference - just for state rference on Refresh (that current state was from broadcast)
+        sessionStorage.setItem("channelType", "broadcast");
+      </script>
+    ';
+
     if (isset($agoraUserScript) && $agoraUserScript!=='') {
       wp_enqueue_script(
         'AgoraBroadcastClient',

@@ -1,8 +1,12 @@
 <?php
 // $channelSettings is defined on the parent contianer of this file
 $recordingSettings = $channelSettings['recording'];
+$chat_support_loggedin = 0;
+if (array_key_exists("chat_support_loggedin", $channelSettings) && $channelSettings['chat_support_loggedin'] == 1) {
+    $chat_support_loggedin = 1;
+}
 ?>
-<footer class="agora-footer">
+<footer class="agora-footer panel-background-color">
 	<div class="buttons-bottom">
 		
 		<div id="audio-controls" class=" text-center btn-group">
@@ -33,13 +37,35 @@ $recordingSettings = $channelSettings['recording'];
 
         <div class="btn-separator"></div>
 
-        <div class="btn-with-title only-desktop">
+        <div id="change-layout-options-controls" class=" text-center btn-group">
+        	<button id="change-layout-options-btn"  type="button" class="btnIcon">
+            <i class="fa fa-columns" aria-hidden="true"></i>
+        	</button>
+        	<button id="change-layout-options-dropdown" type="button" class="btnIcon dropdown-toggle dropdown-toggle-split"
+        		data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        		<span class="sr-only"><?php _e('Change Layout Options Dropdown', 'agoraio'); ?></span>
+        	</button>
+        	<div id="change-layout-options-list" class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" id="grid">Grid</a>
+                <a class="dropdown-item" id="speaker">Speaker</a>
+            </div>
+            <small class="btn-title"><?php _e('Layout', 'agoraio') ?></small>
+        </div>
+
+        <div class="btn-separator"></div>
+
+        <?php require_once('raise-hand.php'); ?>
+
+        <div class="btn-with-title only-desktop ">
     		<button id="screen-share-btn" type="button" class="btnIcon" title="<?php _e('Screen Share', 'agoraio'); ?>">
               <i id="screen-share-icon" class="fas fa-desktop"></i>
               <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none"></span>
             </button>
             <small class="btn-title"><?php _e('Share', 'agoraio') ?></small>
         </div>
+
+        <?php require_once('modal-permission-request.php'); ?>
+
 
         <?php if(is_array($recordingSettings) && 
             !empty($recordingSettings['bucket']) &&
@@ -54,8 +80,22 @@ $recordingSettings = $channelSettings['recording'];
         <?php endif; ?>
 
         <?php $enableChat = false; ?>
-        <?php if (isset($agora->settings['agora-chat']) && $agora->settings['agora-chat']==='enabled') : ?>
-            <?php $enableChat = true; ?>
+        <?php //if (isset($agora->settings['agora-chat']) && $agora->settings['agora-chat']==='enabled') : ?>
+            <?php //$enableChat = true; ?>
+        <?php 
+            if (isset($agora->settings['agora-chat']) && $agora->settings['agora-chat']==='enabled'){  
+                $enableChat = true;
+            } 
+            if(is_user_logged_in()){
+                if (isset($channelSettings['agora-chat-loggedin']) && $channelSettings['agora-chat-loggedin']==='enabled'){  
+                    $enableChat = true;
+                } 
+                if($chat_support_loggedin == 0){
+                   $enableChat = false;
+                }
+            }
+            if($enableChat===true){
+        ?>
 		<div class="btn-separator"></div>
         <div class="btn-with-title">
             <button id="chat-btn" class="btnIcon open-chat" title="<?php _e('Open Chat', 'agoraio'); ?>" type="button">
@@ -64,7 +104,7 @@ $recordingSettings = $channelSettings['recording'];
             </button>
             <small class="btn-title"><?php _e('Chat', 'agoraio') ?></small>
         </div>
-        <?php endif; ?>
+        <?php } ?>
 
         <div class="btn-with-title">
             <button id="exit-btn-footer" class="btnIcon btn-danger only-mobile" type="button">
@@ -76,7 +116,7 @@ $recordingSettings = $channelSettings['recording'];
     <div class="error-container">
         <span id="error-msg" class="text-danger"></span>
     </div>
-    <?php if ($enableChat===true) { require_once('chat-fab.php'); } ?>
+    
 </footer>
-
+<?php if ($enableChat===true) { require_once('chat-fab.php'); } ?>
 <?php require_once "toast.php" ?>

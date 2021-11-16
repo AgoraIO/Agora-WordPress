@@ -16,8 +16,10 @@ window.localStreams = {
   camera: {
     camId: '',
     micId: '',
-    stream: {}
+    stream: {},
+    userDetails: {}
   },
+  tmpCameraStream: {},
   screen: {
     id: "",
     stream: {}
@@ -38,33 +40,44 @@ window.AGORA_BROADCAST_CLIENT = {
 };
 
 // join a channel
-function agoraJoinChannel() {
-  window.AGORA_RTM_UTILS.setupRTM(window.agoraAppId, window.channelName);
+async function agoraJoinChannel() {
 
-  window.agoraToken = window.AGORA_TOKEN_UTILS.agoraGenerateToken(); // rendered on PHP
   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
+  window.channel_type = 'broadcast';
 
-  // set the role
-  window.agoraClient.setClientRole(window.agoraCurrentRole, function() {
-    AgoraRTC.Logger.info('Client role set as host.');
-  }, function(e) {
-    AgoraRTC.Logger.error('setClientRole failed', e);
-  });
-  
-  window.agoraClient.join(window.agoraToken, window.channelName, userId, async function agoraClientJoin(uid) {
-    await window.AGORA_RTM_UTILS.joinChannel(uid);
+  if(window.pre_call_device_test_enabled){
+    let hasVideo = await detectWebcam();
+    await createTmpCameraStream(userId, hasVideo);
+  } 
+  else{
+    window.AGORA_UTILS.setupAgoraListeners();
+    window.AGORA_RTM_UTILS.setupRTM(window.agoraAppId, window.channelName);
+
+    window.agoraToken = window.AGORA_TOKEN_UTILS.agoraGenerateToken(); // rendered on PHP
+    var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
+
+    // set the role
+    window.agoraClient.setClientRole(window.agoraCurrentRole, function() {
+      AgoraRTC.Logger.info('Client role set as host.');
+    }, function(e) {
+      AgoraRTC.Logger.error('setClientRole failed', e);
+    });
     
-    createCameraStream(uid, {});
-    window.localStreams.uid = uid; // keep track of the stream uid  
-    AgoraRTC.Logger.info('User ' + uid + ' joined channel successfully');
+    window.agoraClient.join(window.agoraToken, window.channelName, userId, async function agoraClientJoin(uid) {
+      await window.AGORA_RTM_UTILS.joinChannel(uid);
+      
+      createCameraStream(uid, {});
+      window.localStreams.uid = uid; // keep track of the stream uid  
+      AgoraRTC.Logger.info('User ' + uid + ' joined channel successfully');
 
-  }, function(err) {
-      AgoraRTC.Logger.error('[ERROR] : join channel failed', err);
-  });
+    }, function(err) {
+        AgoraRTC.Logger.error('[ERROR] : join channel failed', err);
+    });
 
-  window.agoraClient.on('stream-published', function (evt) {
-    AgoraRTC.Logger.info("Publish local stream successfully");
-  });
+    window.agoraClient.on('stream-published', function (evt) {
+      AgoraRTC.Logger.info("Publish local stream successfully");
+    });
+  }
 }
 
 //camera validation 
@@ -78,14 +91,29 @@ async function detectWebcam() {
 
 // video streams for channel
 async function createCameraStream(uid, deviceIds) {
+
+  window.channel_type = 'broadcast';
+
   AgoraRTC.Logger.info('Creating stream with sources: ' + JSON.stringify(deviceIds));
   const hasVideo = await detectWebcam()
-  const localStream = AgoraRTC.createStream({
+
+  let streamSpec = {
     streamID: uid,
     audio: true,
     video: hasVideo,
     screen: false
-  });
+  };
+
+  if(sessionStorage.getItem("microphoneId")!=null){
+    streamSpec.microphoneId = sessionStorage.getItem("microphoneId");
+  }
+
+  if(sessionStorage.getItem("cameraId")!=null){
+    streamSpec.cameraId = sessionStorage.getItem("cameraId");
+  }
+
+  const localStream = AgoraRTC.createStream(streamSpec);
+
   localStream.setVideoProfile(window.cameraVideoProfile);
 
   // The user has granted access to the camera and mic.
@@ -114,6 +142,7 @@ async function createCameraStream(uid, deviceIds) {
     // window.AGORA_BROADCAST_UI.calculateVideoScreenSize();
     
     AgoraRTC.Logger.info('getUserMedia successfully');
+     jQuery(".main-screen-stream-section").css('display', 'block');
     localStream.play('full-screen-video'); // play the local stream on the main div
     // publish local stream
 
@@ -129,8 +158,46 @@ async function createCameraStream(uid, deviceIds) {
     window.agoraClient.publish(localStream, function (err) {
       err && AgoraRTC.Logger.error('[ERROR] : publish local stream error: ' + err);
     });
+    
+    jQuery('body .agora-footer').css('display', 'flex');
 
     window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
+    
+    /* Mute Audios and Videos Based on Mute All Users Settings */
+    if(window.mute_all_users_audio){
+      /* Mute if audio is there and user has not unmuted their audio - on Refresh (through session storage) */
+      if((localStream.getAudioTrack() && localStream.getAudioTrack().enabled) && (sessionStorage.getItem("muteAudio")!="0")){
+          jQuery("#mic-btn").trigger('click');
+      }
+    } else {
+      /* If user has muted audio on Refresh (Check through session storage value) */
+      if(sessionStorage.getItem("muteAudio")=="1"){
+        jQuery("#mic-btn").trigger('click');
+      }
+    } 
+    
+    if(window.mute_all_users_video){
+      /* Mute if video is there and user has not unmuted their video - on Refresh (through session storage) */
+      if((localStream.getVideoTrack() && localStream.getVideoTrack().enabled)  && (sessionStorage.getItem("muteVideo")!="0")){
+        jQuery("#video-btn").trigger('click');
+    }
+    } else {
+      /* If user has muted video on Refresh (Check through session storage value) */
+      if(sessionStorage.getItem("muteVideo")=="1"){
+        jQuery("#video-btn").trigger('click');
+      }
+    }
+
+    window.AGORA_UTILS.agora_getUserAvatar(localStream.getId(), function getUserAvatar(avatarData) {
+      let userAvatar = '';
+      if (avatarData && avatarData.user && avatarData.avatar) {
+        userAvatar = avatarData.avatar
+      }
+      if(userAvatar!=''){
+        jQuery('body #no-local-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
+      }
+      window.localStreams.camera.userDetails = {avtar: userAvatar};
+    });
 
     jQuery('#buttons-container').fadeIn();
   }, function (err) {
@@ -170,6 +237,10 @@ function agoraLeaveChannel() {
     jQuery("#rtmp-config-btn").prop("disabled", true);
     jQuery("#start-RTMP-broadcast").prop("disabled", true);
     jQuery("#cloud-recording-btn").prop("disabled", true);
+
+    // hide the mute/no-video overlays
+    window.AGORA_UTILS.toggleVisibility("#mute-overlay", false); 
+    window.AGORA_UTILS.toggleVisibility("#no-local-video", false);
 
     window.localStreams.camera.stream = null;
 
@@ -327,4 +398,4 @@ function setupInjectStreamsListeners() {
   });
 }
 
-window.AGORA_UTILS.setupAgoraListeners();
+//window.AGORA_UTILS.setupAgoraListeners();
