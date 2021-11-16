@@ -12,9 +12,6 @@
 define('AGORA_MIN_RAND_VALUE', 10000000);
 define('AGORA_MAX_RAND_VALUE', 4294967295);
 
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-
 class AgoraCloudRecording {
     private $API_URL = 'https://api.agora.io/v1/apps/';
     private $settings = null;

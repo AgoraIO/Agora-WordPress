@@ -195,6 +195,13 @@ class WP_Agora_Channel {
       }else{
         $MuteAllUsers = 0;
       }
+
+      if(get_post_meta( $this->id, 'mute_all_users_video', true )){
+        $MuteAllUsersVideo = get_post_meta( $this->id, 'mute_all_users_video', true );
+      }else{
+        $MuteAllUsersVideo = 0;
+      }
+
       if(get_post_meta( $this->id, 'chat_history', true )){
         $ChatHistory = get_post_meta( $this->id, 'chat_history', true );
       }else{
@@ -234,6 +241,7 @@ class WP_Agora_Channel {
         'ghost_mode' => $GhostMode,
         'channel_layout' => $channelLayout,
         'mute_all_users' => $MuteAllUsers,
+        'mute_all_users_video' => $MuteAllUsersVideo,
         'chat_history' => $ChatHistory,
         'pre_call_video' => $PreCallVideo,
         'admin_user' => $admin_user,
@@ -259,6 +267,7 @@ class WP_Agora_Channel {
       'ghost_mode' => 0,
       'channel_layout' => 'grid',
       'mute_all_users' => 0,
+      'mute_all_users_video' => 0,
       'chat_history' => 0,
       'pre_call_video' => 0,
       'admin_user_unmute_forcefully' => 0,
@@ -318,6 +327,7 @@ class WP_Agora_Channel {
     update_post_meta($post_id, 'channel_layout', sanitize_key($args['channel_layout']));
     update_post_meta($post_id, 'channel_type', sanitize_key($args['type']));
     update_post_meta($post_id, 'mute_all_users', sanitize_key($args['mute_all_users']));
+    update_post_meta($post_id, 'mute_all_users_video', sanitize_key($args['mute_all_users_video']));
     update_post_meta($post_id, 'chat_history', sanitize_key($args['chat_history']));
     update_post_meta($post_id, 'pre_call_video', sanitize_key($args['pre_call_video']));
     update_post_meta($post_id, 'admin_user', sanitize_key($args['admin_user']));
@@ -383,6 +393,10 @@ class WP_Agora_Channel {
   }
   public function mute_all_users() {
     return (int)$this->properties['mute_all_users'];
+  }
+
+  public function mute_all_users_video() {
+    return (int)$this->properties['mute_all_users_video'];
   }
 
   public function chat_history() {

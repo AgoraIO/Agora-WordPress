@@ -53,11 +53,18 @@
     window.pre_call_device_test_enabled = 0;
   }
 
-  window.mute_all_users_audio_video = '<?php echo $channel->mute_all_users() ?>';
-  if(window.mute_all_users_audio_video == "0"){
-    window.mute_all_users_audio_video = false;
+  window.mute_all_users_audio = '<?php echo $channel->mute_all_users() ?>';
+  if(window.mute_all_users_audio == "0"){
+    window.mute_all_users_audio = false;
   } else {
-    window.mute_all_users_audio_video = true;
+    window.mute_all_users_audio = true;
+  }
+
+  window.mute_all_users_video = '<?php echo $channel->mute_all_users_video() ?>';
+  if(window.mute_all_users_video == "0"){
+    window.mute_all_users_video = false;
+  } else {
+    window.mute_all_users_video = true;
   }
 
   window.chat_history_enabled = '<?php echo $channel->chat_history() ?>';

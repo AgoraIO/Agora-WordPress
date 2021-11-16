@@ -2,7 +2,7 @@
 Contributors: jalejo08, hermesf
 Tags: live streaming, video streaming, video call, video conference
 Requires at least: 5.0
-Tested up to: 5.6
+Tested up to: 5.8.1
 Requires PHP: 7.1
 Stable tag: 2.0.9
 Donate link:
@@ -93,6 +93,7 @@ Agora's flexible APIs enable deep integration of high quality, low latency – l
 #1. View all channels and their short codes
 #2. View and edit a broadcast channel's settings
 #3. View and edit your Agora credentials
+#4. View all of your Agora Cloud Recordings
 
 == Changelog ==
 Version 1.0
@@ -221,5 +222,5 @@ Adds new features, exposes more customizations, and resolves some issues.
 ``.agora .screen-users video{ object-fit: contain !important;}
 
 == Upgrade Notice ==
-[Minor Update] Version 2.0.9 resolves UI issue when scaling beyond 9 streams.
+[Major Update] Version 3.0.0 adds many new features and resolves past issues.
 ...
