@@ -1511,7 +1511,7 @@ button#exit-btn {
 
 #raise-hand-requests-list{
   max-height: 60vh;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .agora-active-view-selected{
@@ -1552,4 +1552,9 @@ button#exit-btn {
 
 .agora-communication.agora-default-template.agora-default-template-screen-users-right.agora-fullscreen .agora-content, .agora-communication.agora-default-template.agora-default-template-screen-users-left.agora-fullscreen .agora-content {
   grid-template-rows: 8vh 74vh;
+}
+
+.agora .fade, .agora .fade:not(.show)
+{
+  opacity:initial;
 }
