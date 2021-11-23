@@ -706,7 +706,7 @@
   position: absolute;
   top: 88px;
   left: 7px;
-  z-index: 1;
+  z-index: 2;
 }
 
 .agora .toast:not(:last-child) {
