@@ -173,12 +173,12 @@
   cursor: pointer;
 }
 
-.remote-video {
+.agora .remote-video {
   z-index: 1;
   height: 100%;
   width: 100%;
 }
-.mute-overlay {
+.agora .mute-overlay {
   position: absolute;
   z-index: 2;
   bottom: 28px;
@@ -187,7 +187,7 @@
   padding: 2px 0 0 2px;
   display: none;
 }
-.no-video-overlay {
+.agora .no-video-overlay {
   position: absolute;
   z-index: 3;
   width: calc(100% - 0.4em);
@@ -401,20 +401,20 @@
 .agora-audience button .fas {
   color: #0096e6;
 }
-.btn-group {
+.agora .btn-group {
   position: relative;
 }
-.btn-group > .btn-group:not(:last-child) > .btnIcon,
-.btn-group > .btnIcon:not(:last-child):not(.dropdown-toggle) {
+.agora .btn-group > .btn-group:not(:last-child) > .btnIcon,
+.agora .btn-group > .btnIcon:not(:last-child):not(.dropdown-toggle) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   padding-right: 6px;
 }
-.btn-group > .btnIcon:not(:first-child) {
+.agora .btn-group > .btnIcon:not(:first-child) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
-.btn-group small.btn-title {
+.agora .btn-group small.btn-title {
   grid-column: 1 / span 2;
 }
 .agora .buttons-bottom small {
@@ -424,7 +424,7 @@
   padding: 8px;
   float: right;
 }
-.dropdown-toggle::after {
+.agora .dropdown-toggle::after {
   display: inline-block;
   /* margin-left: .255em; */
   vertical-align: 0.255em;
@@ -435,17 +435,17 @@
   border-left: 0.22em solid transparent;
 }
 
-.dropdown-menu.show {
+.agora .dropdown-menu.show {
   display: block;
 }
-.dropdown-menu[x-placement^="bottom"],
-.dropdown-menu[x-placement^="left"],
-.dropdown-menu[x-placement^="right"],
-.dropdown-menu[x-placement^="top"] {
+.agora .dropdown-menu[x-placement^="bottom"],
+.agora .dropdown-menu[x-placement^="left"],
+.agora .dropdown-menu[x-placement^="right"],
+.agora .dropdown-menu[x-placement^="top"] {
   right: auto;
   bottom: auto;
 }
-.dropdown-menu {
+.agora .dropdown-menu {
   position: absolute;
   top: 100%;
   left: 0;
@@ -464,11 +464,11 @@
   border-radius: 0.25rem;
   box-shadow: 2px 2px 10px -2px #7e7e7e;
 }
-.dropdown-item:first-child {
+.agora .dropdown-item:first-child {
   border-top-left-radius: calc(0.25rem - 1px);
   border-top-right-radius: calc(0.25rem - 1px);
 }
-.dropdown-item {
+.agora .dropdown-item {
   display: block;
   width: 100%;
   padding: 0.5rem 1.5rem;
@@ -483,7 +483,7 @@
   cursor: pointer;
 }
 
-.btn-separator {
+.agora .btn-separator {
   display: inline-block;
   border-left: 1px solid #555;
   padding: 0;
@@ -492,7 +492,7 @@
   vertical-align: bottom;
 }
 
-.spinner-border {
+.agora .spinner-border {
   display: inline-block;
   width: 1rem;
   height: 1rem;
@@ -568,7 +568,7 @@
 }
 
 @media (min-width: 576px) {
-  .modal-dialog {
+  .agora .modal-dialog {
     max-width: 500px;
     margin: 2.5rem auto 0;
   }
@@ -664,20 +664,20 @@
   -moz-appearance: none;
   appearance: none;
 }
-.modal-header .close {
+.agora .modal-header .close {
   padding: 0.5rem;
   margin: 0.05rem 0 0;
 }
-.modal-title .fas {
+.agora .modal-title .fas {
   color: #8b8b8b;
 }
-.modal-backdrop.show {
+.agora .modal-backdrop.show {
   opacity: 0.5;
 }
-.modal-backdrop {
+.agora .modal-backdrop {
   display: none;
 }
-.modal .img-permissions {
+.agora .modal .img-permissions {
   margin: auto;
   display: block;
   min-height: 100px;
@@ -689,7 +689,7 @@
 /*
  * Bootstrap Toast Notifications
  */
-.toast {
+ .agora .toast {
   -ms-flex-preferred-size: 350px;
   flex-basis: 350px;
   max-width: 350px;
@@ -709,21 +709,21 @@
   z-index: 1;
 }
 
-.toast:not(:last-child) {
+.agora .toast:not(:last-child) {
   margin-bottom: 0.75rem;
 }
 
-.toast.showing {
+.agora .toast.showing {
   opacity: 1;
 }
-.toast.show {
+.agora .toast.show {
   display: block;
   opacity: 1;
 }
-.toast.hide {
+.agora .toast.hide {
   display: none;
 }
-.toast-header {
+.agora .toast-header {
   display: -ms-flexbox;
   display: flex;
   -ms-flex-align: center;
@@ -736,7 +736,7 @@
   border-top-left-radius: calc(0.25rem - 1px);
   border-top-right-radius: calc(0.25rem - 1px);
 }
-.toast-body {
+.agora .toast-body {
   padding: 0.75rem;
 }
 .agora .mr-auto,
@@ -755,10 +755,10 @@
 /*
  * Bootstrap Form Styles
  */
-.form-group {
+.agora .form-group {
   margin-bottom: 1rem;
 }
-.form-control {
+.agora .form-control {
   display: block;
   width: 100%;
   height: calc(1.75rem + 2px);
@@ -841,7 +841,7 @@
   padding: 0 10px;
 }
 
-#watch-live-closed {
+.agora #watch-live-closed {
   margin: 100px auto;
   background-color: transparent;
 }
@@ -885,7 +885,7 @@
   opacity: 0;
 }
 
-.only-mobile {
+.agora .only-mobile {
   display: none !important;
 }
 
@@ -1008,36 +1008,36 @@
 }
 
 /*camera settings*/
-.action-buttons > button.click_to_join,
-#test_microphone_div > button {
+.agora .action-buttons > button.click_to_join,
+.agora #test_microphone_div > button {
   width: 100%;
   padding: 10px;
   font-size: 15px;
 }
 
-.action-buttons {
+.agora .action-buttons {
   margin-top: 15px;
 }
-#test-device-camera-list > select {
+.agora #test-device-camera-list > select {
   width: 100%;
 }
-.d-flex_align {
+.agora .d-flex_align {
   display: flex;
   flex-direction: column;
   margin-bottom: 15px;
 }
-.d-flex_align > span {
+.agora .d-flex_align > span {
   padding-bottom: 5px;
   font-size: 16px;
 }
 
-button#exit-btn {
+.agora button#exit-btn {
   font-size: 16px;
 }
 /* Bigstep */
 
 /* Active Speaker */
-.activeSpeaker {
+.agora .activeSpeaker {
   animation: myVoice 3s infinite;
   border: 1px solid red;
 }
@@ -1051,7 +1051,7 @@ button#exit-btn {
 }
 
 /*Ghost Mode */
-#big-no-video-stream .no-video-overlay {
+.agora #big-no-video-stream .no-video-overlay {
   position: absolute;
   z-index: 3;
   width: calc(100% - 0.4em);
@@ -1074,20 +1074,20 @@ button#exit-btn {
 /* End Ghost Mode */
 
 /* Files in chat */
-.tmp_fileMsg {
+.agora .tmp_fileMsg {
   position: absolute;
   bottom: 0;
 }
 
-.chat-file-upload label {
+.agora .chat-file-upload label {
   cursor: pointer;
 }
 
-.chat-file-upload input[type="file"] {
+.agora .chat-file-upload input[type="file"] {
   display: none !important;
 }
 
-.chat-file-progress-bar {
+.agora .chat-file-progress-bar {
   background-color: #005aab;
   height: 24px;
   text-align: center;
@@ -1096,8 +1096,8 @@ button#exit-btn {
 /* End files in chat */
 
 /****************video*mute*overlay*******************/
-.user .no-video-overlay,
-.screenshare-container .no-video-overlay
+.agora .user .no-video-overlay,
+.agora .screenshare-container .no-video-overlay
  {
   position: absolute;
   z-index: 2;
@@ -1116,7 +1116,7 @@ button#exit-btn {
 
 /****************mike*mute*overlay*end******************/
 /*.user .mute-overlay {  position: absolute;  z-index: 3;    left: calc(50% - 14px);  font-size: 1.5em;  padding: 2px 0 0 2px;  display: none; }*/
-.user .mute-overlay {
+.agora .user .mute-overlay {
   position: absolute;
   z-index: 3;
   left: 0;
@@ -1128,9 +1128,9 @@ button#exit-btn {
 }
 
 /****************active*speaker*****************/
-.user-speraker,
-.user-speraker:before,
-.user-speraker:after {
+.agora .user-speraker,
+.agora .user-speraker:before,
+.agora .user-speraker:after {
   border-radius: 50%;
   width: 1.5em;
   height: 1.5em;
@@ -1139,7 +1139,7 @@ button#exit-btn {
   -webkit-animation: load7 1.8s infinite ease-in-out;
   animation: load7 1.8s infinite ease-in-out;
 }
-.user-speraker {
+.agora .user-speraker {
   color: #ffffff;
   font-size: 6px;
   position: absolute;
@@ -1153,18 +1153,18 @@ button#exit-btn {
   left: 50%;
   bottom: 7%;
 }
-.user-speraker:before,
-.user-speraker:after {
+.agora .user-speraker:before,
+.agora .user-speraker:after {
   content: "";
   position: absolute;
   top: 0;
 }
-.user-speraker:before {
+.agora .user-speraker:before {
   left: -3.5em;
   -webkit-animation-delay: -0.32s;
   animation-delay: -0.32s;
 }
-.user-speraker:after {
+.agora .user-speraker:after {
   left: 3.5em;
 }
 @-webkit-keyframes load7 {
@@ -1189,7 +1189,7 @@ button#exit-btn {
 }
 /****************active*speaker*end****************/
 /*-----------------------click-to-unmute----------------------------------*/
-.user .resume-userclick {
+.agora .user .resume-userclick {
   position: absolute;
   z-index: 11;
   cursor: pointer;
@@ -1204,15 +1204,15 @@ button#exit-btn {
   border: 0.4px solid #ffffff2e;
 }
 /*-----------------------click-to-unmute-ends---------------------------------*/
-.speaker-view {
+.agora .speaker-view {
   display: flex !important;
   justify-content: space-between;
   height: 50vh !important;
 }
-.speaker-view .main-screen {
+.agora .speaker-view .main-screen {
   width: 100%;
 }
-.speaker-view .screen-users {
+.agora .speaker-view .screen-users {
   width: 20%;
   display: block;
   overflow-y: auto;
@@ -1221,26 +1221,26 @@ button#exit-btn {
   max-height: 100% !important;
   justify-content: flex-start;
 }
-.speaker-view .screen-users .user {
+.agora .speaker-view .screen-users .user {
   width: 100%;
   max-height: 200px !important;
 }
-.speaker-view .main-screen .user {
+.agora .speaker-view .main-screen .user {
   display: block !important;
   height: 100%;
   position: relative;
 }
 /*-----------------------chat----------------------------------*/
-.chat .fab_field.user {
+.agora .chat .fab_field.user {
   align-items: center;
 }
-.chat .fab_field.user .chat_field {
+.agora .chat .fab_field.user .chat_field {
   line-height: 9px !important;
 }
-.chat .fab_field.user {
+.agora .chat .fab_field.user {
   padding: 0 0.5rem 0 0.5rem !important;
 }
-.chat .tmp_fileMsg {
+.agora .chat .tmp_fileMsg {
   position: relative;
   padding: 0.5rem;
   background-color: #f8f8f8;
@@ -1248,7 +1248,7 @@ button#exit-btn {
   margin-left: 0.5rem !important;
   display: inline-block;
 }
-.chat .tmp_fileMsg .action a {
+.agora .chat .tmp_fileMsg .action a {
   padding: 0.1rem 0.3rem;
   background-color: #ff0000;
   width: 21px;
@@ -1264,7 +1264,7 @@ button#exit-btn {
   font-size: 1rem;
   margin-left: 0.5rem !important;
 }
-.chat .tmp_fileMsg .action {
+.agora .chat .tmp_fileMsg .action {
   position: absolute;
   right: -7px;
   top: -14px;
@@ -1275,46 +1275,46 @@ button#exit-btn {
 /*-----------------------chat-end---------------------------------*/
 
 /* */
-#main-screen-stream-section {
+.agora #main-screen-stream-section {
   height: 100%;
 }
 
-.remote-stream-main-container {
+.agora .remote-stream-main-container {
   width: 100%;
   height: 100%;
 }
 
 /* Test Device */
-#test-device-section {
+.agora #test-device-section {
   color: #ffffff;
   width: 50%;
   padding: 0 10px;
 }
 
-.test-device-volume-indicator {
+.agora .test-device-volume-indicator {
   display: none;
 }
 
-#test-device-progressBar {
+.agora #test-device-progressBar {
   width: 100%;
   height: 8px;
   background-color: #666666;
   display: inline-block;
 }
 
-#test-device-myVolume {
+.agora #test-device-myVolume {
   width: 0%;
   height: 100%;
   background-color: #b4bb6b;
   display: block;
 }
 
-.test-device-volumeScaleHolder {
+.agora .test-device-volumeScaleHolder {
   padding: 0;
   margin: 3px 0;
 }
 
-.remote-stream-controls {
+.agora .remote-stream-controls {
   position: absolute;
   z-index: 10;
   width: calc(100%);
@@ -1333,13 +1333,13 @@ button#exit-btn {
   display: flex;
 }
 
-.remote-stream-controls .mute-remote-audio-div > i,
-.remote-stream-controls .mute-remote-video-div > i {
+.agora .remote-stream-controls .mute-remote-audio-div > i,
+.agora .remote-stream-controls .mute-remote-video-div > i {
   font-size: 15px;
 }
 
-.remote-stream-controls .mute-remote-audio-div,
-.remote-stream-controls .mute-remote-video-div {
+.agora .remote-stream-controls .mute-remote-audio-div,
+.agora .remote-stream-controls .mute-remote-video-div {
   width: 30px;
   height: 30px;
   background-color: rgba(0, 0, 0, 0.5);
@@ -1350,8 +1350,8 @@ button#exit-btn {
   align-items: center;
   cursor: pointer;
 }
-.remote-stream-pin-control-section,
-.remote-stream-unpin-control-section {
+.agora .remote-stream-pin-control-section,
+.agora .remote-stream-unpin-control-section {
   position: absolute;
   z-index: 99999;
   /* width: calc(100%); */
@@ -1365,17 +1365,17 @@ button#exit-btn {
   /* height: 100%; */
 }
 /*mutliple stream*/
-.speaker-view .screen-users .remote-stream-main-container {
+.agora .speaker-view .screen-users .remote-stream-main-container {
   height: 25%;
 }
-.speaker-view .screen-users .remote-stream-main-container .user {
+.agora .speaker-view .screen-users .remote-stream-main-container .user {
   max-height: unset;
   height: 100%;
   width: 100% !important;
 }
 
 /*pin unpin css*/
-.remote-pin-div {
+.agora .remote-pin-div {
   position: absolute;
   top: 0;
   display: flex;
@@ -1387,48 +1387,48 @@ button#exit-btn {
   z-index: 9;
   cursor: pointer;
 }
-.remote-pin-div > i {
+.agora .remote-pin-div > i {
   font-size: 15px;
 }
 
 /* allow/reject button */
 
-.permission-confirmation-section .actions > button {
+.agora .permission-confirmation-section .actions > button {
   padding: 5px 15px;
   font-size: 15px;
   margin: 20px 5px;
 }
-.permission-text {
+.agora .permission-text {
   font-size: 18px;
 }
-.modal-header button.close {
+.agora .modal-header button.close {
   background: transparent;
 }
 
-.raise-hand-requests > button {
+.agora .raise-hand-requests > button {
   padding: 2px 7px;
 }
 
 /* modal popup ui*/
 /* allow/reject button */
 
-.accept-raise-hand,
-.reject-raise-hand {
+.agora .accept-raise-hand,
+.agora .reject-raise-hand {
   padding: 5px 15px;
   font-size: 15px;
   margin: 20px 5px 10px;
 }
-.user-details {
+.agora .user-details {
   font-size: 17px;
 }
 
 /* left and right screen user */
-.screen.agora-screen-users-left.sharescreen,
-.screen.agora-screen-users-right.sharescreen {
+.agora .screen.agora-screen-users-left.sharescreen,
+.agora .screen.agora-screen-users-right.sharescreen {
   display: flex;
 }
-.screen.agora-screen-users-left.sharescreen > .screen-users,
-.screen.agora-screen-users-right.sharescreen > .screen-users {
+.agora .screen.agora-screen-users-left.sharescreen > .screen-users,
+.agora .screen.agora-screen-users-right.sharescreen > .screen-users {
   flex: 0 0 15%;
   max-width: 15%;
   display: flex;
@@ -1437,29 +1437,29 @@ button#exit-btn {
   max-height: 338px;
   height: 100%;
 }
-.screen.agora-screen-users-left.sharescreen > .screenshare-container,
-.screen.agora-screen-users-right.sharescreen > .screenshare-container {
+.agora .screen.agora-screen-users-left.sharescreen > .screenshare-container,
+.agora .screen.agora-screen-users-right.sharescreen > .screenshare-container {
   flex: 0 0 85%;
   max-width: 84%;
 }
 
 /* for right screen user */
-.screen.agora-screen-users-right.sharescreen {
+.agora .screen.agora-screen-users-right.sharescreen {
   flex-direction: row-reverse;
 }
 
 /* for bottom screen user */
-.screen.agora-screen-users-bottom.sharescreen {
+.agora .screen.agora-screen-users-bottom.sharescreen {
   display: flex;
   flex-direction: column-reverse;
 }
 
-.button_accept_reject {
+.agora .button_accept_reject {
   display: flex;
   justify-content: flex-end;
 }
 
-.request-row {
+.agora .request-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1496,22 +1496,22 @@ button#exit-btn {
   height: 100%;
 }
 
-.raise-hand-requests > button {
+.agora .raise-hand-requests > button {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.raise-hand-requests > button {
+.agora .raise-hand-requests > button {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.raise-hand-requests > button > i {
+.agora .raise-hand-requests > button > i {
   padding-right: 5px;
 }
 
-#raise-hand-requests-list{
+.agora #raise-hand-requests-list{
   max-height: 60vh;
   overflow: auto;
 }
@@ -1550,7 +1550,7 @@ button#exit-btn {
   }
 }  
 
-.user, .screenshare-container{max-height: 100%;}
+.agora .user, .agora .screenshare-container{max-height: 100%;}
 
 .agora-communication.agora-default-template.agora-default-template-screen-users-right.agora-fullscreen .agora-content, .agora-communication.agora-default-template.agora-default-template-screen-users-left.agora-fullscreen .agora-content {
   grid-template-rows: 8vh 74vh;
