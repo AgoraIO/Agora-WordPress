@@ -341,7 +341,7 @@ window.AGORA_UTILS = {
   },
 
   removeLargeStreamView: function(remoteContainerID){
-    console.log("hlwjQuery(remoteContainerID)", jQuery(remoteContainerID).attr('class'));
+    //console.log("hlwjQuery(remoteContainerID)", jQuery(remoteContainerID).attr('class'));
     if(jQuery(remoteContainerID).hasClass('screenshare-container')){
       const streamsContainer = jQuery('#screen-zone');
       streamsContainer.toggleClass('sharescreen');
@@ -351,16 +351,16 @@ window.AGORA_UTILS = {
   handleVideoMuted: function(remoteId){
     window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
 
-      console.log("remoteVideoMuted")
-      console.log("callMuteVideoGhostCheck")
+      // console.log("remoteVideoMuted")
+      // console.log("callMuteVideoGhostCheck")
 
       // if the main user stops their video select a random user from the list
       handleGhostMode(remoteId, 'remote');
       handleMutedVideoBackgroundColor(remoteId, 'remote');
       let userAvatar = '';
       if(window.remoteStreams[remoteId]){
-        console.log("hlwremoteStreams", window.remoteStreams[remoteId])
-        console.log("hlwuserAvtar", window.remoteStreams[remoteId].userDetails)
+        // console.log("hlwremoteStreams", window.remoteStreams[remoteId])
+        // console.log("hlwuserAvtar", window.remoteStreams[remoteId].userDetails)
         if(typeof window.remoteStreams[remoteId].userDetails!='undefined'){
           userAvatar = window.remoteStreams[remoteId].userDetails.avtar;
         }
@@ -373,7 +373,7 @@ window.AGORA_UTILS = {
 
   handleAudioMuted: function(remoteId){
     window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_mute', true);
-    console.log("callMuteAudioGhostCheck")
+    //console.log("callMuteAudioGhostCheck")
     handleGhostMode(remoteId, 'remote');
     handleRemoteStreamControlsIcons(remoteId);
   },
@@ -410,7 +410,7 @@ window.AGORA_UTILS = {
 
     window.agoraClient.on("unmute-audio", function unmuteAudio(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', false);
-      console.log("callUnMuteAudioGhostCheck")
+      //console.log("callUnMuteAudioGhostCheck")
       handleGhostMode(evt.uid, 'remote');
       handleRemoteStreamControlsIcons(evt.uid);
     });
@@ -444,7 +444,7 @@ window.AGORA_UTILS = {
 
     agoraClient.on("unmute-video", function unmuteVideo(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', false);
-      console.log("callUnMuteVideoGhostCheck")
+      //console.log("callUnMuteVideoGhostCheck")
       handleGhostMode(evt.uid, 'remote');
       handleRemoteStreamControlsIcons(evt.uid);
     });
@@ -458,12 +458,12 @@ window.AGORA_UTILS = {
       }else{
         console.log('peer-leave:', evt);
         var streamId = evt.stream.getId(); // the the stream id
-        console.log("hlwRemoveRemteStreamPreCalled")
+        //console.log("hlwRemoveRemteStreamPreCalled")
         //jQuery('#uid-'+streamId).remove();
       }
 
       if(window.remoteStreams[streamId] !== undefined) {
-        console.log("hlwRemoveRemteStreamCalled")
+        //console.log("hlwRemoveRemteStreamCalled")
         window.AGORA_UTILS.deleteRemoteStream(streamId);
         // always is +1 due to the remote streams + local user
         const usersCount = Object.keys(window.remoteStreams).length + 1
@@ -559,13 +559,13 @@ window.AGORA_UTILS = {
       //window.remoteStreams[remoteId] = { stream: remoteStream };
       // console.log('Stream subscribed:', remoteId);
 
-      console.log("Subscribe remote stream successfully:")
+      //console.log("Subscribe remote stream successfully:")
       AgoraRTC.Logger.info("Subscribe remote stream successfully: " + window.screenshareClients);
 
       const isInjectedStream = window.injectedStreamURL && window.injectedStreamURL!=="";
       if (window.screenshareClients[remoteId] || isInjectedStream) {
         // this is a screen share stream:
-        console.log('Screen stream arrived:');
+        //console.log('Screen stream arrived:');
 
         /*Add Streams to large view if there is no stream that is pinned in large screen */
         if(window.pinnedUser==''){
@@ -583,7 +583,7 @@ window.AGORA_UTILS = {
       }
 
       if (window.AGORA_CLOUD_RECORDING.isCloudRecording) {
-        console.log("hnjiStreamSubscribedUpdateLayout")
+        //console.log("hnjiStreamSubscribedUpdateLayout")
         window.AGORA_CLOUD_RECORDING.updateLayout();
       }
 
@@ -667,7 +667,7 @@ window.AGORA_UTILS = {
     remoteStream.play('agora_remote_' + streamId, function(err){
 
       if ((err && err.status !== "aborted") || (err && err.audio && err.audio.status !== "aborted")){
-        console.log("hnjiErrorDuringPlay")
+        //console.log("hnjiErrorDuringPlay")
         jQuery('body #' + streamId + '_container').prepend(
           addAudioErrorGesture(streamId)
         )
@@ -826,7 +826,7 @@ window.AGORA_CLOUD_RECORDING = {
       token: window.agoraToken,
       maxResolutionUid: maxResolutionUid.toString()
     };
-    console.log("params ",params)
+    //console.log("params ",params)
     window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
       // var startRecordURL = agoraAPI + window.agoraAppId + '/cloud_recording/resourceid/' + res.resourceId + '/mode/mix/start';
       // console.log(res);
@@ -975,7 +975,7 @@ function showVisibleScreen(uid, currStreamVisible){
 
   let oldClass = jQuery("#screen-users").attr('class');
 
-  console.log("showvisstreams ")
+  //console.log("showvisstreams ")
   let total_visible_streams = 0;
   if(jQuery('body #agora-root '+local_stream_div_id).is(":visible")){
     total_visible_streams++;    
@@ -983,9 +983,9 @@ function showVisibleScreen(uid, currStreamVisible){
   }
   
   jQuery('body #agora-root .remote-stream-container').each(function(){
-    console.log("checkthiAttr", jQuery(this).attr('id'))
+    //console.log("checkthiAttr", jQuery(this).attr('id'))
     if(jQuery(this).is(":visible")){
-      console.log("visibleHBhua",jQuery(this).attr('id'))
+      //console.log("visibleHBhua",jQuery(this).attr('id'))
       total_visible_streams++;
       jQuery(this).css('display', 'inline-flex');
     }
@@ -996,10 +996,10 @@ function showVisibleScreen(uid, currStreamVisible){
   // }
 
   if(jQuery('body #agora-root .remote-video').parents('.remote-stream-container').length==0){
-    console.log("testHlo",jQuery(this).attr('class'))
+    //console.log("testHlo",jQuery(this).attr('class'))
     jQuery(this).each(function(){
       if(jQuery(this).is(":visible")){
-        console.log("innertestHlo",jQuery(this).attr('class'))
+        //console.log("innertestHlo",jQuery(this).attr('class'))
         total_visible_streams++;
       }
     });
@@ -1009,7 +1009,7 @@ function showVisibleScreen(uid, currStreamVisible){
   jQuery('body #agora-root .remote-video').each(function(){
     if(jQuery(this).parents('.remote-stream-container').length==0){
       if(jQuery(this).is(":visible")){
-        console.log("innertestHlo",jQuery(this).attr('class'))
+        //console.log("innertestHlo",jQuery(this).attr('class'))
         total_visible_streams++;
       }
     }
@@ -1039,7 +1039,7 @@ function showVisibleScreen(uid, currStreamVisible){
     }
   }
 
-  console.log("hlwtotal_visible_streams", total_visible_streams)
+  //console.log("hlwtotal_visible_streams", total_visible_streams)
 
   if(total_visible_streams == 0){
     jQuery("body #big-no-video-stream").show();
@@ -1047,9 +1047,9 @@ function showVisibleScreen(uid, currStreamVisible){
     jQuery("body #big-no-video-stream").hide();
   }
   let newClass = getScreenUsersClass(total_visible_streams);
-  console.log("hlwoldClass", oldClass)
+  //console.log("hlwoldClass", oldClass)
   jQuery("#screen-users").removeClass(oldClass);
-  console.log("hlwnewClass", newClass)
+  //console.log("hlwnewClass", newClass)
   jQuery("#screen-users").addClass(newClass);
 }
 
@@ -1087,7 +1087,7 @@ function handleGhostMode(uid, streamType='local', channelType='communication'){
     let currStreamVisible = 1;
 
     if(streamType == 'local'){
-      console.log("hlwLocal")
+      //console.log("hlwLocal")
       if(channelType == 'broadcast'){
         local_stream_div_id = "#full-screen-video";
       }
@@ -1103,18 +1103,18 @@ function handleGhostMode(uid, streamType='local', channelType='communication'){
       //showVisibleScreen();
     }
     else if(streamType == 'remote' && window.remoteStreams[uid]){
-      console.log("hlwRemite")
+      //console.log("hlwRemite")
       //console.log("hlwRemoteStream", window.remoteStreams[uid].stream)
       if((window.remoteStreams[uid].stream && (!window.remoteStreams[uid].stream.getAudioTrack() || !window.remoteStreams[uid].stream.getAudioTrack().enabled))
       && (window.remoteStreams[uid].stream && (!window.remoteStreams[uid].stream.getVideoTrack() || !window.remoteStreams[uid].stream.getVideoTrack().enabled))
       ){
-        console.log("hlwHideGhost")
+        //console.log("hlwHideGhost")
         window.AGORA_UTILS.toggleVisibility('#' + uid + '_container', false);
         currStreamVisible = 0;
       } else {
-        console.log("audioTrackStaastu", window.remoteStreams[uid].stream.getAudioTrack().enabled)
-        console.log("audioTrackStaastu", window.remoteStreams[uid].stream.getVideoTrack().enabled)
-        console.log("hlwShowGhost", uid)
+        //console.log("audioTrackStaastu", window.remoteStreams[uid].stream.getAudioTrack().enabled)
+        //console.log("audioTrackStaastu", window.remoteStreams[uid].stream.getVideoTrack().enabled)
+        //console.log("hlwShowGhost", uid)
         window.AGORA_UTILS.toggleVisibility('#' + uid + '_container', true);
         currStreamVisible = 1;
       }
@@ -1133,7 +1133,7 @@ function apply_global_colors(){
   window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
     console.log('Query:', res);
     if(typeof res.global_colors!='undefined' && res.global_colors!=null){
-      console.log("glalSettings", res.global_settings)
+      //console.log("glalSettings", res.global_settings)
       const global_colors = res.global_colors;
       if(typeof global_colors.backgroundColorPanels!='undefined' && global_colors.backgroundColorPanels!=""){
         window.panelsBackgroundColor = global_colors.backgroundColorPanels; 
@@ -1313,7 +1313,7 @@ function addStreamInLargeView(pinUserId, setFromSpeakerView = false){
 
     /* Update Recording Layout when a large screen stream is changed */
     if (window.AGORA_CLOUD_RECORDING.isCloudRecording) {
-      console.log("largeScreenLayoutChange")
+      //console.log("largeScreenLayoutChange")
       window.AGORA_CLOUD_RECORDING.updateLayout();
     }
 
@@ -1330,14 +1330,14 @@ function removeStreamFromLargeView(unpinUserId){
       const localStream = window.localStreams.camera.stream;
       localStream.stop();
 
-      console.log("hlwTest", "#"+unpinUserId)
-      console.log('mainStreamHTML', jQuery("#"+unpinUserId).prop("outerHTML"));
+      //console.log("hlwTest", "#"+unpinUserId)
+      //console.log('mainStreamHTML', jQuery("#"+unpinUserId).prop("outerHTML"));
       let localStreamView = "<div class='user' id='"+unpinUserId+"'>"+jQuery("#"+unpinUserId).html()+"</div>";
-      console.log("tstlocalStreamView", localStreamView)
+      //console.log("tstlocalStreamView", localStreamView)
       window.AGORA_UTILS.deleteLocalStreamView(unpinUserId);
 
       const remoteContainerID = '#' + unpinUserId + '_container';
-      console.log("removeremoteContainerID", remoteContainerID)
+      //console.log("removeremoteContainerID", remoteContainerID)
       jQuery(remoteContainerID).empty().remove();
 
       window.AGORA_UTILS.addLocalStreamView(unpinUserId, localStreamView);
@@ -1374,7 +1374,7 @@ function handleStreamPinIcons(evt, type){
     divId = window.agoraMode==='communication' ? 'local-video' : 'full-screen-video';
   }
 
-  console.log("hlwdivId", divId)
+  //console.log("hlwdivId", divId)
 
   if(type == 'pin'){
     return '<i class="fas fa-thumbtack pin-user" rel="'+divId+'"></i>';
@@ -1722,7 +1722,7 @@ function joinAsHost(){
   jQuery("link#wp-agora-io-chat-fab-css").remove();
 
   window.AGORA_UTILS.agoraApiRequest(ajax_url, params).done(function(res) {
-    console.log("afterAjaxSuccess")
+    //console.log("afterAjaxSuccess")
 
     let mainElm = jQuery('#agora-root').parent();
     jQuery('#agora-root').remove();
@@ -1832,7 +1832,7 @@ let requestedPermission = {
 
 /* Function to set content in requested permission popup */
 function getPermConfirmationContent(type){
-  console.log("hlwrequestedPermission", requestedPermission)
+  //console.log("hlwrequestedPermission", requestedPermission)
   if(requestedPermission.audio && requestedPermission.video){
     type = 'Audio/Video';
   } else if(requestedPermission.video){
@@ -1877,7 +1877,7 @@ function denyAccess(){
 
 /* Function that will be run on rtm peer message event listener */
 async function receivePeerRTMMessage(evt) {
-  console.log("hlwPeerMsg", evt.detail.text)
+  //console.log("hlwPeerMsg", evt.detail.text)
   if (evt.detail && evt.detail.text) {
 
     /* Handle Raise Hand Request - Response */
@@ -1906,13 +1906,13 @@ async function receivePeerRTMMessage(evt) {
     /* Handle raise Hand Response */
     /* If Raise hand Request is Rejected */
     else if(evt.detail.text.indexOf('RAISE-HAND-REJECTED')===0){
-      console.log("Raise hand Request Rejected")
+      //console.log("Raise hand Request Rejected")
       window.AGORA_AUDIENCE.raiseHandRequestRejected();
     } 
 
     /* If Raise hand Request is Accepted */
     else if(evt.detail.text.indexOf('RAISE-HAND-ACCEPTED')===0){
-      console.log("Raise hand Request Accepted")
+      //console.log("Raise hand Request Accepted")
       let canJoinAsHostByAgoraLimit = await window.AGORA_UTILS.canJoinAsHostByAgoraLimit();
       if(canJoinAsHostByAgoraLimit){
         await window.AGORA_AUDIENCE.agoraLeaveChannel();
@@ -1946,7 +1946,7 @@ async function receivePeerRTMMessage(evt) {
     }
     /* Unmute video from Admin User */
     else if(evt.detail.text.indexOf('UNMUTE-VIDEO')===0){
-      console.log("Unmute Video Accepted")
+      //console.log("Unmute Video Accepted")
       jQuery("#video-icon").trigger('click');
     }
 
@@ -1976,7 +1976,7 @@ function checkRaiseHandRequestsOnRefresh(){
 /* Function to handle layout change */
 jQuery(document).ready(function(){
   jQuery("body #change-layout-options-list").on("click", "a", function(event){
-    console.log("hnjiClickHoGya", event.target.id)
+    //console.log("hnjiClickHoGya", event.target.id)
     const view = event.target.id;
     if(view == 'speaker'){
       window.isSpeakerView = true;
@@ -2012,7 +2012,7 @@ jQuery(document).ready(function(){
 
 /* Function to show or hide Raise hand button based on the condition if audio muted/unmuted(In Communication mode)*/
 function showRaiseHandInCommunication(){
-  console.log("hlwwindow.agoraMode", window.agoraMode)
+  //console.log("hlwwindow.agoraMode", window.agoraMode)
   if(window.agoraMode == 'communication'){
     if(Object.keys(window.localStreams.camera.stream).length>0 && (!window.localStreams.camera.stream.getAudioTrack() || !window.localStreams.camera.stream.getAudioTrack().enabled)){
       jQuery("body #raiseHand").show();
@@ -2047,7 +2047,7 @@ async function canJoinAsHostByAgoraLimit(){
   /* Exclude Screen Share Streams from count */
   let count = Object.keys(window.remoteStreams).filter(k => k in window.screenshareClients).length;
   totalRemoteStreams = totalRemoteStreams-count;
-  console.log("hlwcheckHosttotalRemoteStreams", totalRemoteStreams)
+  //console.log("hlwcheckHosttotalRemoteStreams", totalRemoteStreams)
 
   if(totalRemoteStreams<17){
     return true;
