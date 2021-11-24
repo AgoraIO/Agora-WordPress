@@ -159,13 +159,51 @@ window.AGORA_UTILS = {
 
   toggleFullscreen: function() {
     const root = jQuery('#agora-root');
-    if(document.webkitFullscreenElement) {
-      document.webkitCancelFullScreen();
+    // if(document.webkitFullscreenElement) {
+    //   document.webkitCancelFullScreen();
+    //   if (root.hasClass('agora-fullscreen')) {
+    //     root.not('.agora-fullscreen-template').removeClass('agora-fullscreen')
+    //   }
+    // } else {
+    //   root[0].webkitRequestFullScreen();
+    //   if (!root.hasClass('agora-fullscreen')) {
+    //     root.addClass('agora-fullscreen')
+    //   }
+    // };
+
+    if(document.webkitFullscreenElement || document.fullscreenElement || document.mozFullScreenElement || document.msExitFullscreen) {
+      
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      } else {
+        document.webkitCancelFullScreen();
+      }
       if (root.hasClass('agora-fullscreen')) {
         root.not('.agora-fullscreen-template').removeClass('agora-fullscreen')
       }
-    } else {
-      root[0].webkitRequestFullScreen();
+    } 
+    else {
+      let elem = root[0];
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.mozRequestFullScreen) {
+        /* Firefox */
+        elem.mozRequestFullScreen();
+      } else if (elem.webkitRequestFullscreen) {
+        /* Chrome, Safari & Opera */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        /* IE/Edge */
+        elem.msRequestFullscreen();
+      } else {
+        elem.webkitRequestFullScreen();
+      }
       if (!root.hasClass('agora-fullscreen')) {
         root.addClass('agora-fullscreen')
       }
