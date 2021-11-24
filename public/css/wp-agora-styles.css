@@ -1582,5 +1582,5 @@
 }
 
 .agora.agora-fullscreen .screen.agora-screen-users-left.sharescreen .screen-users .user, .agora.agora-fullscreen .screen.agora-screen-users-right.sharescreen .screen-users .user {
-  width: 100%; 
+  width: 100% !important; 
 }
