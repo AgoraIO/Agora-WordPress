@@ -1570,3 +1570,13 @@
 .agora-broadcast.agora-default-template.agora-audience.agora-fullscreen .agora-content {
   grid-template-rows: 8vh 87vh;
 }
+
+.agora.agora-fullscreen .screen.agora-screen-users-left.sharescreen > .screen-users, .agora.agora-fullscreen .screen.agora-screen-users-right.sharescreen > .screen-users {
+    flex: 0 0 12%;
+    max-width: 12%;
+}
+
+.agora.agora-fullscreen .screen.agora-screen-users-left.sharescreen > .screenshare-container, .agora.agora-fullscreen .screen.agora-screen-users-right.sharescreen > .screenshare-container {
+  flex: 0 0 88%;
+  max-width: 88%;
+}
