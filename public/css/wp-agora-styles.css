@@ -1562,3 +1562,11 @@
 {
   opacity:initial;
 }
+
+.agora-broadcast.agora-default-template.agora-audience.agora-fullscreen .agora-content {
+  grid-template-rows: 8vh 87vh;
+}
+
+.agora-broadcast.agora-default-template.agora-audience.agora-fullscreen .agora-content {
+  grid-template-rows: 8vh 87vh;
+}
