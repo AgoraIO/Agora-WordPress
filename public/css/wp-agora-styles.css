@@ -348,6 +348,7 @@
   margin:0;
   padding:0;
   overflow: visible;
+  position: static;
 }
 .agora-fullscreen .agora-footer {
   width: 100%;
