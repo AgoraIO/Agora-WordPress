@@ -62,6 +62,7 @@
 .agora-container {
   background-color: var(--agora-background);
   padding: 0;
+  overflow: visible;
 }
 .agora-fullscreen .agora-content {
   display: grid;
