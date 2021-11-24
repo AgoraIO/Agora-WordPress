@@ -342,7 +342,7 @@
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 2;
+  z-index: 4;
   flex-direction: column;
   /* position: relative; */
   margin:0;
