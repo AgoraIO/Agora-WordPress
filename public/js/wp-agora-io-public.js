@@ -89,7 +89,7 @@ function getCameraDevices() {
 
 
     jQuery('#camera-list a').click(function(event) {
-      n(event.target.id)
+      changeCameraDevice(event.target.id)
     });
 
     jQuery('#test-device-camera-list select').on('change', function() {
