@@ -1593,3 +1593,7 @@
 .agora div#camera-list {
   margin-top: -80px;
 }
+
+.agora-fullscreen-template-users-right.agora-fullscreen .agora-content ,agora-fullscreen-template-users-left.agora-fullscreen .agora-content {
+  grid-template-rows: 8vh 81vh;
+}
