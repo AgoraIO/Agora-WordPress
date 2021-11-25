@@ -1589,3 +1589,7 @@
 .agora-fullscreen-template.agora-fullscreen-template-users-bottom .agora-content {
   grid-template-rows: 8vh 70vh;
 }
+
+.agora div#camera-list {
+  margin-top: -80px;
+}
