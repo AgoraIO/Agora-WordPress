@@ -14,7 +14,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
 // }
 
 ?>
-<div id="agora-root" class="agora agora-communication">
+<div id="agora-root" class="agora agora-communication agora-default-template agora-default-template-screen-users-<?php if($remoteSpeakersPos == '') { echo 'top'; } else { echo $remoteSpeakersPos; } ?>">
   <section class="agora-container">
     <?php require_once "parts/header.php" ?>
 

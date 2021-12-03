@@ -67,7 +67,60 @@
   display: grid;
   grid-template-rows: 8vh 92vh;
 }
+.agora-fullscreen-template.agora-fullscreen-template-users-bottom .agora-content, 
+.agora-default-template.agora-default-template-screen-users-bottom.agora-fullscreen .agora-content, 
+.agora-communication.agora-default-template.agora-default-template-screen-users-top.agora-fullscreen .agora-content {
+  grid-template-rows: 8vh 74vh;
+}
+.agora-content .buttons-top {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5px;
+}
+.agora-broadcast.agora-default-template.agora-fullscreen .fabs.fabs-chat-left, 
+.agora-broadcast.agora-default-template.agora-fullscreen .fabs.fabs-chat-right, 
+.agora-fullscreen.agora-boardcast-fullscreen .fabs.fabs-chat-right, 
+.agora-fullscreen.agora-boardcast-fullscreen .fabs.fabs-chat-left {
+    top: auto;
+    bottom: 50%;
+}
+/*.agora-communication.agora-default-template .agora-container .fabs.fabs-chat-left{
+    bottom: auto;
+    top: 50%;
+}
+.agora-default-template.agora-fullscreen .fabs.fabs-chat-right {
+  bottom: 50%;
+  top: auto;
+  transform: translateY(-70%);
+}
+.agora-fullscreen.agora-fullscreen-template .fabs.fabs-chat-right, 
+.agora-broadcast.agora-default-template.agora-fullscreen .fabs.fabs-chat-left {
+    top: auto;
+    bottom: 45%;
+    transform: translateY(-45%);
+}*/
+/*.agora-fullscreen .fabs.fabs-chat-right {
+  bottom: 45%;
+  top: auto;
+  transform: translateY(-45%);
+}*/
 
+.agora-fullscreen-template.agora-fullscreen-template-users-bottom .agora-content .agora-screen-users-bottom .screen-users,
+.agora-default-template.agora-default-template-screen-users-bottom.agora-fullscreen .agora-screen-users-bottom .screen-users {
+  overflow: visible !important;
+}
+.agora-fullscreen-template.agora-fullscreen-template-users-bottom .agora-content #local-video, 
+.agora-fullscreen-template.agora-fullscreen-template-users-top #local-video,
+.agora-fullscreen-template.agora-fullscreen-template-users-left .screenshare-container,
+.agora-fullscreen-template.agora-fullscreen-template-users-right .screenshare-container, 
+.agora-communication.agora-default-template.agora-default-template-screen-users-top.agora-fullscreen #local-video {
+  max-height: 100%;
+}
+.agora-fullscreen-template .agora-screen-users-top .screenshare-container {
+    max-height: 68%;
+}
+
+.agora-fullscreen-template.agora-fullscreen-template-users-left
 .agora .buttons-top {
   display: flex;
   justify-content: space-between;
@@ -200,7 +253,7 @@
 
 .agora .screen.sharescreen .screenshare-container {
   width: 100%;
-  /* height: 50vh; */
+   height: 58vh !important; 
   height: 100%;
   position: relative;
 }
@@ -211,7 +264,7 @@
   height: 50vh;
 }
 .agora-fullscreen .screen-users-1 .user {
-  height: 75vh;
+  height: 68vh;
 }
 
 .agora.agora-audience .screen-users-1 .user {
@@ -224,6 +277,9 @@
 .agora .screen-users-2 .user {
   width: 49.5%;
   height: 45vh;
+}
+.agora-fullscreen .sharescreen .screen-users-2 .user {
+    width: calc(100px * 1.5) !important;
 }
 .agora-fullscreen .screen-users-2 .user {
   width: 50% !important;
@@ -251,6 +307,9 @@
 }
 
 /* screen with 7 y 8 users */
+.agora-fullscreen .sharescreen .screen-users-7-9 .user {
+  width: calc(100px * 1.5) !important;
+}
 .agora .screen-users-7-9 .user {
   width: 33% !important;
   height: 20vh;
@@ -260,6 +319,9 @@
 }
 
 /* pantalla 10, 11 y 12*/
+.agora-fullscreen .sharescreen .screen-users-10-12 .user{
+  width: calc(100px * 1.5) !important;
+}
 .agora .screen-users-10-12 .user {
   width: 24.5% !important;
   height: 17vh;
@@ -1289,7 +1351,7 @@ button#exit-btn {
 .remote-stream-pin-control-section,
 .remote-stream-unpin-control-section {
   position: absolute;
-  z-index: 50;
+  z-index: 99999;
   /* width: calc(100%); */
   top: 0;
   color: #fff;
@@ -1365,8 +1427,8 @@ button#exit-btn {
 }
 .screen.agora-screen-users-left.sharescreen > .screen-users,
 .screen.agora-screen-users-right.sharescreen > .screen-users {
-  flex: 0 0 25%;
-  max-width: 25%;
+  flex: 0 0 15%;
+  max-width: 15%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -1375,8 +1437,8 @@ button#exit-btn {
 }
 .screen.agora-screen-users-left.sharescreen > .screenshare-container,
 .screen.agora-screen-users-right.sharescreen > .screenshare-container {
-  flex: 0 0 75%;
-  max-width: 75%;
+  flex: 0 0 85%;
+  max-width: 84%;
 }
 
 /* for right screen user */
@@ -1454,4 +1516,40 @@ button#exit-btn {
 
 .agora-active-view-selected{
   color: #4221ff;
+}
+
+.agora-broadcast.agora-default-template.agora-fullscreen .agora-content .screenshare-container{
+  max-height: 100%;
+}
+
+.agora-broadcast.agora-default-template.agora-fullscreen .agora-content {
+  grid-template-rows: 8vh 74vh;
+}
+
+.agora-broadcast.agora-default-template.agora-fullscreen #full-screen-video, .agora-broadcast.agora-default-template #full-screen-video_container, .agora-broadcast.agora-default-template #full-screen-video {
+  max-height: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+  .agora .buttons-top {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .agora-content .buttons-top .left-button {
+          margin: 10px 0;
+  }
+  .agora-content .buttons-top .right-buttons {
+      margin-bottom: 5px;
+  }
+  .agora .buttons-bottom {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}  
+
+.user, .screenshare-container{max-height: 100%;}
+
+.agora-communication.agora-default-template.agora-default-template-screen-users-right.agora-fullscreen .agora-content, .agora-communication.agora-default-template.agora-default-template-screen-users-left.agora-fullscreen .agora-content {
+  grid-template-rows: 8vh 74vh;
 }

@@ -189,8 +189,13 @@ class WP_Agora_Public {
 		$username = sanitize_text_field($_POST['uname']);
 		$type = sanitize_text_field($_POST['type']);
 		$message = sanitize_text_field($_POST['msg']);
+		$link = sanitize_text_field($_POST['link']);
 		$time = strtotime(date("Y-m-d H:i:s"));
 		$created_on = date("Y-m-d H:i:s");
+
+		if($type == 'file'){
+			$message = '<a href="'.$link.'">'.$message.'</a>';
+		}
 
 		$table_name = $wpdb->prefix . 'agora_io_chats';
 
@@ -226,7 +231,12 @@ class WP_Agora_Public {
 			$targetDirURL = plugin_dir_url( dirname( __FILE__ ) ).'/uploads/'.$channel_id.'/';
 			
 			// File upload configuration 
-			$targetDirPath = plugin_dir_path( dirname( __FILE__ ) ).'/uploads/'.$channel_id.'/';
+			$targetMainUploadsDirPath = plugin_dir_path( dirname( __FILE__ ) ).'/uploads/';
+			
+			if (!file_exists($targetMainUploadsDirPath)) {
+				mkdir($targetMainUploadsDirPath);
+			}
+			$targetDirPath = $targetMainUploadsDirPath.$channel_id.'/';
 			if (!file_exists($targetDirPath)) {
 				mkdir($targetDirPath);
 			}
@@ -240,7 +250,7 @@ class WP_Agora_Public {
 			$ext = pathinfo($file, PATHINFO_EXTENSION);
 
 			/* File Type Restriction */
-			if(in_array($ext, $allowedFileTypes)){
+			if(in_array(strtolower($ext), $allowedFileTypes)){
 				$newFileName = $fileName.'-'.uniqid().'.'.$ext;
 
 				$targetFilePath = $targetDirPath.$newFileName; 
@@ -389,9 +399,7 @@ class WP_Agora_Public {
 		$bootstrap_popper_js = plugin_dir_url( __FILE__ ) . 'js/bootstrap/popper.min.js';
 	  	$fontawesome = plugin_dir_url( __FILE__ ) . 'css/fontawesome/css/all.min.css';
 
-
-		//wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-3.2.1.100.js', array('jquery'), null );
-		wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-3.5.2.js', array('jquery'), null );
+		wp_enqueue_script( 'AgoraSDK', plugin_dir_url( __FILE__ ).'js/agora/AgoraRTCSDK-3.6.5.200.js', array('jquery'), null );
 		wp_enqueue_script( 'AgoraRTM', plugin_dir_url( __FILE__ ).'js/agora/agora-rtm-sdk-1.2.2.js', array('jquery'), null );
 		
 		wp_enqueue_style( 'fontawesome', $fontawesome, array('bootstrap'), null, 'all' );
