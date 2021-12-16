@@ -11,9 +11,9 @@ if(!empty($settings['appearance']['watchButtonText'])) {
 }
 $buttonIcon = $settings['appearance']['watchButtonIcon']!=='false';
 
-$screenStyles = '';
+$screenStyles = 'display: none; ';
 if (!empty($settings['appearance']['noHostImageURL'])) {
-  $screenStyles = "background-size:cover; background-image: url('".$settings['appearance']['noHostImageURL']."')";
+  $screenStyles = "display: none; background-size:cover; background-image: url('".$settings['appearance']['noHostImageURL']."')";
 }
 
 $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ? $agora->settings['agora-remote-speakers-position'] : '';
@@ -29,7 +29,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
 
       <div id="screen-zone" class="screen agora-screen-users-<?php if($remoteSpeakersPos == '') { echo 'top'; } else { echo $remoteSpeakersPos; } ?>" <?php echo $agoraStyle ?>>
         <div id="screen-users" class="screen-users screen-users-1">
-          <div id="full-screen-video" class="user" style="display: none; <?php echo $screenStyles; ?>"></div>
+          <div id="full-screen-video" class="user" style="<?php echo $screenStyles; ?>"></div>
 
           <div id="watch-live-overlay" class="overlay user">
             <div id="overlay-container">
