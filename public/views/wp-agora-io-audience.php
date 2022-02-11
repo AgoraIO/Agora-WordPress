@@ -236,7 +236,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
           var streamId = evt.uid; // the the stream id
           //return false;
         } else{
-          const streamId = evt.stream.getId(); // the the stream id
+          var streamId = evt.stream.getId(); // the the stream id
           evt.stream.isPlaying() && evt.stream.stop(); // stop the stream
         }
   
