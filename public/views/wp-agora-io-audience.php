@@ -119,14 +119,16 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
         jQuery("#full-screen-video").hide();
         jQuery("#watch-live-closed").show();
 
-        function waitUntilClose() {
-          jQuery('#txt-waiting').hide();
-          jQuery('#txt-finished').show();
+        // function waitUntilClose() {
+        //   jQuery('#txt-waiting').hide();
+        //   jQuery('#txt-finished').show();
 
-          agoraLeaveChannel();
-        }
+        //   agoraLeaveChannel();
+        // }
         exitBtn.hide();
-        window.waitingClose = setTimeout(waitUntilClose, WAIT_FOR_RECONNECT_TIMEOUT)
+        agoraLeaveChannel();
+        jQuery('#txt-finished').show();
+        //window.waitingClose = setTimeout(waitUntilClose, WAIT_FOR_RECONNECT_TIMEOUT)
       }
       
       // Due to broswer restrictions on auto-playing video, 
