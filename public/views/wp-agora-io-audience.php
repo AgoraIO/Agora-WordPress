@@ -115,9 +115,19 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
       })
 
       function finishVideoScreen() {
-        jQuery(".remote-stream-container").hide();
+        //jQuery(".remote-stream-container").hide();
         jQuery("#full-screen-video").hide();
         jQuery("#watch-live-closed").show();
+
+        jQuery(".remote-stream-container").empty();
+        /* Clean up screen share feeds */
+        if(jQuery("body #agora-root .screenshare-container").length>0){
+          jQuery("body #agora-root .screenshare-container").remove();
+        }
+        if(jQuery("body #agora-root #screen-zone").hasClass("sharescreen")){
+          jQuery("body #agora-root #screen-zone").removeClass("sharescreen");
+        }
+        /* Clean up screen share feeds */
 
         // function waitUntilClose() {
         //   jQuery('#txt-waiting').hide();

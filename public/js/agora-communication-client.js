@@ -297,6 +297,15 @@ function agoraLeaveChannel() {
     jQuery("#screen-share-btn").prop("disabled", true);
     jQuery("#exit-btn").prop("disabled", true);
     jQuery("#cloud-recording-btn").prop("disabled", true);
+
+    /* Clean up screen share feeds */
+    if(jQuery("body #agora-root .screenshare-container").length>0){
+      jQuery("body #agora-root .screenshare-container").remove();
+    }
+    if(jQuery("body #agora-root #screen-zone").hasClass("sharescreen")){
+      jQuery("body #agora-root #screen-zone").removeClass("sharescreen");
+    }
+    /* Clean up screen share feeds */
     
     // hide the mute/no-video overlays
     window.AGORA_UTILS.toggleVisibility("#mute-overlay", false); 
