@@ -119,7 +119,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
         jQuery("#full-screen-video").hide();
         jQuery("#watch-live-closed").show();
 
-        jQuery(".remote-stream-container").empty();
+        jQuery("body #agora-root .remote-stream-container").remove();
         /* Clean up screen share feeds */
         if(jQuery("body #agora-root .screenshare-container").length>0){
           jQuery("body #agora-root .screenshare-container").remove();
