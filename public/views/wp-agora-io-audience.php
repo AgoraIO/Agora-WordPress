@@ -138,7 +138,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
         window.agoraClient.init(agoraAppId, function () {
           jQuery("#watch-live-overlay").remove();
           jQuery("#screen-zone").css('background', 'none')
-          jQuery("#full-screen-video").fadeIn();
+          jQuery("#full-screen-video").show();
           AgoraRTC.Logger.info('AgoraRTC client initialized');
           agoraJoinChannel(); // join channel upon successfull init
         }, function (err) {
@@ -186,7 +186,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
 
         jQuery("#watch-live-closed").hide();
         jQuery("#watch-live-overlay").hide();
-        jQuery("#full-screen-video").css('background', 'none').fadeIn();
+        jQuery("#full-screen-video").css('background', 'none').show();
         exitBtn.show();
 
         // Subscribe to the stream.
