@@ -331,6 +331,8 @@ function agoraLeaveChannel() {
     // leave also RTM Channel
     window.AGORA_RTM_UTILS.leaveChannel();
 
+    showVisibleScreen();
+
     window.dispatchEvent(new CustomEvent("agora.leavedChannel"));
     
     // show the modal overlay to join
