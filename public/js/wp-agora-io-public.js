@@ -1419,6 +1419,13 @@ function removeStreamFromLargeView(unpinUserId){
     window.AGORA_CLOUD_RECORDING.updateLayout();
   }
 
+  /* Handle Ghost Mode UI */
+  if(unpinUserId == 'local-video' || unpinUserId == 'full-screen-video'){
+    handleGhostMode(unpinUserId, 'local');
+  } else {
+      handleGhostMode(unpinUserId, 'remote');
+  }
+
 }
 
 /* Pin/Unpin button on streams hover */
