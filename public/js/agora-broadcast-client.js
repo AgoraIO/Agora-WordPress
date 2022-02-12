@@ -238,6 +238,12 @@ function agoraLeaveChannel() {
     jQuery("#start-RTMP-broadcast").prop("disabled", true);
     jQuery("#cloud-recording-btn").prop("disabled", true);
 
+    /* clean up the remote feeds */
+    jQuery("body #agora-root .remote-stream-container").each(function(){
+      jQuery(this).remove();
+    });
+    /* clean up the remote feeds */
+
     /* Clean up screen share feeds */
     if(jQuery("body #agora-root .screenshare-container").length>0){
       jQuery("body #agora-root .screenshare-container").remove();
