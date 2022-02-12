@@ -2062,14 +2062,56 @@ function checkRaiseHandRequestsOnRefresh(){
       jQuery("body #change-layout-options-list #speaker").addClass("agora-active-view-selected");
 	    jQuery("body #change-layout-options-list #grid").removeClass("agora-active-view-selected");
 
-      /* Set Local Video in Large View by default if user selects Active Speaker */
-      if(canHandlePinUnpin()){
+      /* Set Local Video in Large View by default if user selects Active Speaker and user has not pinned any stream in large view */
+      if(canHandlePinUnpin() && window.pinnedUser==''){
         if(window.agoraMode == 'communication'){
-          jQuery("body #agora-root #local-video").addClass('activeSpeaker');
-          addStreamInLargeView("local-video", true);
+          if(window.isGhostModeEnabled){ // Set First Visible Stream as Active Speaker if Ghost Mode is enabled
+            let visibleStreamId = 0;
+            if(jQuery("body #agora-root #local-video").is(":visible")
+            ){
+              visibleStreamId = "local-video";
+            } else {
+              let remoteStreams = Object.fromEntries(Object.entries(window.remoteStreams).filter(([_, v]) => v != null));
+              for (var key of Object.keys(remoteStreams)) {
+                if(jQuery("body #agora-root #"+key+"_container").is(":visible")){
+                  visibleStreamId = key;
+                  break;
+                }
+              }
+            }
+
+            if(visibleStreamId!=0){
+              jQuery("body #agora-root #"+visibleStreamId).addClass('activeSpeaker');
+              addStreamInLargeView(visibleStreamId, true);
+            }
+          } else {
+            jQuery("body #agora-root #local-video").addClass('activeSpeaker');
+            addStreamInLargeView("local-video", true);
+          }
         } else {
-          jQuery("body #agora-root #full-screen-video").addClass('activeSpeaker');
-          addStreamInLargeView("full-screen-video", true);
+          if(window.isGhostModeEnabled){ // Set First Visible Stream as Active Speaker if Ghost Mode is enabled
+            let visibleStreamId = 0;
+            if(jQuery("body #agora-root #full-screen-video").is(":visible")
+            ){
+              visibleStreamId = "full-screen-video";
+            } else {
+              let remoteStreams = Object.fromEntries(Object.entries(window.remoteStreams).filter(([_, v]) => v != null));
+              for (var key of Object.keys(remoteStreams)) {
+                if(jQuery("body #agora-root #"+key+"_container").is(":visible")){
+                  visibleStreamId = key;
+                  break;
+                }
+              }
+            }
+
+            if(visibleStreamId!=0){
+              jQuery("body #agora-root #"+visibleStreamId).addClass('activeSpeaker');
+              addStreamInLargeView(visibleStreamId, true);
+            }
+          } else {
+            jQuery("body #agora-root #full-screen-video").addClass('activeSpeaker');
+            addStreamInLargeView("full-screen-video", true);
+          }
         }
       }
       /* Set Local Video in Large View by default if user selects Active Speaker */
