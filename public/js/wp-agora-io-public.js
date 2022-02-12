@@ -2024,6 +2024,16 @@ jQuery(document).ready(function(){
       }
       jQuery("body #change-layout-options-list #speaker").addClass("agora-active-view-selected");
 	    jQuery("body #change-layout-options-list #grid").removeClass("agora-active-view-selected");
+
+      /* Set Local Video in Large View by default if user selects Active Speaker */
+      if(window.agoraMode == 'communication'){
+        jQuery("body #agora-root #local-video").addClass('activeSpeaker');
+        addStreamInLargeView("local-video", true);
+      } else {
+        jQuery("body #agora-root #full-screen-video").addClass('activeSpeaker');
+        addStreamInLargeView("full-screen-video", true);
+      }
+      /* Set Local Video in Large View by default if user selects Active Speaker */
     } else {
       /* Remove large screen view if user has not pinned any user (it's default Active speaker user) and the screen share stream is not in large screen */
       if(window.pinnedUser==''){
