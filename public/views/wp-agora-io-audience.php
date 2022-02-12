@@ -81,7 +81,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
         /* Check if Raise Hand Request was accepted - on Refresh (using session storage) */
         /* In joinAsHostApprovedUserId, there will be window.userId - that will be 0 for logged-out user, so skipping that as in logged out users every time, a new user id is generated */
         if(sessionStorage.getItem("joinAsHostApprovedUserId")!=0 && sessionStorage.getItem("joinAsHostApprovedUserId") == window.userID){
-          joinAsHost();
+          joinAsAgoraHost();
         } else {
           handleOnLoad();
         }

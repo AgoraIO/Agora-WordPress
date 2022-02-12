@@ -1764,7 +1764,7 @@ jQuery(document).ready(function(){
 
 
 /* Handle - change User Role - From Raise hand in Broadcast mode */
-function joinAsHost(){
+function joinAsAgoraHost(){
   var params = {
     action: 'load_host_view', // wp ajax action
     channel_id: window.channelId,
@@ -1985,7 +1985,7 @@ async function receivePeerRTMMessage(evt) {
       let canJoinAsHostByAgoraLimit = await window.AGORA_UTILS.canJoinAsHostByAgoraLimit();
       if(canJoinAsHostByAgoraLimit){
         await window.AGORA_AUDIENCE.agoraLeaveChannel();
-        joinAsHost();
+        joinAsAgoraHost();
       } else {
         showToastMsg('Error', "You cannot raise hand as host limit has been reached.");
       }
