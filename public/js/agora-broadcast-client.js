@@ -219,7 +219,7 @@ function agoraLeaveChannel() {
 
   window.dispatchEvent(new CustomEvent("agora.leavingChannel"));
 
-  window.agoraClient.leave(function callbackLeave() {
+  window.agoraClient.leave(function() {
     AgoraRTC.Logger.info('client leaves channel');
     window.localStreams.camera.stream.stop() // stop the camera stream playback
     window.localStreams.camera.stream.close(); // clean up and close the camera stream
