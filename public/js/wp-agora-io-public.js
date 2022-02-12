@@ -614,7 +614,7 @@ window.AGORA_UTILS = {
         
         } else {
           // show new stream on screen:
-          window.AGORA_UTILS.addRemoteStreamView(remoteStream);
+          //window.AGORA_UTILS.addRemoteStreamView(remoteStream);
         }
 
         // // Subscribe to the stream.
@@ -660,6 +660,7 @@ window.AGORA_UTILS = {
           window.AGORA_BROADCAST_UI.toggleCaptureStreamBtn(null, 'started');
         }
       } else {
+        window.AGORA_UTILS.addRemoteStreamView(remoteStream);
         // always add 1 due to the remote streams + local user
         const usersCount = Object.keys(window.remoteStreams).length + 1
         window.AGORA_UTILS.updateUsersCounter(usersCount);
@@ -669,8 +670,6 @@ window.AGORA_UTILS = {
         //console.log("hnjiStreamSubscribedUpdateLayout")
         window.AGORA_CLOUD_RECORDING.updateLayout();
       }
-
-      handleGhostMode(remoteId, 'remote');
 
       // let remoteStream = stream;
       //   let remoteId = streamId;
