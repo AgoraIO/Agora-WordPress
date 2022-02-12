@@ -540,6 +540,12 @@ window.AGORA_UTILS = {
       }
 
       showVisibleScreen();
+
+      //When there are no remote streams and local stream is in the large view then update/fix the UI
+      if(totalRemoteStreams() == 0 && jQuery("body #agora-root .screenshare-container").length>0){
+        let unpinUserId = jQuery("body #agora-root .screenshare-container").attr('rel');
+		    removeStreamFromLargeView(unpinUserId);
+      }
     });
 
 
@@ -1489,14 +1495,20 @@ jQuery(document).ready(function(){
 
 });  
 
-function canHandlePinUnpin(){
-  let totalStreams = 1; //Local Stream
-
+function totalRemoteStreams(){
+  let totalStreams = 0;
   let remoteStreams = Object.fromEntries(Object.entries(window.remoteStreams).filter(([_, v]) => v != null));
   totalStreams+=Object.keys(remoteStreams).length;
 
   let screenShareStreams = Object.fromEntries(Object.entries(window.screenshareClients).filter(([_, v]) => v != null));
   totalStreams+=Object.keys(screenShareStreams).length;
+  return totalStreams;
+}
+
+function canHandlePinUnpin(){
+  let totalStreams = 1; //Local Stream
+
+  totalStreams+=totalRemoteStreams(); //Remote Streams
 
   //totalStreams = totalStreams+Object.keys(window.remoteStreams).length+Object.keys(window.screenshareClients).length;
   if(totalStreams>1){
