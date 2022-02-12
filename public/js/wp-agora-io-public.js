@@ -2087,6 +2087,7 @@ jQuery(document).ready(function(){
       jQuery("body #change-layout-options-list #grid").addClass("agora-active-view-selected");
 	    jQuery("body #change-layout-options-list #speaker").removeClass("agora-active-view-selected");
     }
+    showVisibleScreen();
   });
 }); 
 /* End Function to handle layout change */
