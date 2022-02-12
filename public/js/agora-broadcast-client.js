@@ -146,6 +146,8 @@ async function createCameraStream(uid, deviceIds) {
     //localStream.play('full-screen-video'); // play the local stream on the main div
     // publish local stream
 
+    jQuery("body #agora-root #full-screen-video").append('<div class="agora-loader"></div>');
+
     if(jQuery.isEmptyObject(window.localStreams.camera.stream)) {
       window.AGORA_BROADCAST_UI.enableUiControls(localStream); // move after testing
     } else {

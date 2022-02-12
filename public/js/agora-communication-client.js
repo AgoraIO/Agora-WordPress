@@ -178,6 +178,8 @@ function createCameraStream(uid, next) {
 
           //localStream.play('local-video'); // play the given stream within the local-video div
 
+          jQuery("body #agora-root #local-video").append('<div class="agora-loader"></div>');
+
           // publish local stream
           window.agoraClient.publish(localStream, function (err) {
               AgoraRTC.Logger.error("[ERROR] : publish local stream error: " + err);
