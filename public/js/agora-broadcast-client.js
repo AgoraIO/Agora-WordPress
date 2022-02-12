@@ -265,6 +265,18 @@ function agoraLeaveChannel() {
     }
     /* Disable Change Layout button */
 
+    /* Disable Raise Hand Requests */
+    if(jQuery("body #agora-rrot .raise-hand-requests").length>0){
+      jQuery("body #agora-rrot .raise-hand-requests button").attr('disabled', 'disabled');
+    }
+    /* Disable Raise Hand Requests */
+
+    /* Disable Chat Button */
+    if(jQuery("body #agora-rrot button#chat-btn").length>0){
+      jQuery("body #agora-rrot button#chat-btn").attr('disabled', 'disabled');
+    }
+    /* Disable Chat Button */
+
     // hide the mute/no-video overlays
     window.AGORA_UTILS.toggleVisibility("#mute-overlay", false); 
     window.AGORA_UTILS.toggleVisibility("#no-local-video", false);
