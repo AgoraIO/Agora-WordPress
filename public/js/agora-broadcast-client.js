@@ -217,9 +217,13 @@ async function createCameraStream(uid, deviceIds) {
 
 function agoraLeaveChannel() {
 
-  window.dispatchEvent(new CustomEvent("agora.leavingChannel"));
+  if(screenShareActive) {
+    window.AGORA_SCREENSHARE_UTILS.stopScreenShare();
+  }
 
   handleRemoteStreamsOnLeaveMeeting();
+
+  window.dispatchEvent(new CustomEvent("agora.leavingChannel"));
 
   window.agoraClient.leave(function() {
     AgoraRTC.Logger.info('client leaves channel');
