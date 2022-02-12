@@ -393,7 +393,6 @@ window.AGORA_UTILS = {
       // console.log("callMuteVideoGhostCheck")
 
       // if the main user stops their video select a random user from the list
-      handleGhostMode(remoteId, 'remote');
       handleMutedVideoBackgroundColor(remoteId, 'remote');
       let userAvatar = '';
       if(window.remoteStreams[remoteId]){
@@ -407,13 +406,14 @@ window.AGORA_UTILS = {
         jQuery('body #'+ remoteId + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
       }
       handleRemoteStreamControlsIcons(remoteId);
+      handleGhostMode(remoteId, 'remote');
   },
 
   handleAudioMuted: function(remoteId){
     window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_mute', true);
     //console.log("callMuteAudioGhostCheck")
-    handleGhostMode(remoteId, 'remote');
     handleRemoteStreamControlsIcons(remoteId);
+    handleGhostMode(remoteId, 'remote');
   },
 
   setupAgoraListeners: function() {
