@@ -129,6 +129,12 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
         }
         /* Clean up screen share feeds */
 
+        /* Disable Raise hand button */
+        if(jQuery("body #agora-root .raise-hand-icon").length>0){
+          jQuery("body #agora-root .raise-hand-icon button").attr('disabled', 'disabled');
+        }
+        /* Disable Raise hand button */
+
         // function waitUntilClose() {
         //   jQuery('#txt-waiting').hide();
         //   jQuery('#txt-finished').show();
