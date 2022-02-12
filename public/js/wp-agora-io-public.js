@@ -2043,8 +2043,8 @@ function checkRaiseHandRequestsOnRefresh(){
 }
 
 /* Function to handle layout change */
-jQuery(document).ready(function(){
-  jQuery("body #change-layout-options-list").on("click", "a", function(event){
+//jQuery(document).ready(function(){
+  jQuery(document).on("click", "body #change-layout-options-list a", function(event){
     //console.log("hnjiClickHoGya", event.target.id)
     const view = event.target.id;
     if(view == 'speaker'){
@@ -2089,7 +2089,7 @@ jQuery(document).ready(function(){
     }
     showVisibleScreen();
   });
-}); 
+//}); 
 /* End Function to handle layout change */
 
 /* Function to show or hide Raise hand button based on the condition if audio muted/unmuted(In Communication mode)*/
