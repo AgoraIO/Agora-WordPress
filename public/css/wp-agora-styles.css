@@ -1597,3 +1597,13 @@
 .agora-fullscreen-template-users-right.agora-fullscreen .agora-content ,.agora-fullscreen-template-users-left.agora-fullscreen .agora-content {
   grid-template-rows: 8vh 81vh;
 }
+
+.agora-loader{
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
