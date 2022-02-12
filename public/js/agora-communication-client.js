@@ -308,7 +308,19 @@ function agoraLeaveChannel() {
       jQuery("body #agora-root #screen-zone").removeClass("sharescreen");
     }
     /* Clean up screen share feeds */
-    
+
+    /* Disable Raise hand button */
+    if(jQuery("body #agora-root .raise-hand-icon").length>0){
+      jQuery("body #agora-root .raise-hand-icon button").attr('disabled', 'disabled');
+    }
+    /* Disable Raise hand button */
+
+    /* Disable Change Layout button */
+    if(jQuery("body #agora-root #change-layout-options-btn").length>0){
+      jQuery("body #agora-root #change-layout-options-btn").attr('disabled', 'disabled');
+    }
+    /* Disable Change Layout button */
+
     // hide the mute/no-video overlays
     window.AGORA_UTILS.toggleVisibility("#mute-overlay", false); 
     window.AGORA_UTILS.toggleVisibility("#no-local-video", false);
