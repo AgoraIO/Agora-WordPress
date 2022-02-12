@@ -548,6 +548,41 @@ window.AGORA_UTILS = {
       }
     });
 
+    window.agoraClient.on('stream-published', function streamPublished(evt) {
+      let localStreamDivId = 'full-screen-video';
+      if(window.agoraMode == 'communication'){
+        localStreamDivId = 'local-video';
+      }
+
+      let localStream = window.localStreams.camera.stream;
+		  localStream.play(localStreamDivId); // play the given stream within the local-video div
+
+      /* Mute Audios and Videos Based on Mute All Users Settings- Enabled */
+      if(window.mute_all_users_audio){
+        /* Mute if audio is there and user has not unmuted their audio - on Refresh (through session storage) */
+        if((localStream.getAudioTrack() && localStream.getAudioTrack().enabled) && (sessionStorage.getItem("muteAudio")!="0")){
+          jQuery("#mic-btn").trigger('click');
+        }
+      } else {
+        /* If user has muted audio on Refresh (Check through session storage value) */
+        if(sessionStorage.getItem("muteAudio")=="1"){
+          jQuery("#mic-btn").trigger('click');
+        }
+      }
+
+      if(window.mute_all_users_video){
+        /* Mute if video is there and user has not unmuted their video - on Refresh (through session storage) */
+        if((localStream.getVideoTrack() && localStream.getVideoTrack().enabled) && (sessionStorage.getItem("muteVideo")!="0")){
+          jQuery("#video-btn").trigger('click');
+        }
+      }
+      else { 
+        /* If user has muted video on Refresh (Check through session storage value) */
+        if(sessionStorage.getItem("muteVideo")=="1"){
+          jQuery("#video-btn").trigger('click');
+        }
+      }
+    });
 
     // connect remote streams
     window.agoraClient.on('stream-added', function streamAdded(evt) {
