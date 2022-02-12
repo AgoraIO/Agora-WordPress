@@ -569,7 +569,9 @@ window.AGORA_UTILS = {
           if (avatarData && avatarData.user && avatarData.avatar) {
             userAvatar = avatarData.avatar
           }
-          window.remoteStreams[remoteId].userDetails = {avtar: userAvatar};
+          if(typeof window.remoteStreams[remoteId]!='undefined'){
+            window.remoteStreams[remoteId].userDetails = {avtar: userAvatar};
+          }
         });
 
         const isInjectedStream = window.injectedStreamURL && window.injectedStreamURL!=="";
