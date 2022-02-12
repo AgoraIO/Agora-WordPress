@@ -423,6 +423,18 @@ class WP_Agora_Channel {
     return json_encode(array_flip($this->properties['host']));
   }
 
+  public function join_as_host(){
+    $current_user = wp_get_current_user();
+	  $props = $this->properties;
+	  $host = is_array($props['host']) ? $props['host'] : array($props['host']);
+	  /* If user is in the list of broadcast users */
+		if ( in_array($current_user->ID, $host) ) { 
+		  return 1; 
+		} else {  
+		  return 0; 
+		}
+  }
+
   public function admin_user_config(){
     //return $this->admin_user();
     if($this->admin_user()!='' && $this->admin_user()==get_current_user_id()){
