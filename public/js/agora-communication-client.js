@@ -280,6 +280,8 @@ function agoraLeaveChannel() {
     window.AGORA_SCREENSHARE_UTILS.stopScreenShare();
   }
 
+  handleRemoteStreamsOnLeaveMeeting();
+
   window.dispatchEvent(new CustomEvent("agora.leavingChannel"));
 
   agoraClient.leave(function() {
