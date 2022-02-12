@@ -844,14 +844,12 @@ window.AGORA_UTILS = {
 function handleRemoteStreamsOnLeaveMeeting(){
   let rs = window.remoteStreams;
   for (var key of Object.keys(rs)) {
-    console.log(key + " -> " + rs[key])
 	  window.AGORA_UTILS.deleteRemoteStream(key);
   }
  
   let ss = window.screenshareClients;
   for (var key of Object.keys(ss)) {
-    console.log(key + " -> " + ss[key])
-	  delete window.screenshareClients[streamId];
+	  delete window.screenshareClients[key];
   }
 }
 
