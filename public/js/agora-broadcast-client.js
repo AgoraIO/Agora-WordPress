@@ -259,7 +259,7 @@ function agoraLeaveChannel() {
 
     window.localStreams.camera.stream = null;
 
-    showVisibleScreen();
+    jQuery("body #agora-root #screen-users").attr("class", "screen-users screen-users-1");
 
     // leave also RTM Channel
     window.AGORA_RTM_UTILS.leaveChannel();
