@@ -259,6 +259,8 @@ function agoraLeaveChannel() {
 
     window.localStreams.camera.stream = null;
 
+    showVisibleScreen();
+
     // leave also RTM Channel
     window.AGORA_RTM_UTILS.leaveChannel();
 
