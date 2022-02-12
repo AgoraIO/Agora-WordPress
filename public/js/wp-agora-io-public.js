@@ -554,7 +554,7 @@ window.AGORA_UTILS = {
         localStreamDivId = 'local-video';
       }
 
-      jQuery("body #agora-root #"+localStreamDivId).remove();
+      //jQuery("body #agora-root #"+localStreamDivId).remove();
 
       let localStream = window.localStreams.camera.stream;
 		  localStream.play(localStreamDivId); // play the given stream within the local-video div
