@@ -266,14 +266,14 @@ function agoraLeaveChannel() {
     /* Disable Change Layout button */
 
     /* Disable Raise Hand Requests */
-    if(jQuery("body #agora-rrot .raise-hand-requests").length>0){
-      jQuery("body #agora-rrot .raise-hand-requests button").attr('disabled', 'disabled');
+    if(jQuery("body #agora-root .raise-hand-requests").length>0){
+      jQuery("body #agora-root .raise-hand-requests button").attr('disabled', 'disabled');
     }
     /* Disable Raise Hand Requests */
 
     /* Disable Chat Button */
-    if(jQuery("body #agora-rrot button#chat-btn").length>0){
-      jQuery("body #agora-rrot button#chat-btn").attr('disabled', 'disabled');
+    if(jQuery("body #agora-root button#chat-btn").length>0){
+      jQuery("body #agora-root button#chat-btn").attr('disabled', 'disabled');
     }
     /* Disable Chat Button */
 
