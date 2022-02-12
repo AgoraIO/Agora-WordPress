@@ -2026,12 +2026,20 @@ jQuery(document).ready(function(){
 	    jQuery("body #change-layout-options-list #grid").removeClass("agora-active-view-selected");
 
       /* Set Local Video in Large View by default if user selects Active Speaker */
-      if(window.agoraMode == 'communication'){
-        jQuery("body #agora-root #local-video").addClass('activeSpeaker');
-        addStreamInLargeView("local-video", true);
-      } else {
-        jQuery("body #agora-root #full-screen-video").addClass('activeSpeaker');
-        addStreamInLargeView("full-screen-video", true);
+      let totalStreams = 0;
+      let remoteStreams = Object.fromEntries(Object.entries(window.remoteStreams).filter(([_, v]) => v != null));
+      totalStreams+=Object.keys(remoteStreams).length;
+
+      let screenShareStreams = Object.fromEntries(Object.entries(window.screenshareClients).filter(([_, v]) => v != null));
+      totalStreams+=Object.keys(screenShareStreams).length;
+      if(totalStreams>1){
+        if(window.agoraMode == 'communication'){
+          jQuery("body #agora-root #local-video").addClass('activeSpeaker');
+          addStreamInLargeView("local-video", true);
+        } else {
+          jQuery("body #agora-root #full-screen-video").addClass('activeSpeaker');
+          addStreamInLargeView("full-screen-video", true);
+        }
       }
       /* Set Local Video in Large View by default if user selects Active Speaker */
     } else {
