@@ -817,6 +817,7 @@ window.AGORA_UTILS = {
       jQuery("body #full-screen-video").removeAttr('style');
 
     window.localStreams.tmpCameraStream.stop();
+    window.localStreams.tmpCameraStream.close();
 
     jQuery('body div#test-device-section').remove();
 
