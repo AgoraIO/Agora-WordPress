@@ -217,7 +217,7 @@ async function createCameraStream(uid, deviceIds) {
 
 function agoraLeaveChannel() {
 
-  if(screenShareActive) {
+  if(window.screenShareActive) {
     window.AGORA_SCREENSHARE_UTILS.stopScreenShare();
   }
 
@@ -258,6 +258,12 @@ function agoraLeaveChannel() {
       jQuery("body #agora-root #screen-zone").removeClass("sharescreen");
     }
     /* Clean up screen share feeds */
+
+    /* Disable Change Layout button */
+    if(jQuery("body #agora-root #change-layout-options-btn").length>0){
+      jQuery("body #agora-root #change-layout-options-btn").attr('disabled', 'disabled');
+    }
+    /* Disable Change Layout button */
 
     // hide the mute/no-video overlays
     window.AGORA_UTILS.toggleVisibility("#mute-overlay", false); 
