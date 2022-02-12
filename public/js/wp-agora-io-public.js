@@ -640,6 +640,8 @@ window.AGORA_UTILS = {
       //window.remoteStreams[remoteId] = { stream: remoteStream };
       // console.log('Stream subscribed:', remoteId);
 
+      window.remoteStreams[remoteId] = { stream: remoteStream };
+
       //console.log("Subscribe remote stream successfully:")
       AgoraRTC.Logger.info("Subscribe remote stream successfully: " + window.screenshareClients);
 
@@ -667,6 +669,8 @@ window.AGORA_UTILS = {
         //console.log("hnjiStreamSubscribedUpdateLayout")
         window.AGORA_CLOUD_RECORDING.updateLayout();
       }
+
+      handleGhostMode(remoteId, 'remote');
 
       // let remoteStream = stream;
       //   let remoteId = streamId;
