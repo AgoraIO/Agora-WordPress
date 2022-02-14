@@ -2096,6 +2096,12 @@ function checkRaiseHandRequestsOnRefresh(){
   jQuery(document).on("click", "body #change-layout-options-list a", function(event){
     //console.log("hnjiClickHoGya", event.target.id)
     const view = event.target.id;
+
+    let localStreamDivId = 'full-screen-video';
+    if(window.agoraMode == 'communication'){
+      localStreamDivId = 'local-video';
+    }
+
     if(view == 'speaker'){
       window.isSpeakerView = true;
       if(canHandleStateOnRefresh()){
@@ -2106,55 +2112,80 @@ function checkRaiseHandRequestsOnRefresh(){
 
       /* Set Local Video in Large View by default if user selects Active Speaker and user has not pinned any stream in large view */
       if(canHandlePinUnpin() && window.pinnedUser==''){
-        if(window.agoraMode == 'communication'){
-          if(window.isGhostModeEnabled){ // Set First Visible Stream as Active Speaker if Ghost Mode is enabled
-            let visibleStreamId = 0;
-            if(jQuery("body #agora-root #local-video").is(":visible")
-            ){
-              visibleStreamId = "local-video";
-            } else {
-              let remoteStreams = Object.fromEntries(Object.entries(window.remoteStreams).filter(([_, v]) => v != null));
-              for (var key of Object.keys(remoteStreams)) {
-                if(jQuery("body #agora-root #"+key+"_container").is(":visible")){
-                  visibleStreamId = key;
-                  break;
-                }
+        // if(window.agoraMode == 'communication'){
+        //   if(window.isGhostModeEnabled){ // Set First Visible Stream as Active Speaker if Ghost Mode is enabled
+        //     let visibleStreamId = 0;
+        //     if(jQuery("body #agora-root #local-video").is(":visible")
+        //     ){
+        //       visibleStreamId = "local-video";
+        //     } else {
+        //       let remoteStreams = Object.fromEntries(Object.entries(window.remoteStreams).filter(([_, v]) => v != null));
+        //       for (var key of Object.keys(remoteStreams)) {
+        //         if(jQuery("body #agora-root #"+key+"_container").is(":visible")){
+        //           visibleStreamId = key;
+        //           break;
+        //         }
+        //       }
+        //     }
+
+        //     if(visibleStreamId!=0){
+        //       jQuery("body #agora-root #"+visibleStreamId).addClass('activeSpeaker');
+        //       addStreamInLargeView(visibleStreamId, true);
+        //     }
+        //   } else {
+        //     jQuery("body #agora-root #local-video").addClass('activeSpeaker');
+        //     addStreamInLargeView("local-video", true);
+        //   }
+        // } else {
+        //   if(window.isGhostModeEnabled){ // Set First Visible Stream as Active Speaker if Ghost Mode is enabled
+        //     let visibleStreamId = 0;
+        //     if(jQuery("body #agora-root #full-screen-video").is(":visible")
+        //     ){
+        //       visibleStreamId = "full-screen-video";
+        //     } else {
+        //       let remoteStreams = Object.fromEntries(Object.entries(window.remoteStreams).filter(([_, v]) => v != null));
+        //       for (var key of Object.keys(remoteStreams)) {
+        //         if(jQuery("body #agora-root #"+key+"_container").is(":visible")){
+        //           visibleStreamId = key;
+        //           break;
+        //         }
+        //       }
+        //     }
+
+        //     if(visibleStreamId!=0){
+        //       jQuery("body #agora-root #"+visibleStreamId).addClass('activeSpeaker');
+        //       addStreamInLargeView(visibleStreamId, true);
+        //     }
+        //   } else {
+        //     jQuery("body #agora-root #full-screen-video").addClass('activeSpeaker');
+        //     addStreamInLargeView("full-screen-video", true);
+        //   }
+        // }
+
+        if(window.isGhostModeEnabled){ // Set First Visible Stream as Active Speaker if Ghost Mode is enabled
+          let visibleStreamId = 0;
+          if(jQuery("body #agora-root #"+localStreamDivId).is(":visible")
+          ){
+            visibleStreamId = localStreamDivId;
+          } else {
+            let remoteStreams = Object.fromEntries(Object.entries(window.remoteStreams).filter(([_, v]) => v != null));
+            for (var key of Object.keys(remoteStreams)) {
+              if(jQuery("body #agora-root #"+key+"_container").is(":visible")){
+                visibleStreamId = key;
+                break;
               }
             }
+          }
 
-            if(visibleStreamId!=0){
-              jQuery("body #agora-root #"+visibleStreamId).addClass('activeSpeaker');
-              addStreamInLargeView(visibleStreamId, true);
-            }
-          } else {
-            jQuery("body #agora-root #local-video").addClass('activeSpeaker');
-            addStreamInLargeView("local-video", true);
+          if(visibleStreamId!=0){
+            jQuery("body #agora-root #"+visibleStreamId).addClass('activeSpeaker');
+            addStreamInLargeView(visibleStreamId, true);
           }
         } else {
-          if(window.isGhostModeEnabled){ // Set First Visible Stream as Active Speaker if Ghost Mode is enabled
-            let visibleStreamId = 0;
-            if(jQuery("body #agora-root #full-screen-video").is(":visible")
-            ){
-              visibleStreamId = "full-screen-video";
-            } else {
-              let remoteStreams = Object.fromEntries(Object.entries(window.remoteStreams).filter(([_, v]) => v != null));
-              for (var key of Object.keys(remoteStreams)) {
-                if(jQuery("body #agora-root #"+key+"_container").is(":visible")){
-                  visibleStreamId = key;
-                  break;
-                }
-              }
-            }
-
-            if(visibleStreamId!=0){
-              jQuery("body #agora-root #"+visibleStreamId).addClass('activeSpeaker');
-              addStreamInLargeView(visibleStreamId, true);
-            }
-          } else {
-            jQuery("body #agora-root #full-screen-video").addClass('activeSpeaker');
-            addStreamInLargeView("full-screen-video", true);
-          }
+          jQuery("body #agora-root #"+localStreamDivId).addClass('activeSpeaker');
+          addStreamInLargeView(localStreamDivId, true);
         }
+
       }
       /* Set Local Video in Large View by default if user selects Active Speaker */
     } else {
