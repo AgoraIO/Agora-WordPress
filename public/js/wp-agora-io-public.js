@@ -2185,7 +2185,6 @@ function checkRaiseHandRequestsOnRefresh(){
           jQuery("body #agora-root #"+localStreamDivId).addClass('activeSpeaker');
           addStreamInLargeView(localStreamDivId, true);
         }
-
       }
       /* Set Local Video in Large View by default if user selects Active Speaker */
     } else {
