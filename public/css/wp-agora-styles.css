@@ -1064,6 +1064,7 @@
   margin: 0 auto;
   display: block;
   text-align: center;
+  left: 0;
 }
 
 .agora.agora-audience #big-no-video-stream {
