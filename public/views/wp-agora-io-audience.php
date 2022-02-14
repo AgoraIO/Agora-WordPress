@@ -278,10 +278,12 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
             window.screenshareClients[streamId].isPlaying() && window.screenshareClients[streamId].stop();
           }
           const remoteContainerID = '#' + streamId + '_container';
+          window.AGORA_UTILS.removeLargeStreamView(remoteContainerID);
           jQuery(remoteContainerID).empty().remove();
           const streamsContainer = jQuery('#screen-zone');
           streamsContainer.toggleClass('sharescreen');
           delete window.screenshareClients[streamId];
+          handleGhostMode(streamId, 'remote');
         } else {
           const usersCount = Object.keys(window.remoteStreams).length;
           if (usersCount===0) {
