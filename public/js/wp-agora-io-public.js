@@ -1294,6 +1294,7 @@ function getCurrentlyVisiblwStreamId(){
   return visibleStreamId;
 }
 
+/* Fix Layout when there is only one visible stream in Ghost Mode */
 function handleLayoutInGhostModeinOneStream(){
   if(window.isGhostModeEnabled && get_total_visible_streams_count()==1){
     let visibleStreamId = getCurrentlyVisiblwStreamId();
