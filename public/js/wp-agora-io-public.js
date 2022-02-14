@@ -674,6 +674,8 @@ window.AGORA_UTILS = {
         window.AGORA_CLOUD_RECORDING.updateLayout();
       }
 
+      handleLayoutInGhostModeinOneStream();
+
       // let remoteStream = stream;
       //   let remoteId = streamId;
       //   window.remoteStreams[remoteId] = { stream: remoteStream };

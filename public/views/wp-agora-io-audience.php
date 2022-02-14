@@ -244,6 +244,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
           const usersCount = Object.keys(window.remoteStreams).length;
           window.AGORA_UTILS.updateUsersCounter(usersCount);
         }
+        handleLayoutInGhostModeinOneStream();
       });
 
       // remove the remote-container when a user leaves the channel
