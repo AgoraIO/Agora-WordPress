@@ -1955,6 +1955,9 @@ function joinAsAgoraHost(){
     page_title: page_title
   };
 
+  window.screenshareClients = {};
+  window.remoteStream = {};
+
   /* Remove Previous RTM Event Listeners when joining from audience to host */
   window.removeEventListener('agora.rtm_init', loadChatApp);
   window.removeEventListener('agora.rtmMessageFromChannel', receiveRTMMessage);
