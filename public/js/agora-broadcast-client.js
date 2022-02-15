@@ -290,6 +290,8 @@ function agoraLeaveChannel() {
     // leave also RTM Channel
     window.AGORA_RTM_UTILS.leaveChannel();
 
+    showVisibleScreen();
+
     window.dispatchEvent(new CustomEvent("agora.leavedChannel"));
   }, function(err) {
     AgoraRTC.Logger.error('client leave failed ', err); //error handling
