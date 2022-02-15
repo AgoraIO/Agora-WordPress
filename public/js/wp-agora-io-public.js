@@ -1725,7 +1725,7 @@ jQuery(document).ready(function(){
   if(window.isAdminUser){
     jQuery("body").on("mouseenter", ".remote-stream-container, .screenshare-container", function(){
       const streamId = jQuery(this).attr('rel'); 
-      if (window.remoteStreams.hasOwnProperty(streamId)) {
+      if (window.remoteStreams.hasOwnProperty(streamId) && !window.screenshareClients.hasOwnProperty(streamId)) { //Show Remote Auudio/Video Controls button only to non screen share stream feeds
         jQuery(this).append(
           "<div class='remote-stream-controls'>"+
             "<div class='mute-remote-audio-div'></div>"+
