@@ -547,6 +547,7 @@ window.AGORA_UTILS = {
         let unpinUserId = jQuery("body #agora-root .screenshare-container").attr('rel');
 		    removeStreamFromLargeView(unpinUserId);
       }
+      handleLayoutInGhostModeinOneStream();
     });
 
     window.agoraClient.on('stream-published', function streamPublished(evt) {
