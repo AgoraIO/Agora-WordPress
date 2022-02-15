@@ -1552,7 +1552,9 @@ function removeStreamFromLargeView(unpinUserId){
   if(unpinUserId == 'local-video' || unpinUserId == 'full-screen-video'){
     if(window.localStreams.camera.stream){
       const localStream = window.localStreams.camera.stream;
-      localStream.stop();
+      if(localStream.isPlaying()){
+        localStream.stop();
+      }
 
       //console.log("hlwTest", "#"+unpinUserId)
       //console.log('mainStreamHTML', jQuery("#"+unpinUserId).prop("outerHTML"));
