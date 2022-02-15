@@ -1262,7 +1262,7 @@ function getScreenUsersClass(total_visible_streams){
 	return countClass;
 }
 
-function getCurrentlyVisiblwStreamId(){
+function getCurrentlyVisibleStreamId(){
   let localStreamDivId = 'full-screen-video';
   if(window.agoraMode == 'communication'){
     localStreamDivId = 'local-video';
@@ -1297,7 +1297,7 @@ function getCurrentlyVisiblwStreamId(){
 /* Fix Layout when there is only one visible stream in Ghost Mode */
 function handleLayoutInGhostModeinOneStream(){
   if(window.isGhostModeEnabled && get_total_visible_streams_count()==1){
-    let visibleStreamId = getCurrentlyVisiblwStreamId();
+    let visibleStreamId = getCurrentlyVisibleStreamId();
     if(visibleStreamId!=0){
       removeStreamFromLargeView(visibleStreamId);
     }
@@ -2289,7 +2289,7 @@ function checkRaiseHandRequestsOnRefresh(){
         // }
 
         if(window.isGhostModeEnabled){ // Set First Visible Stream as Active Speaker if Ghost Mode is enabled
-          let visibleStreamId = getCurrentlyVisiblwStreamId();
+          let visibleStreamId = getCurrentlyVisibleStreamId();
           
 
           if(visibleStreamId!=0){
