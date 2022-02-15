@@ -109,6 +109,7 @@ window.AGORA_BROADCAST_UI = {
         thisBtn.toggleClass('load-rec');
         captureIcon.hide()
         loaderIcon.show()
+        loaderIcon.attr('style', 'display:inline-block !important');
       }
 
       // 
