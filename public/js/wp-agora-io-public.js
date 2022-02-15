@@ -655,6 +655,10 @@ window.AGORA_UTILS = {
 
         /*Add Streams to large view if there is no stream that is pinned in large screen */
         if(window.pinnedUser==''){
+          let visibleStreamId = getCurrentlyVisibleStreamId();
+          if(visibleStreamId!=0){
+            removeStreamFromLargeView(visibleStreamId);
+          }
           window.AGORA_SCREENSHARE_UTILS.addRemoteScreenshare(remoteStream);
         } else {
           window.AGORA_UTILS.addRemoteStreamView(remoteStream);
@@ -1552,7 +1556,7 @@ function removeStreamFromLargeView(unpinUserId){
   if(unpinUserId == 'local-video' || unpinUserId == 'full-screen-video'){
     if(window.localStreams.camera.stream){
       const localStream = window.localStreams.camera.stream;
-      if(localStream.isPlaying()){
+      if(localStream!=null && localStream.isPlaying()){
         localStream.stop();
       }
 
