@@ -415,6 +415,7 @@ window.AGORA_UTILS = {
     //console.log("callMuteAudioGhostCheck")
     handleRemoteStreamControlsIcons(remoteId);
     handleGhostMode(remoteId, 'remote');
+    handleLayoutInGhostModeinOneStream();
   },
 
   setupAgoraListeners: function() {

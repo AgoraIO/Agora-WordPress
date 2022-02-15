@@ -307,6 +307,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
       window.agoraClient.on("mute-audio", function (evt) {
         window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', true);
         handleGhostMode(evt.uid, 'remote');
+        handleLayoutInGhostModeinOneStream();
       });
 
       window.agoraClient.on("unmute-audio", function (evt) {
@@ -326,6 +327,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
           jQuery('body #'+ evt.uid + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
         }
         window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', true);
+        handleLayoutInGhostModeinOneStream();
       });
 
       window.agoraClient.on("unmute-video", function (evt) {
