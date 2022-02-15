@@ -586,6 +586,7 @@ window.AGORA_UTILS = {
           jQuery("#video-btn").trigger('click');
         }
       }
+      handleLayoutInGhostModeinOneStream();
     });
 
     // connect remote streams
