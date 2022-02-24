@@ -74,7 +74,7 @@
   window.wp_username = '<?php echo $current_user->data->display_name; ?>';
   <?php endif; ?>
 
-
+  window.joinAsHost = parseInt('<?php echo $channel->join_as_host(); ?>');
 
 	// use tokens for added security
     window.AGORA_TOKEN_UTILS = {

@@ -81,7 +81,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
         /* Check if Raise Hand Request was accepted - on Refresh (using session storage) */
         /* In joinAsHostApprovedUserId, there will be window.userId - that will be 0 for logged-out user, so skipping that as in logged out users every time, a new user id is generated */
         if(sessionStorage.getItem("joinAsHostApprovedUserId")!=0 && sessionStorage.getItem("joinAsHostApprovedUserId") == window.userID){
-          joinAsHost();
+          joinAsAgoraHost();
         } else {
           handleOnLoad();
         }
@@ -115,18 +115,37 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
       })
 
       function finishVideoScreen() {
-        jQuery(".remote-stream-container").hide();
+        //jQuery(".remote-stream-container").hide();
         jQuery("#full-screen-video").hide();
         jQuery("#watch-live-closed").show();
 
-        function waitUntilClose() {
-          jQuery('#txt-waiting').hide();
-          jQuery('#txt-finished').show();
-
-          agoraLeaveChannel();
+        jQuery("body #agora-root .remote-stream-container").remove();
+        /* Clean up screen share feeds */
+        if(jQuery("body #agora-root .screenshare-container").length>0){
+          jQuery("body #agora-root .screenshare-container").remove();
         }
+        if(jQuery("body #agora-root #screen-zone").hasClass("sharescreen")){
+          jQuery("body #agora-root #screen-zone").removeClass("sharescreen");
+        }
+        /* Clean up screen share feeds */
+
+        /* Disable Raise hand button */
+        if(jQuery("body #agora-root .raise-hand-icon").length>0){
+          jQuery("body #agora-root .raise-hand-icon button").attr('disabled', 'disabled');
+        }
+        /* Disable Raise hand button */
+
+        // function waitUntilClose() {
+        //   jQuery('#txt-waiting').hide();
+        //   jQuery('#txt-finished').show();
+
+        //   agoraLeaveChannel();
+        // }
         exitBtn.hide();
-        window.waitingClose = setTimeout(waitUntilClose, WAIT_FOR_RECONNECT_TIMEOUT)
+        agoraLeaveChannel();
+        jQuery('#txt-waiting').hide();
+        jQuery('#txt-finished').show();
+        //window.waitingClose = setTimeout(waitUntilClose, WAIT_FOR_RECONNECT_TIMEOUT)
       }
       
       // Due to broswer restrictions on auto-playing video, 
@@ -225,6 +244,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
           const usersCount = Object.keys(window.remoteStreams).length;
           window.AGORA_UTILS.updateUsersCounter(usersCount);
         }
+        handleLayoutInGhostModeinOneStream();
       });
 
       // remove the remote-container when a user leaves the channel
@@ -236,7 +256,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
           var streamId = evt.uid; // the the stream id
           //return false;
         } else{
-          const streamId = evt.stream.getId(); // the the stream id
+          var streamId = evt.stream.getId(); // the the stream id
           evt.stream.isPlaying() && evt.stream.stop(); // stop the stream
         }
   
@@ -258,10 +278,12 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
             window.screenshareClients[streamId].isPlaying() && window.screenshareClients[streamId].stop();
           }
           const remoteContainerID = '#' + streamId + '_container';
+          window.AGORA_UTILS.removeLargeStreamView(remoteContainerID);
           jQuery(remoteContainerID).empty().remove();
           const streamsContainer = jQuery('#screen-zone');
           streamsContainer.toggleClass('sharescreen');
           delete window.screenshareClients[streamId];
+          handleGhostMode(streamId, 'remote');
         } else {
           const usersCount = Object.keys(window.remoteStreams).length;
           if (usersCount===0) {
@@ -285,6 +307,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
       window.agoraClient.on("mute-audio", function (evt) {
         window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', true);
         handleGhostMode(evt.uid, 'remote');
+        handleLayoutInGhostModeinOneStream();
       });
 
       window.agoraClient.on("unmute-audio", function (evt) {
@@ -304,6 +327,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
           jQuery('body #'+ evt.uid + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
         }
         window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', true);
+        handleLayoutInGhostModeinOneStream();
       });
 
       window.agoraClient.on("unmute-video", function (evt) {
