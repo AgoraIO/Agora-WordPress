@@ -28,14 +28,14 @@ function renderCommnicationShortcode($agora, $attrs) {
 
     ob_start();
 
-    $host = is_array($props['host']) ? $props['host'] : array($props['host']);
+   /* $host = is_array($props['host']) ? $props['host'] : array($props['host']);
     
-    /* If user is in the list of broadcast users */
+    // If user is in the list of broadcast users
     if ( in_array($current_user->ID, $host) ) { ?>
       <script> window.joinAsHost = 1; </script>
     <?php } else { ?>
       <script> window.joinAsHost = 0; </script>
-    <?php }
+    <?php }*/
 
     $out = '
     <script>
