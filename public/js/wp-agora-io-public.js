@@ -1091,7 +1091,7 @@ window.AGORA_UTILS = {
     agoraClient.leave(function() {
       AgoraRTC.Logger.info("client leaves channel");
       const camStream = window.localStreams.camera.stream;
-      if (camStream) {
+      if (camStream && !jQuery.isEmptyObject(camStream)) {
         camStream.stop() // stop the camera stream playback
         camStream.close(); // clean up and close the camera stream
         agoraClient.unpublish(camStream); // unpublish the camera stream
