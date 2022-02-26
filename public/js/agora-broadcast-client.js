@@ -35,269 +35,269 @@ window.devices = {
 window.AGORA_BROADCAST_CLIENT = {
   startLiveTranscoding: startLiveTranscoding,
   addExternalSource: addExternalSource,
-  agoraLeaveChannel: agoraLeaveChannel,
-  agoraJoinChannel: agoraJoinChannel
+  //agoraLeaveChannel: agoraLeaveChannel,
+  //agoraJoinChannel: agoraJoinChannel
 };
 
 // join a channel
-async function agoraJoinChannel() {
+// async function agoraJoinChannel() {
 
-  var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
-  window.channel_type = 'broadcast';
+//   var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
+//   window.channel_type = 'broadcast';
 
-  if(window.pre_call_device_test_enabled){
-    let hasVideo = await detectWebcam();
-    await createTmpCameraStream(userId, hasVideo);
-  } 
-  else{
-    window.AGORA_UTILS.setupAgoraListeners();
-    window.AGORA_RTM_UTILS.setupRTM(window.agoraAppId, window.channelName);
+//   if(window.pre_call_device_test_enabled){
+//     let hasVideo = await detectWebcam();
+//     await createTmpCameraStream(userId, hasVideo);
+//   } 
+//   else{
+//     window.AGORA_UTILS.setupAgoraListeners();
+//     window.AGORA_RTM_UTILS.setupRTM(window.agoraAppId, window.channelName);
 
-    window.agoraToken = window.AGORA_TOKEN_UTILS.agoraGenerateToken(); // rendered on PHP
-    var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
+//     window.agoraToken = window.AGORA_TOKEN_UTILS.agoraGenerateToken(); // rendered on PHP
+//     var userId = window.userID || 0; // set to null to auto generate uid on successfull connection
 
-    // set the role
-    window.agoraClient.setClientRole(window.agoraCurrentRole, function() {
-      AgoraRTC.Logger.info('Client role set as host.');
-    }, function(e) {
-      AgoraRTC.Logger.error('setClientRole failed', e);
-    });
+//     // set the role
+//     window.agoraClient.setClientRole(window.agoraCurrentRole, function() {
+//       AgoraRTC.Logger.info('Client role set as host.');
+//     }, function(e) {
+//       AgoraRTC.Logger.error('setClientRole failed', e);
+//     });
     
-    window.agoraClient.join(window.agoraToken, window.channelName, userId, async function agoraClientJoin(uid) {
-      await window.AGORA_RTM_UTILS.joinChannel(uid);
+//     window.agoraClient.join(window.agoraToken, window.channelName, userId, async function agoraClientJoin(uid) {
+//       await window.AGORA_RTM_UTILS.joinChannel(uid);
       
-      createCameraStream(uid, {});
-      window.localStreams.uid = uid; // keep track of the stream uid  
-      AgoraRTC.Logger.info('User ' + uid + ' joined channel successfully');
+//       createCameraStream(uid, {});
+//       window.localStreams.uid = uid; // keep track of the stream uid  
+//       AgoraRTC.Logger.info('User ' + uid + ' joined channel successfully');
 
-    }, function(err) {
-        AgoraRTC.Logger.error('[ERROR] : join channel failed', err);
-    });
+//     }, function(err) {
+//         AgoraRTC.Logger.error('[ERROR] : join channel failed', err);
+//     });
 
-    window.agoraClient.on('stream-published', function (evt) {
-      AgoraRTC.Logger.info("Publish local stream successfully");
-    });
-  }
-}
+//     window.agoraClient.on('stream-published', function (evt) {
+//       AgoraRTC.Logger.info("Publish local stream successfully");
+//     });
+//   }
+// }
 
-//camera validation 
-async function detectWebcam() {
-  let md = navigator.mediaDevices;
-  if (!md || !md.enumerateDevices) return false;
+// //camera validation 
+// async function detectWebcam() {
+//   let md = navigator.mediaDevices;
+//   if (!md || !md.enumerateDevices) return false;
 
-  const devices = await md.enumerateDevices()
-  return devices.some(device => 'videoinput' === device.kind);
-}
+//   const devices = await md.enumerateDevices()
+//   return devices.some(device => 'videoinput' === device.kind);
+// }
 
-// video streams for channel
-async function createCameraStream(uid, deviceIds) {
+// // video streams for channel
+// async function createCameraStream(uid, deviceIds) {
 
-  window.channel_type = 'broadcast';
+//   window.channel_type = 'broadcast';
 
-  AgoraRTC.Logger.info('Creating stream with sources: ' + JSON.stringify(deviceIds));
-  const hasVideo = await detectWebcam()
+//   AgoraRTC.Logger.info('Creating stream with sources: ' + JSON.stringify(deviceIds));
+//   const hasVideo = await detectWebcam()
 
-  let streamSpec = {
-    streamID: uid,
-    audio: true,
-    video: hasVideo,
-    screen: false
-  };
+//   let streamSpec = {
+//     streamID: uid,
+//     audio: true,
+//     video: hasVideo,
+//     screen: false
+//   };
 
-  if(sessionStorage.getItem("microphoneId")!=null){
-    streamSpec.microphoneId = sessionStorage.getItem("microphoneId");
-  }
+//   if(sessionStorage.getItem("microphoneId")!=null){
+//     streamSpec.microphoneId = sessionStorage.getItem("microphoneId");
+//   }
 
-  if(sessionStorage.getItem("cameraId")!=null){
-    streamSpec.cameraId = sessionStorage.getItem("cameraId");
-  }
+//   if(sessionStorage.getItem("cameraId")!=null){
+//     streamSpec.cameraId = sessionStorage.getItem("cameraId");
+//   }
 
-  const localStream = AgoraRTC.createStream(streamSpec);
+//   const localStream = AgoraRTC.createStream(streamSpec);
 
-  localStream.setVideoProfile(window.cameraVideoProfile);
+//   localStream.setVideoProfile(window.cameraVideoProfile);
 
-  // The user has granted access to the camera and mic.
-  localStream.on("accessAllowed", function() {
-    if(window.devices.cameras.length === 0 && window.devices.mics.length === 0) {
-      AgoraRTC.Logger.info('[DEBUG] : checking for cameras & mics');
-      window.AGORA_UTILS.getCameraDevices();
-      window.AGORA_UTILS.getMicDevices();
-    }
-    AgoraRTC.Logger.info("accessAllowed");
-    if(!hasVideo){
-      const msg = {
-        text: "USER_JOINED_WITHOUT_PERMISSIONS",
-        messageType:"TEXT"
-      }
-      console.log('sending message')
-      window.AGORA_RTM_UTILS.sendChannelMessage(msg, cb)
-    }
-  });
-  // The user has denied access to the camera and mic.
-  localStream.on("accessDenied", function() {
-    AgoraRTC.Logger.warning("accessDenied");
-  });
+//   // The user has granted access to the camera and mic.
+//   localStream.on("accessAllowed", function() {
+//     if(window.devices.cameras.length === 0 && window.devices.mics.length === 0) {
+//       AgoraRTC.Logger.info('[DEBUG] : checking for cameras & mics');
+//       window.AGORA_UTILS.getCameraDevices();
+//       window.AGORA_UTILS.getMicDevices();
+//     }
+//     AgoraRTC.Logger.info("accessAllowed");
+//     if(!hasVideo){
+//       const msg = {
+//         text: "USER_JOINED_WITHOUT_PERMISSIONS",
+//         messageType:"TEXT"
+//       }
+//       console.log('sending message')
+//       window.AGORA_RTM_UTILS.sendChannelMessage(msg, cb)
+//     }
+//   });
+//   // The user has denied access to the camera and mic.
+//   localStream.on("accessDenied", function() {
+//     AgoraRTC.Logger.warning("accessDenied");
+//   });
 
-  localStream.init(function() {
-    // window.AGORA_BROADCAST_UI.calculateVideoScreenSize();
+//   localStream.init(function() {
+//     // window.AGORA_BROADCAST_UI.calculateVideoScreenSize();
     
-    AgoraRTC.Logger.info('getUserMedia successfully');
-     jQuery(".main-screen-stream-section").css('display', 'block');
-    //localStream.play('full-screen-video'); // play the local stream on the main div
-    // publish local stream
+//     AgoraRTC.Logger.info('getUserMedia successfully');
+//      jQuery(".main-screen-stream-section").css('display', 'block');
+//     //localStream.play('full-screen-video'); // play the local stream on the main div
+//     // publish local stream
 
-    //jQuery("body #agora-root #full-screen-video").append('<div class="agora-loader"></div>');
+//     //jQuery("body #agora-root #full-screen-video").append('<div class="agora-loader"></div>');
 
-    if(jQuery.isEmptyObject(window.localStreams.camera.stream)) {
-      window.AGORA_BROADCAST_UI.enableUiControls(localStream); // move after testing
-    } else {
-      //reset controls
-      jQuery("#mic-btn").prop("disabled", false);
-      jQuery("#video-btn").prop("disabled", false);
-      jQuery("#exit-btn").prop("disabled", false);
-    }
+//     if(jQuery.isEmptyObject(window.localStreams.camera.stream)) {
+//       window.AGORA_BROADCAST_UI.enableUiControls(localStream); // move after testing
+//     } else {
+//       //reset controls
+//       jQuery("#mic-btn").prop("disabled", false);
+//       jQuery("#video-btn").prop("disabled", false);
+//       jQuery("#exit-btn").prop("disabled", false);
+//     }
     
-    window.agoraClient.publish(localStream, function (err) {
-      err && AgoraRTC.Logger.error('[ERROR] : publish local stream error: ' + err);
-    });
+//     window.agoraClient.publish(localStream, function (err) {
+//       err && AgoraRTC.Logger.error('[ERROR] : publish local stream error: ' + err);
+//     });
     
-    jQuery('body .agora-footer').css('display', 'flex');
+//     jQuery('body .agora-footer').css('display', 'flex');
 
-    window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
+//     window.localStreams.camera.stream = localStream; // keep track of the camera stream for later
     
-    // /* Mute Audios and Videos Based on Mute All Users Settings */
-    // if(window.mute_all_users_audio){
-    //   /* Mute if audio is there and user has not unmuted their audio - on Refresh (through session storage) */
-    //   if((localStream.getAudioTrack() && localStream.getAudioTrack().enabled) && (sessionStorage.getItem("muteAudio")!="0")){
-    //       jQuery("#mic-btn").trigger('click');
-    //   }
-    // } else {
-    //   /* If user has muted audio on Refresh (Check through session storage value) */
-    //   if(sessionStorage.getItem("muteAudio")=="1"){
-    //     jQuery("#mic-btn").trigger('click');
-    //   }
-    // } 
+//     // /* Mute Audios and Videos Based on Mute All Users Settings */
+//     // if(window.mute_all_users_audio){
+//     //   /* Mute if audio is there and user has not unmuted their audio - on Refresh (through session storage) */
+//     //   if((localStream.getAudioTrack() && localStream.getAudioTrack().enabled) && (sessionStorage.getItem("muteAudio")!="0")){
+//     //       jQuery("#mic-btn").trigger('click');
+//     //   }
+//     // } else {
+//     //   /* If user has muted audio on Refresh (Check through session storage value) */
+//     //   if(sessionStorage.getItem("muteAudio")=="1"){
+//     //     jQuery("#mic-btn").trigger('click');
+//     //   }
+//     // } 
     
-    // if(window.mute_all_users_video){
-    //   /* Mute if video is there and user has not unmuted their video - on Refresh (through session storage) */
-    //   if((localStream.getVideoTrack() && localStream.getVideoTrack().enabled)  && (sessionStorage.getItem("muteVideo")!="0")){
-    //     jQuery("#video-btn").trigger('click');
-    // }
-    // } else {
-    //   /* If user has muted video on Refresh (Check through session storage value) */
-    //   if(sessionStorage.getItem("muteVideo")=="1"){
-    //     jQuery("#video-btn").trigger('click');
-    //   }
-    // }
+//     // if(window.mute_all_users_video){
+//     //   /* Mute if video is there and user has not unmuted their video - on Refresh (through session storage) */
+//     //   if((localStream.getVideoTrack() && localStream.getVideoTrack().enabled)  && (sessionStorage.getItem("muteVideo")!="0")){
+//     //     jQuery("#video-btn").trigger('click');
+//     // }
+//     // } else {
+//     //   /* If user has muted video on Refresh (Check through session storage value) */
+//     //   if(sessionStorage.getItem("muteVideo")=="1"){
+//     //     jQuery("#video-btn").trigger('click');
+//     //   }
+//     // }
 
-    window.AGORA_UTILS.agora_getUserAvatar(localStream.getId(), function getUserAvatar(avatarData) {
-      let userAvatar = '';
-      if (avatarData && avatarData.user && avatarData.avatar) {
-        userAvatar = avatarData.avatar
-      }
-      if(userAvatar!=''){
-        jQuery('body #no-local-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
-      }
-      window.localStreams.camera.userDetails = {avtar: userAvatar};
-    });
+//     window.AGORA_UTILS.agora_getUserAvatar(localStream.getId(), function getUserAvatar(avatarData) {
+//       let userAvatar = '';
+//       if (avatarData && avatarData.user && avatarData.avatar) {
+//         userAvatar = avatarData.avatar
+//       }
+//       if(userAvatar!=''){
+//         jQuery('body #no-local-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
+//       }
+//       window.localStreams.camera.userDetails = {avtar: userAvatar};
+//     });
 
-    jQuery('#buttons-container').fadeIn();
-  }, function (err) {
-    AgoraRTC.Logger.error('[ERROR] : getUserMedia failed', err);
+//     jQuery('#buttons-container').fadeIn();
+//   }, function (err) {
+//     AgoraRTC.Logger.error('[ERROR] : getUserMedia failed', err);
 
-    if (err.msg==='NotAllowedError') {
-      const msg = {
-        text: "USER_JOINED_WITHOUT_PERMISSIONS**"+uid,
-        messageType:"TEXT"
-      }
-      window.AGORA_RTM_UTILS.sendChannelMessage(msg)
-      window.AGORA_COMMUNICATION_UI.enableExit()
-      window.AGORA_UTILS.showPermissionsModal()
-    }
-  });
-}
+//     if (err.msg==='NotAllowedError') {
+//       const msg = {
+//         text: "USER_JOINED_WITHOUT_PERMISSIONS**"+uid,
+//         messageType:"TEXT"
+//       }
+//       window.AGORA_RTM_UTILS.sendChannelMessage(msg)
+//       window.AGORA_COMMUNICATION_UI.enableExit()
+//       window.AGORA_UTILS.showPermissionsModal()
+//     }
+//   });
+// }
 
-function agoraLeaveChannel() {
+// function agoraLeaveChannel() {
 
-  if(window.screenShareActive) {
-    window.AGORA_SCREENSHARE_UTILS.stopScreenShare();
-  }
+//   if(window.screenShareActive) {
+//     window.AGORA_SCREENSHARE_UTILS.stopScreenShare();
+//   }
 
-  handleRemoteStreamsOnLeaveMeeting();
+//   handleRemoteStreamsOnLeaveMeeting();
 
-  window.dispatchEvent(new CustomEvent("agora.leavingChannel"));
+//   window.dispatchEvent(new CustomEvent("agora.leavingChannel"));
 
-  window.agoraClient.leave(function() {
-    AgoraRTC.Logger.info('client leaves channel');
-    window.localStreams.camera.stream.stop() // stop the camera stream playback
-    window.localStreams.camera.stream.close(); // clean up and close the camera stream
-    window.agoraClient.unpublish(window.localStreams.camera.stream); // unpublish the camera stream
-    if (window.injectedStreamURL && window.injectedStreamURL != "") {
-      window.agoraClient.removeInjectStreamUrl(window.injectedStreamURL);
-    }
-    jQuery("#remote-streams").empty() // clean up the remote feeds
-    //disable the UI elements
-    jQuery('#mic-btn').prop('disabled', true);
-    jQuery('#video-btn').prop('disabled', true);
-    jQuery('#screen-share-btn').prop('disabled', true);
-    jQuery('#exit-btn').prop('disabled', true);
-    jQuery("#add-rtmp-btn").prop("disabled", true);
-    jQuery("#rtmp-config-btn").prop("disabled", true);
-    jQuery("#start-RTMP-broadcast").prop("disabled", true);
-    jQuery("#cloud-recording-btn").prop("disabled", true);
+//   window.agoraClient.leave(function() {
+//     AgoraRTC.Logger.info('client leaves channel');
+//     window.localStreams.camera.stream.stop() // stop the camera stream playback
+//     window.localStreams.camera.stream.close(); // clean up and close the camera stream
+//     window.agoraClient.unpublish(window.localStreams.camera.stream); // unpublish the camera stream
+//     if (window.injectedStreamURL && window.injectedStreamURL != "") {
+//       window.agoraClient.removeInjectStreamUrl(window.injectedStreamURL);
+//     }
+//     jQuery("#remote-streams").empty() // clean up the remote feeds
+//     //disable the UI elements
+//     jQuery('#mic-btn').prop('disabled', true);
+//     jQuery('#video-btn').prop('disabled', true);
+//     jQuery('#screen-share-btn').prop('disabled', true);
+//     jQuery('#exit-btn').prop('disabled', true);
+//     jQuery("#add-rtmp-btn").prop("disabled", true);
+//     jQuery("#rtmp-config-btn").prop("disabled", true);
+//     jQuery("#start-RTMP-broadcast").prop("disabled", true);
+//     jQuery("#cloud-recording-btn").prop("disabled", true);
 
-    /* clean up the remote feeds */
-    jQuery("body #agora-root .remote-stream-container").each(function(){
-      jQuery(this).remove();
-    });
-    /* clean up the remote feeds */
+//     /* clean up the remote feeds */
+//     jQuery("body #agora-root .remote-stream-container").each(function(){
+//       jQuery(this).remove();
+//     });
+//     /* clean up the remote feeds */
 
-    /* Clean up screen share feeds */
-    if(jQuery("body #agora-root .screenshare-container").length>0){
-      jQuery("body #agora-root .screenshare-container").remove();
-    }
-    if(jQuery("body #agora-root #screen-zone").hasClass("sharescreen")){
-      jQuery("body #agora-root #screen-zone").removeClass("sharescreen");
-    }
-    /* Clean up screen share feeds */
+//     /* Clean up screen share feeds */
+//     if(jQuery("body #agora-root .screenshare-container").length>0){
+//       jQuery("body #agora-root .screenshare-container").remove();
+//     }
+//     if(jQuery("body #agora-root #screen-zone").hasClass("sharescreen")){
+//       jQuery("body #agora-root #screen-zone").removeClass("sharescreen");
+//     }
+//     /* Clean up screen share feeds */
 
-    /* Disable Change Layout button */
-    if(jQuery("body #agora-root #change-layout-options-btn").length>0){
-      jQuery("body #agora-root #change-layout-options-btn").attr('disabled', 'disabled');
-    }
-    /* Disable Change Layout button */
+//     /* Disable Change Layout button */
+//     if(jQuery("body #agora-root #change-layout-options-btn").length>0){
+//       jQuery("body #agora-root #change-layout-options-btn").attr('disabled', 'disabled');
+//     }
+//     /* Disable Change Layout button */
 
-    /* Disable Raise Hand Requests */
-    if(jQuery("body #agora-root .raise-hand-requests").length>0){
-      jQuery("body #agora-root .raise-hand-requests button").attr('disabled', 'disabled');
-    }
-    /* Disable Raise Hand Requests */
+//     /* Disable Raise Hand Requests */
+//     if(jQuery("body #agora-root .raise-hand-requests").length>0){
+//       jQuery("body #agora-root .raise-hand-requests button").attr('disabled', 'disabled');
+//     }
+//     /* Disable Raise Hand Requests */
 
-    /* Disable Chat Button */
-    if(jQuery("body #agora-root button#chat-btn").length>0){
-      jQuery("body #agora-root button#chat-btn").attr('disabled', 'disabled');
-    }
-    /* Disable Chat Button */
+//     /* Disable Chat Button */
+//     if(jQuery("body #agora-root button#chat-btn").length>0){
+//       jQuery("body #agora-root button#chat-btn").attr('disabled', 'disabled');
+//     }
+//     /* Disable Chat Button */
 
-    // hide the mute/no-video overlays
-    window.AGORA_UTILS.toggleVisibility("#mute-overlay", false); 
-    window.AGORA_UTILS.toggleVisibility("#no-local-video", false);
+//     // hide the mute/no-video overlays
+//     window.AGORA_UTILS.toggleVisibility("#mute-overlay", false); 
+//     window.AGORA_UTILS.toggleVisibility("#no-local-video", false);
 
-    window.localStreams.camera.stream = null;
+//     window.localStreams.camera.stream = null;
 
-    jQuery("body #agora-root #screen-users").attr("class", "screen-users screen-users-1");
+//     jQuery("body #agora-root #screen-users").attr("class", "screen-users screen-users-1");
 
-    // leave also RTM Channel
-    window.AGORA_RTM_UTILS.leaveChannel();
+//     // leave also RTM Channel
+//     window.AGORA_RTM_UTILS.leaveChannel();
 
-    showVisibleScreen();
+//     showVisibleScreen();
 
-    window.dispatchEvent(new CustomEvent("agora.leavedChannel"));
-  }, function(err) {
-    AgoraRTC.Logger.error('client leave failed ', err); //error handling
-  });
-}
-// window.AGORA_BROADCAST_CLIENT.agoraLeaveChannel = agoraLeaveChannel;
+//     window.dispatchEvent(new CustomEvent("agora.leavedChannel"));
+//   }, function(err) {
+//     AgoraRTC.Logger.error('client leave failed ', err); //error handling
+//   });
+// }
+// window.AGORA_UTILS.agoraLeaveChannel = agoraLeaveChannel;
 
 
 function startLiveTranscoding() {

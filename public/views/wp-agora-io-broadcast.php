@@ -84,7 +84,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
       // init Agora SDK
       window.agoraClient.init(window.agoraAppId, function () {
         AgoraRTC.Logger.info('AgoraRTC client initialized');
-        window.AGORA_BROADCAST_CLIENT.agoraJoinChannel(); // join channel upon successfull init
+        window.AGORA_UTILS.agoraJoinChannel(window.channelName); // join channel upon successfull init
       }, function (err) {
         AgoraRTC.Logger.error('[ERROR] : AgoraRTC client init failed', err);
       });
