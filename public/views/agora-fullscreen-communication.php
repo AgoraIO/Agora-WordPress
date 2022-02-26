@@ -20,7 +20,7 @@
 <body <?php body_class(); ?> style="min-height: 100vh; min-height: -webkit-fill-available;">
   <?php 
     $isFullScreenTemplate = true;
-    require_once('agora-communication-teamplates-common.php'); 
+    require_once('agora-communication-templates-common.php'); 
   ?>
   <?php /* ?>
   <div id="agora-root" class="agora agora-fullscreen agora-fullscreen-template agora-fullscreen-template-users-<?php if($remoteSpeakersPos == '') { echo 'top'; } else { echo $remoteSpeakersPos; } ?>">

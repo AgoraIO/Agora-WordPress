@@ -1,6 +1,6 @@
 <?php 
   $isFullScreenTemplate = false;
-  require_once('agora-communication-teamplates-common.php'); 
+  require_once('agora-communication-templates-common.php'); 
 ?>
 
 <?php /* ?>
