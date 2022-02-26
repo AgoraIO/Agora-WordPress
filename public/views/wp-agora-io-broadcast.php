@@ -1,4 +1,10 @@
 <?php
+  $isFullScreenTemplate = false;
+  require_once('agora-broadcast-templates-common.php'); 
+?>
+
+<?php
+/*
 $channelSettings    = $channel->get_properties();
 $videoSettings      = $channelSettings['settings'];
 $appearanceSettings = $channelSettings['appearance'];
@@ -7,7 +13,6 @@ $channel_layout = $channelSettings['channel_layout'];
 
 $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ? $agora->settings['agora-remote-speakers-position'] : '';
 
-/* Code with Reemote Streams on right side - use for future */
 // $isSpeakerView = false;
 // if($channel_layout == 'speaker'){
 //   $isSpeakerView = true;
@@ -15,15 +20,6 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
 
 ?>
 <div id="agora-root" class="agora agora-broadcast agora-default-template agora-default-template-screen-users-<?php if($remoteSpeakersPos == '') { echo 'top'; } else { echo $remoteSpeakersPos; } ?>">
-      <?php /* if(is_array($recordingSettings) && 
-            !empty($recordingSettings['bucket']) &&
-            !empty($recordingSettings['accessKey'])) : ?>
-      <!-- <div id="cloud-recording-container" class="mt-3">
-        <button id="cloud-recording-btn" class="btn btn-sm start-rec" title="<?php _e('Start Recording', 'agoraio'); ?>">
-          <div class="inner-icon"> </div>
-        </button>
-      </div> -->
-      <?php endif; */ ?>
 
     <section class="agora-container">
       <?php require_once "parts/header.php" ?>
@@ -32,19 +28,6 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
         <?php require_once "parts/header-controls.php" ?>
 
         <div id="screen-zone" class="screen <?php //if($isSpeakerView){ echo 'speaker-view'; } ?> agora-screen-users-<?php if($remoteSpeakersPos == '') { echo 'top'; } else { echo $remoteSpeakersPos; } ?>">
-
-        <?php 
-        /* Code with Reemote Streams on right side - use for future */
-        /* if($isSpeakerView){ ?>
-          <div class="main-screen">
-            <div id="main-screen-stream-section" class="main-screen-stream-section">
-              <div id="full-screen-video" class="user">
-                <div id="mute-overlay" class="mute-overlay"><i class="fas fa-microphone-slash"></i></div>
-                <div id="no-local-video" class="no-video-overlay text-center"><i class="fas fa-user"></i></div>
-              </div>  
-            </div>
-          </div>
-        <?php } else { */ ?>
 
           <div id="screen-users" class="screen-users screen-users-1">
             <div id="full-screen-video" class="user">
@@ -65,9 +48,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
   <?php require_once "parts/scripts-common.php" ?>
   <?php require_once "parts/scripts-broadcast.php" ?>
   <script>
-    /**
-     * Agora Broadcast Client 
-     */
+    
     window.agoraCurrentRole = 'host';
     window.agoraMode = 'broadcast';
 
@@ -116,7 +97,8 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
       background-color: <?php echo $appearanceSettings['disabledButtonColor'] ?>;
       border-color: <?php echo $appearanceSettings['disabledButtonColor'] ?>;
     }
-    <?php } */ ?>
+    
   </style>
 </div>
 <!-- End Agora Broadcast View -->
+<?php } */ ?>
