@@ -30,7 +30,7 @@ if($isFullScreenTemplate){
     <div class="agora-content">
       <?php require_once "parts/header-controls.php" ?>
 
-      <div id="screen-zone" class="screen <?php //if($isSpeakerView){ echo 'speaker-view'; } ?> agora-screen-users-<?php if($remoteSpeakersPos == '') { echo 'top'; } else { echo $remoteSpeakersPos; } ?>">
+      <div id="screen-zone" class="screen <?php //if($isSpeakerView){ echo 'speaker-view'; } ?> agora-screen-users-<?php echo $remoteSpeakersPosClass; ?>">
 
         <?php 
         /* Code with Remote Streams on right side - use for future */
