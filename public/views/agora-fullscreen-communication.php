@@ -1,12 +1,12 @@
 <?php
-$channelSettings    = $channel->get_properties();
-$videoSettings      = $channelSettings['settings'];
-$appearanceSettings = $channelSettings['appearance'];
-$recordingSettings  = $channelSettings['recording'];
-$current_user       = wp_get_current_user();
-$current_path       = plugins_url('wp-agora-io') . '/public';
+// $channelSettings    = $channel->get_properties();
+// $videoSettings      = $channelSettings['settings'];
+// $appearanceSettings = $channelSettings['appearance'];
+// $recordingSettings  = $channelSettings['recording'];
+// $current_user       = wp_get_current_user();
+// $current_path       = plugins_url('wp-agora-io') . '/public';
 
-$remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ? $agora->settings['agora-remote-speakers-position'] : '';
+// $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ? $agora->settings['agora-remote-speakers-position'] : '';
 
 ?>
 <!DOCTYPE html>
@@ -18,6 +18,11 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
   <?php wp_head() ?>
 </head>
 <body <?php body_class(); ?> style="min-height: 100vh; min-height: -webkit-fill-available;">
+  <?php 
+    $isFullScreenTemplate = true;
+    require_once('agora-communication-teamplates-common.php'); 
+  ?>
+  <?php /* ?>
   <div id="agora-root" class="agora agora-fullscreen agora-fullscreen-template agora-fullscreen-template-users-<?php if($remoteSpeakersPos == '') { echo 'top'; } else { echo $remoteSpeakersPos; } ?>">
     <section class="agora-container">
       <?php require_once "parts/header.php" ?>
@@ -52,6 +57,9 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
       window.AGORA_COMMUNICATION_CLIENT.initClientAndJoinChannel(window.agoraAppId, window.channelName);
     });
   </script>
+
+<?php */ ?>
+
   <?php wp_footer(); ?>
 </body>
 </html>
