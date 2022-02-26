@@ -538,6 +538,23 @@ window.AGORA_UTILS = {
           delete window.screenshareClients[streamId];
         }
         handleGhostMode(streamId, 'remote');
+      } else {
+        if(window.agoraMode == 'audience'){
+          const usersCount = Object.keys(window.remoteStreams).length;
+          if (usersCount===0) {
+            const chatBtn = document.querySelector('#chatToggleBtn');
+            if (chatBtn) {
+              chatBtn.style.display = "none";
+            }
+
+            const raiseHandIcon = document.querySelector(".raise-hand-icon-fabs");
+            if (raiseHandIcon) {
+              raiseHandIcon.style.display = "none";
+            }
+
+            finishVideoScreen();
+          }
+        }
       }
 
       /* If the peer which is leaving is pinned user, then, update the variable  */
@@ -560,53 +577,54 @@ window.AGORA_UTILS = {
     });
 
     window.agoraClient.on('stream-published', function streamPublished(evt) {
-      let localStreamDivId = 'full-screen-video';
-      if(window.agoraMode == 'communication'){
-        localStreamDivId = 'local-video';
-      }
-
-      //jQuery("body #agora-root #"+localStreamDivId).remove();
-
-      let localStream = window.localStreams.camera.stream;
-		  localStream.play(localStreamDivId); // play the given stream within the local-video div
-
-      /* Mute Audios and Videos Based on Mute All Users Settings- Enabled */
-      if(window.mute_all_users_audio){
-        /* Mute if audio is there and user has not unmuted their audio - on Refresh (through session storage) */
-        if((localStream.getAudioTrack() && localStream.getAudioTrack().enabled) && (sessionStorage.getItem("muteAudio")!="0")){
-          jQuery("#mic-btn").trigger('click');
+      if(window.agoraMode!='audience'){
+        let localStreamDivId = 'full-screen-video';
+        if(window.agoraMode == 'communication'){
+          localStreamDivId = 'local-video';
         }
-      } else {
-        /* If user has muted audio on Refresh (Check through session storage value) */
-        if(sessionStorage.getItem("muteAudio")=="1"){
-          jQuery("#mic-btn").trigger('click');
-        }
-      }
 
-      if(window.mute_all_users_video){
-        /* Mute if video is there and user has not unmuted their video - on Refresh (through session storage) */
-        if((localStream.getVideoTrack() && localStream.getVideoTrack().enabled) && (sessionStorage.getItem("muteVideo")!="0")){
-          jQuery("#video-btn").trigger('click');
+        //jQuery("body #agora-root #"+localStreamDivId).remove();
+
+        let localStream = window.localStreams.camera.stream;
+        localStream.play(localStreamDivId); // play the given stream within the local-video div
+
+        /* Mute Audios and Videos Based on Mute All Users Settings- Enabled */
+        if(window.mute_all_users_audio){
+          /* Mute if audio is there and user has not unmuted their audio - on Refresh (through session storage) */
+          if((localStream.getAudioTrack() && localStream.getAudioTrack().enabled) && (sessionStorage.getItem("muteAudio")!="0")){
+            jQuery("#mic-btn").trigger('click');
+          }
+        } else {
+          /* If user has muted audio on Refresh (Check through session storage value) */
+          if(sessionStorage.getItem("muteAudio")=="1"){
+            jQuery("#mic-btn").trigger('click');
+          }
         }
-      }
-      else { 
-        /* If user has muted video on Refresh (Check through session storage value) */
-        if(sessionStorage.getItem("muteVideo")=="1"){
-          jQuery("#video-btn").trigger('click');
+
+        if(window.mute_all_users_video){
+          /* Mute if video is there and user has not unmuted their video - on Refresh (through session storage) */
+          if((localStream.getVideoTrack() && localStream.getVideoTrack().enabled) && (sessionStorage.getItem("muteVideo")!="0")){
+            jQuery("#video-btn").trigger('click');
+          }
         }
+        else { 
+          /* If user has muted video on Refresh (Check through session storage value) */
+          if(sessionStorage.getItem("muteVideo")=="1"){
+            jQuery("#video-btn").trigger('click');
+          }
+        }
+        handleLayoutInGhostModeinOneStream();
       }
-      handleLayoutInGhostModeinOneStream();
     });
 
     // connect remote streams
     window.agoraClient.on('stream-added', function streamAdded(evt) {
       const stream = evt.stream;
       const streamId = stream.getId();
-      console.log('AgoraRTC.Logger.info("new stream added: " + streamId);', streamId)
       AgoraRTC.Logger.info("new stream added: " + streamId);
-
       // Check if the stream is the local screen
-      if (streamId != window.localStreams.screen.id) {
+      if ((window.localStreams!=null && streamId != window.localStreams.screen.id) || (window.agoraMode == 'audience')) {
+        console.log('AgoraRTC.Logger.info("new stream added: " + streamId);', streamId)
 
         let remoteStream = stream;
         let remoteId = streamId;
@@ -632,7 +650,8 @@ window.AGORA_UTILS = {
         }
 
         // // Subscribe to the stream.
-        agoraClient.subscribe(stream, function (err) {
+        window.agoraClient.subscribe(stream, function (err) {
+          console.log(("[ERROR] : subscribe stream failed", err));
           AgoraRTC.Logger.error("[ERROR] : subscribe stream failed", err);
           window.AGORA_UTILS.deleteRemoteStream(stream.getId());
           var streamId = evt.stream.getId(); // the the stream id
@@ -646,6 +665,23 @@ window.AGORA_UTILS = {
       } else {
         // show this stream on main screen
       }
+      if(window.agoraMode == 'audience'){
+        const chatBtn = document.querySelector('#chatToggleBtn');
+        if (chatBtn) {
+          chatBtn.style.display = "block";
+        }
+
+        /*Hide Raise hand button in case if user joins as audience from communication channel due to users restriction limit */
+        const raiseHandIcon = document.querySelector(".raise-hand-icon-fabs");
+        if(sessionStorage.getItem("channelType") != 'communication'){
+          raiseHandIcon.style.display = "block";
+        }
+
+        jQuery("#watch-live-closed").hide();
+        jQuery("#watch-live-overlay").hide();
+        jQuery("#full-screen-video").css('background', 'none').show();
+        jQuery('#exit-btn').show();
+      }
     });
 
     window.agoraClient.on('stream-subscribed', function streamSubscribed(evt) {
@@ -653,6 +689,12 @@ window.AGORA_UTILS = {
       var remoteId = remoteStream.getId();
       //window.remoteStreams[remoteId] = { stream: remoteStream };
       // console.log('Stream subscribed:', remoteId);
+
+      console.log("stream-subscribedcalled")
+
+      if(window.agoraMode == 'audience'){
+        jQuery('#full-screen-video').hide();
+      }
 
       window.remoteStreams[remoteId] = { stream: remoteStream };
 
@@ -688,7 +730,7 @@ window.AGORA_UTILS = {
         //console.log("hnjiStreamSubscribedUpdateLayout")
         window.AGORA_CLOUD_RECORDING.updateLayout();
       }
-
+      showVisibleScreen();
       handleLayoutInGhostModeinOneStream();
 
       // let remoteStream = stream;
