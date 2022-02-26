@@ -368,6 +368,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
     }
 
     function finishVideoScreen() {
+        agoraLeaveChannel();
         //jQuery(".remote-stream-container").hide();
         jQuery("#full-screen-video").hide();
         jQuery("#watch-live-closed").show();
@@ -395,7 +396,6 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
         //   agoraLeaveChannel();
         // }
         exitBtn.hide();
-        agoraLeaveChannel();
         jQuery('#txt-waiting').hide();
         jQuery('#txt-finished').show();
         //window.waitingClose = setTimeout(waitUntilClose, WAIT_FOR_RECONNECT_TIMEOUT)
