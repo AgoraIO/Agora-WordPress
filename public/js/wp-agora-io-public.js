@@ -551,8 +551,8 @@ window.AGORA_UTILS = {
             if (raiseHandIcon) {
               raiseHandIcon.style.display = "none";
             }
-
-            finishVideoScreen();
+            window.AGORA_UTILS.agoraLeaveChannel();
+            //finishVideoScreen();
           }
         }
       }
@@ -1130,13 +1130,15 @@ window.AGORA_UTILS = {
   
     window.dispatchEvent(new CustomEvent("agora.leavingChannel"));
   
-    agoraClient.leave(function() {
+    window.agoraClient.leave(function() {
       AgoraRTC.Logger.info("client leaves channel");
-      const camStream = window.localStreams.camera.stream;
-      if (camStream && !jQuery.isEmptyObject(camStream)) {
-        camStream.stop() // stop the camera stream playback
-        camStream.close(); // clean up and close the camera stream
-        agoraClient.unpublish(camStream); // unpublish the camera stream
+      if(window.localStreams!=null){
+        const camStream = window.localStreams.camera.stream;
+        if (camStream && !jQuery.isEmptyObject(camStream)) {
+          camStream.stop() // stop the camera stream playback
+          camStream.close(); // clean up and close the camera stream
+          agoraClient.unpublish(camStream); // unpublish the camera stream
+        }
       }
 
       if(window.agoraMode == 'broadcast'){
@@ -1206,15 +1208,24 @@ window.AGORA_UTILS = {
       jQuery('#rejoin-container').show();
       jQuery('#buttons-container').addClass('hidden');
 
-      window.localStreams.camera.stream = null;
-
       jQuery("body #agora-root #screen-users").attr("class", "screen-users screen-users-1");
+
+      if(window.agoraMode == 'audience'){
+        console.log("hulalacalled")
+        jQuery("#full-screen-video").hide();
+        jQuery("#watch-live-closed").show();
+        jQuery('#exit-btn').hide();
+        jQuery('#txt-waiting').hide();
+        jQuery('#txt-finished').show();
+      } else {
+        window.localStreams.camera.stream = null;
+      }
   
       // leave also RTM Channel
       window.AGORA_RTM_UTILS.leaveChannel();
-  
-      showVisibleScreen();
-  
+      if(window.agoraMode != 'audience'){
+        showVisibleScreen();
+      }
       window.dispatchEvent(new CustomEvent("agora.leavedChannel"));
       
       // show the modal overlay to join
@@ -2503,7 +2514,7 @@ async function receivePeerRTMMessage(evt) {
       //console.log("Raise hand Request Accepted")
       let canJoinAsHostByAgoraLimit = await window.AGORA_UTILS.canJoinAsHostByAgoraLimit();
       if(canJoinAsHostByAgoraLimit){
-        await window.AGORA_AUDIENCE.agoraLeaveChannel();
+        await window.AGORA_UTILS.agoraLeaveChannel();
         joinAsAgoraHost();
       } else {
         showToastMsg('Error', "You cannot raise hand as host limit has been reached.");

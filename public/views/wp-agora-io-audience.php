@@ -111,7 +111,8 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
           window.remoteStreams[key].stream.close()
         });
         window.remoteStreams = {};
-        finishVideoScreen();
+        window.AGORA_UTILS.agoraLeaveChannel();
+        //finishVideoScreen();
       })
       
       // Due to broswer restrictions on auto-playing video, 
@@ -315,7 +316,7 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
     }
 
     window.AGORA_AUDIENCE = {
-      agoraLeaveChannel: agoraLeaveChannel,
+      //agoraLeaveChannel: agoraLeaveChannel,
       raiseHandRequestRejected: raiseHandRequestRejected
     };
 
@@ -354,52 +355,52 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
       });
     }
 
-    function agoraLeaveChannel() {
-      window.dispatchEvent(new CustomEvent("agora.leavingChannel"));
-      window.agoraClient.leave(function() {
-        AgoraRTC.Logger.info('client leaves channel');
-        console.log('client leaves channel');
-        window.AGORA_RTM_UTILS.leaveChannel();
+    // function agoraLeaveChannel() {
+    //   window.dispatchEvent(new CustomEvent("agora.leavingChannel"));
+    //   window.agoraClient.leave(function() {
+    //     AgoraRTC.Logger.info('client leaves channel');
+    //     console.log('client leaves channel');
+    //     window.AGORA_RTM_UTILS.leaveChannel();
 
-        window.dispatchEvent(new CustomEvent("agora.leavedChannel"));
-      }, function(err) {
-        AgoraRTC.Logger.error('client leave failed ', err); //error handling
-      });
-    }
+    //     window.dispatchEvent(new CustomEvent("agora.leavedChannel"));
+    //   }, function(err) {
+    //     AgoraRTC.Logger.error('client leave failed ', err); //error handling
+    //   });
+    // }
 
-    function finishVideoScreen() {
-        agoraLeaveChannel();
-        //jQuery(".remote-stream-container").hide();
-        jQuery("#full-screen-video").hide();
-        jQuery("#watch-live-closed").show();
+    // function finishVideoScreen() {
+    //     agoraLeaveChannel();
+    //     //jQuery(".remote-stream-container").hide();
+    //     jQuery("#full-screen-video").hide();
+    //     jQuery("#watch-live-closed").show();
 
-        jQuery("body #agora-root .remote-stream-container").remove();
-        /* Clean up screen share feeds */
-        if(jQuery("body #agora-root .screenshare-container").length>0){
-          jQuery("body #agora-root .screenshare-container").remove();
-        }
-        if(jQuery("body #agora-root #screen-zone").hasClass("sharescreen")){
-          jQuery("body #agora-root #screen-zone").removeClass("sharescreen");
-        }
-        /* Clean up screen share feeds */
+    //     jQuery("body #agora-root .remote-stream-container").remove();
+    //     /* Clean up screen share feeds */
+    //     if(jQuery("body #agora-root .screenshare-container").length>0){
+    //       jQuery("body #agora-root .screenshare-container").remove();
+    //     }
+    //     if(jQuery("body #agora-root #screen-zone").hasClass("sharescreen")){
+    //       jQuery("body #agora-root #screen-zone").removeClass("sharescreen");
+    //     }
+    //     /* Clean up screen share feeds */
 
-        /* Disable Raise hand button */
-        if(jQuery("body #agora-root .raise-hand-icon").length>0){
-          jQuery("body #agora-root .raise-hand-icon button").attr('disabled', 'disabled');
-        }
-        /* Disable Raise hand button */
+    //     /* Disable Raise hand button */
+    //     if(jQuery("body #agora-root .raise-hand-icon").length>0){
+    //       jQuery("body #agora-root .raise-hand-icon button").attr('disabled', 'disabled');
+    //     }
+    //     /* Disable Raise hand button */
 
-        // function waitUntilClose() {
-        //   jQuery('#txt-waiting').hide();
-        //   jQuery('#txt-finished').show();
+    //     // function waitUntilClose() {
+    //     //   jQuery('#txt-waiting').hide();
+    //     //   jQuery('#txt-finished').show();
 
-        //   agoraLeaveChannel();
-        // }
-        exitBtn.hide();
-        jQuery('#txt-waiting').hide();
-        jQuery('#txt-finished').show();
-        //window.waitingClose = setTimeout(waitUntilClose, WAIT_FOR_RECONNECT_TIMEOUT)
-      }
+    //     //   agoraLeaveChannel();
+    //     // }
+    //     jQuery('#exit-btn').hide();
+    //     jQuery('#txt-waiting').hide();
+    //     jQuery('#txt-finished').show();
+    //     //window.waitingClose = setTimeout(waitUntilClose, WAIT_FOR_RECONNECT_TIMEOUT)
+    //   }
   </script>
 
   <?php require_once "parts/toast.php" ?>
