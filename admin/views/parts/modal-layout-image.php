@@ -1,5 +1,5 @@
 <!-- Recording Popup Modal -->
-<div class="modal fade slideInLeft animated" id="view-recording-layout-image-modal" tabindex="-1" role="dialog" aria-labelledby="add-external-source-url-label" aria-hidden="true" data-keyboard=true>
+<div class="modal fade slideInLeft animated" id="view-recording-layout-image-modal" tabindex="-1" role="dialog" aria-labelledby="add-external-source-url-label" aria-hidden="true" data-backdrop="false" data-keyboard=true>
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">

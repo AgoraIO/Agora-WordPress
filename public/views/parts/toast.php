@@ -9,7 +9,7 @@
 </div>
 
 <!-- Permissions Notification Modal -->
-  <div class="modal fade animated" id="permissions-notification-modal" tabindex="-1" role="dialog" aria-labelledby="permissinos-notification-modal-label" aria-hidden="true" data-keyboard=true>
+  <div class="modal fade animated" id="permissions-notification-modal" tabindex="-1" role="dialog" aria-labelledby="permissinos-notification-modal-label" aria-hidden="true" data-backdrop="false" data-keyboard=true>
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">

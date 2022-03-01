@@ -18,6 +18,7 @@ window.AGORA_BROADCAST_UI = {
     jQuery("#video-btn").click(function(){
       window.AGORA_BROADCAST_UI.toggleVideo();
       handleGhostMode(localStream.getId(), 'local', 'broadcast');
+      handleLayoutInGhostModeinOneStream();
     });
 
     jQuery("#cloud-recording-btn").click(function(){
@@ -109,6 +110,7 @@ window.AGORA_BROADCAST_UI = {
         thisBtn.toggleClass('load-rec');
         captureIcon.hide()
         loaderIcon.show()
+        loaderIcon.attr('style', 'display:inline-block !important');
       }
 
       // 
