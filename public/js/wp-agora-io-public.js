@@ -586,7 +586,7 @@ window.AGORA_UTILS = {
         //jQuery("body #agora-root #"+localStreamDivId).remove();
 
         let localStream = window.localStreams.camera.stream;
-        localStream.play(localStreamDivId, {}, function(){
+        localStream.play(localStreamDivId, {}, function streamPlayed(){
           /* Mute Audios and Videos Based on Mute All Users Settings- Enabled */
           if(window.mute_all_users_audio){
             /* Mute if audio is there and user has not unmuted their audio - on Refresh (through session storage) */
