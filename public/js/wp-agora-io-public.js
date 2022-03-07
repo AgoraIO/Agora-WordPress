@@ -586,34 +586,34 @@ window.AGORA_UTILS = {
         //jQuery("body #agora-root #"+localStreamDivId).remove();
 
         let localStream = window.localStreams.camera.stream;
-        localStream.play(localStreamDivId); // play the given stream within the local-video div
+        localStream.play(localStreamDivId, {}, function(){
+          /* Mute Audios and Videos Based on Mute All Users Settings- Enabled */
+          if(window.mute_all_users_audio){
+            /* Mute if audio is there and user has not unmuted their audio - on Refresh (through session storage) */
+            if((localStream.getAudioTrack() && localStream.getAudioTrack().enabled) && (sessionStorage.getItem("muteAudio")!="0")){
+              jQuery("#mic-btn").trigger('click');
+            }
+          } else {
+            /* If user has muted audio on Refresh (Check through session storage value) */
+            if(sessionStorage.getItem("muteAudio")=="1"){
+              jQuery("#mic-btn").trigger('click');
+            }
+          }
 
-        /* Mute Audios and Videos Based on Mute All Users Settings- Enabled */
-        if(window.mute_all_users_audio){
-          /* Mute if audio is there and user has not unmuted their audio - on Refresh (through session storage) */
-          if((localStream.getAudioTrack() && localStream.getAudioTrack().enabled) && (sessionStorage.getItem("muteAudio")!="0")){
-            jQuery("#mic-btn").trigger('click');
+          if(window.mute_all_users_video){
+            /* Mute if video is there and user has not unmuted their video - on Refresh (through session storage) */
+            if((localStream.getVideoTrack() && localStream.getVideoTrack().enabled) && (sessionStorage.getItem("muteVideo")!="0")){
+              jQuery("#video-btn").trigger('click');
+            }
           }
-        } else {
-          /* If user has muted audio on Refresh (Check through session storage value) */
-          if(sessionStorage.getItem("muteAudio")=="1"){
-            jQuery("#mic-btn").trigger('click');
+          else { 
+            /* If user has muted video on Refresh (Check through session storage value) */
+            if(sessionStorage.getItem("muteVideo")=="1"){
+              jQuery("#video-btn").trigger('click');
+            }
           }
-        }
-
-        if(window.mute_all_users_video){
-          /* Mute if video is there and user has not unmuted their video - on Refresh (through session storage) */
-          if((localStream.getVideoTrack() && localStream.getVideoTrack().enabled) && (sessionStorage.getItem("muteVideo")!="0")){
-            jQuery("#video-btn").trigger('click');
-          }
-        }
-        else { 
-          /* If user has muted video on Refresh (Check through session storage value) */
-          if(sessionStorage.getItem("muteVideo")=="1"){
-            jQuery("#video-btn").trigger('click');
-          }
-        }
-        handleLayoutInGhostModeinOneStream();
+          handleLayoutInGhostModeinOneStream();
+        }); // play the given stream within the local-video div
       }
     });
 
