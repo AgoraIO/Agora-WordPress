@@ -394,7 +394,7 @@ window.AGORA_UTILS = {
     }
   },
 
-  handleVideoMuted: function(remoteId){
+  handleVideoMuted: function(remoteId, cond=''){
     window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
 
       // console.log("remoteVideoMuted")
@@ -415,7 +415,9 @@ window.AGORA_UTILS = {
       }
       handleRemoteStreamControlsIcons(remoteId);
       handleGhostMode(remoteId, 'remote');
-      handleLayoutInGhostModeinOneStream();
+      if(cond==''){ //If not called from same function to handle layout in one stream
+        handleLayoutInGhostModeinOneStream();
+      }
   },
 
   handleAudioMuted: function(remoteId){
@@ -423,7 +425,9 @@ window.AGORA_UTILS = {
     //console.log("callMuteAudioGhostCheck")
     handleRemoteStreamControlsIcons(remoteId);
     handleGhostMode(remoteId, 'remote');
-    handleLayoutInGhostModeinOneStream();
+    if(cond==''){ //If not called from same function to handle layout in one stream
+      handleLayoutInGhostModeinOneStream();
+    }
   },
 
   setupAgoraListeners: function() {
@@ -832,19 +836,19 @@ window.AGORA_UTILS = {
       }
       // console.log("streamPlayGhostCheck", streamId)
       // console.log("streamPlayGhostCheck", remoteStream.getAudioTrack().enabled)
-      window.AGORA_UTILS.handleStreamMuteOnPlay(remoteStream);
+      window.AGORA_UTILS.handleStreamMuteOnPlay(remoteStream, cond);
       handleGhostMode(streamId, 'remote');
     });
   },
 
-  handleStreamMuteOnPlay: function(remoteStream){
+  handleStreamMuteOnPlay: function(remoteStream, cond=''){
     let streamId = remoteStream.getId();
     if(!remoteStream.getVideoTrack() || !remoteStream.getVideoTrack().enabled || window.remoteStreams[streamId].videoMuted){
-      window.AGORA_UTILS.handleVideoMuted(streamId);
+      window.AGORA_UTILS.handleVideoMuted(streamId, cond);
     }
 
     if(!remoteStream.getAudioTrack() || !remoteStream.getAudioTrack().enabled || window.remoteStreams[streamId].audioMuted){
-      window.AGORA_UTILS.handleAudioMuted(streamId);
+      window.AGORA_UTILS.handleAudioMuted(streamId, cond);
     }
   },
 
@@ -1661,7 +1665,7 @@ function handleLayoutInGhostModeinOneStream(){
   if(window.isGhostModeEnabled && get_total_visible_streams_count()==1){
     let visibleStreamId = getCurrentlyVisibleStreamId();
     if(visibleStreamId!=0){
-      removeStreamFromLargeView(visibleStreamId);
+      removeStreamFromLargeView(visibleStreamId, 'handleLayoutInOneStream');
     }
   }
 }
@@ -1906,7 +1910,7 @@ function addStreamInLargeView(pinUserId, setFromSpeakerView = false){
 }
 /* Function to add a stream in large screen */
 
-function removeStreamFromLargeView(unpinUserId){
+function removeStreamFromLargeView(unpinUserId, cond=''){
   if(unpinUserId == 'local-video' || unpinUserId == 'full-screen-video' ){
     isMainLargeStreamLocal = true;
   }
@@ -1940,7 +1944,7 @@ function removeStreamFromLargeView(unpinUserId){
     const remoteContainerID = '#' + unpinUserId + '_container';
     jQuery(remoteContainerID).empty().remove();
 
-    window.AGORA_UTILS.addRemoteStreamView(remoteStream);
+    window.AGORA_UTILS.addRemoteStreamView(remoteStream, cond);
 
   }
 
