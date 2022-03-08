@@ -420,7 +420,7 @@ window.AGORA_UTILS = {
       }
   },
 
-  handleAudioMuted: function(remoteId){
+  handleAudioMuted: function(remoteId, cond=''){
     window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_mute', true);
     //console.log("callMuteAudioGhostCheck")
     handleRemoteStreamControlsIcons(remoteId);
