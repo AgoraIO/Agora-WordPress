@@ -453,12 +453,16 @@ window.AGORA_UTILS = {
       // console.log("callMuteAudioGhostCheck")
       // handleGhostMode(evt.uid, 'remote');
       // handleRemoteStreamControlsIcons(evt.uid);
+      if(window.remoteStreams[evt.uid] == null) { window.remoteStreams[remoteId] = {}; }
+      window.remoteStreams[evt.uid].audioMuted = true;
       window.AGORA_UTILS.handleAudioMuted(evt.uid);
     });
 
     window.agoraClient.on("unmute-audio", function unmuteAudio(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', false);
       //console.log("callUnMuteAudioGhostCheck")
+      if(window.remoteStreams[evt.uid] == null) { window.remoteStreams[remoteId] = {}; }
+      window.remoteStreams[evt.uid].audioMuted = false;
       handleGhostMode(evt.uid, 'remote');
       handleRemoteStreamControlsIcons(evt.uid);
     });
@@ -466,6 +470,8 @@ window.AGORA_UTILS = {
     // show user icon whenever a remote has disabled their video
     window.agoraClient.on("mute-video", async function muteVideo(evt) {
       const remoteId = evt.uid;
+      if(window.remoteStreams[remoteId] == null) { window.remoteStreams[remoteId] = {}; }
+      window.remoteStreams[remoteId].videoMuted = true;
       window.AGORA_UTILS.handleVideoMuted(remoteId);
 
       // window.AGORA_UTILS.toggleVisibility('#' + remoteId + '_no-video', true);
@@ -493,6 +499,8 @@ window.AGORA_UTILS = {
     agoraClient.on("unmute-video", function unmuteVideo(evt) {
       window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', false);
       //console.log("callUnMuteVideoGhostCheck")
+      if(window.remoteStreams[evt.uid] == null) { window.remoteStreams[remoteId] = {}; }
+      window.remoteStreams[evt.uid].videoMuted = false;
       handleGhostMode(evt.uid, 'remote');
       handleRemoteStreamControlsIcons(evt.uid);
     });
@@ -628,7 +636,9 @@ window.AGORA_UTILS = {
 
         let remoteStream = stream;
         let remoteId = streamId;
-        window.remoteStreams[remoteId] = { stream: remoteStream };
+        //window.remoteStreams[remoteId] = { stream: remoteStream };
+        if(window.remoteStreams[remoteId] == null) { window.remoteStreams[remoteId] = {}; }
+        window.remoteStreams[remoteId].stream = remoteStream;
 
         /* Set the remote stream details alongwith user avtar */
         window.AGORA_UTILS.agora_getUserAvatar(remoteId, function getUserAvatar(avatarData) {
@@ -696,7 +706,9 @@ window.AGORA_UTILS = {
         jQuery('#full-screen-video').hide();
       }
 
-      window.remoteStreams[remoteId] = { stream: remoteStream };
+      //window.remoteStreams[remoteId] = { stream: remoteStream };
+      if(window.remoteStreams[remoteId] == null) { window.remoteStreams[remoteId] = {}; }
+      window.remoteStreams[remoteId].stream = remoteStream;
 
       //console.log("Subscribe remote stream successfully:")
       AgoraRTC.Logger.info("Subscribe remote stream successfully: " + window.screenshareClients);
@@ -827,11 +839,11 @@ window.AGORA_UTILS = {
 
   handleStreamMuteOnPlay: function(remoteStream){
     let streamId = remoteStream.getId();
-    if(!remoteStream.getVideoTrack() || !remoteStream.getVideoTrack().enabled){
+    if(!remoteStream.getVideoTrack() || !remoteStream.getVideoTrack().enabled || window.remoteStreams[streamId].videoMuted){
       window.AGORA_UTILS.handleVideoMuted(streamId);
     }
 
-    if(!remoteStream.getAudioTrack() || !remoteStream.getAudioTrack().enabled){
+    if(!remoteStream.getAudioTrack() || !remoteStream.getAudioTrack().enabled || window.remoteStreams[streamId].audioMuted){
       window.AGORA_UTILS.handleAudioMuted(streamId);
     }
   },
@@ -1678,8 +1690,8 @@ function handleGhostMode(uid, streamType='local', channelType='communication'){
     else if(streamType == 'remote' && window.remoteStreams[uid]){
       //console.log("hlwRemite")
       //console.log("hlwRemoteStream", window.remoteStreams[uid].stream)
-      if((window.remoteStreams[uid].stream && (!window.remoteStreams[uid].stream.getAudioTrack() || !window.remoteStreams[uid].stream.getAudioTrack().enabled))
-      && (window.remoteStreams[uid].stream && (!window.remoteStreams[uid].stream.getVideoTrack() || !window.remoteStreams[uid].stream.getVideoTrack().enabled))
+      if((window.remoteStreams[uid].stream && (!window.remoteStreams[uid].stream.getAudioTrack() || !window.remoteStreams[uid].stream.getAudioTrack().enabled || window.remoteStreams[uid].audioMuted))
+      && (window.remoteStreams[uid].stream && (!window.remoteStreams[uid].stream.getVideoTrack() || !window.remoteStreams[uid].stream.getVideoTrack().enabled || window.remoteStreams[uid].videoMuted))
       ){
         //console.log("hlwHideGhost")
         window.AGORA_UTILS.toggleVisibility('#' + uid + '_container', false);
@@ -1766,12 +1778,12 @@ function handleRemoteStreamControlsIcons(streamId){
   const currStreamRTMUserId = generateRTMUidfromStreamId(streamId); 
 
   let streamAudioIcon = "<i class='fas fa-microphone mute-remote-audio' rel='"+currStreamRTMUserId+"'></i>";
-  if(!window.remoteStreams[streamId].stream.getAudioTrack() || !window.remoteStreams[streamId].stream.getAudioTrack().enabled){
+  if(!window.remoteStreams[streamId].stream.getAudioTrack() || !window.remoteStreams[streamId].stream.getAudioTrack().enabled || window.remoteStreams[streamId].audioMuted){
     streamAudioIcon = "<i class='fas fa-microphone-slash unmute-remote-audio' rel='"+currStreamRTMUserId+"'></i>";
   }
 
   let streamVideoIcon = "<i class='fas fa-video mute-remote-video' rel='"+currStreamRTMUserId+"'></i>";
-  if(!window.remoteStreams[streamId].stream.getVideoTrack() || !window.remoteStreams[streamId].stream.getVideoTrack().enabled){
+  if(!window.remoteStreams[streamId].stream.getVideoTrack() || !window.remoteStreams[streamId].stream.getVideoTrack().enabled || window.remoteStreams[streamId].videoMuted){
     streamVideoIcon = "<i class='fas fa-video-slash unmute-remote-video' rel='"+currStreamRTMUserId+"'></i>";
   }
 
