@@ -843,11 +843,11 @@ window.AGORA_UTILS = {
 
   handleStreamMuteOnPlay: function(remoteStream, cond=''){
     let streamId = remoteStream.getId();
-    if(!remoteStream.getVideoTrack() || !remoteStream.getVideoTrack().enabled || window.remoteStreams[streamId].videoMuted){
+    if(!remoteStream.getVideoTrack() || !remoteStream.getVideoTrack().enabled || (remoteStreams[streamId] && window.remoteStreams[streamId].videoMuted)){
       window.AGORA_UTILS.handleVideoMuted(streamId, cond);
     }
 
-    if(!remoteStream.getAudioTrack() || !remoteStream.getAudioTrack().enabled || window.remoteStreams[streamId].audioMuted){
+    if(!remoteStream.getAudioTrack() || !remoteStream.getAudioTrack().enabled || (remoteStreams[streamId] && window.remoteStreams[streamId].audioMuted)){
       window.AGORA_UTILS.handleAudioMuted(streamId, cond);
     }
   },
