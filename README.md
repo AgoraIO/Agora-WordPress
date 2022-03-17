@@ -2,7 +2,7 @@
 **Contributors:** [jalamprea](https://github.com/jalamprea), [digitallysavvy](https://github.com/digitallysavvy)  
 **Tags:** live streaming, video streaming, video call, video conference  
 **Requires at least:** 5.0.0   
-**Tested up to:** 5.8.1   
+**Tested up to:** 5.9.2   
 **Requires PHP:** 7.1   
 **Stable tag:** 3.0.0  
 **License:** CC BY-ND 4.0   
