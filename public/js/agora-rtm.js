@@ -204,8 +204,8 @@ function processRtmRequest(value) {
 				const usersCount = Object.keys(window.remoteStreams).length + 1
 				window.AGORA_UTILS.updateUsersCounter(usersCount);
 
-				window.AGORA_SCREENSHARE_UTILS.addRemoteScreenshare(screenStream);
 				window.screenshareClients[uid] = screenStream;
+				window.AGORA_SCREENSHARE_UTILS.addRemoteScreenshare(screenStream);
 			}
 	  	}
 

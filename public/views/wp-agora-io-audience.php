@@ -111,42 +111,9 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
           window.remoteStreams[key].stream.close()
         });
         window.remoteStreams = {};
-        finishVideoScreen();
+        window.AGORA_UTILS.agoraLeaveChannel();
+        //finishVideoScreen();
       })
-
-      function finishVideoScreen() {
-        //jQuery(".remote-stream-container").hide();
-        jQuery("#full-screen-video").hide();
-        jQuery("#watch-live-closed").show();
-
-        jQuery("body #agora-root .remote-stream-container").remove();
-        /* Clean up screen share feeds */
-        if(jQuery("body #agora-root .screenshare-container").length>0){
-          jQuery("body #agora-root .screenshare-container").remove();
-        }
-        if(jQuery("body #agora-root #screen-zone").hasClass("sharescreen")){
-          jQuery("body #agora-root #screen-zone").removeClass("sharescreen");
-        }
-        /* Clean up screen share feeds */
-
-        /* Disable Raise hand button */
-        if(jQuery("body #agora-root .raise-hand-icon").length>0){
-          jQuery("body #agora-root .raise-hand-icon button").attr('disabled', 'disabled');
-        }
-        /* Disable Raise hand button */
-
-        // function waitUntilClose() {
-        //   jQuery('#txt-waiting').hide();
-        //   jQuery('#txt-finished').show();
-
-        //   agoraLeaveChannel();
-        // }
-        exitBtn.hide();
-        agoraLeaveChannel();
-        jQuery('#txt-waiting').hide();
-        jQuery('#txt-finished').show();
-        //window.waitingClose = setTimeout(waitUntilClose, WAIT_FOR_RECONNECT_TIMEOUT)
-      }
       
       // Due to broswer restrictions on auto-playing video, 
       // user must click to init and join channel
@@ -165,189 +132,12 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
         });
       });
 
-      window.agoraClient.on('stream-published', function (evt) {
-        AgoraRTC.Logger.info('Publish local stream successfully');
-      });
+      window.AGORA_UTILS.setupAgoraListeners();
 
-      // connect remote streams
-      window.agoraClient.on('stream-added', function addStream(evt) {
-        const stream = evt.stream;
-        const streamId = stream.getId();
-        window.remoteStreams[streamId] = {stream: stream};
-
-        /* Set the remote stream details alongwith user avtar */
-        window.AGORA_UTILS.agora_getUserAvatar(streamId, function getUserAvatar(avatarData) {
-          let userAvatar = '';
-          if (avatarData && avatarData.user && avatarData.avatar) {
-            userAvatar = avatarData.avatar
-          }
-          window.remoteStreams[streamId].userDetails = {avtar: userAvatar};
-        });
-
-        if (window.waitingClose) {
-          clearTimeout(window.waitingClose)
-          window.waitingClose = null;
-        }
-
-        AgoraRTC.Logger.info('New stream added: ' + streamId);
-        AgoraRTC.Logger.info('Subscribing to remote stream:' + streamId);
-
-        const chatBtn = document.querySelector('#chatToggleBtn');
-        if (chatBtn) {
-          chatBtn.style.display = "block";
-        }
-
-        /*Hide Raise hand button in case if user joins as audience from communication channel due to users restriction limit */
-        const raiseHandIcon = document.querySelector(".raise-hand-icon-fabs");
-        if(sessionStorage.getItem("channelType") != 'communication'){
-          raiseHandIcon.style.display = "block";
-        }
-
-        jQuery("#watch-live-closed").hide();
-        jQuery("#watch-live-overlay").hide();
-        jQuery("#full-screen-video").css('background', 'none').show();
-        exitBtn.show();
-
-        // Subscribe to the stream.
-        window.agoraClient.subscribe(stream, function (err) {
-          AgoraRTC.Logger.error('[ERROR] : subscribe stream failed', err);
-        });
-      });
-
-      window.agoraClient.on('stream-removed', function closeStream(evt) {
-        const stream = evt.stream;
-        const streamId = stream.getId();
-        stream.stop(); // stop the stream
-        stream.close(); // clean up and close the camera stream
-
-        window.remoteStreams[streamId] = null;
-        delete window.remoteStreams[streamId];
-
-        AgoraRTC.Logger.warning("Remote stream is removed " + stream.getId());
-      });
-
-      window.agoraClient.on('stream-subscribed', function (evt) {
-        const remoteStream = evt.stream;
-        const streamId = remoteStream.getId();
-        AgoraRTC.Logger.info('Successfully subscribed to remote stream: ' + streamId);
-
-        jQuery('#full-screen-video').hide();
-
-        if (window.screenshareClients[streamId]) {
-          // this is a screen share stream:
-          console.log('Screen stream arrived:');
-          window.AGORA_SCREENSHARE_UTILS.addRemoteScreenshare(remoteStream);
-        } else {
-          // show new stream on screen:
-          window.AGORA_UTILS.addRemoteStreamView(remoteStream);
-
-          const usersCount = Object.keys(window.remoteStreams).length;
-          window.AGORA_UTILS.updateUsersCounter(usersCount);
-        }
-        handleLayoutInGhostModeinOneStream();
-      });
-
-      // remove the remote-container when a user leaves the channel
-      window.agoraClient.on('peer-leave', function(evt) {
-        AgoraRTC.Logger.info('Remote stream has left the channel: ' + evt.uid);
-        
-        if (!evt || !evt.stream) {
-          console.error('Stream undefined cannot be removed', evt);
-          var streamId = evt.uid; // the the stream id
-          //return false;
-        } else{
-          var streamId = evt.stream.getId(); // the the stream id
-          evt.stream.isPlaying() && evt.stream.stop(); // stop the stream
-        }
-  
-        if(window.remoteStreams[streamId] !== undefined) {
-          if(typeof window.remoteStreams[streamId].stream!='undefined'){
-            window.remoteStreams[streamId].stream.isPlaying() && window.remoteStreams[streamId].stream.stop(); //stop playing the feed
-          }
-
-          delete window.remoteStreams[streamId]; // remove stream from list
-          const remoteContainerID = '#' + streamId + '_container';
-          jQuery(remoteContainerID).empty().remove();
-
-          const usersCount = Object.keys(window.remoteStreams).length;
-          window.AGORA_UTILS.updateUsersCounter(usersCount);
-        }
-
-        if (window.screenshareClients[streamId]) {
-          if (typeof window.screenshareClients[streamId].stop==='function') {
-            window.screenshareClients[streamId].isPlaying() && window.screenshareClients[streamId].stop();
-          }
-          const remoteContainerID = '#' + streamId + '_container';
-          window.AGORA_UTILS.removeLargeStreamView(remoteContainerID);
-          jQuery(remoteContainerID).empty().remove();
-          const streamsContainer = jQuery('#screen-zone');
-          streamsContainer.toggleClass('sharescreen');
-          delete window.screenshareClients[streamId];
-          handleGhostMode(streamId, 'remote');
-        } else {
-          const usersCount = Object.keys(window.remoteStreams).length;
-          if (usersCount===0) {
-            const chatBtn = document.querySelector('#chatToggleBtn');
-            if (chatBtn) {
-              chatBtn.style.display = "none";
-            }
-
-            const raiseHandIcon = document.querySelector(".raise-hand-icon-fabs");
-            if (raiseHandIcon) {
-              raiseHandIcon.style.display = "none";
-            }
-
-            finishVideoScreen();
-          }
-        }
-      });
-
-
-      // show mute icon whenever a remote has muted their mic
-      window.agoraClient.on("mute-audio", function (evt) {
-        window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', true);
-        handleGhostMode(evt.uid, 'remote');
-        handleLayoutInGhostModeinOneStream();
-      });
-
-      window.agoraClient.on("unmute-audio", function (evt) {
-        window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_mute', false);
-        handleGhostMode(evt.uid, 'remote');
-      });
-
-      // show user icon whenever a remote has disabled their video
-      window.agoraClient.on("mute-video", function (evt) {
-        handleGhostMode(evt.uid, 'remote');
-        handleMutedVideoBackgroundColor(evt.uid, 'remote');
-        let userAvatar = '';
-        if(window.remoteStreams[evt.uid].userDetails){
-          userAvatar = window.remoteStreams[evt.uid].userDetails.avtar;
-        }
-        if(userAvatar!=''){
-          jQuery('body #'+ evt.uid + '_no-video').html('<img src="'+userAvatar.url+'" width="'+userAvatar.width+'" height="'+userAvatar.height+'" />')
-        }
-        window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', true);
-        handleLayoutInGhostModeinOneStream();
-      });
-
-      window.agoraClient.on("unmute-video", function (evt) {
-        window.AGORA_UTILS.toggleVisibility('#' + evt.uid + '_no-video', false);
-        handleGhostMode(evt.uid, 'remote');
-      });
-
-      // ingested live stream 
-      window.agoraClient.on('streamInjectedStatus', function (evt) {
-        AgoraRTC.Logger.info("Injected Steram Status Updated");
-        // evt.stream.play('full-screen-video');
-        AgoraRTC.Logger.info(JSON.stringify(evt));
-      }); 
-
-      // Listener for Agora RTM Events
-      //window.addEventListener('agora.rtmMessageFromPeer', receivePeerRTMMessage)
     }
 
     window.AGORA_AUDIENCE = {
-      agoraLeaveChannel: agoraLeaveChannel,
+      //agoraLeaveChannel: agoraLeaveChannel,
       raiseHandRequestRejected: raiseHandRequestRejected
     };
 
@@ -383,19 +173,6 @@ $remoteSpeakersPos = isset($agora->settings['agora-remote-speakers-position']) ?
           });
       }, function(err) {
           AgoraRTC.Logger.error('[ERROR] : join channel failed', err);
-      });
-    }
-
-    function agoraLeaveChannel() {
-      window.dispatchEvent(new CustomEvent("agora.leavingChannel"));
-      window.agoraClient.leave(function() {
-        AgoraRTC.Logger.info('client leaves channel');
-        console.log('client leaves channel');
-        window.AGORA_RTM_UTILS.leaveChannel();
-
-        window.dispatchEvent(new CustomEvent("agora.leavedChannel"));
-      }, function(err) {
-        AgoraRTC.Logger.error('client leave failed ', err); //error handling
       });
     }
   </script>
