@@ -1,5 +1,5 @@
 # Agora Video for WordPress #  
-**Contributors:** [jalamprea](https://github.com/jalamprea), [digitallysavvy](https://github.com/digitallysavvy)  
+**Contributors:** [jalamprea](https://github.com/jalamprea), [digitallysavvy](https://github.com/digitallysavvy), [ekaansharora](https://github.com/ekaansharora)  
 **Tags:** live streaming, video streaming, video call, video conference  
 **Requires at least:** 5.0.0   
 **Tested up to:** 5.9.2   
