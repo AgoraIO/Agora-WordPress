@@ -155,6 +155,9 @@ class WP_Agora_Public {
 		$table_name = $wpdb->prefix . 'agora_io_chats';
 
 		$channel_id = sanitize_text_field($_POST['channel_id']);
+		$timezone = sanitize_text_field($_POST['timezone']);
+		$username = sanitize_text_field($_POST['username']);
+		$todayDate = sanitize_text_field($_POST['todayDate']);
 		$getChatsQuery = $wpdb->prepare("SELECT * FROM $table_name WHERE channel_id = %s", $channel_id);
 		
 		$results = $wpdb->get_results($getChatsQuery);
