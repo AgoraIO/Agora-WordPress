@@ -149,36 +149,37 @@ class WP_Agora_Public {
 		wp_die();
 	}
 
-	/* Function to get chats from the databse */
+	/* Function to get chats from the database */
 	public function getChatsFromHistory(){
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'agora_io_chats';
 
 		$channel_id = sanitize_text_field($_POST['channel_id']);
-		$timezone = sanitize_text_field($_POST['timezone']);
-		$username = sanitize_text_field($_POST['username']);
-		$todayDate = sanitize_text_field($_POST['todayDate']);
-
-		$getChatsQuery = "SELECT * from $table_name where channel_id = '$channel_id'";
+		$getChatsQuery = $wpdb->prepare("SELECT * FROM $table_name WHERE channel_id = %s", $channel_id);
+		
 		$results = $wpdb->get_results($getChatsQuery);
-		if(!empty($results)){	
-			foreach($results as $result){
+
+		if (!empty($results)) {    
+			foreach ($results as $result) {
 				$dateInLocalTimezone = strtotime($this->convertToTimezone(date("Y-m-d H:i:s", $result->time), $timezone));
 				$result->time = date("Y-m-d h:i a", $dateInLocalTimezone);
 
-				/* If message date is equal to today's date the, return only time */
-				if(strtotime($todayDate) == strtotime(date("Y-m-d", $dateInLocalTimezone))){
+				/* If message date is equal to today's date, return only time */
+				if (strtotime($todayDate) == strtotime(date("Y-m-d", $dateInLocalTimezone))) {
 					$result->time = date("h:i a", $dateInLocalTimezone);
 				}
+
 				$result->isLocalMessage = false;
-				if((is_user_logged_in() && $result->user_id == get_current_user_id()) || ($username==$result->username)){
+				if ((is_user_logged_in() && $result->user_id == get_current_user_id()) || ($username == $result->username)) {
 					$result->isLocalMessage = true;
 				}
 			}
 		}
+
 		echo json_encode($results);
 		wp_die();
 	}
+
 
 	/* Function to save chat in the database if chat is enabled */
 	public function saveChat(){
@@ -199,7 +200,7 @@ class WP_Agora_Public {
 
 		$table_name = $wpdb->prefix . 'agora_io_chats';
 
-		/* Create Chat History table if it doesn't exit */
+		/* Create Chat History table if it doesn't exist */
 		$chat_history_table_sql = "CREATE TABLE IF NOT EXISTS $table_name ( 
 			id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
 			channel_id INT(255),
@@ -209,13 +210,17 @@ class WP_Agora_Public {
 			time VARCHAR (255),
 			message TEXT,
 			created_on DATETIME
-			)";
-		$wpdb->query($chat_history_table_sql );
+		)";
+		$wpdb->query($chat_history_table_sql);
 
-		$saveChat_query = "INSERT INTO $table_name ( user_id, username, channel_id, type, message, time, created_on) VALUES ('$user_id', '$username', '$channel_id', '$type', '$message', '$time' ,'$created_on')";
+		$saveChat_query = $wpdb->prepare(
+			"INSERT INTO $table_name (user_id, username, channel_id, type, message, time, created_on) VALUES (%d, %s, %d, %s, %s, %d, %s)",
+			$user_id, $username, $channel_id, $type, $message, $time, $created_on
+		);
 		$wpdb->query($saveChat_query);
 		wp_die();
 	}
+
 
 	public function uploadChatFile(){
 		$response = array(
